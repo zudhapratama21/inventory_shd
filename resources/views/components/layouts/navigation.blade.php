@@ -7,9 +7,9 @@
             <!--begin::Header Logo-->
             <div class="header-logo">
                 <a href="/">
-                    <img alt="Logo" src="{{ asset('assets/media/logos/logo_kpa_main.png') }}"
+                    <img alt="Logo" src="{{ asset('logo_bsb_2.png') }}"
                         class="logo-default max-h-40px" />
-                    <img alt="Logo" src="{{ asset('assets/media/logos/logo_kpa.png') }}"
+                    <img alt="Logo" src="{{ asset('logo_bsb_2.png') }}"
                         class="logo-sticky max-h-40px" />
                 </a>
             </div>

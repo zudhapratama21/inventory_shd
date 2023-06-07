@@ -5,7 +5,7 @@
 <head>
     <base href="../../../../">
     <meta charset="utf-8" />
-    <title>Login Form - Inventory KPA</title>
+    <title>Login Form - Inventory BSB</title>
     <meta name="description" content="Login Form - Inventory KPA" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 

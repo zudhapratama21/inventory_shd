@@ -10,7 +10,7 @@
                 <!--begin::Login Header-->
                 <div class="d-flex flex-center mb-15">
                     <a href="#">
-                        <img src="assets/media/logos/logo_kpa.png" class="max-h-75px" alt="" />
+                        <img src="logo_bsb_2.png" class="max-h-75px" alt="" />
                     </a>
                 </div>
                 <!--end::Login Header-->

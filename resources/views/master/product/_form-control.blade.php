@@ -1,23 +1,4 @@
 <div class="card-body">
-
-    <div class="form-group">
-        <label>Group Barang *:</label>
-        <select class="form-control select2" id="select2" name="productgroup_id">
-            <option value="">Pilih Group Barang</option>
-            @foreach ($productgroups as $cg)
-            @if ($product->productgroup_id == $cg->id)
-            <option selected="selected" value="{{ $cg->id }}">{{ $cg->nama }}</option>
-            @else
-            <option value="{{ $cg->id }}">{{ $cg->nama }}</option>
-            @endif
-
-            @endforeach
-        </select>
-        @error('productgroup_id')
-        <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
-    </div>
-
     <div class="form-group">
         <label>Merk *:</label>
         <select class="form-control select2" id="merk" name="merk_id">

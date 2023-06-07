@@ -27,7 +27,7 @@
 
     <!--begin::Layout Themes(used by all pages)-->
     <!--end::Layout Themes-->
-    <link rel="shortcut icon" href="{{ asset('assets/media/logos/logo_kpa_putih.png') }}" />
+    <link rel="shortcut icon" href="{{ asset('logo_bsb_2.png') }}" />
 
     <style type="text/css">
         .signature-pad{
@@ -50,7 +50,7 @@
     <div id="kt_header_mobile" class="header-mobile ">
         <!--begin::Logo-->
         <a href="/">
-            <img alt="Logo" src="{{ asset('assets/media/logos/logo_kpa_main.png') }}" class="logo-default max-h-30px" />
+            <img alt="Logo" src="{{ asset('logo_bsb_2.png') }}" class="logo-default max-h-30px" />
         </a>
         <!--end::Logo-->
 
@@ -96,7 +96,7 @@
                     <div class=" container  d-flex flex-column flex-md-row align-items-center justify-content-between">
                         <!--begin::Copyright-->
                         <div class="text-dark order-2 order-md-1">
-                            <span class="text-muted font-weight-bold mr-2">2021 &copy; PT KARYA PUTRA ANDALAN</span>
+                            <span class="text-muted font-weight-bold mr-2">2021 &copy; PT BRILIAN SUKSES BERKAH</span>
                             <a href="http://keenthemes.com/metronic" target="_blank"
                                 class="text-dark-75 text-hover-primary"></a>
                         </div>
