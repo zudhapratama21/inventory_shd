@@ -70,7 +70,8 @@ class PerformaSalesController extends Controller
            's.nama','s.id','s.hp',
             DB::raw("sum(fp.grandtotal) as grandtotal_penjualan"),
             DB::raw("sum(fp.ppn) as total_ppn"),
-            DB::raw("sum(fp.total_cn) as total_cn")
+            DB::raw("sum(fp.total_cn) as total_cn"),
+            DB::raw("sum(fp.ongkir) as total_ongkir"),
         )->get();
 
 
@@ -81,7 +82,7 @@ class PerformaSalesController extends Controller
         foreach ($sales as $value) {
             
             foreach ($hasil as $res) {
-                $dataOmset = $res->grandtotal_penjualan - $res->total_cn - $res->total_ppn;
+                $dataOmset = $res->grandtotal_penjualan - $res->total_cn - $res->total_ppn - $res->total_ongkir;
                 if ($request->kategori == 2) {
                     $targetSales = TargetSales::where('sales_id',$value->id)->where('tahun',$request->year)->where('bulan',$request->month)->first();
                     if ($targetSales) {
@@ -140,7 +141,8 @@ class PerformaSalesController extends Controller
                                     's.id','s.nama as nama_sales','kp.nama as nama_kategori',
                                     DB::raw("sum(fp.grandtotal) as grandtotal_penjualan"),
                                     DB::raw("sum(fp.ppn) as total_ppn"),
-                                    DB::raw("sum(fp.total_cn) as total_cn")
+                                    DB::raw("sum(fp.total_cn) as total_cn"),
+                                    DB::raw("sum(fp.ongkir) as total_ongkir"),
                             )->get();
                              
         $sales = [];
@@ -151,7 +153,7 @@ class PerformaSalesController extends Controller
         if ($count > 0) {
             foreach ($hasil as $key => $value) {
                 $sales[] =  $value->nama_sales ;
-                $penjualan []  = $value->grandtotal_penjualan - $value->total_ppn - $value->total_cn;
+                $penjualan []  = $value->grandtotal_penjualan - $value->total_ppn - $value->total_cn - $value->total_ongkir;
             }
         }
 
@@ -229,7 +231,8 @@ class PerformaSalesController extends Controller
                     DB::raw("DATE_FORMAT(fp.tanggal, '%m') as tanggal_penjualan"),
                     DB::raw("sum(fp.grandtotal) as grandtotal_penjualan"),
                     DB::raw("sum(fp.ppn) as total_ppn"),
-                    DB::raw("sum(fp.total_cn) as total_cn")
+                    DB::raw("sum(fp.total_cn) as total_cn"),
+                    DB::raw("sum(fp.ongkir) as total_ongkir"),
                 );         
         
         $hasil= $tipe->get();                        
@@ -238,7 +241,7 @@ class PerformaSalesController extends Controller
                         
         foreach ($hasil as $key => $value) {
             $data[(int)$value->tanggal_penjualan] = [
-                'grandtotal' => (int) ( $value->grandtotal_penjualan - $value->total_ppn - $value->total_cn)
+                'grandtotal' => (int) ( $value->grandtotal_penjualan - $value->total_ppn - $value->total_cn - $value->total_ongkir)
             ];
         }
         
@@ -326,7 +329,7 @@ class PerformaSalesController extends Controller
                     DB::raw("DATE_FORMAT(fp.tanggal, '%Y') as tahun_penjualan"),
                     DB::raw("sum(fdp.qty) as stok_produk"),
                     DB::raw("sum(fdp.total) as total_penjualan"),                    
-                    DB::raw("sum(fp.total_cn) as total_cn")      
+                    DB::raw("sum(fdp.cn_total) as total_cn") 
                 )                  
                 ->get(); 
 

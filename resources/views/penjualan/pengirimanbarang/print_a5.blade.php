@@ -131,14 +131,9 @@
                                 }}, No. {{ $pengirimanbarang->customers->nomor
                                 }}, {{ $pengirimanbarang->customers->namakota->name
                                 }}</td>
-
                         </tr>
-
                     </table>
-
-
-                </td>
-               
+                </td>               
             </tr>
             <tr>
                 <td width="20%" style="font-size: 70%; vertical-align: top;">

@@ -32,10 +32,10 @@
         <tr>
             <td width="15%" style="text-align: center;">
                 <div style="transform: rotate(270deg);position: fixed;margin-left:-200px;width: 600px;margin-top:240px;">
-                   <h1 style="margin-top: 5px; margin-bottom: 10px;color:rgb(5, 2, 186)">PT KARYA PUTRA ANDALAN</h1>
-                   <h3 style="margin-top: 0px; margin-bottom: 3px;">Ruko Purimas - Rungkut Madya Jl. Raya I gusti Ngurah
-                    Rai <br> Kav. A1. No. 11-120
-                    Surabaya</h3>
+                   <h1 style="margin-top: 5px; margin-bottom: 10px;color:rgb(5, 2, 186)">PT BRILIAN SUKSES BERKAH</h1>
+                   <h3 style="margin-top: 0px; margin-bottom: 3px;">Juanda Regency Blok H-06, JL. Raya Bypass Juanda NO.11
+                    Rai <br> Pabean-Sedati, Sidoarjo
+                    Kode Pos : 61253</h3>
                    {{-- <h3 style="margin-top: 0px;margin-bottom: 5px;">NPWP : 03.113.119.6-615.000</h3> --}}
                 </div>
             </td>
@@ -121,7 +121,7 @@
                                 <h3 style="margin-top: -10px">Surabaya, {{ \Carbon\Carbon::now()->format("d F Y") }}</h3>
                                 <br /><br /> <br /><br /> <br /> <br />
                                 <h3>                                                                       
-                                    <u>AHMAD MUHTAROM</u> <br />
+                                    <u>HEPPY WAHYU</u> <br />
                                     Direktur
                                 </h3>
                             </td>
