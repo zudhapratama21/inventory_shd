@@ -13,6 +13,7 @@ use App\Models\PenerimaanBarang;
 use App\Models\PesananPembelian;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
+use App\Models\HargaNonExpired;
 use App\Models\InventoryTransaction;
 use Illuminate\Support\Facades\Auth;
 use App\Models\PenerimaanBarangDetail;
@@ -78,8 +79,7 @@ class PenerimaanBarangController extends Controller
         $pesananpembelians = PesananPembelian::with('suppliers', 'statusPO')
             ->where('status_po_id', '<=', '3')
             ->where('status_po_id', '<>', '1');
-            
-            
+                                
         if (request()->ajax()) {
             return Datatables::of($pesananpembelians)
                 ->addIndexColumn()
@@ -277,10 +277,42 @@ class PenerimaanBarangController extends Controller
             $nilai_lama = $stok_lama * $hpp_lama;
             $status_exp = $product->status_exp;
 
+            // status exp = 1 artinya ada expirednya 
+            // status exp detil = 1 berarti exp sudah terinput atau tidak perlu ada exp nya 
+
             if ($status_exp == 1) {
                 $status_exp_detil = 0;
             } else {
                 $status_exp_detil = 1;
+                $hargaNonExpired = HargaNonExpired::where('product_id',$product_id)
+                                                    ->where('harga_beli',$hargabeli)
+                                                    ->where('supplier_id',$supplier_id)
+                                                    ->where('diskon_persen',$diskon_persen)
+                                                    ->where('diskon_rupiah',$diskon_rp)                                            
+                                                    ->first();
+                if ($hargaNonExpired) {
+                    $qtynonexpired =  $hargaNonExpired->qty + $a->qty;
+                    $hargaNonExpired->update([
+                        'qty' => $qtynonexpired,
+                        'penerimaanbarang_id' => $id_pb,
+                        'tanggal' => $tanggal
+                    ]);
+                }else{
+                    HargaNonExpired::create([
+                        'product_id' => $product_id,
+                        'qty' => $a->qty,
+                        'harga_beli' => $hargabeli,
+                        'ppn' => $detailPesanan->ppn,
+                        'diskon_persen' => $diskon_persen,
+                        'diskon_rupiah' => $diskon_rp,
+                        'tanggal_transaksi' => $tanggal,
+                        'supplier_id' => $supplier_id,
+                        'penerimaanbarang_id' => $id_pb
+                    ]);
+
+
+                    
+                }
             }
 
             $nilai_terima = $a->qty * $hargabeli_fix;
@@ -308,18 +340,6 @@ class PenerimaanBarangController extends Controller
             $detail->status_exp = $status_exp_detil;
             $detail->save();
             
-            // ########## end input detail #############
-
-            //######### start update stok ##############
-            // $product2 = new Product;
-            // $product2 = Product::find($a->product_id)->first();
-            // $product2->stok = $stok_baru;
-            // $product2->hpp = $hpp_baru;
-            // $product2->save();
-
-            // Product::where('id', $a->product_id)
-            //     ->update(['stok' => $stok_baru, 'hpp' => $hpp_baru]);
-            //######### end update stok ################
 
             //######### start add INV TRANS ############
             $inventoryTrans = new InventoryTransaction;
