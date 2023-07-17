@@ -279,7 +279,7 @@
                     }}
 
                     <br /><br /> <br /><br /> <br /> <br />
-                    <u>AHMAD MUHTAROM</u> <br />
+                    <u>HEPPY WAHYU</u> <br />
                     Direktur
                 </td>
             </tr>
