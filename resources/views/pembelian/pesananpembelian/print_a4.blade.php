@@ -31,13 +31,12 @@
     <table width="100%" style="margin-top: 0px; border-collapse:collapse">
         <tr>
             <td width="40%" style="font-size: 70%; vertical-align: top;">
-                <h3>PT KARYA PUTRA ANDALAN</h3>
+                <h3>PT BRILIAN SUKSES BERKAH</h3>
                 <p>
-                    Ruko Purimas - Rungkut Madya Jl. Raya I Gusti Ngurah
-                    Rai Kav. A1. No. 11-12
-                    Surabaya
-                </p>
-                <hp style="margin-top: 0px;margin-bottom: 5px;">NPWP : 03.113.119.6-615.000</p>
+                    Juanda Regency Blok H-06, JL. Raya Bypass Juanda NO.11, Pabean-Sedati, Sidoarjo, Kode Pos 61253.
+                </p>                
+                <p style="margin-top: 0px;margin-bottom: 0px;">NPWP : 61.097.970.0-643.000</p>
+                <p style="margin-top: 0px;margin-bottom: 3px;">IDAK : 13102201284910012</p>
             </td>
             <td width="20%" style="font-size: 75%; vertical-align: top; text-align: center;">
                 <center><b></b></center>

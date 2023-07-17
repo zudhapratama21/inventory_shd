@@ -28,17 +28,15 @@
 <body style="font-family: sans-serif;">
     @for($i = 1; $i <= $totalPage; $i++) <table width=" 100%" style="margin-top: 0px; border-collapse:collapse">
         <tr>
-            <td colspan="4" style=" border-bottom: 1px solid black;">FAKTUR PEMBELIAN</td>
+            <td colspan="4" style=" border-bottom: 1px solid black;">FAKTUR PENJUALAN</td>
             <td colspan="2" style=" border-bottom: 1px solid black; text-align:right">No. Faktur :
                 {{ $fakturpembelian->kode }}</td>
         </tr>
         <tr>
             <td colspan="6" style="text-align: center; border-bottom: 1px solid black;">
-                <h1 style="margin-top: 5px; margin-bottom: 10px;">PT KARYA PUTRA ANDALAN</h1>
-                <h5 style="margin-top: 0px; margin-bottom: 5px;">Ruko Purimas - Rungkut Madya Jl. Raya I gusti Ngurah
-                    Rai Kav. A1. No. 11-12
-                    Surabaya</h5>
-                <h5 style="margin-top: 0px;margin-bottom: 5px;">NPWP : 03.113.119.6-615.000</h5>
+                <h1 style="margin-top: 5px; margin-bottom: 10px;">PT BRILIAN SUKSES BERKAH</h1>
+                <h5 style="margin-top: 0px; margin-bottom: 5px;">Juanda Regency Blok H-06, JL. Raya Bypass Juanda NO.11, Pabean-Sedati, Sidoarjo , Kode Pos 61253</h5>                
+                <h5 style="margin-top: 0px;margin-bottom: 5px;">IDAK : 13102201284910012 | NPWP : 61.097.970.0-643.000</h5>
             </td>
 
         </tr>

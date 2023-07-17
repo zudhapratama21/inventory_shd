@@ -16,7 +16,7 @@ class NoFakturPajakImport implements ToModel
             $now = now()->format('y');
             $nopajak = NoFakturPajak::create([
                 'no_pajak' => $row[0],
-                'no_kpa' => $row[1].'-'.$now.'/KPA',
+                'no_kpa' => $row[1].'-'.$now.'/BSB',
                 'status' => 'Aktif',                
             ]);
         }

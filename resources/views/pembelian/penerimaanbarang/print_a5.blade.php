@@ -95,11 +95,8 @@
         <table border="0" width="100%">
             <tr>
                 <td width="20%" style="font-size: 70%; vertical-align: top;">
-                    <h3>PT KARYA PUTRA ANDALAN</h3>
-                    <p>
-                        Ruko Purimas - Rungkut Madya Jl. Raya I Gusti Ngurah
-                        Rai Kav. A1. No. 11-12
-                        Surabaya
+                    <h3>PT BRILIAN SUKSES BERKAH</h3>
+                    <p>Juanda Regency Blok H-06, JL. Raya Bypass Juanda NO.11, Pabean-Sedati, Sidoarjo , Kode Pos 61253.
                     </p>
                 </td>
                 <td width="25%" style="font-size: 75%; vertical-align: top; text-align: center;">
