@@ -14,6 +14,7 @@ use App\Models\PesananPembelian;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Models\HargaNonExpired;
+use App\Models\HargaNonExpiredDetail;
 use App\Models\InventoryTransaction;
 use Illuminate\Support\Facades\Auth;
 use App\Models\PenerimaanBarangDetail;
@@ -298,7 +299,7 @@ class PenerimaanBarangController extends Controller
                         'tanggal' => $tanggal
                     ]);
                 }else{
-                    HargaNonExpired::create([
+                   $harganonExpired =  HargaNonExpired::create([
                         'product_id' => $product_id,
                         'qty' => $a->qty,
                         'harga_beli' => $hargabeli,
@@ -309,10 +310,12 @@ class PenerimaanBarangController extends Controller
                         'supplier_id' => $supplier_id,
                         'penerimaanbarang_id' => $id_pb
                     ]);
-
-
-                    
+                
+                    $hargaNonExpired->id = $harganonExpired->id;
                 }
+
+               
+
             }
 
             $nilai_terima = $a->qty * $hargabeli_fix;
@@ -339,7 +342,23 @@ class PenerimaanBarangController extends Controller
             $detail->keterangan = $a->keterangan;
             $detail->status_exp = $status_exp_detil;
             $detail->save();
-            
+
+
+            // ============= UNTUK INPUT HARGA NON EXPIRED DETAIL  ===============================
+            if (!$hargaNonExpired) {
+                HargaNonExpiredDetail::create([
+                    'tanggal' => $tanggal,
+                    'harganonexpired_id' => $hargaNonExpired->id,
+                    'product_id' => $product_id,
+                    'qty' => $a->qty,
+                    'id_pb' => $id_pb, 
+                    'id_pb_detail' => $detail->id,                    
+                    'harga_beli' => $hargabeli,                    
+                    'diskon_persen_beli' => $diskon_persen,
+                    'diskon_rupiah_beli' => $diskon_rp
+                ]);
+            }
+             
 
             //######### start add INV TRANS ############
             $inventoryTrans = new InventoryTransaction;

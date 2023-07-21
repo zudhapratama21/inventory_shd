@@ -109,7 +109,7 @@
 
             document.getElementById('save-jpeg').addEventListener('click', function () {
             if (signaturePad.isEmpty()) {
-                alert("Tanda Tangan Anda Kosong! Silahkan tanda tangan terlebih dahulu.");
+                
             }else{
                 var data = signaturePad.toDataURL();                
                 $('#ttd').html('<textarea id="signature64" type="hidden" name="signed" style="display:none">'+data+'</textarea>');
