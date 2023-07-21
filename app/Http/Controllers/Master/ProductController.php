@@ -150,8 +150,7 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
-        $request->validate([
-            'productgroup_id' => ['required'],
+        $request->validate([            
             'nama' => ['required', 'max:255'],
             'productcategory_id' => ['required'],
             'productsubcategory_id' => ['required'],
