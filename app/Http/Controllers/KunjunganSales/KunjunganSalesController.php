@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\FakturPenjualan;
 use App\Models\KunjunganSales;
 use App\Models\Sales;
+use App\Traits\CodeTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +15,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class KunjunganSalesController extends Controller
 {
+    use CodeTrait;
     public function __construct()
     {
         $this->middleware('permission:kunjungansales-list',['only' => ['index','datatable'] ]);

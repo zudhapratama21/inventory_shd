@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Blameable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class KunjunganSales extends Model
 {
-    use HasFactory;
+    use HasFactory,Blameable,SoftDeletes;
 
     protected $table = 'kunjungan_sales';
     protected $fillable = [
