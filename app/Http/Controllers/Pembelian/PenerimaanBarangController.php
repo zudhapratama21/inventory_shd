@@ -22,6 +22,8 @@ use App\Models\PesananPembelianDetail;
 use App\Models\Supplier;
 use Barryvdh\DomPDF\Facade as PDF;
 
+use function PHPUnit\Framework\isEmpty;
+
 class PenerimaanBarangController extends Controller
 {
     use CodeTrait;
@@ -285,37 +287,6 @@ class PenerimaanBarangController extends Controller
                 $status_exp_detil = 0;
             } else {
                 $status_exp_detil = 1;
-                $hargaNonExpired = HargaNonExpired::where('product_id',$product_id)
-                                                    ->where('harga_beli',$hargabeli)
-                                                    ->where('supplier_id',$supplier_id)
-                                                    ->where('diskon_persen',$diskon_persen)
-                                                    ->where('diskon_rupiah',$diskon_rp)                                            
-                                                    ->first();
-                if ($hargaNonExpired) {
-                    $qtynonexpired =  $hargaNonExpired->qty + $a->qty;
-                    $hargaNonExpired->update([
-                        'qty' => $qtynonexpired,
-                        'penerimaanbarang_id' => $id_pb,
-                        'tanggal' => $tanggal
-                    ]);
-                }else{
-                   $harganonExpired =  HargaNonExpired::create([
-                        'product_id' => $product_id,
-                        'qty' => $a->qty,
-                        'harga_beli' => $hargabeli,
-                        'ppn' => $detailPesanan->ppn,
-                        'diskon_persen' => $diskon_persen,
-                        'diskon_rupiah' => $diskon_rp,
-                        'tanggal_transaksi' => $tanggal,
-                        'supplier_id' => $supplier_id,
-                        'penerimaanbarang_id' => $id_pb
-                    ]);
-                
-                    $hargaNonExpired->id = $harganonExpired->id;
-                }
-
-               
-
             }
 
             $nilai_terima = $a->qty * $hargabeli_fix;
@@ -345,10 +316,46 @@ class PenerimaanBarangController extends Controller
 
 
             // ============= UNTUK INPUT HARGA NON EXPIRED DETAIL  ===============================
-            if (!$hargaNonExpired) {
+
+            if ($status_exp_detil == 1) {
+
+                $hargaNonExpired = HargaNonExpired::where('product_id',$product_id)
+                                                    ->where('harga_beli',$hargabeli)
+                                                    ->where('supplier_id',$supplier_id)
+                                                    ->where('diskon_persen',$diskon_persen)
+                                                    ->where('diskon_rupiah',$diskon_rp)                                            
+                                                    ->first();
+               
+                if ($hargaNonExpired) {
+                    $qtynonexpired =  $hargaNonExpired->qty + $a->qty;
+                    $hargaNonExpired->update([
+                        'qty' => $qtynonexpired,
+                        'penerimaanbarang_id' => $id_pb,
+                        'tanggal' => $tanggal
+                    ]);
+                     
+                    $idexpired = $hargaNonExpired->id;
+
+                    
+                }else{
+                   $harganonExpired =  HargaNonExpired::create([
+                        'product_id' => $product_id,
+                        'qty' => $a->qty,
+                        'harga_beli' => $hargabeli,
+                        'ppn' => $detailPesanan->ppn,
+                        'diskon_persen' => $diskon_persen,
+                        'diskon_rupiah' => $diskon_rp,
+                        'tanggal_transaksi' => $tanggal,
+                        'supplier_id' => $supplier_id,
+                        'penerimaanbarang_id' => $id_pb
+                    ]);  
+                    
+                    $idexpired= $harganonExpired->id;
+                }
+
                 HargaNonExpiredDetail::create([
                     'tanggal' => $tanggal,
-                    'harganonexpired_id' => $hargaNonExpired->id,
+                    'harganonexpired_id' => $idexpired,
                     'product_id' => $product_id,
                     'qty' => $a->qty,
                     'id_pb' => $id_pb, 
@@ -357,8 +364,8 @@ class PenerimaanBarangController extends Controller
                     'diskon_persen_beli' => $diskon_persen,
                     'diskon_rupiah_beli' => $diskon_rp
                 ]);
-            }
-             
+                
+            }             
 
             //######### start add INV TRANS ############
             $inventoryTrans = new InventoryTransaction;
