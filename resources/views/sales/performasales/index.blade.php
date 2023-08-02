@@ -180,10 +180,20 @@
                                     </div>
                                 </div>
 
+                                
+                                @can('chat-list')
+                                    @php
+                                        $access = 1 ;
+                                    @endphp    
+                                @endcan
+                                @php
+                                    $access = 0;
+                                @endphp
                             </div>
                                 <div class="row" id="performasales">
                                         
                                 </div>
+
                         </div>
                     </div>
                 </div>
@@ -200,7 +210,6 @@
 <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
 <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
     const idperformasales = document.getElementById('chartperformasales');
     const performasales = document.getElementById('performasales');
@@ -210,10 +219,14 @@
     let kategori = 'All';
     let bulan = 'All';
     let category = 'All';
+    let access = {{$access}};
+    
 
     $(document).ready(function() {
         DataPerformaSales();
         grafikperformasales();
+
+        console.log(access);
     })
 
     let barPerformaSales= {
@@ -322,7 +335,7 @@
     function WAblast(user,persen,laba) {
         let count = user.length;
 
-        if (count > 0) {
+        if (count > 0 && access == 1) {
             return user.map(item =>`
                       <a href="whatsapp://send?text=Assalamualaikum wr wb %0AMohon Perhatian !!%0ATarget Penjualan pada bulan ini masih ${persen}% dengan nominal Rp.${laba} %0A Segera Tingkatkan strategi untuk mencapai target penjualan !! %0ASemangatt !!&app_absent=0&phone=${item.phone}" 
                       target="_blank" class="btn btn-outline-success btn-sm" >${item.name}</a>
