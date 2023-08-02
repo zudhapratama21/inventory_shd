@@ -19,6 +19,7 @@ use App\Models\InventoryTransaction;
 use Illuminate\Support\Facades\Auth;
 use App\Models\PenerimaanBarangDetail;
 use App\Models\PesananPembelianDetail;
+use App\Models\PesananPenjualanDetail;
 use App\Models\Supplier;
 use Barryvdh\DomPDF\Facade as PDF;
 
@@ -348,7 +349,7 @@ class PenerimaanBarangController extends Controller
                         'tanggal_transaksi' => $tanggal,
                         'supplier_id' => $supplier_id,
                         'penerimaanbarang_id' => $id_pb
-                    ]);  
+                    ]);
                     
                     $idexpired= $harganonExpired->id;
                 }
@@ -459,8 +460,11 @@ class PenerimaanBarangController extends Controller
         $product_id =  $penerimaanbarangdetail->product_id;
         $penerimaanbarang_id = $penerimaanbarangdetail->penerimaan_barang_id;
         $qty_diterima = $penerimaanbarangdetail->qty;
-
         
+
+        // get harga dari pesanan pembelian
+        $pesananpembelian = PesananPembelianDetail::where('id',$penerimaanbarangdetail->pesanan_pembelian_id)->first();
+    
         //get jumlah qty di exp data
         $totalQtyExp = StokExpDetail::where('id_pb_detail', '=', $penerimaanbarangdetail_id)->sum('qty');
         $qtyExpNow = $totalQtyExp + $qty;
@@ -469,23 +473,27 @@ class PenerimaanBarangController extends Controller
         if ($qtyExpNow <= $qty_diterima) {
             
             $mainStokExp = StokExp::where('tanggal', '=', $tanggal)
-                ->where('product_id', '=', $product_id)
-                ->where('lot',$lot)
-                ->count();
+                            ->where('product_id', '=', $product_id)
+                            ->where('lot',$lot)
+                            ->where('harga_beli',$pesananpembelian->hargabeli)
+                            ->where('diskon_persen',$pesananpembelian->diskon_persen)
+                            ->where('diskon_rupiah',$pesananpembelian->diskon_rp)
+                            ->first();
             
 
             // dd($mainStokExp);
 
             if ($mainStokExp > 0) {
                 //ada data, tinggal update stok
-                $stokExp = StokExp::where('tanggal', '=', $tanggal)
-                    ->where('product_id', '=', $product_id)
-                    ->where('lot',$lot)
-                    ->first();
+                // $stokExp = StokExp::where('tanggal', '=', $tanggal)
+                //     ->where('product_id', '=', $product_id)
+                //     ->where('lot',$lot)
+                    
+                //     ->first();
 
-                $id_stokExp = $stokExp->id;
-                $stokExp->qty += $qty;
-                $stokExp->save();
+                $id_stokExp = $mainStokExp->id;
+                $mainStokExp->qty += $qty;
+                $mainStokExp->save();
 
                 //insert detail
                 $stokExpDetail = new StokExpDetail;
@@ -503,6 +511,9 @@ class PenerimaanBarangController extends Controller
                 $datas['product_id'] = $product_id;
                 $datas['qty'] = $qty;
                 $datas['lot'] = $lot;
+                $datas['harga_beli'] = $pesananpembelian->hargabeli;
+                $datas['diskon_persen'] = $pesananpembelian->diskon_persen;
+                $datas['diskon_rupiah'] = $pesananpembelian->diskon_rp;
                 $id_stokExp = StokExp::create($datas)->id;
 
                 //insert detail;
@@ -547,9 +558,7 @@ class PenerimaanBarangController extends Controller
         $penerimaanbarangdetail_id =  $stokExpDetail->id_pb_detail;
         $stokExp_id = $stokExpDetail->stok_exp_id;
         $qtyDetail  = $stokExpDetail->qty;
-
         
-
         $stokExp = StokExp::find($stokExp_id);
         $stokMain = $stokExp->qty;
         $stokSisa = $stokMain - $qtyDetail;

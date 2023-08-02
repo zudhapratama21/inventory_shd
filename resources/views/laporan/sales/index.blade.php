@@ -73,7 +73,7 @@
                                     <input type="hidden" name="sales" value="all" id="formsales">
                                     <input type="hidden" name="tanggal_mulai" id="formtanggal_mulai">
                                     <input type="hidden" name="tanggal_selesai" id="formtanggal_selesai">
-                                    @can('laporansales-print')
+                                    @can('laporansales-list')
                                     <button type="submit"
                                         class="btn btn-primary font-weight-bolder " >
                                         <i class="flaticon2-printer "></i>

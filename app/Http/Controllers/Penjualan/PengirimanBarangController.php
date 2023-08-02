@@ -379,6 +379,7 @@ class PengirimanBarangController extends Controller
         $listExp = StokExpDetail::with('stockExp')->where('id_sj_detail', '=', $pengirimanbarangdetail_id)->get();        
         return view('penjualan.pengirimanbarang.setexp', compact('pengirimanbarangdetail', 'title', 'listExp', 'pengirimanbarang'));
     }
+    
     public function listexp(PengirimanBarangDetail $pengirimanbarangdetail)
     {
         $title = "Pengaturan Expired Date";

@@ -16,7 +16,11 @@ class StokExp extends Model
         'tanggal',
         'product_id',
         'qty',
-        'lot'
+        'lot',
+        'ppn',
+        'harga_beli',
+        'diskon_persen',
+        'diskon_rupiah'
     ];
 
     protected $dates = ['tanggal'];

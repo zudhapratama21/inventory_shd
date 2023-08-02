@@ -69,9 +69,10 @@
                                 <thead class="datatable-head">
                                     <tr>
                                         <th style="width: 10%">Kode barang</th>
-                                        <th>Nama Barang</th>
+                                        <th style="width: 50%">Nama Barang</th>
                                         <th style="width: 5%">Satuan</th>
                                         <th style="width: 5%">Qty Diterima</th>
+                                        <th style="width: 10%">Is Expired ?</th>
                                         <th style="width: 5%">Status</th>
                                         <th style="width: 10%">Action</th>
                                     </tr>
@@ -80,9 +81,16 @@
                                     @foreach ($detailItem as $item)
                                     <tr>
                                         <td>{{ $item->products->kode }}</td>
-                                        <td>{{ $item->products->nama }}</td>
+                                        <td>{{ $item->products->nama }}</td>                                       
                                         <td>{{ $item->satuan }}</td>
                                         <td>{{ $item->qty }}</td>
+                                        <td>
+                                            @if ($item->products->status_exp == 1)
+                                                <span class="badge badge-info">Expired</span>
+                                            @else   
+                                                <span class="badge badge-primary">Non Expired</span>
+                                            @endif
+                                        </td>
                                         <td>
                                             @if($item->status_exp == 1)
                                             <span class="label label-success label-pill label-inline mr-2">Done</span>
