@@ -122,6 +122,7 @@
                                 <thead class="datatable-head">
                                     <tr>
                                         <th>Tanggal</th>
+                                        <th>Jam</th>
                                         <th>Sales</th>
                                         <th>Customer</th>
                                         <th>Aktivitas</th>                                    
@@ -175,6 +176,7 @@
               columns: [
                 //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                   {data: 'tanggal', name: 'tanggal'},
+                  {data: 'jam', name: 'jam'},
                   {data: 'user', name:'user'},
                   {data: 'customer', name:'customer'},
                   {data: 'aktifitas', name:'aktifitas'},                 
@@ -196,7 +198,7 @@
                 {responsivePriority: 10001, targets: 4},
                 {
                     responsivePriority: 2,
-                    targets: -1
+                    targets: 3
                 },
                
                 

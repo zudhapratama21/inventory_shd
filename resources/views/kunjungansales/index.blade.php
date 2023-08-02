@@ -72,6 +72,7 @@
                                 <thead class="datatable-head">
                                     <tr>                                        
                                         <th>Tanggal</th>
+                                        <th>Jam</th>
                                         <th>Sales</th>
                                         <th>Customer</th>
                                         <th>Aktivitas</th>                                       
@@ -120,6 +121,7 @@
               columns: [
                 //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                   {data: 'tanggal', name: 'tanggal'},
+                  {data: 'jam', name: 'jam'},
                   {data: 'sales_name', name:'sales_name'},
                   {data: 'customer', name:'customer'},
                   {data: 'aktifitas', name:'aktifitas'},
