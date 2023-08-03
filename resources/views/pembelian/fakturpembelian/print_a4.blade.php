@@ -273,7 +273,7 @@
 
                 </td>
 
-                <td style='font-size: 70%; text-align:center; vertical-align:top'>Surabaya, {{
+                <td style='font-size: 70%; text-align:center; vertical-align:top'>Sidoarjo, {{
                     $fakturpembelian->tanggal->format("d
                     F Y")
                     }}
