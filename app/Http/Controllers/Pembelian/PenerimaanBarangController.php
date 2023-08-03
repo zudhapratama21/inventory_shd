@@ -463,8 +463,8 @@ class PenerimaanBarangController extends Controller
         
 
         // get harga dari pesanan pembelian
-        $pesananpembelian = PesananPembelianDetail::where('id',$penerimaanbarangdetail->pesanan_pembelian_id)->first();
-        dd($pesananpembelian);
+        $pesananpembelian = PesananPembelianDetail::where('id',$penerimaanbarangdetail->pesanan_pembelian_detail_id)->first();
+        // dd($pesananpembelian);
     
         //get jumlah qty di exp data
         $totalQtyExp = StokExpDetail::where('id_pb_detail', '=', $penerimaanbarangdetail_id)->sum('qty');
