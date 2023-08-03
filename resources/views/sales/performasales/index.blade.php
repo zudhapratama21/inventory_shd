@@ -63,6 +63,7 @@
                                     <select name="chart_year" class="form-control" id="kt_select2_4" onchange="filterkategorigrafik()">    
                                         <option value="All">Semua</option>
                                         @foreach ($kategori as $item)
+                                        
                                           <option value="{{$item->id}}">{{$item->nama}}</option>  
                                         @endforeach
                                     </select>
@@ -180,20 +181,21 @@
                                     </div>
                                 </div>
 
+                                @php
+                                    $access = 0;
+                                @endphp
                                 
                                 @can('chat-list')
                                     @php
                                         $access = 1 ;
                                     @endphp    
                                 @endcan
-                                @php
-                                    $access = 0;
-                                @endphp
+                             
                             </div>
                                 <div class="row" id="performasales">
                                         
                                 </div>
-
+                      
                         </div>
                     </div>
                 </div>
@@ -298,7 +300,11 @@
                         <div class="progress">
                             <div class="progress-bar" role="progressbar" style="width: ${item.persen}%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div> </br>                           
                         </div>
-                        <span class="text-primary">${item.persen}%</span>
+                        <span class="text-primary">${
+                            if (item.persen == ) {
+                                
+                            }
+                        }%</span>
                         <hr> 
                         
                         <div class="d-flex justify-content-between align-items-center"> 
@@ -306,7 +312,7 @@
                             
                             <div>
                                 ${WAblast(item.user , item.persen , item.laba)}
-                                <a href="/sales/performasales/${item.id}/detail" class="btn btn-primary btn-outline btn-sm" > Detail </a>
+                                <a href="/sales/performasales/${item.id}/${month}/${category}/detail" class="btn btn-primary btn-outline btn-sm" > Detail </a>
                             </div>
                         </div>    
                         

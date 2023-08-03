@@ -927,7 +927,7 @@ Route::middleware('has.role')->prefix('sales')->group(function () {
 
     Route::prefix('performasales')->group(function () {       
         Route::get('', [PerformaSalesController::class, 'index'])->name('performasales.index');  
-        Route::get('/{id}/detail', [PerformaSalesController::class, 'performasalesdetail'])->name('performasales.performasalesdetail');  
+        Route::get('/{id}/{month}/{category}/detail', [PerformaSalesController::class, 'performasalesdetail'])->name('performasales.performasalesdetail');  
         Route::post('/performasales', [PerformaSalesController::class, 'dataperformasales'])->name('performasales.dataperformasales'); 
         Route::post('/grafikperformasales', [PerformaSalesController::class, 'grafikPerformaSales'])->name('performasales.grafikperformasales'); 
 

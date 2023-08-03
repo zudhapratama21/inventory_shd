@@ -170,10 +170,10 @@ class PerformaSalesController extends Controller
     // =====================================================================================================================================
 
 
-    public function performasalesdetail($id)
+    public function performasalesdetail($id,$month,$kategori)
     {
         $title = 'Detail Performa Sales';
-        $kategori = Kategoripesanan::get();
+        $category = Kategoripesanan::get();
 
         for ($i = 1; $i <=12; $i++) {
             $databulan = '1-'.$i.'-2023';
@@ -189,7 +189,9 @@ class PerformaSalesController extends Controller
         return view('sales.performasales.detailperforma.index',[
             'sales_id' => $id,
             'title' => $title,
-            'kategori' => $kategori,
+            'kategori' => $category,
+            'bulan_id' => $month,
+            'kategori_id' => $kategori,
             'bulan' => $months,
             'sales' => $sales
         ]);

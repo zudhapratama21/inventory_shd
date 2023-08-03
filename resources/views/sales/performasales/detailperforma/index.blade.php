@@ -3,6 +3,14 @@
 @section('content')
 <!--begin::Content-->
 <div class="content  d-flex flex-column flex-column-fluid" id="kt_content">
+
+    
+    @if ($bulan_id == 'All')
+        @php
+            $bulan_id = 99;
+        @endphp
+        
+    @endif
     <!--begin::Subheader-->
 
     {{-- GRAFIK PERFORMA SALES --}}
@@ -57,14 +65,18 @@
                                 </div>
                             </div>
 
+                            
+
                             <div class="col-md-6">
                                 <div class="form-group">    
                                     <label for="">Kategori</label>                                                    
                                     <select name="chart_year" class="form-control" id="kt_select2_4" onchange="filteryearkategori()">    
-                                        <option value="All" selected>Semua</option>                                                                    
-                                            @foreach ($kategori as $x)
-                                                <option value="{{$x->id}}">{{$x->nama}}</option>
-                                            @endforeach
+                                        <option value="All" selected>Semua</option>   
+                                        
+                                        @foreach ($kategori as $item)                                           
+                                            <option value="{{$item->id}}">{{$item->nama}}</option>                                                   
+                                        @endforeach                                                             
+                                        
                                     </select>
                                 </div>
                             </div>
@@ -136,13 +148,19 @@
                                     </div>
                                 </div>
 
+                                
                                 <div class="col-md-4">
                                     <div class="form-group">    
                                         <label for="">Bulan</label>                                                    
                                         <select name="chart_year" class="form-control" id="kt_select2_11" onchange="filtercustomermonth()">                               
                                             <option value="All" selected>Semua</option>                                                                        
-                                            @foreach ($bulan as $item)
-                                                <option value="{{$item['id']}}">{{$item['nama']}}</option>
+                                            @foreach ($bulan as $item)                                            
+                                                @if ($item['id'] == $bulan_id)
+                                                    <option value="{{$item['id']}}" selected>{{$item['nama']}}</option>    
+                                                @else 
+                                                    <option value="{{$item['id']}}">{{$item['nama']}}</option>    
+                                                @endif
+                                                
                                             @endforeach
                                         </select>
                                     </div>
@@ -153,8 +171,15 @@
                                         <label for="">Kategori</label>                                                    
                                         <select name="chart_year" class="form-control" id="kt_select2_2" onchange="filtercustomerkategori()"> 
                                             <option value="All" selected>Semua</option> 
-                                                @foreach ($kategori as $x)
-                                                    <option value="{{$x->id}}">{{$x->nama}}</option>
+                                                @foreach ($kategori as $item)
+                                                        @if ($kategori_id !== 'All')
+                                                            @if ($kategori_id == $item->id)
+                                                                <option value="{{$item->id}}" selected>{{$item->nama}}</option>        
+                                                            @else
+                                                                <option value="{{$item->id}}">{{$item->nama}}</option>        
+                                                            @endif                                      
+                                                        @endif  
+                                                       
                                                 @endforeach
                                         </select>
                                     </div>
