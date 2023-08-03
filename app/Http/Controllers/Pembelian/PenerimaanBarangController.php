@@ -475,7 +475,7 @@ class PenerimaanBarangController extends Controller
             $mainStokExp = StokExp::where('tanggal', '=', $tanggal)
                             ->where('product_id', '=', $product_id)
                             ->where('lot',$lot)
-                            ->where('harga_beli',$pesananpembelian->harga_beli)
+                            ->where('harga_beli',$pesananpembelian->hargabeli)
                             ->where('diskon_persen',$pesananpembelian->diskon_persen)
                             ->where('diskon_rupiah',$pesananpembelian->diskon_rp)
                             ->first();
@@ -483,7 +483,7 @@ class PenerimaanBarangController extends Controller
 
             // dd($mainStokExp);
 
-            if ($mainStokExp > 0) {
+            if ($mainStokExp) {
                 //ada data, tinggal update stok
                 // $stokExp = StokExp::where('tanggal', '=', $tanggal)
                 //     ->where('product_id', '=', $product_id)
