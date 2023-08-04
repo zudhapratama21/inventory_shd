@@ -301,9 +301,7 @@
                             <div class="progress-bar" role="progressbar" style="width: ${item.persen}%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div> </br>                           
                         </div>
                         <span class="text-primary">${
-                            if (item.persen == ) {
-                                
-                            }
+                            item.persen
                         }%</span>
                         <hr> 
                         
