@@ -239,7 +239,7 @@
             </tr>
         </table>
         <div style="border: 0.5px solid black;width: 100%;line-height:90%">
-            <p style="font-size:55%;text-align:center"><b>   Pembayaran dapat ditransfer ke Rek  : <b>Bank BCA No.675 088 0809</b> , <b>Bank JATIM No. 066 1000 651</b> a/n PT.BRILIAN SUKSES BERKAH</b></p>
+            <p style="font-size:55%;text-align:center"><b>   Pembayaran dapat ditransfer ke Rek  : <b>Bank BCA No.675 088 0809</b> , <b>Bank JATIM No. 066 1292 229</b> a/n PT.BRILIAN SUKSES BERKAH</b></p>
 
         </div>
 
