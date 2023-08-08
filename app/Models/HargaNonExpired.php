@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class HargaNonExpired extends Model
 {
     use HasFactory,Blameable,SoftDeletes;
-    protected $table = 'Harga_Non_Expired';
+    protected $table = 'harga_non_expired';
 
     protected $fillable = [
         'product_id',
