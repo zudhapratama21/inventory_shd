@@ -525,6 +525,9 @@ class PenerimaanBarangController extends Controller
                 $stokExpDetail->qty = $qty;
                 $stokExpDetail->id_pb = $penerimaanbarang_id;
                 $stokExpDetail->id_pb_detail = $penerimaanbarangdetail_id;
+                $stokExpDetail->harga_beli = $pesananpembelian->hargabeli;
+                $stokExpDetail->diskon_persen_beli = $pesananpembelian->diskon_persen;
+                $stokExpDetail->diskon_rupiah_beli = $pesananpembelian->diskon_rp;
                 $stokExpDetail->save();
 
             }
