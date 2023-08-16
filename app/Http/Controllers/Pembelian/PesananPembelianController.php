@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\PesananPembelianDetail;
 use Barryvdh\DomPDF\Facade as PDF;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 
 class PesananPembelianController extends Controller
@@ -100,81 +101,89 @@ class PesananPembelianController extends Controller
             'komoditas_id' => ['required'],
             'kategoripesanan_id' => ['required'],
         ]);
-
         $datas = $request->all();
+        DB::beginTransaction();
+        try {
+            $subtotal = TempPo::where('user_id', '=', Auth::user()->id)->sum('total');
+            $ongkir = TempPo::where('user_id', '=', Auth::user()->id)->sum('ongkir');
+            $diskon = TempDiskon::where('jenis', '=', "PO")
+                ->where('user_id', '=', Auth::user()->id)
+                ->get()->first();
+                
+            $diskon_persen = $diskon->persen;
+            $diskon_rupiah = $diskon->rupiah;
+    
+            $total_diskon = ($subtotal * ($diskon_persen / 100)) + $diskon_rupiah;
+            $total_diskon_header = $total_diskon;
+            $total_diskon_detail = TempPo::where('user_id', '=', Auth::user()->id)->sum('total_diskon');
+    
+            $total = $subtotal - $total_diskon + $ongkir;
+    
+            $ppnData = TempPpn::where('jenis', '=', "PO")
+                ->where('user_id', '=', Auth::user()->id)
+                ->get()->first();
+            $ppn_persen = $ppnData->persen;
+            $ppn = $total * ($ppn_persen / 100);        
+            $grandtotal = $total + $ppn;
+    
+            $tanggal = $request->tanggal;
+            if ($tanggal <> null) {
+                $tanggal = Carbon::createFromFormat('d-m-Y', $tanggal)->format('Y-m-d');
+            }
+    
+            $dataTemp = TempPo::where('user_id', '=', Auth::user()->id)->get();
+            $jmlTemp = $dataTemp->count();
+            if ($jmlTemp < 1) {
+                return redirect()->route('pesananpembelian.index')->with('gagal', 'Tidak ada barang yang diinputkan, Pesanan Pembelian Gagal Disimpan!');
+            }
+    
+            $datas['kode'] = $this->getKodeTransaksi("pesanan_pembelians", "PO");
+            $datas['tanggal'] = $tanggal;
+            $datas['status_po_id'] = "1";
+            $datas['diskon_persen'] = $diskon_persen;
+            $datas['diskon_rupiah'] = $diskon_rupiah;
+            $datas['subtotal'] = $subtotal;
+            $datas['total_diskon_header'] = $total_diskon_header;
+            $datas['total_diskon_detail'] = $total_diskon_detail;
+            $datas['total'] =  $total;
+            $datas['ppn'] = $ppn_persen;
+            $datas['ongkir'] = $ongkir;
+            $datas['grandtotal'] = $grandtotal;
+            $datas['no_so_customer'] = $request->no_so_customer;
+    
+            $id_po = PesananPembelian::create($datas)->id;
+    
+            //insert detail
+            foreach ($dataTemp as $a) {
+    
+                $detail = new PesananPembelianDetail;
+                $detail->pesanan_pembelian_id = $id_po;
+                $detail->tanggal = $tanggal;
+                $detail->product_id = $a->product_id;
+                $detail->qty = $a->qty;
+                $detail->qty_sisa = $a->qty;
+                $detail->satuan = $a->satuan;
+                $detail->hargabeli = $a->hargabeli;
+                $detail->diskon_persen = $a->diskon_persen;
+                $detail->diskon_rp = $a->diskon_rp;
+                $detail->subtotal = $a->subtotal;
+                $detail->total_diskon = $a->total_diskon;
+                $detail->total = $a->total;
+                $detail->ongkir = $a->ongkir;
+                $detail->keterangan = $a->keterangan;
+                $detail->save();
+                
+            }
+            DB::commit();
+    
+            return redirect()->route('pesananpembelian.index')->with('status', 'Pesanan Pembelian (Purchase Order) berhasil dibuat !');
 
-        $subtotal = TempPo::where('user_id', '=', Auth::user()->id)->sum('total');
-        $ongkir = TempPo::where('user_id', '=', Auth::user()->id)->sum('ongkir');
-        $diskon = TempDiskon::where('jenis', '=', "PO")
-            ->where('user_id', '=', Auth::user()->id)
-            ->get()->first();
-            
-        $diskon_persen = $diskon->persen;
-        $diskon_rupiah = $diskon->rupiah;
-
-        $total_diskon = ($subtotal * ($diskon_persen / 100)) + $diskon_rupiah;
-        $total_diskon_header = $total_diskon;
-        $total_diskon_detail = TempPo::where('user_id', '=', Auth::user()->id)->sum('total_diskon');
-
-        $total = $subtotal - $total_diskon + $ongkir;
-
-        $ppnData = TempPpn::where('jenis', '=', "PO")
-            ->where('user_id', '=', Auth::user()->id)
-            ->get()->first();
-        $ppn_persen = $ppnData->persen;
-        $ppn = $total * ($ppn_persen / 100);        
-        $grandtotal = $total + $ppn;
-
-        $tanggal = $request->tanggal;
-        if ($tanggal <> null) {
-            $tanggal = Carbon::createFromFormat('d-m-Y', $tanggal)->format('Y-m-d');
+        } catch (Exception $th) {
+            DB::rollBack();
+            return redirect()->route('pesananpembelian.index')->with('error',$th->getMessage());
         }
 
-        $dataTemp = TempPo::where('user_id', '=', Auth::user()->id)->get();
-        $jmlTemp = $dataTemp->count();
-        if ($jmlTemp < 1) {
-            return redirect()->route('pesananpembelian.index')->with('gagal', 'Tidak ada barang yang diinputkan, Pesanan Pembelian Gagal Disimpan!');
-        }
-
-        $datas['kode'] = $this->getKodeTransaksi("pesanan_pembelians", "PO");
-        $datas['tanggal'] = $tanggal;
-        $datas['status_po_id'] = "1";
-        $datas['diskon_persen'] = $diskon_persen;
-        $datas['diskon_rupiah'] = $diskon_rupiah;
-        $datas['subtotal'] = $subtotal;
-        $datas['total_diskon_header'] = $total_diskon_header;
-        $datas['total_diskon_detail'] = $total_diskon_detail;
-        $datas['total'] =  $total;
-        $datas['ppn'] = $ppn_persen;
-        $datas['ongkir'] = $ongkir;
-        $datas['grandtotal'] = $grandtotal;
-        $datas['no_so_customer'] = $request->no_so_customer;
-
-        $id_po = PesananPembelian::create($datas)->id;
-
-        //insert detail
-        foreach ($dataTemp as $a) {
-
-            $detail = new PesananPembelianDetail;
-            $detail->pesanan_pembelian_id = $id_po;
-            $detail->tanggal = $tanggal;
-            $detail->product_id = $a->product_id;
-            $detail->qty = $a->qty;
-            $detail->qty_sisa = $a->qty;
-            $detail->satuan = $a->satuan;
-            $detail->hargabeli = $a->hargabeli;
-            $detail->diskon_persen = $a->diskon_persen;
-            $detail->diskon_rp = $a->diskon_rp;
-            $detail->subtotal = $a->subtotal;
-            $detail->total_diskon = $a->total_diskon;
-            $detail->total = $a->total;
-            $detail->ongkir = $a->ongkir;
-            $detail->keterangan = $a->keterangan;
-            $detail->save();
-            
-        }
-
-        return redirect()->route('pesananpembelian.index')->with('status', 'Pesanan Pembelian (Purchase Order) berhasil dibuat !');
+       
     }
 
     public function caribarang()
@@ -628,6 +637,7 @@ class PesananPembelianController extends Controller
 
     public function inputPesananDetail(Request $request)
     {
+       
         $datas = $request->all();
         $id = $request->pesanan_pembelian_id; 
 

@@ -19,6 +19,8 @@ use App\Models\FakturPembelianDetail;
 use App\Models\PenerimaanBarangDetail;
 use App\Models\PesananPembelianDetail;
 use App\Models\TempBiaya;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class FakturPembelianController extends Controller
 {
@@ -218,119 +220,127 @@ class FakturPembelianController extends Controller
         $biaya = TempBiaya::where('jenis', '=', "FB")
                 ->where('user_id', '=', Auth::user()->id)
                 ->first();
+        
+        DB::beginTransaction();
+        try {
+            $biayalainlain = $biaya->rupiah;
 
-
-        $biayalainlain = $biaya->rupiah;
-
-        if ($tanggal <> null) {
-            $tanggal = Carbon::createFromFormat('d-m-Y', $tanggal)->format('Y-m-d');
-        }
-
-        $kode = $this->getKodeTransaksi("faktur_pembelians", "FB");
-        $id_pb = $penerimaanbarang->id;
-        $id_po = $penerimaanbarang->pesanan_pembelian_id;
-
-        $tanggalPenerimaan = $penerimaanbarang->tanggal;
-        $pembelian = PesananPembelian::where('id',$id_po)->first();
-
-        $tanggal_top = date("Y-m-d", strtotime("+".$pembelian->top." days" . $tanggalPenerimaan));    
-
-        //start cek status exp date PB :
-        $PBdetails = PenerimaanBarangDetail::where('penerimaan_barang_id', '=', $id_pb)->get();
-        $status_exp_pb = 1;
-        foreach ($PBdetails as $s) {
-            if ($s->status_exp == 0) {
-                $status_exp_pb = 0;
+            if ($tanggal <> null) {
+                $tanggal = Carbon::createFromFormat('d-m-Y', $tanggal)->format('Y-m-d');
             }
+    
+            $kode = $this->getKodeTransaksi("faktur_pembelians", "FB");
+            $id_pb = $penerimaanbarang->id;
+            $id_po = $penerimaanbarang->pesanan_pembelian_id;
+    
+            $tanggalPenerimaan = $penerimaanbarang->tanggal;
+            $pembelian = PesananPembelian::where('id',$id_po)->first();
+    
+            $tanggal_top = date("Y-m-d", strtotime("+".$pembelian->top." days" . $tanggalPenerimaan));    
+    
+            //start cek status exp date PB :
+            $PBdetails = PenerimaanBarangDetail::where('penerimaan_barang_id', '=', $id_pb)->get();
+            $status_exp_pb = 1;
+            foreach ($PBdetails as $s) {
+                if ($s->status_exp == 0) {
+                    $status_exp_pb = 0;
+                }
+            }
+            if ($status_exp_pb == 0) {
+                return redirect()->route('fakturpembelian.listpb')->with('gagal', 'Terdapat Penerimaan Barang Yang Belum Diinputkan Exp. Date! Silahkah hubungi bagian Logistik untuk menginputnya !');
+            }
+            // end cek status exp date PB
+    
+            $POdata = PesananPembelian::find($id_po);
+            $ppn_po = $POdata->ppn;
+            $diskon_rupiah_po = $POdata->diskon_rupiah;
+            $diskon_persen_po = $POdata->diskon_persen;
+    
+            $FBdetails = TempFakturpos::where('penerimaan_barang_id', '=', $id_pb)
+                ->where('user_id', '=', Auth::user()->id)->get();
+            $subtotal_header = TempFakturpos::where('penerimaan_barang_id', '=', $id_pb)
+                ->where('user_id', '=', Auth::user()->id)->sum('total');
+            //$subtotal_header = $total_det;
+            $ongkir_header = TempFakturpos::where('penerimaan_barang_id', '=', $id_pb)
+                ->where('user_id', '=', Auth::user()->id)->sum('ongkir');
+    
+            $total_diskon_detail = TempFakturpos::where('penerimaan_barang_id', '=', $id_pb)
+                ->where('user_id', '=', Auth::user()->id)->sum('total_diskon');
+    
+            $total_diskon_header = ($subtotal_header * ($diskon_persen_po / 100)) + $diskon_rupiah_po;
+            $total_header = $subtotal_header - $total_diskon_header;
+            $ppn_header = round(($total_header * ($ppn_po / 100)), 2);
+            $grandtotal_header = $total_header + $ppn_header + $ongkir_header + $biayalainlain ;
+    
+            $datas['kode'] = $kode;
+            $datas['tanggal'] = $tanggal;
+            $datas['supplier_id'] = $penerimaanbarang->supplier_id;
+            $datas['pesanan_pembelian_id'] = $id_po;
+            $datas['penerimaan_barang_id'] = $id_pb;
+            $datas['status_fakturpo_id'] = "1";
+            $datas['keterangan'] = $request->keterangan;
+            $datas['diskon_rupiah'] = $diskon_rupiah_po;
+            $datas['diskon_persen'] = $diskon_persen_po;
+            $datas['subtotal'] = $subtotal_header;
+            $datas['total_diskon_detail'] = $total_diskon_detail;
+            $datas['total_diskon_header'] = $total_diskon_header;
+            $datas['total'] = $total_header;
+            $datas['grandtotal'] = $grandtotal_header;
+            $datas['ppn'] = $ppn_header;
+            $datas['ongkir'] = $ongkir_header;
+            $datas['biaya_lain'] = $biayalainlain;
+            $datas['no_faktur_supplier'] = $request->no_faktur_supplier;
+            $idFaktur = FakturPembelian::create($datas)->id;
+    
+            //$ongkir_header = $ongkir_det;
+            foreach ($FBdetails as $pb) {
+                $detil = new FakturPembelianDetail;
+                $detil->faktur_pembelian_id = $idFaktur;
+                $detil->penerimaan_barang_detail_id = $pb->penerimaan_barang_detail_id;
+                $detil->product_id = $pb->product_id;
+                $detil->qty = $pb->qty;
+                $detil->satuan = $pb->satuan;
+                $detil->hargabeli = $pb->hargabeli;
+                $detil->diskon_persen = $pb->diskon_persen;
+                $detil->diskon_rp = $pb->diskon_rp;
+                $detil->subtotal = $pb->subtotal;
+                $detil->total_diskon = $pb->total_diskon;
+                $detil->total = $pb->total;
+                $detil->ongkir = $pb->ongkir;
+                $detil->keterangan = $pb->keterangan;
+                $detil->save();
+            }
+            
+            #################### update Status PB ##################
+            $dataPB = PenerimaanBarang::find($id_pb);
+            $dataPB->status_pb_id = "2";
+            $dataPB->save();
+            #################### END update status PB ##############
+            #################### update Hutang ##################
+            $hutang = new Hutang;
+            $hutang->tanggal = $tanggal;
+            $hutang->supplier_id = $penerimaanbarang->supplier_id;
+            $hutang->pesanan_pembelian_id = $id_po;
+            $hutang->penerimaan_barang_id = $id_pb;
+            $hutang->faktur_pembelian_id = $idFaktur;
+            $hutang->dpp = $total_header;
+            $hutang->ppn = $ppn_header;
+            $hutang->total = $grandtotal_header;
+            $hutang->dibayar = "0";
+            $hutang->status = "1"; //1 = belum lunas ; 2= lunas
+            $hutang->tanggal_top = $tanggal_top;
+            $hutang->save();
+            #################### end update Hutang ##################
+            DB::commit();
+    
+            return redirect()->route('fakturpembelian.index')->with('status', 'Faktur Pembelian berhasil dibuat !');
+            
+        } catch (Exception $th) {
+            DB::rollBack();
+            return redirect()->route('fakturpembelian.index')->with('gagal',$th->getMessage());
         }
-        if ($status_exp_pb == 0) {
-            return redirect()->route('fakturpembelian.listpb')->with('gagal', 'Terdapat Penerimaan Barang Yang Belum Diinputkan Exp. Date! Silahkah hubungi bagian Logistik untuk menginputnya !');
-        }
-        // end cek status exp date PB
 
-        $POdata = PesananPembelian::find($id_po);
-        $ppn_po = $POdata->ppn;
-        $diskon_rupiah_po = $POdata->diskon_rupiah;
-        $diskon_persen_po = $POdata->diskon_persen;
-
-        $FBdetails = TempFakturpos::where('penerimaan_barang_id', '=', $id_pb)
-            ->where('user_id', '=', Auth::user()->id)->get();
-        $subtotal_header = TempFakturpos::where('penerimaan_barang_id', '=', $id_pb)
-            ->where('user_id', '=', Auth::user()->id)->sum('total');
-        //$subtotal_header = $total_det;
-        $ongkir_header = TempFakturpos::where('penerimaan_barang_id', '=', $id_pb)
-            ->where('user_id', '=', Auth::user()->id)->sum('ongkir');
-
-        $total_diskon_detail = TempFakturpos::where('penerimaan_barang_id', '=', $id_pb)
-            ->where('user_id', '=', Auth::user()->id)->sum('total_diskon');
-
-        $total_diskon_header = ($subtotal_header * ($diskon_persen_po / 100)) + $diskon_rupiah_po;
-        $total_header = $subtotal_header - $total_diskon_header;
-        $ppn_header = round(($total_header * ($ppn_po / 100)), 2);
-        $grandtotal_header = $total_header + $ppn_header + $ongkir_header + $biayalainlain ;
-
-        $datas['kode'] = $kode;
-        $datas['tanggal'] = $tanggal;
-        $datas['supplier_id'] = $penerimaanbarang->supplier_id;
-        $datas['pesanan_pembelian_id'] = $id_po;
-        $datas['penerimaan_barang_id'] = $id_pb;
-        $datas['status_fakturpo_id'] = "1";
-        $datas['keterangan'] = $request->keterangan;
-        $datas['diskon_rupiah'] = $diskon_rupiah_po;
-        $datas['diskon_persen'] = $diskon_persen_po;
-        $datas['subtotal'] = $subtotal_header;
-        $datas['total_diskon_detail'] = $total_diskon_detail;
-        $datas['total_diskon_header'] = $total_diskon_header;
-        $datas['total'] = $total_header;
-        $datas['grandtotal'] = $grandtotal_header;
-        $datas['ppn'] = $ppn_header;
-        $datas['ongkir'] = $ongkir_header;
-        $datas['biaya_lain'] = $biayalainlain;
-        $datas['no_faktur_supplier'] = $request->no_faktur_supplier;
-        $idFaktur = FakturPembelian::create($datas)->id;
-
-        //$ongkir_header = $ongkir_det;
-        foreach ($FBdetails as $pb) {
-            $detil = new FakturPembelianDetail;
-            $detil->faktur_pembelian_id = $idFaktur;
-            $detil->penerimaan_barang_detail_id = $pb->penerimaan_barang_detail_id;
-            $detil->product_id = $pb->product_id;
-            $detil->qty = $pb->qty;
-            $detil->satuan = $pb->satuan;
-            $detil->hargabeli = $pb->hargabeli;
-            $detil->diskon_persen = $pb->diskon_persen;
-            $detil->diskon_rp = $pb->diskon_rp;
-            $detil->subtotal = $pb->subtotal;
-            $detil->total_diskon = $pb->total_diskon;
-            $detil->total = $pb->total;
-            $detil->ongkir = $pb->ongkir;
-            $detil->keterangan = $pb->keterangan;
-            $detil->save();
-        }
-        
-        #################### update Status PB ##################
-        $dataPB = PenerimaanBarang::find($id_pb);
-        $dataPB->status_pb_id = "2";
-        $dataPB->save();
-        #################### END update status PB ##############
-        #################### update Hutang ##################
-        $hutang = new Hutang;
-        $hutang->tanggal = $tanggal;
-        $hutang->supplier_id = $penerimaanbarang->supplier_id;
-        $hutang->pesanan_pembelian_id = $id_po;
-        $hutang->penerimaan_barang_id = $id_pb;
-        $hutang->faktur_pembelian_id = $idFaktur;
-        $hutang->dpp = $total_header;
-        $hutang->ppn = $ppn_header;
-        $hutang->total = $grandtotal_header;
-        $hutang->dibayar = "0";
-        $hutang->status = "1"; //1 = belum lunas ; 2= lunas
-        $hutang->tanggal_top = $tanggal_top;
-        $hutang->save();
-        #################### end update Hutang ##################
-        
-
-        return redirect()->route('fakturpembelian.index')->with('status', 'Faktur Pembelian berhasil dibuat !');
+       
     }
 
     public function delete(Request $request)

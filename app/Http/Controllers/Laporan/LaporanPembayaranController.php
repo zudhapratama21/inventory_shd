@@ -174,18 +174,18 @@ class LaporanPembayaranController extends Controller
 
         if ($data['tgl1']) {            
             if (!$data['tgl2']) {
-                $tanggalFilter=$pembayaran->where('p.tanggal','>=',$tgl1);
+                $tanggalFilter=$pembayaran->where('h.tanggal','>=',$tgl1);
                                 
             }else{
-                $tanggalFilter=$pembayaran->where('p.tanggal','>=',$tgl1)
-                                ->where('p.tanggal','<=',$tgl2);
+                $tanggalFilter=$pembayaran->where('h.tanggal','>=',$tgl1)
+                                ->where('h.tanggal','<=',$tgl2);
             }
         }elseif($data['tgl2']){
             if (!$data['tgl1']) {
-                $tanggalFilter=$pembayaran->where('p.tanggal','<=',$tgl2);
+                $tanggalFilter=$pembayaran->where('h.tanggal','<=',$tgl2);
             }else{
-                $tanggalFilter=$pembayaran->where('p.tanggal','>=',$tgl1)
-                                ->where('p.tanggal','<=',$tgl2);
+                $tanggalFilter=$pembayaran->where('h.tanggal','>=',$tgl1)
+                                ->where('h.tanggal','<=',$tgl2);
             }
         }else{
             $tanggalFilter = $pembayaran;
