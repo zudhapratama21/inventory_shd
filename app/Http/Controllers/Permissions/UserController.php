@@ -72,6 +72,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'email_verfied_at' => now()->format('Y-m-d H:i:s')
         ]);
         $insertedId = $user->id;
         $user->assignRole($request->role_id);
