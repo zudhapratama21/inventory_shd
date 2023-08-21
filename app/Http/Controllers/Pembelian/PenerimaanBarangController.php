@@ -657,8 +657,8 @@ class PenerimaanBarangController extends Controller
                 $product->stok = $stok - $a->qty;
                 $product->save();
 
-                $pesananPembelianDetail = PesananPembelianDetail::where('pesanan_pembelian_id',$a->pesanan_pembelian_detail_id)->first();
-                $pesananpembelian = PesananPembelian::where('pesanan_pembelian_id',$pesananPembelianDetail->id)->first();
+                $pesananPembelianDetail = PesananPembelianDetail::where('id',$a->pesanan_pembelian_detail_id)->first();
+                $pesananpembelian = PesananPembelian::where('id',$pesananPembelianDetail->pesanan_pembelian_id)->first();
                 $harganonexpired = HargaNonExpired::where('harga_beli',$pesananPembelianDetail->hargabeli)
                                                   ->where('product_id',$pesananPembelianDetail->product_id)
                                                   ->where('diskon_persen_beli',$pesananPembelianDetail->diskon_persen)
