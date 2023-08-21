@@ -625,9 +625,9 @@ class PenerimaanBarangController extends Controller
 
     public function destroy(Request $request)
     {
-        // DB::beginTransaction();
+        DB::beginTransaction();
 
-        // try {
+        try {
             $tglNow = Carbon::now()->format('Y-m-d');
             $id = $request->id;
             $penerimaanbarang = PenerimaanBarang::find($id);
@@ -657,7 +657,7 @@ class PenerimaanBarangController extends Controller
                 $product->stok = $stok - $a->qty;
                 $product->save();
 
-                $pesananPembelianDetail = PesananPembelianDetail::where($a->pesanan_pembelian_detail_id)->first();
+                $pesananPembelianDetail = PesananPembelianDetail::where('pesanana_pembelian_id',$a->pesanan_pembelian_detail_id)->first();
                 $pesananpembelian = PesananPembelian::where('pesanan_pembelian_id',$pesananPembelianDetail->id)->first();
                 $harganonexpired = HargaNonExpired::where('harga_beli',$pesananPembelianDetail->hargabeli)
                                                   ->where('product_id',$pesananPembelianDetail->product_id)
@@ -723,12 +723,12 @@ class PenerimaanBarangController extends Controller
             $POmain->save();
             //############# end update status PO #############    
 
-            // DB::commit();
+            DB::commit();
             return redirect()->route('penerimaanbarang.index')->with('status', 'Data Penerimaan Barang Berhasil Dihapus !');
-        // } catch (Exception $th) {
-        //     DB::rollBack();
-        //     return redirect()->route('penerimaanbarang.index')->with('gagal',$th->getMessage());
-        // }
+        } catch (Exception $th) {
+            DB::rollBack();
+            return redirect()->route('penerimaanbarang.index')->with('gagal',$th->getMessage());
+        }
         
        
     }
