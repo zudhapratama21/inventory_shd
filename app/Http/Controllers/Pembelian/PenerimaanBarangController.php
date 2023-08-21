@@ -666,6 +666,17 @@ class PenerimaanBarangController extends Controller
                                                   ->where('supplier_id',$pesananpembelian->supplier_id)
                                                   ->first();
 
+                if ($harganonexpired->qty < $a->qty) {
+                    return redirect()->route('penerimaanbarang.index')->with('gagal','Barang '.$product->nama.' telah dilakukan penjualan  , silahkan hapus surat jalan terlebih dahulu');   
+                }else{
+                    $stokNonExpired = $harganonexpired->qty - $a->qty;
+                    
+                    $harganonexpired->update([
+                        'qty' => $stokNonExpired
+                    ]);                   
+                    
+                }
+
                 
                 $pesanan_pembelian_detail_id = $a->pesanan_pembelian_detail_id;
                 $stok_baru = $stok - $a->qty;
@@ -712,11 +723,11 @@ class PenerimaanBarangController extends Controller
             $POmain->save();
             //############# end update status PO #############    
 
-        DB::commit();
-        return redirect()->route('penerimaanbarang.index')->with('status', 'Data Penerimaan Barang Berhasil Dihapus !');
+            DB::commit();
+            return redirect()->route('penerimaanbarang.index')->with('status', 'Data Penerimaan Barang Berhasil Dihapus !');
         } catch (Exception $th) {
             DB::rollBack();
-            return redirect()->route('penerimaanbarang.index')->with('error',$th->getMessage());
+            return redirect()->route('penerimaanbarang.index')->with('gagal',$th->getMessage());
         }
         
        
@@ -769,15 +780,6 @@ class PenerimaanBarangController extends Controller
 
         $pdf = PDF::loadView('pembelian.penerimaanbarang.print_a5', $data)->setPaper('a5', 'landscape');;
         return $pdf->download($penerimaanbarang->kode.'.pdf');
-
-        // return view('pembelian.penerimaanbarang.print_a5', compact(
-        //     'title',  
-        //     'totalPage',
-        //     'perBaris',
-        //     'listExp' ,
-        //     'penerimaanbarang' ,
-        //     'penerimaanbarangdetail' 
-        // ));
     }
 
     
