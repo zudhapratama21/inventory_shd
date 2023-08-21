@@ -662,7 +662,7 @@ class PenerimaanBarangController extends Controller
                 $harganonexpired = HargaNonExpired::where('harga_beli',$pesananPembelianDetail->hargabeli)
                                                   ->where('product_id',$pesananPembelianDetail->product_id)
                                                   ->where('diskon_persen',$pesananPembelianDetail->diskon_persen)
-                                                  ->where('diskon_rupiah'.$pesananPembelianDetail->diskon_rp)
+                                                  ->where('diskon_rupiah',$pesananPembelianDetail->diskon_rp)
                                                   ->where('supplier_id',$pesananpembelian->supplier_id)
                                                   ->first();
 
