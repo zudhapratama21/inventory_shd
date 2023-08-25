@@ -450,6 +450,7 @@ class FakturPenjualanController extends Controller
         try {
              // ambil data dari temp     
              $fj = FakturPenjualan::where('id',$id)->first();
+             $tanggal = $request->tanggal;
 
             // ubah status menjadi aktif
             $pajak = NoFakturPajak::where('id',$fj->pajak_id)->update([
@@ -476,6 +477,10 @@ class FakturPenjualanController extends Controller
                 $grandtotal = $fj->grandtotal;
                 $rupiah = $fj->biaya_lain;
             }
+
+            if ($tanggal <> null) {
+                $tanggal = Carbon::createFromFormat('d-m-Y', $tanggal)->format('Y-m-d');
+            }
                      
             $fj->update([
                 'grandtotal' => $grandtotal,
@@ -483,7 +488,8 @@ class FakturPenjualanController extends Controller
                 'pajak_id' => $request->pajak_id,
                 'biaya_lain'  => $rupiah,
                 'no_seri_pajak' => $request->no_seri_pajak,
-                'no_pajak' => $pajak->no_pajak
+                'no_pajak' => $pajak->no_pajak,
+                'tanggal' => $tanggal
             ]);
 
              // ubah status menjadi aktif
@@ -498,6 +504,7 @@ class FakturPenjualanController extends Controller
 
             return redirect()->route('fakturpenjualan.index')->with('status', 'Faktur Penjualan berhasil diubah!');
         } catch (Exception $th) {
+            DB::rollBack();
             return redirect()->route('fakturpenjualan.index')->with('error', $th->getMessage());
         }
        
