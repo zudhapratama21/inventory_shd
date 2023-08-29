@@ -47,7 +47,7 @@
             <td width="40%" style="vertical-align: top; text-align: left; font-family: sans-serif">
                 <table >
                     <tr style="padding:0px;">
-                        <td style="padding:0px;font-size: 70%; " colspan="3"><br />Surabaya, 
+                        <td style="padding:0px;font-size: 70%; " colspan="3"><br />Sidoarjo, 
                            {{$pesananpenjualan->tanggal->format('d F Y')}}
                         </td>                            
                     </tr>
