@@ -669,16 +669,19 @@ class PenerimaanBarangController extends Controller
                                                   ->where('supplier_id',$pesananpembelian->supplier_id)
                                                   ->first();
 
-                if ($harganonexpired->qty < $a->qty) {
-                    return redirect()->route('penerimaanbarang.index')->with('gagal','Barang '.$product->nama.' telah dilakukan penjualan  , silahkan hapus surat jalan terlebih dahulu');   
-                }else{
-                    $stokNonExpired = $harganonexpired->qty - $a->qty;
-                    
-                    $harganonexpired->update([
-                        'qty' => $stokNonExpired
-                    ]);                   
-                    
+                if ($harganonexpired->qty) {
+                    if ($harganonexpired->qty < $a->qty) {
+                        return redirect()->route('penerimaanbarang.index')->with('gagal','Barang '.$product->nama.' telah dilakukan penjualan  , silahkan hapus surat jalan terlebih dahulu');   
+                    }else{
+                        $stokNonExpired = $harganonexpired->qty - $a->qty;
+                        
+                        $harganonexpired->update([
+                            'qty' => $stokNonExpired
+                        ]);                   
+                        
+                    }
                 }
+                
 
                 
                 $pesanan_pembelian_detail_id = $a->pesanan_pembelian_detail_id;
