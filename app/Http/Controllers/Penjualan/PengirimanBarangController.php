@@ -285,6 +285,7 @@ class PengirimanBarangController extends Controller
             $stok_lama = $product->stok;
             $hpp = $product->hpp;
             $status_exp = $product->status_exp;
+
             if ($status_exp == 1) {
                 $status_exp_detil = 0;
             } else {
