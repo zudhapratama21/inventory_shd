@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Laporan;
 use App\Exports\LaporanKartuStok;
 use App\Exports\LaporanStockExport;
 use App\Exports\LaporanStokExp;
+use App\Exports\SyncronisasiDataExpired;
+use App\Exports\SyncronisasiDataNonExpired;
 use Carbon\Carbon;
 use App\Models\Product;
 use App\Models\StokExp;
@@ -200,10 +202,8 @@ class LaporanStokController extends Controller
 
     public function exportkartustok(Request $request)
     {
-
         $id = $request->product_id;
         $now = Carbon::parse(now())->format('Y-m-d');
-
         return Excel::download(new LaporanKartuStok($id), 'laporankartustock-'.$now.'.xlsx');
     }
 
@@ -212,5 +212,13 @@ class LaporanStokController extends Controller
         $now = Carbon::parse(now())->format('Y-m-d');
 
         return Excel::download(new LaporanStokExp($request->all()), 'laporanstockexpired-'.$now.'.xlsx');
+    }
+
+    public function getdataexp(){
+        return Excel::download(new SyncronisasiDataExpired(), 'laporanstockexpired.xlsx'); 
+    }
+
+    public function getdatanonexp(){
+        return Excel::download(new SyncronisasiDataNonExpired(), 'laporanstocknonexpired.xlsx'); 
     }
 }

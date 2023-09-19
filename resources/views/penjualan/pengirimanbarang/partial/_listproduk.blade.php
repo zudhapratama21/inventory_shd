@@ -50,12 +50,12 @@
                                             </g>
                                         </svg>
                                         <!--end::Svg Icon--></span> </span>
-                                <h3 class="card-label">Atur Expired Date</h3>
+                                <h3 class="card-label">Stok Produk Yang Tersedia</h3>
                             </div>
                             <div class="card-toolbar">
                                 <!--begin::Button-->
 
-                                <a href="{{ route('pengirimanbarang.index') }}"
+                                <a href="{{ route('pengirimanbarang.setexp', $pengirimanbarangdetail) }}"
                                     class="btn btn-danger font-weight-bolder ">
                                     <i class="flaticon2-fast-back"></i>
                                     Back
@@ -68,45 +68,31 @@
                             <table class="table yajra-datatable collapsed ">
                                 <thead class="datatable-head">
                                     <tr>
-                                        <th style="width: 10%">Kode barang</th>
-                                        <th>Nama Barang</th>
-                                        <th style="width: 5%">Satuan</th>
-                                        <th style="width: 5%">Qty Diterima</th>
-                                        <th style="width: 5%">Status</th>
+                                        <th>Supplier</th>
+                                        <th>Harga Beli</th>
+                                        <th>Diskon(%) Beli</th>
+                                        <th>Diskon(Rp) Beli</th>
+                                        <th style="width: 15%">Qty</th>
                                         <th style="width: 10%">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($detailItem as $item)
+                                    @foreach ($stokProduk as $item)
                                     <tr>
-                                        <td>{{ $item->products->kode }}</td>
-                                        <td>{{ $item->products->nama }}</td>
-                                        <td>{{ $item->satuan }}</td>
-                                        <td>{{ $item->qty }}</td>
-                                        <td>
-                                            @if($item->status_exp == 1)
-                                            <span class="label label-success label-pill label-inline mr-2">Done</span>
-                                            @else
-                                            <span
-                                                class="label label-warning label-pill label-inline mr-2">Pending</span>
-                                            @endif
-                                        </td>
+                                        <th>{{$item->supplier ? $item->supplier->nama : '-'}}</th>
+                                        <th>{{$item->harga_beli}}</th>
+                                        <th>{{$item->diskon_persen}}</th>
+                                        <th>{{$item->diskon_rupiah}}</th>
+                                        <td>{{$item->qty}}</td>
                                         <td>
                                             <div style="text-align:center;">
                                                 <div class="d-flex flex-nowrap">
 
                                                     @can('pengirimanbarang-create')
-                                                        @if ($item->products->status_exp == 1)
-                                                            <a href="{{ route('pengirimanbarang.setexp', $item) }}"
-                                                                class="btn btn-success btn-sm">
-                                                                <i class="flaticon2-check-mark"></i> Pilih
-                                                            </a>
-                                                        @else
-                                                            <a href="{{ route('pengirimanbarang.setproduk', $item) }}"
-                                                                class="btn btn-success btn-sm">
-                                                                <i class="flaticon2-check-mark"></i> Pilih
-                                                            </a>
-                                                        @endif                                                    
+                                                    <a href="{{ route('pengirimanbarang.formsetproduk', ['stokproduk'=>$item,'pengirimanbarangdetail'=> $pengirimanbarangdetail]) }}"
+                                                        class="btn btn-success btn-sm">
+                                                        <i class="flaticon2-check-mark"></i> Pilih
+                                                    </a>
                                                     @endcan
                                                 </div>
                                             </div>

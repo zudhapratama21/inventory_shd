@@ -20,7 +20,8 @@ class StokExp extends Model
         'ppn',
         'harga_beli',
         'diskon_persen',
-        'diskon_rupiah'
+        'diskon_rupiah',
+        'supplier_id'
     ];
 
     protected $dates = ['tanggal'];
@@ -29,10 +30,15 @@ class StokExp extends Model
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
-
    
     public function stokExpDetail()
     {
         return $this->hasMany(StokExpDetail::class, 'stok_exp_id', 'id');
     }
+   
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class, 'supplier_id', 'id');
+    }
+
 }

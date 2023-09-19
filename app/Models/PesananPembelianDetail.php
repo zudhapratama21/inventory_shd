@@ -38,4 +38,10 @@ class PesananPembelianDetail extends Model
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
+
+    
+    public function pesananpembelian()
+    {
+        return $this->belongsTo(PesananPembelian::class, 'pesanan_pembelian_id', 'id');
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Penjualan;
 
+use App\Exports\SyncronisasiDataExport;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade as PDF;
 use App\Models\TempSj;
@@ -16,10 +17,13 @@ use App\Models\PesananPenjualan;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\HargaNonExpired;
+use App\Models\HargaNonExpiredDetail;
 use App\Models\InventoryTransaction;
 use Illuminate\Support\Facades\Auth;
 use App\Models\PengirimanBarangDetail;
 use App\Models\PesananPenjualanDetail;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PengirimanBarangController extends Controller
 {
@@ -286,11 +290,11 @@ class PengirimanBarangController extends Controller
             $hpp = $product->hpp;
             $status_exp = $product->status_exp;
 
-            if ($status_exp == 1) {
-                $status_exp_detil = 0;
-            } else {
-                $status_exp_detil = 1;
-            }
+            // if ($status_exp == 1) {
+            //     $status_exp_detil = 0;
+            // } else {
+            //     $status_exp_detil = 1;
+            // }
 
             $stok_baru = $stok_lama - $a->qty;
             $product->stok = $stok_baru;
@@ -309,7 +313,7 @@ class PengirimanBarangController extends Controller
             $detail->qty_pesanan = $a->qty_pesanan;
             $detail->satuan = $a->satuan;
             $detail->keterangan = $a->keterangan;
-            $detail->status_exp = $status_exp_detil;
+            $detail->status_exp = 0;
             $detail->save();
             // ########## end input detail #############
 
@@ -366,8 +370,7 @@ class PengirimanBarangController extends Controller
     {
         $title = "Pengaturan Expired Date";
         $pengirimanbarang_id =  $pengirimanbarang->id;
-        $detailItem = PengirimanBarangDetail::where('pengiriman_barang_id', '=', $pengirimanbarang_id)->get();
-        // dd($detailItem);
+        $detailItem = PengirimanBarangDetail::where('pengiriman_barang_id', '=', $pengirimanbarang_id)->get();        
         return view('penjualan.pengirimanbarang.inputexp', compact('pengirimanbarang', 'title', 'detailItem'));
     }
 
@@ -377,7 +380,7 @@ class PengirimanBarangController extends Controller
         $pengirimanbarangdetail_id = $pengirimanbarangdetail->id;
         $pengirimanbarang_id = $pengirimanbarangdetail->pengiriman_barang_id;
         $pengirimanbarang = PengirimanBarang::find($pengirimanbarang_id);
-        $listExp = StokExpDetail::with('stockExp')->where('id_sj_detail', '=', $pengirimanbarangdetail_id)->get();        
+        $listExp = StokExpDetail::with('stockExp.supplier')->where('id_sj_detail', '=', $pengirimanbarangdetail_id)->get();        
         return view('penjualan.pengirimanbarang.setexp', compact('pengirimanbarangdetail', 'title', 'listExp', 'pengirimanbarang'));
     }
     
@@ -388,9 +391,10 @@ class PengirimanBarangController extends Controller
         $pengirimanbarang_id = $pengirimanbarangdetail->pengiriman_barang_id;
         $pengirimanbarang = PengirimanBarang::find($pengirimanbarang_id);
         $product_id = $pengirimanbarangdetail->product_id;
-        $stokExp = StokExp::where('product_id', '=', $product_id)
-            ->where('qty', '<>', '0')
-            ->get();
+        $stokExp = StokExp::with('supplier')
+                    ->where('product_id', '=', $product_id)
+                    ->where('qty', '<>', '0')
+                    ->get();
         
 
         return view('penjualan.pengirimanbarang.listexp', compact('pengirimanbarangdetail', 'title', 'stokExp', 'pengirimanbarang'));
@@ -407,7 +411,6 @@ class PengirimanBarangController extends Controller
     public function saveexp(Request $request, StokExp $stokExp, PengirimanBarangDetail $pengirimanbarangdetail)
     {
         $request->validate([
-
             'qty' => ['required'],
         ]);
 
@@ -446,7 +449,11 @@ class PengirimanBarangController extends Controller
                 $stokExpDetail->product_id = $product_id;
                 $stokExpDetail->qty = ($qty * -1);
                 $stokExpDetail->id_sj = $pengirimanbarang_id;
-                $stokExpDetail->id_sj_detail = $pengirimanbarangdetail_id;
+                $stokExpDetail->id_sj_detail = $pengirimanbarangdetail_id;   
+                $stokExpDetail->id_sj_detail = $pengirimanbarangdetail_id; 
+                $stokExpDetail->harga_beli =   $stokExp->harga_beli;
+                $stokExpDetail->diskon_persen_beli = $stokExp->diskon_persen;
+                $stokExpDetail->diskon_rupiah_beli = $stokExp->diskon_rupiah;
                 $stokExpDetail->save();
 
                 if ($qtyExpNow == $qty_kirim) {
@@ -637,5 +644,129 @@ class PengirimanBarangController extends Controller
 
         return view('penjualan.pengirimanbarang.show', compact('title', 'listExp', 'pengirimanbarang', 'pengirimanbarangdetails'));
     }
+
+    // set produk untuk yang ada non expired
+    public function setProduk(PengirimanBarangDetail $pengirimanbarangdetail){
+        
+        $title = "Pengaturan Expired Date";
+        $pengirimanbarangdetail_id = $pengirimanbarangdetail->id;
+        $pengirimanbarang_id = $pengirimanbarangdetail->pengiriman_barang_id;
+        $pengirimanbarang = PengirimanBarang::find($pengirimanbarang_id);
+        $listProduk = HargaNonExpiredDetail::with('harganonexpired.supplier','product')->where('id_sj_detail', '=', $pengirimanbarangdetail_id)->get();   
+
+        return view('penjualan.pengirimanbarang.partial._setproduk', compact('pengirimanbarangdetail', 'title', 'listProduk', 'pengirimanbarang'));
+    }
+
+    public function listProduk(PengirimanBarangDetail $pengirimanbarangdetail)
+    {        
+        $title = "Pengaturan Expired Date";
+        $pengirimanbarangdetail_id = $pengirimanbarangdetail->id;
+        $pengirimanbarang_id = $pengirimanbarangdetail->pengiriman_barang_id;
+        $pengirimanbarang = PengirimanBarang::find($pengirimanbarang_id);
+        $product_id = $pengirimanbarangdetail->product_id;
+        $stokProduk = HargaNonExpired::with('supplier')->where('product_id', '=', $product_id)
+                    ->where('qty', '<>', '0')
+                    ->get();
+        
+
+        // return view('penjualan.pengirimanbarang.listexp', compact('pengirimanbarangdetail', 'title', 'stokExp', 'pengirimanbarang'));
+        
+        return view('penjualan.pengirimanbarang.partial._listproduk', compact('pengirimanbarangdetail', 'title', 'stokProduk', 'product_id'));
+    }
+
+    public function formSetProduct(HargaNonExpired $stokproduk, PengirimanBarangDetail $pengirimanbarangdetail){
+        $title = "Form Pengaturan Expired Date";
+        $pengirimanbarangdetail_id = $pengirimanbarangdetail->id;
+        $pengirimanbarang_id = $pengirimanbarangdetail->pengiriman_barang_id;
+        $product_id = $stokproduk->product_id;
+        return view('penjualan.pengirimanbarang.partial._formsetproduk', compact('pengirimanbarangdetail', 'stokproduk', 'title'));
+    }
+
+    public function saveProduk(Request $request, HargaNonExpired $stokproduk, PengirimanBarangDetail $pengirimanbarangdetail){
+        $request->validate([
+            'qty' => ['required'],
+        ]);
+
+        $datas = $request->all();
+        $qty = $request->qty;
+
+        if ($qty < 1) {
+            return redirect()->route('pengirimanbarang.setproduk', $pengirimanbarangdetail)->with('status', 'Qty Harus Lebih dari Nol (0)!');
+        }
+
+        $pengirimanbarangdetail_id = $pengirimanbarangdetail->id;
+        $pengirimanbarang_id = $pengirimanbarangdetail->pengiriman_barang_id;
+        $product_id = $stokproduk->product_id;
+        $stokProduk_id = $stokproduk->id;
+        $tanggal = $stokproduk->tanggal_transaksi;
+
+        $stok = $stokproduk->qty;
+        $qty_kirim = $pengirimanbarangdetail->qty;
+
+        //get jumlah qty di exp data
+        $totalQtyProduk = (HargaNonExpiredDetail::where('id_sj_detail', '=', $pengirimanbarangdetail_id)->sum('qty')) * -1;
+
+        $qtyTotalOut = $totalQtyProduk + $qty;
+
+        if ($qtyTotalOut <= $qty_kirim) {
+            if ($qty <= $stok) {
+                //ada data, tinggal update stok
+                $stokprodukHarga =  HargaNonExpired::find($stokProduk_id);
+                $stokprodukHarga->qty -= $qty;
+                $stokprodukHarga->save();
+
+                //insert detail
+                $stokHargaProdukDetail = new HargaNonExpiredDetail();
+                $stokHargaProdukDetail->tanggal = $tanggal;
+                $stokHargaProdukDetail->harganonexpired_id = $stokProduk_id;
+                $stokHargaProdukDetail->product_id = $product_id;
+                $stokHargaProdukDetail->qty = ($qty * -1);
+                $stokHargaProdukDetail->id_sj = $pengirimanbarang_id;
+                $stokHargaProdukDetail->id_sj_detail = $pengirimanbarangdetail_id;
+                $stokHargaProdukDetail->harga_beli = $stokproduk->harga_beli;
+                $stokHargaProdukDetail->diskon_persen_beli = $stokproduk->diskon_persen;
+                $stokHargaProdukDetail->diskon_rupiah_beli = $stokproduk->diskon_rupiah;
+                $stokHargaProdukDetail->save();
+
+                if ($qtyTotalOut == $qty_kirim) {
+                    $pengirimanbarangdetail = PengirimanBarangDetail::find($pengirimanbarangdetail_id);
+                    $pengirimanbarangdetail->status_exp = "1";
+                    $pengirimanbarangdetail->save();
+                }
+
+                return redirect()->route('pengirimanbarang.setproduk', $pengirimanbarangdetail)->with('sukses', 'Produk Berhasil DiKeluarkan !');
+            } else {
+                return redirect()->route('pengirimanbarang.setproduk', $pengirimanbarangdetail)->with('status', 'Stok Tidak Mencukupi!');
+            }
+        } else {
+            return redirect()->route('pengirimanbarang.setproduk', $pengirimanbarangdetail)->with('status', 'Qty Produk Melebihi Qty Pesanan');
+        }
+    }
+
+
+    public function destroyProduk(Request $request){
+        $id = $request->id;
+
+        $stokProdukDetail = HargaNonExpiredDetail::find($id);
+        $pengirimanbarangdetail_id =  $stokProdukDetail->id_sj_detail;
+
+        $qtyDetail  = ($stokProdukDetail->qty) * -1;
+        HargaNonExpiredDetail::destroy($id);
+
+        $stokProduk = HargaNonExpired::find($stokProdukDetail->harganonexpired_id);
+        $stokProduk->qty += $qtyDetail;
+        $stokProduk->save();
+
+        $pengirimanbarangdetail = PengirimanBarangDetail::find($pengirimanbarangdetail_id);
+        $pengirimanbarangdetail->status_exp = "0";
+        $pengirimanbarangdetail->save();
+
+
+        return response()->json('Data berhasil dihapus');
+    }
+
+    public function syncronisasi(){
+        return Excel::download(new SyncronisasiDataExport(), 'laporanpembelian.xlsx');
+    }   
 }
 

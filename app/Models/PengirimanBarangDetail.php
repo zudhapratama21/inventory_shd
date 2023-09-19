@@ -41,4 +41,23 @@ class PengirimanBarangDetail extends Model
     {
         return $this->belongsTo(PesananPenjualan::class, 'pesanan_penjualan_id', 'id');
     }
+
+    
+    public function faktupenjualandetail()
+    {
+        return $this->hasOne(FakturPenjualanDetail::class, 'pengiriman_barang_detail_id');
+    }
+
+   
+   
+    public function stokexpdetail()
+    {
+        return $this->hasMany(StokExpDetail::class, 'id_sj_detail');
+    }
+
+  
+    public function harganonexpireddetail()
+    {
+        return $this->hasMany(HargaNonExpiredDetail::class, 'id_sj_detail');
+    }
 }

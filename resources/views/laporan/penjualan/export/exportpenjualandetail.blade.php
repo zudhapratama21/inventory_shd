@@ -2,6 +2,9 @@
     <thead>
         <tr>
             <th>No</th>
+            <th>ID Penjualan Detail</th>
+            <th>ID Produk</th>
+            <th>ID Penjualan</th>
             <th>Tanggal</th>
             <th>Kode Faktur</th>
             <th>No KPA</th>

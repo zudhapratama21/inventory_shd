@@ -75,4 +75,10 @@ class PesananPembelian extends Model
     {
         return $this->belongsTo(User::class, 'updated_by', 'id');
     }
+
+   
+    public function pesananpembeliandetail()
+    {
+        return $this->hasMany(PesananPembelianDetail::class, 'pesanan_pembelian_id');
+    }
 }

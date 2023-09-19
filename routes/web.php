@@ -557,12 +557,20 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
         Route::get('{pengirimanbarang}/inputexp', [PengirimanBarangController::class, 'inputexp'])->name('pengirimanbarang.inputexp');
         Route::get('{pengirimanbarangdetail}/setexp', [PengirimanBarangController::class, 'setexp'])->name('pengirimanbarang.setexp');
         Route::get('{pengirimanbarangdetail}/listexp', [PengirimanBarangController::class, 'listexp'])->name('pengirimanbarang.listexp');
-        Route::get('{stokExp}/{pengirimanbarangdetail}/formsetexp', [PengirimanBarangController::class, 'formsetexp'])->name('pengirimanbarang.formsetexp');
+        Route::get('{stokExp}/{pengirimanbarangdetail}/formsetexp', [PengirimanBarangController::class, 'formsetexp'])->name('pengirimanbarang.formsetexp');                
         Route::post('{stokExp}/{pengirimanbarangdetail}/saveexp', [PengirimanBarangController::class, 'saveexp'])->name('pengirimanbarang.saveexp');
         Route::post('hapusexp', [PengirimanBarangController::class, 'hapusexp'])->name('pengirimanbarang.hapusexp');
         Route::delete('destroy_exp', [PengirimanBarangController::class, 'destroy_exp'])->name('pengirimanbarang.destroy_exp');
 
+        // untuk set harga non expired 
+        Route::get('{pengirimanbarangdetail}/setproduk', [PengirimanBarangController::class, 'setProduk'])->name('pengirimanbarang.setproduk');
+        Route::get('{pengirimanbarangdetail}/listproduk', [PengirimanBarangController::class, 'listProduk'])->name('pengirimanbarang.listproduk');
+        Route::get('{stokproduk}/{pengirimanbarangdetail}/formsetproduk', [PengirimanBarangController::class, 'formSetProduct'])->name('pengirimanbarang.formsetproduk');    
+        Route::post('{stokproduk}/{pengirimanbarangdetail}/saveproduk', [PengirimanBarangController::class, 'saveProduk'])->name('pengirimanbarang.saveproduk'); 
+        Route::post('destroyproduk', [PengirimanBarangController::class, 'destroyProduk'])->name('pengirimanbarang.destroyproduk');           
+
         Route::get('{pengirimanbarang}/print_a5', [PengirimanBarangController::class, 'print_a5'])->name('pengirimanbarang.print_a5');
+        Route::get('/snycronisasi', [PengirimanBarangController::class, 'syncronisasi'])->name('pengirimanbarang.syncronisasi');
     });
 
 
@@ -671,6 +679,9 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
 
         Route::get('refresh', [InventoryController::class, 'update'])->name('laporanstok.refresh');
         Route::get('singkronisasi', [LaporanAdjustmentStokController::class, 'sync'])->name('laporanstok.singkronisasi');
+
+        Route::get('getexp', [LaporanStokController::class, 'getdataexp'])->name('laporanstok.getdataexp');
+        Route::get('getnonexp', [LaporanStokController::class, 'getdatanonexp'])->name('laporanstok.getdatanonexp');
 
 
         

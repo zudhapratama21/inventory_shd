@@ -73,6 +73,11 @@
                                     <i class="flaticon2-add"></i>
                                     Pengiriman Barang
                                 </a>
+
+                                <a href="{{ route('pengirimanbarang.syncronisasi') }}"
+                                    class="btn btn-danger font-weight-bolder ml-2">                                
+                                        Syncronisasi Data 
+                                    </a>
                                 @endcan
 
                                 <!--end::Button-->

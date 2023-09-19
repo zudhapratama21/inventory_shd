@@ -96,4 +96,16 @@ class Product extends Model
     {
         return $this->hasMany(TempPb::class, 'product_id', 'id');
     }
+
+   
+    public function stokExp()
+    {
+        return $this->hasMany(StokExp::class, 'product_id');
+    }
+
+   
+    public function harganonexpired()
+    {
+        return $this->hasMany(HargaNonExpired::class, 'product_id');
+    }
 }

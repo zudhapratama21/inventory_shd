@@ -69,6 +69,10 @@
                                 <thead class="datatable-head">
                                     <tr>
                                         <th>Tanggal Expired</th>
+                                        <th>Supplier</th>
+                                        <th>Harga Beli</th>
+                                        <th>Diskon Beli (%)</th>
+                                        <th>Diskon Beli (Rp.)</th>
                                         <th>Lot</th>
                                         <th style="width: 15%">Qty</th>
                                         <th style="width: 10%">Action</th>
@@ -77,7 +81,11 @@
                                 <tbody>
                                     @foreach ($stokExp as $item)
                                     <tr>
-                                        <td>{{ $item->tanggal->format("d F Y") }}</td>
+                                        <td>{{ $item->tanggal->format("d-m-Y") }}</td>
+                                        <td>{{ $item->supplier ? $item->supplier->nama : '-' }}</td>
+                                        <td>{{ $item->harga_beli }}</td>
+                                        <td>{{ $item->diskon_persen }}</td>
+                                        <td>{{ $item->diskon_rupiah }}</td>
                                         <td>{{ $item->lot }}</td>
                                         <td>{{ $item->qty }}</td>
                                         <td>

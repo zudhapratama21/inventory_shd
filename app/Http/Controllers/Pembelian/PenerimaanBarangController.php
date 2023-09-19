@@ -479,7 +479,7 @@ class PenerimaanBarangController extends Controller
         
 
         // get harga dari pesanan pembelian
-        $pesananpembelian = PesananPembelianDetail::where('id',$penerimaanbarangdetail->pesanan_pembelian_detail_id)->first();
+        $pesananpembelian = PesananPembelianDetail::with('pesananpembelian')->where('id',$penerimaanbarangdetail->pesanan_pembelian_detail_id)->first();
         // dd($pesananpembelian);
     
         //get jumlah qty di exp data
@@ -495,6 +495,7 @@ class PenerimaanBarangController extends Controller
                             ->where('harga_beli',$pesananpembelian->hargabeli)
                             ->where('diskon_persen',$pesananpembelian->diskon_persen)
                             ->where('diskon_rupiah',$pesananpembelian->diskon_rp)
+                            ->where('supplier_id',$pesananpembelian->pesananpembelian->supplier_id)
                             ->first();
             
 
@@ -534,6 +535,7 @@ class PenerimaanBarangController extends Controller
                 $datas['harga_beli'] = $pesananpembelian->hargabeli;
                 $datas['diskon_persen'] = $pesananpembelian->diskon_persen;
                 $datas['diskon_rupiah'] = $pesananpembelian->diskon_rp;
+                $datas['supplier_id'] = $pesananpembelian->pesananpembelian->supplier_id;
                 $id_stokExp = StokExp::create($datas)->id;
 
                 //insert detail;

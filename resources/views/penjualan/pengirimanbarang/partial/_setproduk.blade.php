@@ -105,15 +105,15 @@
                                             </g>
                                         </svg>
                                         <!--end::Svg Icon--></span> </span>
-                                <h3 class="card-label">Daftar Expired Date Produk</h3>
+                                <h3 class="card-label">Daftar Produk Yang Akan Dikirim</h3>
                             </div>
                             <div class="card-toolbar">
                                 <!--begin::Button-->
                                 @can('pengirimanbarang-create')
-                                <a href="{{ route('pengirimanbarang.listexp', $pengirimanbarangdetail) }}"
-                                    class="btn btn-primary font-weight-bolder ">
+                                <a href="{{ route('pengirimanbarang.listproduk', $pengirimanbarangdetail) }}"
+                                    class="btn btn-primary font-weight-bolder "> 
                                     <i class="flaticon2-add"></i>
-                                    Tambah Tgl. Expired Date
+                                    Tambah Produk
                                 </a>
                                 @endcan
 
@@ -125,30 +125,26 @@
                             <table class="table yajra-datatable collapsed ">
                                 <thead class="datatable-head">
                                     <tr>
-                                        <th>Tanggal</th>
                                         <th>Supplier</th>
                                         <th>Harga Beli</th>
-                                        <th>Diskon Beli (Rp.)</th>
                                         <th>Diskon Beli (%)</th>
-                                        <th>Lot</th>
-                                        <th>Qty</th>                                        
+                                        <th>Diskon Beli (Rp.)</th>
+                                        <th>Qty yang dikirim</th>                                        
                                         <th style="width: 15%">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($listExp as $item)
+                                    @foreach ($listProduk as $item)
                                     <tr>
-                                        <td>{{ $item->tanggal->format("d F Y")  }}</td>
-                                    <td>{{$item->stockExp->supplier ? $item->stockExp->supplier->nama : '-'}}</td>
-                                        <td>{{$item->harga_beli}}</td>
-                                        <td>{{$item->diskon_persen_beli}}</td>
-                                        <td>{{$item->diskon_rupiah_beli}}</td>
-                                        <td>{{ $item->stockExp->lot }}</td>
+                                        <td>{{ $item->harganonexpired->supplier->nama}}</td>
+                                        <td>{{ $item->harga_beli }}</td>
+                                        <td>{{ $item->diskon_persen_beli }}</td>
+                                        <td>{{ $item->diskon_rupiah_beli }}</td>
                                         <td>{{ $item->qty * -1 }}</td>
                                         <td>
                                             <div style="text-align:center;">
                                                 <div class="d-flex flex-nowrap">
-                                                    <a href="javascript:show_confirm({{ $item->id }})"
+                                                    <a href="#" onclick="deleteData({{$item->id}})"
                                                         class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3">
                                                         <span class="svg-icon svg-icon-md svg-icon-primary">
                                                             <!--begin::Svg Icon | path:assets/media/svg/icons/General/Trash.svg--><svg
@@ -227,6 +223,41 @@
         var txt = document.createElement('textarea');
         txt.innerHTML=data;
         return txt.value;
+    }
+
+    function deleteData(id) {
+        Swal.fire({
+        title: "Apakah Anda Yakin ?",
+        text: "Kamu Tidak Akan Bisa Mengembalikan Data Ini !",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Hapus!"
+        }).then(function(result) {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('pengirimanbarang.destroyproduk') }}',
+                    dataType: 'html',
+                    headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
+                    data: {
+                        'id':id,
+                        "_token": "{{ csrf_token() }}"},
+                    
+                    success: function (data){
+                        Swal.fire(
+                                "Terhapus!",
+                                "Anda Berhasil menghapus Data",
+                                "success"
+                                 )
+                        location.reload();
+                        
+                    },
+                    error: function(data){
+                        console.log(data);
+                    }
+                });               
+            }
+        });
     }
 
     

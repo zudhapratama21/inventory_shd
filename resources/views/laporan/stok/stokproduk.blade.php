@@ -60,12 +60,23 @@
                                     Download Sinkronisasi</a>
                             </div>
 
+                             <div>
+                                <a href="{{ route('laporanstok.getdatanonexp') }}" class="btn btn-success mr-2" >
+                                    <i class="flaticon-technology"></i>                                  
+                                    Download Produk Non Expired</a>
+                            </div>
+
+                            <div>
+                                <a href="{{ route('laporanstok.getdataexp') }}" class="btn btn-success mr-2" >
+                                    <i class="flaticon-technology"></i>                                  
+                                    Download Produk Expired</a>
+                            </div>
+
                             <div>
                                 <a href="#" class="btn btn-primary mr-2" data-toggle="modal" data-target="#modalexport">
                                     <i class="flaticon-technology"></i>                                  
                                     Export to Excel</a>
-                            </div>
-                                                       
+                            </div>                                                       
                         </div>
                         <div class="card-body">
                             <!--begin: Datatable-->
