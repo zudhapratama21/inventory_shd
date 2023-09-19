@@ -2,9 +2,9 @@
     <thead>
         <tr>
             <th>No</th>
-            <th>ID Penjualan Detail</th>
+            <th>ID Faktur</th>
             <th>ID Produk</th>
-            <th>ID Penjualan</th>
+            <th>ID Pengiriman</th>
             <th>Tanggal</th>
             <th>Kode Faktur</th>
             <th>No KPA</th>
@@ -52,6 +52,9 @@
         @foreach ($penjualan as $item)
             <tr>
                 <td>{{$no++}}</td>
+                <th>{{$item->id}}</th>
+                <th>{{$item->id_product}}</th>
+                <th>{{$item->id_pengiriman}}</th>
                 <td>{{ date('d/m/Y', strtotime($item->tanggal)) }}</td>
                 <td>{{$item->kode}}</td>
                 <td>{{$item->no_kpa}}</td>

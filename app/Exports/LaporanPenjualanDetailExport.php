@@ -104,7 +104,7 @@ class LaporanPenjualanDetailExport implements FromView
                 ->orderBy('fp.tanggal','desc')
                 ->orderBy('fpb.id','asc')
                 ->orderBy('fp.kode','desc')                
-                ->select('fp.*','fpb.qty as qty_det','fpb.satuan as satuan_det','fpb.hargajual as hargajual_det'
+                ->select('fp.*','pb.id as id_pengiriman','p.id as id_product','fpb.qty as qty_det','fpb.satuan as satuan_det','fpb.hargajual as hargajual_det'
                 ,'fpb.diskon_persen as dikson_persen_det','fpb.diskon_rp as diskon_rp_det','fpb.subtotal as subtotal_det'
                 ,'fpb.total as total_det','fpb.total_diskon as total_diskon_det','fpb.ongkir as ongkir_det','fpb.keterangan as keterangan_det','fpb.cn_persen as cn_persen',
                 'fpb.cn_total as cn_total'
