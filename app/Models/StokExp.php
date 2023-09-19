@@ -15,6 +15,7 @@ class StokExp extends Model
     protected $fillable = [
         'tanggal',
         'product_id',
+        'supplier_id',
         'qty',
         'lot',
         'ppn',

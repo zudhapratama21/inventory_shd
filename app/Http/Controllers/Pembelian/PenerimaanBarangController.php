@@ -456,8 +456,8 @@ class PenerimaanBarangController extends Controller
             'tanggal' => ['required'],
         ]);
 
-        // DB::beginTransaction();
-        // try {
+        DB::beginTransaction();
+        try {
             $datas = $request->all();        
 
         $tanggal = $request->tanggal;
@@ -480,7 +480,6 @@ class PenerimaanBarangController extends Controller
 
         // get harga dari pesanan pembelian
         $pesananpembelian = PesananPembelianDetail::with('pesananpembelian')->where('id',$penerimaanbarangdetail->pesanan_pembelian_detail_id)->first();
-        dd($pesananpembelian);
         // dd($pesananpembelian);
     
         //get jumlah qty di exp data
@@ -564,11 +563,11 @@ class PenerimaanBarangController extends Controller
         } else {
             return redirect()->route('penerimaanbarang.setexp', $penerimaanbarangdetail)->with('status', 'Qty Expired Date Melebihi Qty Pesanan');
         }
-            // DB::commit();
+            DB::commit();
           return redirect()->route('penerimaanbarang.setexp', $penerimaanbarangdetail)->with('sukses', 'Expired Date Berhasil Didaftarkan !');
-        // } catch (Exception $th) {
-        //     return back()->with('error',$th->getMessage());
-        // }       
+        } catch (Exception $th) {
+            return back()->with('error',$th->getMessage());
+        }       
 
         
     }
