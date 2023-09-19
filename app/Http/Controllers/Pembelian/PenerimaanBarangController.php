@@ -480,6 +480,7 @@ class PenerimaanBarangController extends Controller
 
         // get harga dari pesanan pembelian
         $pesananpembelian = PesananPembelianDetail::with('pesananpembelian')->where('id',$penerimaanbarangdetail->pesanan_pembelian_detail_id)->first();
+        dd($pesananpembelian);
         // dd($pesananpembelian);
     
         //get jumlah qty di exp data
