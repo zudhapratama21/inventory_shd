@@ -5,8 +5,7 @@
             <th>Kode</th>
             <th>Nama Barang</th>            
             <th>Merk</th>
-            <th>Satuan</th>
-            <th>Group Produk</th>
+            <th>Satuan</th>            
             <th>Categori Produk</th>
             <th>Sub Kategori</th>
             <th>Jenis</th>
@@ -42,7 +41,6 @@
                 <td>{{$item->satuan}}</td>   
                 <td>{{$item->categories->nama}}</td>   
                 <td>{{$item->subcategories->nama}}</td>   
-                <td>{{$item->groups->nama}}</td>   
                 <td>{{$item->jenis}}</td>   
                 <td>{{$item->stok}}</td>   
                 <td>{{$item->tipe}}</td>   
