@@ -59,7 +59,9 @@ class PenerimaanBarangController extends Controller
                     return $pb->po->no_so;
                 })
                 ->addColumn('status', function (PenerimaanBarang $pb) {
-                    return $pb->statusPB->nama;
+                    $status_penerimaan = $pb->status_pb_id;
+                    $status_exp = $pb->status_exp ? $pb->status_exp : 0;            
+                    return view('pembelian.penerimaanbarang.partials.status',compact('status_penerimaan','status_exp'));                    
                 })
                 ->editColumn('tanggal', function (PenerimaanBarang $pb) {
                     return $pb->tanggal ? with(new Carbon($pb->tanggal))->format('d-m-Y') : '';

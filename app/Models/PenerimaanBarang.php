@@ -19,6 +19,7 @@ class PenerimaanBarang extends Model
         'sj_customer',
         'supplier_id',
         'status_pb_id',
+        'status_exp',
         'keterangan',
     ];
 

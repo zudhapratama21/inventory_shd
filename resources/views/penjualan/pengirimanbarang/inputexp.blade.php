@@ -72,6 +72,7 @@
                                         <th>Nama Barang</th>
                                         <th style="width: 5%">Satuan</th>
                                         <th style="width: 5%">Qty Diterima</th>
+                                        <th style="width: 5%">Is Expired ?</th>
                                         <th style="width: 5%">Status</th>
                                         <th style="width: 10%">Action</th>
                                     </tr>
@@ -83,6 +84,13 @@
                                         <td>{{ $item->products->nama }}</td>
                                         <td>{{ $item->satuan }}</td>
                                         <td>{{ $item->qty }}</td>
+                                        <td>
+                                            @if ($item->products->status_exp == 1)
+                                                <span class="badge badge-primary">Expired</span>
+                                            @else 
+                                                <span class="badge badge-warning">Non Expired</span>
+                                            @endif
+                                        </td>
                                         <td>
                                             @if($item->status_exp == 1)
                                             <span class="label label-success label-pill label-inline mr-2">Done</span>

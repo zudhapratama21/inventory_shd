@@ -41,7 +41,10 @@ class PengirimanBarangController extends Controller
 
 
         $title = "Pengiriman Barang";
-        $pengirimanbarang = PengirimanBarang::with(['customers',  'statusSJ', 'so'])->orderByDesc('id');
+        $pengirimanbarang = PengirimanBarang::with(['customers',  'statusSJ', 'so'])
+                                            ->with(['PengirimanBarangDetails' =>  function($query){
+                                                $query->where('status_exp',0);
+                                            }])->orderByDesc('id');
 
         if (request()->ajax()) {
             return Datatables::of($pengirimanbarang)
@@ -52,8 +55,10 @@ class PengirimanBarangController extends Controller
                 ->addColumn('kode_so', function (PengirimanBarang $sj) {
                     return $sj->so->kode;
                 })
-                ->addColumn('status', function (PengirimanBarang $sj) {
-                    return $sj->statusSJ->nama;
+                ->addColumn('status', function (PengirimanBarang $sj) {                    
+                    $status_pengiriman = $sj->status_sj_id;                                
+                    $dataSj = $sj;
+                    return view('penjualan.pengirimanbarang.partial._status',compact('status_pengiriman','dataSj'));   
                 })
                 ->editColumn('tanggal', function (PengirimanBarang $sj) {
                     return $sj->tanggal ? with(new Carbon($sj->tanggal))->format('d-m-Y') : '';
