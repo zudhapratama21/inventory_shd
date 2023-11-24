@@ -34,8 +34,8 @@
                 <td>
                     @php
                         $tglHutang = strtotime($item->tanggal);
-                        $tglPembayaran = strtotime($item->tanggal);
-                        
+                        $tglPembayaran = strtotime($item->tanggal_pembayaran);
+
                         $selisih = ($tglPembayaran - $tglHutang ) / 86400;                                                
                     @endphp
 
