@@ -3,6 +3,9 @@
         <tr>
             <th>No</th>
             <th>Tanggal</th>
+            <th>Tanggal TOP</th>
+            <th>Tanggal Pembayaran</th>
+            <th>Selisih Pembayaran</th>
             <th>Customer</th>
             <th>Kode SO</th>
             <th>Kode SJ</th>
@@ -26,6 +29,19 @@
             <tr>
                 <td>{{$no++}}</td>
                 <td>{{ date('d/m/Y', strtotime($item->tanggal)) }}</td>
+                <td>{{ date('d/m/Y', strtotime($item->tanggal_top)) }}</td>
+                <td>{{ date('d/m/Y', strtotime($item->tanggal_pembayaran)) }}</td>
+                <td>
+                    @php
+                        $tglHutang = strtotime($item->tanggal);
+                        $tglPembayaran = strtotime($item->tanggal);
+                        
+                        $selisih = ($tglPembayaran - $tglHutang ) / 86400;                                                
+                    @endphp
+
+                    <span>{{$selisih}}</span>
+                </td>
+                
                 <td>{{$item->nama_customer}}</td>
                 <td>{{$item->kode_pp}}</td>
                 <td>{{$item->kode_pb}}</td>

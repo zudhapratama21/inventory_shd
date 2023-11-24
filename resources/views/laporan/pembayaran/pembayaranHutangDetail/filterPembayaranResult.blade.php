@@ -27,7 +27,7 @@
 
                 <div class="col-lg-12">
                     <!--begin::Card-->
-                    <div class="card card-custom">
+                    <div class="card card-custom" height="500">
                         <div class="card-header py-3 d-flex justify-content-between">
                             <div class="card-title">
                                 

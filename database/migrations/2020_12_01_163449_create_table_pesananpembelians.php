@@ -30,7 +30,7 @@ class CreateTablePesananpembelians extends Migration
             $table->unsignedBigInteger('status_po_id');
             $table->string('keterangan')->nullable();
             $table->double('subtotal')->nullable();
-            $table->double('total_diskon')->nullable();
+            $table->double('total_diskon_detail')->nullable();
             $table->double('total')->nullable();
 
             $table->timestamps();

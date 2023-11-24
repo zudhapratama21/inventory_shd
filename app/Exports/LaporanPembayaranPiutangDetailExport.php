@@ -110,7 +110,12 @@ class LaporanPembayaranPiutangDetailExport implements FromView
             }
         }
 
-        $datafilter = $salesfilter->select('c.nama as nama_customer','pp.kode as kode_pp','pb.kode as kode_pb','fp.kode as kode_fp','p.*','s.nama as nama_sales','pps.nominal as nominal_pembayaran','b.nama as nama_bank','pps.keterangan')
+        $datafilter = $salesfilter->select('c.nama as nama_customer'
+                                            ,'pp.kode as kode_pp','pb.kode as kode_pb','fp.kode as kode_fp'
+                                            ,'p.*','s.nama as nama_sales','pps.nominal as nominal_pembayaran'
+                                            ,'b.nama as nama_bank','pps.keterangan','pp.tanggal as tanggal_pembayaran',
+                                            'pp.keterangan as keterangan_pembayaran'
+                                            )
                                 ->get();
 
         if (count($datafilter) <= 0) {
