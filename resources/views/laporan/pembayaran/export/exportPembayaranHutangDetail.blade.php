@@ -2,7 +2,8 @@
     <thead>
         <tr>
             <th>No</th>
-            <th>Tanggal</th>
+            <th>Tanggal Hutang</th>
+            <th>Tanggal Pembayaran</th>
             <th>No KPA</th>
             <th>No SO Supplier</th>
             <th>No Faktur Supplier</th>
@@ -28,6 +29,7 @@
             <tr>
                 <td>{{$no++}}</td>
                 <td>{{ date('d/m/Y', strtotime($item->tanggal)) }}</td>
+                <td>{{ date('d/m/Y', strtotime($item->tanggal_pembayaran)) }}</td>
                 <td>{{$item->no_so}}</td>
                 <td>{{$item->no_so_customer}}</td>
                 <td>{{$item->no_faktur_supplier}}</td>
@@ -48,7 +50,8 @@
                     @else
                         Lunas
                     @endif
-                </td>                                        
+                </td>    
+                <td>{{$item->keterangan_pembayaran}}</td>                                    
             </tr>
         @endforeach
     </tbody>
