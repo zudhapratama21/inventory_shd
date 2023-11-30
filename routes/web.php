@@ -32,6 +32,7 @@ use App\Http\Controllers\Profile\ProfilePicController;
 use App\Http\Controllers\Laporan\LaporanStokController;
 use App\Http\Controllers\Laporan\LaporanPembayaranController;
 use App\Http\Controllers\Laporan\LaporanPembelianController;
+use App\Http\Controllers\Laporan\laporanPlanMarketingController;
 use App\Http\Controllers\Laporan\LaporanSalesController;
 use App\Http\Controllers\Master\ProductGroupController;
 use App\Http\Controllers\Master\KategoriPesananController;
@@ -54,7 +55,9 @@ use App\Http\Controllers\Pembayaran\PembayaranPiutangController;
 use App\Http\Controllers\Penjualan\BiayaLainController;
 use App\Http\Controllers\Penjualan\LabaRugiController;
 use App\Http\Controllers\Permissions\AssignPermissionController;
+use App\Http\Controllers\Sales\OutletController;
 use App\Http\Controllers\Sales\PerformaSalesController;
+use App\Http\Controllers\Sales\PlanMarketingController;
 use App\Http\Controllers\Sales\TargetSalesController;
 use App\Http\Controllers\Teknisi\KunjunganTeknisiController;
 use App\Http\Controllers\Teknisi\MaintenanceController;
@@ -789,11 +792,18 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
     
         Route::get('', [LaporanSalesController::class, 'index'])->name('laporansales.index');        
         Route::post('/datatable', [LaporanSalesController::class, 'datatable'])->name('laporansales.datatable');
-
-
         Route::get('/{id}/show', [LaporanSalesController::class, 'show'])->name('laporansales.show');
-
         Route::post('/print', [LaporanSalesController::class, 'print'])->name('laporansales.print');        
+        
+    });
+
+
+    Route::prefix('planmarketing')->group(function () {
+    
+        Route::get('', [laporanPlanMarketingController::class, 'index'])->name('laporanplanmarketing.index');        
+        Route::post('/datatable', [laporanPlanMarketingController::class, 'datatable'])->name('laporanplanmarketing.datatable');
+        Route::get('/{id}/show', [laporanPlanMarketingController::class, 'show'])->name('laporanplanmarketing.show');
+        Route::post('/print', [laporanPlanMarketingController::class, 'print'])->name('laporanplanmarketing.print');        
         
     });
 
@@ -953,6 +963,35 @@ Route::middleware('has.role')->prefix('sales')->group(function () {
         Route::post('/targetsales/import', [TargetSalesController::class, 'import'])->name('targetsales.import'); 
         Route::post('/datatable', [TargetSalesController::class, 'datatable'])->name('targetsales.datatable');        
         Route::get('', [TargetSalesController::class, 'index'])->name('targetsales.index');                  
+    });
+
+    Route::prefix('planmarketing')->group(function () {        
+        Route::get('', [PlanMarketingController::class, 'index'])->name('planmarketing.index');                  
+        Route::get('/create', [PlanMarketingController::class, 'create'])->name('planmarketing.create');  
+        Route::post('/store', [PlanMarketingController::class, 'store'])->name('planmarketing.store');                  
+        Route::post('/datatable', [PlanMarketingController::class, 'datatable'])->name('planmarketing.datatable');  
+
+        Route::get('{id}/edit', [PlanMarketingController::class, 'edit'])->name('planmarketing.edit');  
+        Route::put('{id}/update', [PlanMarketingController::class, 'update'])->name('planmarketing.update');  
+
+        Route::post('/destroy', [PlanMarketingController::class, 'destroy'])->name('planmarketing.delete');  
+
+    });
+
+    Route::prefix('outlet')->group(function () {
+        // Route::post('/targetsales/import', [TargetSalesController::class, 'import'])->name('targetsales.import'); 
+        Route::post('/datatable', [OutletController::class, 'datatable'])->name('outlet.datatable');        
+        Route::get('', [OutletController::class, 'index'])->name('outlet.index');             
+        Route::post('/store', [OutletController::class, 'store'])->name('outlet.store');                  
+        Route::post('/edit', [OutletController::class, 'edit'])->name('outlet.edit');                  
+        Route::post('/update', [OutletController::class, 'update'])->name('outlet.update'); 
+        Route::post('/delete', [OutletController::class, 'destroy'])->name('outlet.delete');  
+
+        Route::post('/import', [OutletController::class, 'import'])->name('outlet.import');  
+        
+        
+
+
     });
     
 });

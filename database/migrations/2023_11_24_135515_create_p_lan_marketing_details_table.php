@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePlanMarketingsTable extends Migration
+class CreatePLanMarketingDetailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,12 @@ class CreatePlanMarketingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('plan_marketings', function (Blueprint $table) {
+        Schema::create('plan_marketing_details', function (Blueprint $table) {
             $table->id();
-            $table->string('tahun');
-            $table->string('bulan');
-            $table->foreignId('outlet_id')->constrained('outlets');
-            $table->foreignId('user_id')->constrained('users');             
-            $table->timestamps(); 
-            $table->unsignedBigInteger('created_by')->nullable();
-            $table->unsignedBigInteger('updated_by')->nullable();
-            $table->unsignedBigInteger('deleted_by')->nullable();
+            $table->string('type_minggu');
+            $table->foreignId('type_day')->constrained('days');
+            $table->timestamps();
+
             $table->foreign('created_by')
                 ->references('id')->on('users')
                 ->onDelete('cascade');
@@ -43,6 +39,6 @@ class CreatePlanMarketingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('plan_marketings');
+        Schema::dropIfExists('p_lan_marketing_details');
     }
 }

@@ -114,21 +114,20 @@
                                     @foreach ($datas as $key_index => $data)
                                     <tr>
                                         @foreach ($data as $key_item => $item)
-                                        @if ($key_item == 0)
-                                        <td><b>{{ $item }}</b></td>
-                                        @else
-                                        <td>
-                                            <label class="checkbox checkbox-success">
-                                                <input
-                                                    {{ $role->permissions()->find($item->id) ? "checked='checked'" : "" }}
-                                                    type="checkbox" name="permission[]" value="{{ $item->id }}"
-                                                    id="{{ explode('-', $item->name)[1].$item->id }}" />
-                                                <span></span>
-                                                &nbsp; {{ $item->name }}
-                                            </label>
-
-                                        </td>
-                                        @endif
+                                            @if ($key_item == 0)
+                                            <td><b>{{ $item }}</b></td>
+                                            @else
+                                            <td>
+                                                <label class="checkbox checkbox-success">
+                                                    <input
+                                                        {{ $role->permissions()->find($item->id) ? "checked='checked'" : "" }}
+                                                        type="checkbox" name="permission[]" value="{{ $item->id }}"
+                                                        id="{{ explode('-', $item->name)[1].$item->id }}" />
+                                                    <span></span>
+                                                    &nbsp; {{ $item->name }}
+                                                </label>
+                                            </td>
+                                            @endif
                                         @endforeach
                                     </tr>
                                     @endforeach

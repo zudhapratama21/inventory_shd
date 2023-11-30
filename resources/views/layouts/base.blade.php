@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="{{ asset('logo_bsb_2.png') }}" />
 
     <style type="text/css">
-        .signature-pad{
+        .signature-pad {
             border: 1px solid #ccc;
             border-radius: 5px;
             width: 100%;
@@ -43,7 +43,7 @@
 
 <!--begin::Body-->
 
-<body id="kt_body" style="background-image: url({{ asset('assets/media/bg/bg-10.jpg')}})"
+<body id="kt_body" style="background-image: url({{ asset('assets/media/bg/bg-10.jpg') }})"
     class="quick-panel-right demo-panel-right offcanvas-right header-fixed subheader-enabled page-loading">
     <!--begin::Main-->
     <!--begin::Header Mobile-->
@@ -193,10 +193,10 @@
     <!--begin::Page Scripts(used by this page)-->
     <script src="{{ asset('assets/js/pages/widgets.js?v=7.0.6') }}"></script>
 
-    
+
     <!--begin::Page Scripts(used by this page)-->
     <script src="{{ asset('assets/js/pages/crud/datatables/basic/scrollable.js?v=7.0.6') }}"></script>
-    
+
     <script src="{{ asset('assets/js/pages/features/miscellaneous/sweetalert2.js?v=7.0.6') }}"></script>
 
     <script src="{{ asset('assets/js/pages/features/miscellaneous/sweetalert2.js?v=7.0.6') }}"></script>
@@ -204,10 +204,22 @@
     <!--begin::Page Scripts(used by this page)-->
     <script src="{{ asset('assets/js/pages/features/charts/apexcharts.js?v=7.0.6') }} "></script>
     <!--end::Page Scripts-->
-    
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     <!--end::Page Scripts-->
     @stack('script')
     <!--end::Page Scripts-->
+
+    <script>
+        @if (session('success-create'))
+            swal("Good job!", "Anda Berhasil Menambahkan Data !", "success");
+        @endif
+
+        @if (session('success-update'))
+            swal("Good job!", "Anda Berhasil Mengubah Data !", "success");
+        @endif
+    </script>
 
 </body>
 <!--end::Body-->

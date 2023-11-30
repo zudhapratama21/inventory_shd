@@ -343,9 +343,9 @@
             return user.map(item =>`
                       <a href="whatsapp://send?text=Assalamualaikum wr wb %0AMohon Perhatian !!%0ATarget Penjualan pada bulan ini masih ${persen}% dengan nominal Rp.${laba} %0A Segera Tingkatkan strategi untuk mencapai target penjualan !! %0ASemangatt !!&app_absent=0&phone=${item.phone}" 
                       target="_blank" class="btn btn-outline-success btn-sm" >${item.name}</a>
-            `).join('')
+            `).join('');
         }else{
-            return '-'
+            return '-';
         }
     }
 
