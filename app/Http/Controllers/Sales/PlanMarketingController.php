@@ -24,16 +24,16 @@ class PlanMarketingController extends Controller
         $title = "Plan Marketing";
         $day = Day::get();
         $bulan =  [];
-        for ($i = 1; $i <=12; $i++) {
-            $databulan = '1-'.$i.'-2023';
+        for ($i = 1; $i <= 12; $i++) {
+            $databulan = '1-' . $i . '-2023';
             $bulan[] = [
-                'nama' => Carbon::parse($databulan)->format('F') ,
+                'nama' => Carbon::parse($databulan)->format('F'),
                 'id' => $i
-            ];         
+            ];
         }
 
         $outlet = Outlet::get();
-        return view('sales.planmarketing.index', compact('title','bulan','outlet','day'));
+        return view('sales.planmarketing.index', compact('title', 'bulan', 'outlet', 'day'));
     }
 
     public function datatable(Request $request)
@@ -56,26 +56,26 @@ class PlanMarketingController extends Controller
             ->with('outlet')
             ->with('user');
 
-            if ($request->outlet !== 'all') {
-                $outlet = $planmarketing->where('outlet_id',$request->outlet);
-            }else{
-                $outlet =  $planmarketing;
-            }
+        if ($request->outlet !== 'all') {
+            $outlet = $planmarketing->where('outlet_id', $request->outlet);
+        } else {
+            $outlet =  $planmarketing;
+        }
 
-            if ($request->tahun) {
-                $year = $outlet->where('tahun',$request->tahun);
-            }
+        if ($request->tahun) {
+            $year = $outlet->where('tahun', $request->tahun);
+        }
 
-            if ($request->bulan) {
-                $bulan = $year->where('bulan',$request->bulan);
-            }            
-            $bulan->where('user_id', auth()->user()->id)
-                  ->orderBy('id', 'asc');
+        if ($request->bulan) {
+            $bulan = $year->where('bulan', $request->bulan);
+        }
+        $bulan->where('user_id', auth()->user()->id)
+            ->orderBy('id', 'asc');
 
         return DataTables::of($planmarketing)
             ->addIndexColumn()
             ->addColumn('waktu', function (PlanMarketing $ot) {
-                $tanggal = '11-'.$ot->bulan.'-'.$ot->tahun;
+                $tanggal = '11-' . $ot->bulan . '-' . $ot->tahun;
                 $waktu = Carbon::parse($tanggal)->format('F - Y');
                 return $waktu;
             })
@@ -112,26 +112,26 @@ class PlanMarketingController extends Controller
     public function create()
     {
         $bulan =  [];
-        for ($i = 1; $i <=12; $i++) {
-            $databulan = '1-'.$i.'-2023';
+        for ($i = 1; $i <= 12; $i++) {
+            $databulan = '1-' . $i . '-2023';
             $bulan[] = [
-                'nama' => Carbon::parse($databulan)->format('F') ,
+                'nama' => Carbon::parse($databulan)->format('F'),
                 'id' => $i
-            ];         
+            ];
         }
 
 
         $title = 'Plan Marketing';
         $outlet = Outlet::get();
         $day = Day::get();
-        return view('sales.planmarketing.create', compact('outlet', 'title', 'day','bulan'));
+        return view('sales.planmarketing.create', compact('outlet', 'title', 'day', 'bulan'));
     }
 
 
     public function store(Request $request)
     {
-        DB::beginTransaction();
-        try {
+    //     DB::beginTransaction();        
+    //     try {
             $planmarketing = PlanMarketing::create([
                 'tahun' => $request->tahun,
                 'bulan' => $request->bulan,
@@ -140,56 +140,66 @@ class PlanMarketingController extends Controller
             ]);
 
             // looping minggu ke 1 
-            foreach ($request->day_minggu1 as $item) {
-                PLanMarketingDetail::create([
-                    'planmarketing_id' => $planmarketing->id,
-                    'day_id' => $item,
-                    'minggu' => 1
-                ]);
+            if ($request->day_minggu1) {
+                foreach ($request->day_minggu1 as $item) {
+                    PLanMarketingDetail::create([
+                        'planmarketing_id' => $planmarketing->id,
+                        'day_id' => $item,
+                        'minggu' => 1
+                    ]);
+                }
             }
 
-            // looping minggu ke 2 
-            foreach ($request->day_minggu2 as $item) {
-                PLanMarketingDetail::create([
-                    'planmarketing_id' => $planmarketing->id,
-                    'day_id' => $item,
-                    'minggu' => 2
-                ]);
+            if ($request->day_minggu2) {
+                // looping minggu ke 2 
+                foreach ($request->day_minggu2 as $item) {
+                    PLanMarketingDetail::create([
+                        'planmarketing_id' => $planmarketing->id,
+                        'day_id' => $item,
+                        'minggu' => 2
+                    ]);
+                }
             }
 
-            // looping minggu ke 3
-            foreach ($request->day_minggu3 as $item) {
-                PLanMarketingDetail::create([
-                    'planmarketing_id' => $planmarketing->id,
-                    'day_id' => $item,
-                    'minggu' => 3
-                ]);
+            if ($request->day_minggu3) {
+                // looping minggu ke 3
+                foreach ($request->day_minggu3 as $item) {
+                    PLanMarketingDetail::create([
+                        'planmarketing_id' => $planmarketing->id,
+                        'day_id' => $item,
+                        'minggu' => 3
+                    ]);
+                }
             }
 
-            // looping minggu ke 4 
-            foreach ($request->day_minggu4 as $item) {
-                PLanMarketingDetail::create([
-                    'planmarketing_id' => $planmarketing->id,
-                    'day_id' => $item,
-                    'minggu' => 4
-                ]);
+            if ($request->day_minggu4) {
+                // looping minggu ke 4 
+                foreach ($request->day_minggu4 as $item) {
+                    PLanMarketingDetail::create([
+                        'planmarketing_id' => $planmarketing->id,
+                        'day_id' => $item,
+                        'minggu' => 4
+                    ]);
+                }
             }
 
-            // looping minggu ke 5 
-            foreach ($request->day_minggu5 as $item) {
-                PLanMarketingDetail::create([
-                    'planmarketing_id' => $planmarketing->id,
-                    'day_id' => $item,
-                    'minggu' => 5
-                ]);
+            if ($request->day_minggu5) {
+                // looping minggu ke 5 
+                foreach ($request->day_minggu5 as $item) {
+                    PLanMarketingDetail::create([
+                        'planmarketing_id' => $planmarketing->id,
+                        'day_id' => $item,
+                        'minggu' => 5
+                    ]);
+                }
             }
 
-            DB::commit();
+            // DB::commit();
 
             return redirect()->back()->with('success-create', 'Data Berhasil Ditambahkan');
-        } catch (Exception $th) {
-            return redirect()->back()->with('error', $th->getMessage());
-        }
+        // } catch (Exception $th) {
+        //     return redirect()->back()->with('error', $th->getMessage());
+        // }
     }
 
 
@@ -224,7 +234,7 @@ class PlanMarketingController extends Controller
     {
         DB::beginTransaction();
         try {
-            $planmarketing = PlanMarketing::where('id',$id)->first();
+            $planmarketing = PlanMarketing::where('id', $id)->first();
             $planmarketing->planmarketingdetailminggu1()->delete();
             $planmarketing->planmarketingdetailminggu2()->delete();
             $planmarketing->planmarketingdetailminggu3()->delete();
@@ -288,15 +298,14 @@ class PlanMarketingController extends Controller
         } catch (Exception $th) {
             return redirect()->back()->with('error', $th->getMessage());
         }
-
     }
 
 
-    public function destroy (Request $request)
+    public function destroy(Request $request)
     {
-        $planmarketing = PlanMarketing::where('id',$request->id)->first();
-        $planmarketing->planmarketingdetailminggu1()->delete();  
-        
+        $planmarketing = PlanMarketing::where('id', $request->id)->first();
+        $planmarketing->planmarketingdetailminggu1()->delete();
+
         $planmarketing->delete();
 
         return response()->json('Data Berhasil Dihapus');

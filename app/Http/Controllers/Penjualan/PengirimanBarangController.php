@@ -773,5 +773,13 @@ class PengirimanBarangController extends Controller
     public function syncronisasi(){
         return Excel::download(new SyncronisasiDataExport(), 'laporanpembelian.xlsx');
     }   
+
+
 }
+
+
+
+
+
+
 
