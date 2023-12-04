@@ -976,6 +976,9 @@ Route::middleware('has.role')->prefix('sales')->group(function () {
 
         Route::post('/destroy', [PlanMarketingController::class, 'destroy'])->name('planmarketing.delete');  
 
+
+        Route::post('/remind', [PlanMarketingController::class, 'remind'])->name('planmarketing.remind');  
+
     });
 
     Route::prefix('outlet')->group(function () {
@@ -988,10 +991,6 @@ Route::middleware('has.role')->prefix('sales')->group(function () {
         Route::post('/delete', [OutletController::class, 'destroy'])->name('outlet.delete');  
 
         Route::post('/import', [OutletController::class, 'import'])->name('outlet.import');  
-        
-        
-
-
     });
     
 });

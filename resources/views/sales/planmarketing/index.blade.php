@@ -67,8 +67,7 @@
                                     <!--begin::Button-->
 
                                     @can('planmarketing-create')
-                                        <a href="#" class="btn btn-danger font-weight-bolder mr-2" data-toggle="modal"
-                                            data-target="#remind">
+                                        <a href="#" class="btn btn-danger font-weight-bolder mr-2" onclick="remind()">
                                             <i class="flaticon2-crisp-icons-1"></i>
                                             Remind Me
                                         </a>
@@ -162,6 +161,7 @@
     <!--end::Content-->
     <div id="modal-confirm-delete"></div>
     <div id="modal-show-detail"></div>
+    <div id="modal-remind-detail"></div>
 
     <!-- Modal -->
     <div class="modal fade" id="remind" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -197,7 +197,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-primary" onclick="chat()">Save changes</button>
                 </div>
             </div>
         </div>
@@ -337,6 +337,48 @@
 
             $('.yajra-datatable').DataTable().ajax.reload(null, false);
         }
+
+        function remind(){
+            $('#remind').modal('show');
+        }
+
+        function chat(){
+
+            let r = document.getElementById("kt_select2_7");
+            minggu = r.options[r.selectedIndex].value;
+
+            let s = document.getElementById("kt_select2_8");
+            hari = s.options[s.selectedIndex].value;
+
+            $.ajax({
+                    type: 'POST',
+                    url: '{{ route('planmarketing.remind') }}',
+                    dataType: 'html',
+                    headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
+                    data: {
+                        id : minggu,
+                        hari : hari,
+                        tahun : tahun,
+                        bulan : bulan,
+                        minggu : minggu,
+                        "_token": "{{ csrf_token() }}"
+                    },
+                    
+                    success: function (data){              
+                        $('#modal-remind-detail').html(data);
+                        $('#remind').modal('hide');   
+                        $('#option').modal('show');   
+                    },
+                    error: function(data){
+                        console.log(data);
+                    }
+             });
+
+
+
+
+        }
+
 
 
         
