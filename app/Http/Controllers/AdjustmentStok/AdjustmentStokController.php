@@ -99,7 +99,7 @@ class AdjustmentStokController extends Controller
     {        
         
         $data= Excel::import(new ProductExpiredImport, $request->file('file_import'));        
-
+                
         return back();
     }
 

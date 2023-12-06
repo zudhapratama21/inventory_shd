@@ -10,7 +10,6 @@ use App\Models\StokExpDetail;
 use App\Traits\CodeTrait;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\ToModel;
-use Str;
 
 class ProductExpiredImport implements ToModel
 {
@@ -30,9 +29,9 @@ class ProductExpiredImport implements ToModel
             // ngecek apakah expired datenya ada 
             // cek produk    
             
-              $product = Product::where('kode',$row[0])->first();   
+              $product = Product::where('kode',$row[0])->first();                 
               if ($product) {
-
+            
                     // stok exp berdasarkan exp nya 
                     // insert masing-masing exp stok dan exp date sesuai dengan product id dan tanggal 
                     // cek jika ada tanggal yang sama maka ditambah
@@ -51,7 +50,10 @@ class ProductExpiredImport implements ToModel
                     $datas['tanggal'] = $tanggal;
                     $datas['product_id'] = $product->id;
                     $datas['qty'] = $row[2];                    
-                    $datas['lot'] = $row[3];         
+                    $datas['lot'] = $row[3];
+                    $datas['harga_beli'] = $row[6];
+                    $datas['diskon_persen'] = $row[7];
+                    $datas['diskon_rupiah'] = $row[8];
                     $id_stokExp = StokExp::create($datas)->id;                    
                     
                     //insert detail;
@@ -59,10 +61,13 @@ class ProductExpiredImport implements ToModel
                     $stokExpDetail->tanggal = $tanggal;
                     $stokExpDetail->stok_exp_id = $id_stokExp;
                     $stokExpDetail->product_id = $product->id;
-                    $stokExpDetail->qty = $row[2];                                        
+                    $stokExpDetail->qty = $row[2];  
+                    $stokExpDetail->harga_beli = $row[6];                                        
+                    $stokExpDetail->diskon_persen_beli = $row[7];                                        
+                    $stokExpDetail->diskon_rupiah_beli = $row[8];                                                            
                     $stokExpDetail->save();          
                     
-                    // cek stok berdasarkan qty
+                    // cek stok berdasarkan     qty
                     // kurangi dari qty inputan - stok 
                     $stok = $row[2];  
                     $tahun = Carbon::now()->format('y');
@@ -93,14 +98,11 @@ class ProductExpiredImport implements ToModel
                         'stok' => $row[5]
                     ]);
               }
-
-              
-             
+                                   
         }
-
         $this->no++;
         return ;
-    }
+    }  
 }
 
 
