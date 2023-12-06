@@ -128,17 +128,17 @@
                                 <td style="font-size: 70%; ">{{ $a->qty }} {{ $a->satuan }}</td>
                                 <td style="font-size: 70%;font-family: DejaVu Sans; sans-serif; ">{{ $a->products->nama }}</td>
                                 <td style="font-size: 70%; text-align:right;">{{ $a->products->merks->nama }}</td>
-                                <td style="font-size: 70%; text-align:right">{{ number_format($a->hargabeli, 0, ',', '.')
+                                <td style="font-size: 70%; text-align:right">{{ number_format($a->hargabeli, 2, ',', '.')
                                     }}</td>
-                                <td style="font-size: 70%; text-align:center">{{ number_format($a->diskon_persen, 0, ',', '.')
+                                <td style="font-size: 70%; text-align:center">{{ number_format($a->diskon_persen, 2, ',', '.')
                                     }}</td>
-                                <td style="font-size: 70%; text-align:left">{{ number_format($a->diskon_rp, 0, ',', '.')
+                                <td style="font-size: 70%; text-align:left">{{ number_format($a->diskon_rp, 2, ',', '.')
                                     }}</td>
-                                <td style="font-size: 70%; text-align:right">{{ number_format($a->subtotal, 0, ',', '.')
+                                <td style="font-size: 70%; text-align:right">{{ number_format($a->subtotal, 2, ',', '.')
                                     }}</td>
-                                <td style="font-size: 70%; text-align:right">{{ number_format($a->total_diskon, 0, ',',
+                                <td style="font-size: 70%; text-align:right">{{ number_format($a->total_diskon, 2, ',',
                                     '.') }}</td>
-                                <td style="font-size: 70%; text-align:right">{{ number_format($a->total, 0, ',',
+                                <td style="font-size: 70%; text-align:right">{{ number_format($a->total, 2, ',',
                                     '.') }}</td>            
 
                         @endif
@@ -165,28 +165,28 @@
                             <td style='font-size: 70%; width: 75%; line-height:90%'><b>Total Jumlah</b></td>
                             <td style='font-size: 70%; width: 5%;'><b>: Rp.</b></td>
                             <td style='font-size: 70%; line-height:90%; text-align:right'><b>
-                                    {{ number_format(floor($pesananpembelian->subtotal), 0, ',', '.') }}
+                                    {{ number_format(floor($pesananpembelian->subtotal), 2, ',', '.') }}
                                 </b></td>
                         </tr>
                         <tr>
                             <td style='font-size: 70%; width: 75%; line-height:90%'><b>Discount</b></td>
                             <td style='font-size: 70%; width: 5%;'><b>: Rp.</b></td>
                             <td style='font-size: 70%; line-height:90%; text-align:right'><b>
-                                    {{ number_format(floor($pesananpembelian->total_diskon_header), 0, ',', '.') }}
+                                    {{ number_format(floor($pesananpembelian->total_diskon_header), 2, ',', '.') }}
                                 </b></td>
                         </tr>
                         <tr>
                             <td style='font-size: 70%; width: 75%; line-height:90%'><b>Total Harga</b></td>
                             <td style='font-size: 70%; width: 5%;'><b>: Rp.</b></td>
                             <td style='font-size: 70%; line-height:90%; text-align:right'><b>
-                                    {{ number_format(floor($pesananpembelian->total), 0, ',', '.') }}
+                                    {{ number_format(floor($pesananpembelian->total), 2, ',', '.') }}
                                 </b></td>
                         </tr>
                         <tr>
                             <td style='font-size: 70%; width: 75%;'><b>PPN ({{$pesananpembelian->ppn}}) %</b></td>
                             <td style='font-size: 70%; width: 5%;'><b>: Rp.</b></td>
                             <td style='font-size: 70%; text-align:right'><b>
-                                    {{ number_format(floor($pesananpembelian->total * $pesananpembelian->ppn/100), 0, ',', '.') }}
+                                    {{ number_format(floor($pesananpembelian->total * $pesananpembelian->ppn/100), 2, ',', '.') }}
                                 </b></td>
                         </tr>
                         {{-- <tr>
@@ -200,7 +200,7 @@
                             <td style='font-size: 70%; width: 25%;'><b>Jumlah Yang Harus Dibayar</b></td>
                             <td style='font-size: 70%; width: 5%;'><b>: Rp.</b></td>
                             <td style='font-size: 70%; text-align:right'><b>
-                                    {{ number_format(floor($pesananpembelian->grandtotal), 0, ',', '.') }}
+                                    {{ number_format(floor($pesananpembelian->grandtotal), 2, ',', '.') }}
                                 </b></td>
                         </tr>
                     </table>
