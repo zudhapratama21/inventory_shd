@@ -16,6 +16,8 @@ use App\Models\PesananPembelian;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\FakturPembelianDetail;
+use App\Models\FakturPenjualanDetail;
 use App\Models\PesananPembelianDetail;
 use Barryvdh\DomPDF\Facade as PDF;
 use Exception;
@@ -206,8 +208,11 @@ class PesananPembelianController extends Controller
     public function setbarang(Request $request)
     {
         $product = Product::where('id', '=', $request->id)->get()->first();
+        $penjualan = FakturPenjualanDetail::where('product_id',$request->id)->with('fakturpenjualan.customers')->take(30)->orderBy('id','desc')->get();
+        $pembelian = FakturPembelianDetail::where('product_id',$request->id)->with('fakturpembelian.suppliers')->take(30)->orderBy('id','desc')->get();
+        
         $mode = "new";
-        return view('pembelian.pesananpembelian._setbarang', compact('product', 'mode'));
+        return view('pembelian.pesananpembelian._setbarang', compact('product', 'mode','penjualan','pembelian'));
     }
 
     public function inputtemppo(Request $request)

@@ -13,4 +13,10 @@ class FakturPembelianDetail extends Model
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
+
+   
+    public function fakturpembelian()
+    {
+        return $this->belongsTo(FakturPembelian::class, 'faktur_pembelian_id', 'id');
+    }
 }

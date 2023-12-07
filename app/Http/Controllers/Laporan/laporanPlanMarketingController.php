@@ -72,7 +72,7 @@ class laporanPlanMarketingController extends Controller
 
             $sales->orderBy('id', 'asc');
 
-        return DataTables::of($planmarketing)
+        return DataTables::of($sales)
             ->addIndexColumn()
             ->addColumn('waktu', function (PlanMarketing $ot) {
                 $tanggal = '11-'.$ot->bulan.'-'.$ot->tahun;

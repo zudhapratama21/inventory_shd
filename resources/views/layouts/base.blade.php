@@ -9,9 +9,12 @@
     <meta name="description" content="Updates and statistics" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
+
     <!--begin::Fonts-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
     <!--end::Fonts-->
+
+    <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
 
     <!--begin::Page Vendors Styles(used by this page)-->
     <link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css?v=7.0.6') }}" rel="stylesheet"

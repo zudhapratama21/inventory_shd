@@ -21,23 +21,7 @@ class PlanMarketingController extends Controller
 
     public function index()
     {
-
-        // $planmarketing = DB::table('plan_marketings as pm')
-        // ->join('plan_marketings_detail as pmd','pmd.planmarketing_id','=','pm.id')
-        // ->join('outlets as o','pm.outlet_id','=','o.id')
-        // ->join('days as d','pmd.day_id','=','d.id')                
-        // ->where('pm.bulan',12)
-        // ->where('pm.tahun',2023)
-        // ->where('pm.user_id',auth()->user()->id)
-        // ->where('pmd.minggu',1)
-        // ->where('pmd.day_id',2)                    
-        // ->where('pm.deleted_at','=',null)
-        // ->where('pmd.deleted_at','=',null)
-        // ->select('o.nama as nama_outlet','d.nama as nama_hari','pmd.id as id')
-        // ->get(); 
-
-        // dd($planmarketing);
-       
+        
         $title = "Plan Marketing";
         $day = Day::get();
         $bulan =  [];
@@ -346,26 +330,26 @@ class PlanMarketingController extends Controller
     public function remind(Request $request)
     {
         $planmarketing = DB::table('plan_marketings as pm')
-                    ->join('plan_marketings_detail as pmd','pmd.planmarketing_id','=','pm.id')
-                    ->join('outlets as o','pm.outlet_id','=','o.id')
-                    ->join('days as d','pmd.day_id','=','d.id')                
-                    ->where('pm.bulan',$request->bulan)
-                    ->where('pm.tahun',$request->tahun)
-                    ->where('pm.user_id',auth()->user()->id)
-                    ->where('pmd.minggu',$request->minggu)
-                    ->where('pmd.day_id',$request->hari)                    
-                    ->where('pm.deleted_at','=',null)
-                    ->where('pmd.deleted_at','=',null)
-                    ->select('o.nama as nama_outlet','d.nama as nama_hari','pm.bulan as nama_bulan','pm.tahun as nama_tahun' , 'pmd.minggu as nama_minggu')
-                    ->get();    
-        
-        $text='Berikut List Kunjungan Pada Hari ' . ucfirst($planmarketing[0]->nama_hari). ' Minggu ke - ' . ucfirst($planmarketing[0]->nama_minggu) .' Bulan ' . ucfirst(Carbon::parse('01-'.$planmarketing[0]->nama_bulan.'-2023')->format('F')). ' Tahun ' . ucfirst($planmarketing[0]->nama_tahun) .'%0A====================================%0A';
+            ->join('plan_marketings_detail as pmd', 'pmd.planmarketing_id', '=', 'pm.id')
+            ->join('outlets as o', 'pm.outlet_id', '=', 'o.id')
+            ->join('days as d', 'pmd.day_id', '=', 'd.id')
+            ->where('pm.bulan', $request->bulan)
+            ->where('pm.tahun', $request->tahun)
+            ->where('pm.user_id', auth()->user()->id)
+            ->where('pmd.minggu', $request->minggu)
+            ->where('pmd.day_id', $request->hari)
+            ->where('pm.deleted_at', '=', null)
+            ->where('pmd.deleted_at', '=', null)
+            ->select('o.nama as nama_outlet', 'd.nama as nama_hari', 'pm.bulan as nama_bulan', 'pm.tahun as nama_tahun', 'pmd.minggu as nama_minggu')
+            ->get();
+
+        $text = 'Berikut List Kunjungan Pada Hari ' . ucfirst($planmarketing[0]->nama_hari) . ' Minggu ke - ' . ucfirst($planmarketing[0]->nama_minggu) . ' Bulan ' . ucfirst(Carbon::parse('01-' . $planmarketing[0]->nama_bulan . '-2023')->format('F')) . ' Tahun ' . ucfirst($planmarketing[0]->nama_tahun) . '%0A====================================%0A';
         foreach ($planmarketing as $key => $value) {
-            $text = $text.$value->nama_outlet.'%0A'; 
+            $text = $text . $value->nama_outlet . '%0A';
         }
 
 
         $phone = auth()->user()->sales->phone;
-        return view('sales.planmarketing.partial._remind',compact('planmarketing','text','phone'));
+        return view('sales.planmarketing.partial._remind', compact('planmarketing', 'text', 'phone'));
     }
 }
