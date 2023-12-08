@@ -280,7 +280,7 @@
                                         </a>
                                     @endcan
 
-                                    @can('labarugi')
+                                    @can('labarugi-list')
                                         <a href="{{ route('fakturpenjualan.labarugi.show', ['fakturpenjualan'=>$fakturpenjualan->id]) }}"
                                             class="btn btn-primary ml-4" >
                                             <i class="fas fa-paper-plane"></i> Laba / Rugi
