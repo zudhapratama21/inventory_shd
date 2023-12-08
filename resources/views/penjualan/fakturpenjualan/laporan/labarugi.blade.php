@@ -54,8 +54,7 @@
                                     <th>Diskon Jual (%)</th>
                                     <th>Diskon Jual (Rp.)</th>
                                     <th>Total Diskon</th>
-                                    <th>Sub Total</th>                                    
-                                    <th>Total Jual</th>
+                                    <th>Total</th>                                                                        
                                     <th>CN</th>
                                     <th>Harga Jual Nett</th>
                                     <th>Harga Beli</th>
@@ -77,8 +76,7 @@
                                         <td>{{ number_format($item['hargajual'], 2, ',', '.') }}</td>
                                         <td>{{ $item['diskon_persen'] }}</td>
                                         <td>{{ $item['diskon_rp'] }}</td>
-                                        <td>{{ number_format($item['total_diskon'], 2, ',', '.') }}</td>
-                                        <td>{{ number_format($item['subtotal'], 2, ',', '.') }}</td>                                        
+                                        <td>{{ number_format($item['total_diskon'], 2, ',', '.') }}</td>                                                                               
                                         <td>{{ number_format($item['total'], 2, ',', '.') }}</td>
                                         <td>{{ number_format($item['cn_rupiah'], 2, ',', '.') }}</td>
                                         <td>{{ number_format($item['nett'], 2, ',', '.') }}</td>
