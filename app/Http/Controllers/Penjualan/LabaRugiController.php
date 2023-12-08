@@ -82,7 +82,7 @@ class LabaRugiController extends Controller
                         'diskon_persen' => $item->diskon_persen,
                         'diskon_rp' => $item->diskon_rp,
                         'total_diskon' => $item->total_diskon,
-                        'subtotal' => $item->subtotal,
+                        'subtotal' => $item->subtotal - $item->total_diskon,
                         'ppn' => $ppn,
                         'total' => $total,
                         'cn_rupiah' => $item->cn_rupiah,
