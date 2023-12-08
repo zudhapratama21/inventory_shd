@@ -25,6 +25,6 @@ class FakturPenjualanDetail extends Model
   
     public function pengirimanbarangdetail()
     {
-        return $this->belongsTo(PengirimanBarangDetail::class, 'pengiriman_barang_id', 'id');
+        return $this->belongsTo(PengirimanBarangDetail::class, 'pengiriman_barang_detail_id', 'id');
     }
 }

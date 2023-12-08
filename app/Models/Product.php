@@ -108,4 +108,11 @@ class Product extends Model
     {
         return $this->hasMany(HargaNonExpired::class, 'product_id');
     }
+
+
+    
+    public function fakturpenjualandetail()
+    {
+        return $this->hasMany(FakturPenjualanDetail::class, 'product_id');
+    }
 }
