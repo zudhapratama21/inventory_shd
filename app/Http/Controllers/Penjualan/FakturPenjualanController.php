@@ -568,7 +568,7 @@ class FakturPenjualanController extends Controller
         $harga1 = $request->cn_persen;        
         $harga = str_replace(',', '.', $harga1) * 1;
         
-        $subtotal = $fakturpenjualandetail->subtotal;
+        $subtotal = $fakturpenjualandetail->total;
         $data['cn_rupiah'] = $subtotal * $harga/100;
         $data['cn_total'] = $data['cn_rupiah'];
 
