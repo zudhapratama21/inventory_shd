@@ -41,7 +41,7 @@ class LabaRugiController extends Controller
                 foreach ($item->pengirimanbarangdetail->harganonexpireddetail as $nonexpired) {
 
                     $subtotal = $item->qty * $nonexpired->harga_beli;
-                    $total_diskon = ($nonexpired->diskon_persen_beli * $subtotal) + $nonexpired->diskon_rupiah_beli;
+                    $total_diskon = ($nonexpired->diskon_persen_beli * $subtotal/100) + $nonexpired->diskon_rupiah_beli;
                     $hpp = ($subtotal - $total_diskon) * 1.11;
                     $labarugi[] = array(
                         'tanggal' => Carbon::parse($item->fakturpenjualan->tanggal)->format('d/m/Y'),
@@ -70,7 +70,7 @@ class LabaRugiController extends Controller
 
                 foreach ($item->pengirimanbarangdetail->stokexpdetail as $expired) {
                     $subtotalexpired = $item->qty * $expired->harga_beli;
-                    $total_diskon_expired = ($expired->diskon_persen_beli * $subtotalexpired) + $expired->diskon_rupiah_beli;
+                    $total_diskon_expired = ($expired->diskon_persen_beli * $subtotalexpired/100) + $expired->diskon_rupiah_beli;
                     $hpp_expired = ($subtotalexpired - $total_diskon_expired) * 1.11;
                     $labarugi[] = array(
                         'tanggal' => Carbon::parse($item->fakturpenjualan->tanggal)->format('d/m/Y'),
