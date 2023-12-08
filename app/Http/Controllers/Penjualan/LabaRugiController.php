@@ -32,8 +32,7 @@ class LabaRugiController extends Controller
             // dd($fakturpenjualan);
         foreach ($fakturpenjualan as $item) {
 
-            $ppn = ($item->subtotal - $item->total_diskon) * 11 / 100;
-            $total =  $item->subtotal + $ppn - $item->total_diskon;
+            $total =  $item->subtotal - $item->total_diskon;
             $nett = $total - $item->cn_rupiah;
 
 
@@ -53,8 +52,7 @@ class LabaRugiController extends Controller
                         'diskon_persen' => $item->diskon_persen,
                         'diskon_rp' => $item->diskon_rp,
                         'total_diskon' => $item->total_diskon,
-                        'subtotal' => $item->subtotal - $item->total_diskon,
-                        'ppn' => $ppn,
+                        'subtotal' => $item->subtotal - $item->total_diskon,                       
                         'total' => $total,
                         'cn_rupiah' => $item->cn_rupiah,
                         'nett' => $nett,
@@ -82,8 +80,7 @@ class LabaRugiController extends Controller
                         'diskon_persen' => $item->diskon_persen,
                         'diskon_rp' => $item->diskon_rp,
                         'total_diskon' => $item->total_diskon,
-                        'subtotal' => $item->subtotal - $item->total_diskon,
-                        'ppn' => $ppn,
+                        'subtotal' => $item->subtotal - $item->total_diskon,                        
                         'total' => $total,
                         'cn_rupiah' => $item->cn_rupiah,
                         'nett' => $nett,
