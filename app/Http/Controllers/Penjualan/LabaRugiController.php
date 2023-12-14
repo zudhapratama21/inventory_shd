@@ -59,7 +59,7 @@ class LabaRugiController extends Controller
                         'harga_beli' => $nonexpired->harga_beli,
                         'diskon_beli_persen' => $nonexpired->diskon_persen_beli,
                         'diskon_beli_rupiah' => $nonexpired->diskon_rupiah_beli,
-                        'total_diskon' => $total_diskon,
+                        'total_diskon_beli' => $total_diskon,
                         'hpp' => $hpp,
                         'laba_kotor' =>  $nett - $hpp
                     );

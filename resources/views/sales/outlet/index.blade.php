@@ -158,9 +158,10 @@
 
         function dataOutlet() {
             var table = $('.yajra-datatable').DataTable({
+                responsive: true,
                 processing: true,
                 serverSide: true,
-                scrollX: true,
+                autoWidth: false,
                 ajax: {
                     url: "{{ route('outlet.datatable') }}",
                     type: "POST",
