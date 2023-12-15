@@ -91,8 +91,22 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="">Tahun</label>
-                                                <input type="text" name="tahun" class="form-control"
-                                                    value="{{ \Carbon\Carbon::parse(now())->format('Y') }}" readonly>
+                                                <select name="tahun" id="kt_select2_9" class="form-control"
+                                                    onchange="filterYear()">
+                                                    @php
+                                                        $year = 2020;
+                                                        $now = date('Y') + 1;
+                                                    @endphp
+                                                    @foreach (range($now, $year) as $x)
+                                                        @if ($planmarketing->tahun == date('Y'))
+                                                            <option value="{{ $x }}" selected>
+                                                                {{ $x }}</option>
+                                                        @else
+                                                            <option value="{{ $x }}">{{ $x }}
+                                                            </option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                     </div>

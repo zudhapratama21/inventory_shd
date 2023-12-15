@@ -90,9 +90,14 @@
                                                 onchange="filterYear()">
                                                 @php
                                                     $year = 2020;
+                                                    $now = date('Y') + 1;
                                                 @endphp
-                                                @foreach (range(date('Y'), $year) as $x)
-                                                    <option value="{{ $x }}">{{ $x }}</option>
+                                                @foreach (range($now, $year) as $x)
+                                                    @if ($x == date('Y'))
+                                                        <option value="{{ $x }}" selected>{{ $x }}</option>
+                                                    @else   
+                                                        <option value="{{ $x }}">{{ $x }}</option>
+                                                    @endif
                                                 @endforeach
                                             </select>
                                         </div>
@@ -169,7 +174,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">REMIND  ME !!</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">REMIND ME !!</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -177,7 +182,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="">Minggu ke ?</label> <br>
-                        <select name="" class="form-control" id="kt_select2_7" >
+                        <select name="" class="form-control" id="kt_select2_7">
                             <option value="1">Minggu ke 1 </option>
                             <option value="2">Minggu ke 2 </option>
                             <option value="3">Minggu ke 3 </option>
@@ -188,10 +193,10 @@
 
                     <div class="form-group">
                         <label for="">Hari apa ?</label> <br>
-                        <select name="" class="form-control" id="kt_select2_8" >
-                                @foreach ($day as $item)
-                                    <option value="{{$item->id}}">{{$item->nama}}</option>
-                                @endforeach
+                        <select name="" class="form-control" id="kt_select2_8">
+                            @foreach ($day as $item)
+                                <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -338,11 +343,11 @@
             $('.yajra-datatable').DataTable().ajax.reload(null, false);
         }
 
-        function remind(){
+        function remind() {
             $('#remind').modal('show');
         }
 
-        function chat(){
+        function chat() {
 
             let r = document.getElementById("kt_select2_7");
             minggu = r.options[r.selectedIndex].value;
@@ -351,36 +356,34 @@
             hari = s.options[s.selectedIndex].value;
 
             $.ajax({
-                    type: 'POST',
-                    url: '{{ route('planmarketing.remind') }}',
-                    dataType: 'html',
-                    headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
-                    data: {
-                        id : minggu,
-                        hari : hari,
-                        tahun : tahun,
-                        bulan : bulan,
-                        minggu : minggu,
-                        "_token": "{{ csrf_token() }}"
-                    },
-                    
-                    success: function (data){              
-                        $('#modal-remind-detail').html(data);
-                        $('#remind').modal('hide');   
-                        $('#option').modal('show');   
-                    },
-                    error: function(data){
-                        console.log(data);
-                    }
-             });
+                type: 'POST',
+                url: '{{ route('planmarketing.remind') }}',
+                dataType: 'html',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    id: minggu,
+                    hari: hari,
+                    tahun: tahun,
+                    bulan: bulan,
+                    minggu: minggu,
+                    "_token": "{{ csrf_token() }}"
+                },
+
+                success: function(data) {
+                    $('#modal-remind-detail').html(data);
+                    $('#remind').modal('hide');
+                    $('#option').modal('show');
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            });
 
 
 
 
         }
-
-
-
-        
     </script>
 @endpush

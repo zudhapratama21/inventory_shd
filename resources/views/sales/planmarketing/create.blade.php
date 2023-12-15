@@ -71,79 +71,100 @@
                                     <div class="form-group">
                                         <label for="">Outlet</label>
                                         <select name="outlet_id" class="form-control" id="kt_select2_1">
-                                            <option value="" selected disabled>======= Pilih Outlet =================</option>
-                                            @foreach ($outlet as $item)                                            
-                                                <option value="{{$item->id}}">{{$item->nama}}</option>    
-                                            @endforeach                                            
+                                            <option value="" selected disabled>======= Pilih Outlet =================
+                                            </option>
+                                            @foreach ($outlet as $item)
+                                                <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
 
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="">Bulan</label>   
-                                                <select name="bulan"  class="form-control" id="kt_select2_8">
-                                                    @foreach ($bulan as $item)                                                    
-                                                        @if ( \Carbon\Carbon::parse(now())->format('m') == $item['id'])
-                                                            <option value="{{$item['id']}}" selected>{{$item['nama']}}</option>                                                            
+                                                <label for="">Bulan</label>
+                                                <select name="bulan" class="form-control" id="kt_select2_8">
+                                                    @foreach ($bulan as $item)
+                                                        @if (\Carbon\Carbon::parse(now())->format('m') == $item['id'])
+                                                            <option value="{{ $item['id'] }}" selected>{{ $item['nama'] }}
+                                                            </option>
                                                         @else
-                                                            <option value="{{$item['id']}}">{{$item['nama']}}</option>                                                            
-                                                        
-                                                        @endif                                                        
-                                                    @endforeach     
-                                                </select>                                                                                                                                      
+                                                            <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="">Tahun</label>
-                                                <input type="text" name="tahun" class="form-control"  value="{{ \Carbon\Carbon::parse(now())->format('Y') }}" readonly>
+                                                <select name="tahun" id="kt_select2_9" class="form-control"
+                                                    onchange="filterYear()">
+                                                    @php
+                                                        $year = 2020;
+                                                        $now = date('Y') + 1;
+                                                    @endphp
+                                                    @foreach (range($now, $year) as $x)
+                                                        @if ($x == date('Y'))
+                                                            <option value="{{ $x }}" selected>
+                                                                {{ $x }}</option>
+                                                        @else
+                                                            <option value="{{ $x }}">{{ $x }}
+                                                            </option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="">Minggu ke - 1</label>
-                                        <select name="day_minggu1[]"  class="form-control" id="kt_select2_2" multiple="multiple">
+                                        <select name="day_minggu1[]" class="form-control" id="kt_select2_2"
+                                            multiple="multiple">
                                             @foreach ($day as $item)
-                                                <option value="{{$item->id}}">{{$item->nama}}</option>   
-                                            @endforeach                                            
+                                                <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="">Minggu ke - 2</label>
-                                        <select name="day_minggu2[]"  class="form-control" id="kt_select2_3" multiple="multiple">                                            
+                                        <select name="day_minggu2[]" class="form-control" id="kt_select2_3"
+                                            multiple="multiple">
                                             @foreach ($day as $item)
-                                                <option value="{{$item->id}}">{{$item->nama}}</option>   
-                                            @endforeach                                            
+                                                <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="">Minggu ke - 3</label>
-                                        <select name="day_minggu3[]"  class="form-control" id="kt_select2_4" multiple="multiple">                                            
+                                        <select name="day_minggu3[]" class="form-control" id="kt_select2_4"
+                                            multiple="multiple">
                                             @foreach ($day as $item)
-                                                <option value="{{$item->id}}">{{$item->nama}}</option>   
-                                            @endforeach                                            
+                                                <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="">Minggu ke - 4</label>
-                                        <select name="day_minggu4[]"  class="form-control" id="kt_select2_5" multiple="multiple">                                            
+                                        <select name="day_minggu4[]" class="form-control" id="kt_select2_5"
+                                            multiple="multiple">
                                             @foreach ($day as $item)
-                                                <option value="{{$item->id}}">{{$item->nama}}</option>   
-                                            @endforeach                                            
+                                                <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="">Minggu ke - 5</label>
-                                        <select name="day_minggu5[]"  class="form-control" id="kt_select2_7" multiple="multiple">                                            
+                                        <select name="day_minggu5[]" class="form-control" id="kt_select2_7"
+                                            multiple="multiple">
                                             @foreach ($day as $item)
-                                                <option value="{{$item->id}}">{{$item->nama}}</option>   
-                                            @endforeach                                            
+                                                <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
 
@@ -151,7 +172,7 @@
                                         <button class="btn btn-primary" type="submit">Save</button>
                                         <a href="{{ route('planmarketing.index') }}" class="btn btn-secondary">Close</a>
                                     </div>
-                                   
+
                                 </form>
                             </div>
                         </div>
@@ -173,8 +194,7 @@
 
     <script>
         $('#kt_select2_3_modal').select2({
-             placeholder: &quot;Select a state&quot;,
+            placeholder: & quot;Select a state & quot;,
         });
     </script>
 @endpush
-	
