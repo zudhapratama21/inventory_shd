@@ -248,6 +248,7 @@ Route::middleware('has.role')->prefix('master')->group(function () {
         Route::delete('delete', [MerkController::class, 'destroy'])->name('merk.destroy');
 
         Route::post('import', [MerkController::class, 'import'])->name('merk.import');
+        Route::get('export', [MerkController::class, 'export'])->name('merk.export');
 
 
     });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Master;
 
+use App\Exports\MerkExport;
 use App\Models\Merk;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -105,5 +106,10 @@ class MerkController extends Controller
         Excel::import(new MerkImport, $request->file('file')); 
         return back();
         
+    }
+
+    public function export ()
+    {        
+        return Excel::download(new MerkExport,'merk.xlsx'); ;
     }
 }
