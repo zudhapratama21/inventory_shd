@@ -76,6 +76,7 @@
                             <table class="table yajra-datatable collapsed ">
                                 <thead class="datatable-head">
                                     <tr>
+                                        <th>ID</th>
                                         <th>Kode</th>
                                         <th>Kategori</th>
                                         <th>Nama</th>
@@ -127,6 +128,7 @@
               ajax: "{{ route('supplier.index') }}",
               columns: [
                 //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                  {data: 'id', name: 'id'},
                   {data: 'kode', name: 'kode'},
                   {data: 'kategori', name: 'kategori.nama'},
                   {data: 'nama', name: 'nama'},
