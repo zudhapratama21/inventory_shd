@@ -352,7 +352,7 @@
 
         // untuk product 
         let bulanproduct = 'All';
-        let yearProduct = 'All';
+        let yearProduct = {{ now()->format('Y') }};
         let kategoriProduct = 'All';
         // end of product
 
