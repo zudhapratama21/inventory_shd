@@ -958,6 +958,10 @@ Route::middleware('has.role')->prefix('sales')->group(function () {
         Route::post('/performasales/performasalesCustomer', [PerformaSalesController::class, 'datatableCustomer'])->name('performasales.dataperformasales.datatableCustomer'); 
 
         Route::post('/performasales/performasalesProduk', [PerformaSalesController::class, 'datatableProduk'])->name('performasales.dataperformasales.datatableProduk'); 
+
+        Route::post('/performasales/dataproduct', [PerformaSalesController::class, 'dataProduct'])->name('performasales.dataperformasales.dataproduct'); 
+
+
     });
 
     Route::prefix('targetsales')->group(function () {

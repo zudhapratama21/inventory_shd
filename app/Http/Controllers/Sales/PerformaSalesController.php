@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Sales;
 
 use App\Http\Controllers\Controller;
+use App\Models\Customer_category;
 use App\Models\Kategoripesanan;
+use App\Models\Merk;
 use App\Models\Sales;
 use App\Models\TargetSales;
 use App\Models\User;
@@ -174,6 +176,8 @@ class PerformaSalesController extends Controller
     {
         $title = 'Detail Performa Sales';
         $category = Kategoripesanan::get();
+        $categorycustomer = Customer_category::get();
+        $merk = Merk::get();
 
         for ($i = 1; $i <=12; $i++) {
             $databulan = '1-'.$i.'-2023';
@@ -193,7 +197,9 @@ class PerformaSalesController extends Controller
             'bulan_id' => $month,
             'kategori_id' => $kategori,
             'bulan' => $months,
-            'sales' => $sales
+            'sales' => $sales,
+            'categorycustomer' => $categorycustomer,
+            'merk' => $merk
         ]);
 
 
@@ -322,8 +328,16 @@ class PerformaSalesController extends Controller
         }else{
             $kategori = $bulan;
         }
+
+        if ($request->kategoricustomer !== 'All') {
+            $customercategori = $kategori->where('c.kategori_id',$request->kategoricustomer);
+        }else{
+            $customercategori = $kategori;
+        }
+
+
         
-        $hasil = $kategori
+        $hasil = $customercategori
                 ->groupBy('pp.customer_id')             
                 ->select(     
                     'c.nama','c.id',              
@@ -445,4 +459,90 @@ class PerformaSalesController extends Controller
                     })      
                     ->make(true);  
     }
+
+
+    // =================================================== DATATABLE DATA PRODUCT ========================================================================
+
+    public function dataProduct(Request $request)
+    {
+        $results = DB::table('faktur_penjualans as fp')
+                    ->join('faktur_penjualan_details as fdp','fdp.faktur_penjualan_id','=','fp.id')                    
+                    ->join('pesanan_penjualans as pp','fp.pesanan_penjualan_id','=','pp.id')        
+                    ->join('products as p','fdp.product_id','=','p.id')           
+                    ->where('fp.deleted_at','=',null)
+                    ->where('pp.sales_id',$request->sales_id);                    
+
+        if ($request->year) {
+            $res=$results->whereYear('fp.tanggal',$request->year);       
+        }else{
+            $res=$results;
+        }
+
+        if ($request->bulan !== 'All') {
+             $bulan = $res->whereMonth('fp.tanggal',$request->bulan)
+                      ->groupBy(DB::raw("DATE_FORMAT(fp.tanggal, '%m-%Y')"));
+        }else{
+             $bulan = $res;
+        }
+
+        if ($request->kategori !== 'All') {
+             $kategori = $bulan->where('pp.kategoripesanan_id',$request->kategori);
+        }else{
+            $kategori = $bulan;
+        }
+
+        if ($request->merk !== 'All') {
+            $merk = $kategori->where('p.merk_id',$request->merk);
+        }else{
+            $merk = $kategori;
+        }
+
+        $hasil = $merk
+            ->groupBy('fdp.product_id')             
+            ->select(     
+                'p.nama','p.id',              
+                DB::raw("DATE_FORMAT(fp.tanggal, '%m') as tanggal_penjualan"),
+                DB::raw("DATE_FORMAT(fp.tanggal, '%Y') as tahun_penjualan"),
+                DB::raw("sum(fdp.qty) as stok_produk"),
+                DB::raw("sum(fdp.total) as total_penjualan"),
+                DB::raw("sum(fdp.cn_total) as total_cn")
+            )                  
+            ->get(); 
+
+        $count = count($hasil);
+        $tmp = null;
+
+        if ($count > 0) {            
+        for ($i=0; $i < $count-1 ; $i++) { 
+            for ($j=$i+1; $j < $count ; $j++) { 
+                $awal = $hasil[$i]->total_penjualan - ($hasil[$i]->total_cn ? $hasil[$i]->total_cn : 0) ;
+                $akhir = $hasil[$j]->total_penjualan - ($hasil[$j]->total_cn ? $hasil[$j]->total_cn : 0);     
+
+                if ($awal < $akhir) {
+                    $tmp = $hasil[$i];
+                    $hasil[$i] = $hasil[$j];
+                    $hasil[$j] = $tmp;
+                }
+            }
+        }       
+        }
+
+        $data = $hasil;
+
+        return DataTables::of($data)
+                    ->addIndexColumn() 
+                    ->editColumn('tanggal', function ($data) {
+                    return $data->tanggal_penjualan . '-'. $data->tahun_penjualan; 
+                    })                        
+                    ->editColumn('total', function ($data) {
+                        return 'Rp.' . number_format($data->total_penjualan -  $data->total_cn, 0, ',', '.');
+                    })        
+                    ->addColumn('action', function ($data) {
+                        $customer_id =  $data->id;
+                        return view('sales.performasales.detailperforma.partial.button',compact('customer_id'));
+                    })      
+                    ->make(true);  
+    }
+
+
 }

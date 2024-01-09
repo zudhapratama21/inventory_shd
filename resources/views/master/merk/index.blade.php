@@ -88,6 +88,7 @@
                                     <thead class="datatable-head">
                                         <tr>
                                             <th>Nama</th>
+                                            <th>Supplier</th>
                                             <th>Keterangan</th>
                                             <th style="width: 10%; ">Action</th>
                                         </tr>
@@ -161,6 +162,10 @@
                     {
                         data: 'nama',
                         name: 'nama'
+                    },
+                    {
+                        data: 'supplier',
+                        name: 'supplier.nama'
                     },
                     {
                         data: 'keterangan',

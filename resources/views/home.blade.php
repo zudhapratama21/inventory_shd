@@ -100,7 +100,7 @@
 
                        
                           
-                            <!--begin::Chart-->
+                            <!--begin::Chart-->c
                             {{-- <div id="penjualanchart"></div> --}}
                               <div>
                                  <canvas id="myChart" height="100"></canvas>

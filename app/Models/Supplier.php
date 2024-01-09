@@ -83,4 +83,10 @@ class Supplier extends Model
     {
         return $this->hasMany(Hutang::class, 'supplier_id','id');
     }
+
+   
+    public function merk()
+    {
+        return $this->hasMany(Merk::class, 'supplier_id');
+    }
 }

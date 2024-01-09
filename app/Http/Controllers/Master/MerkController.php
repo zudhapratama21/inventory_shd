@@ -24,11 +24,14 @@ class MerkController extends Controller
     public function index()
     {
         $title = "MERK";
-        $merks = Merk::latest()->get();
+        $merks = Merk::with('supplier')->latest()->get();
 
         if (request()->ajax()) {
             return Datatables::of($merks)
                 ->addIndexColumn()
+                ->addColumn('supplier', function (Merk $s) {
+                    return $s->supplier->nama;
+                })
                 ->addColumn('action', function ($row) {
                     $editUrl = route('merk.edit', ['merk' => $row->id]);
                     $id = $row->id;

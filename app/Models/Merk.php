@@ -15,11 +15,18 @@ class Merk extends Model
 
     protected $fillable = [
         'nama',
-        'keterangan'
+        'keterangan',
+        'supplier_id'
     ];
 
     public function products()
     {
         return $this->hasMany(Product::class, 'merk_id', 'id');
+    }
+
+    
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class, 'supplier_id', 'id');
     }
 }

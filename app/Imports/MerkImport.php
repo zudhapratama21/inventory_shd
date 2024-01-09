@@ -13,11 +13,10 @@ class MerkImport implements ToModel
     public function model(array $row)
     {
         if ($this->no !== 0) {
-            Merk::create([
-                'nama' => $row[0],
-                'keterangan' => null
+            Merk::where('id',$row[0])->update([
+                'supplier_id' => $row[1]
             ]);
-        }
+        }                
         $this->no ++;
         return ;
     }

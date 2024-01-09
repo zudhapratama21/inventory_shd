@@ -3,10 +3,6 @@
 @section('content')
 <!--begin::Content-->
 <div class="content  d-flex flex-column flex-column-fluid" id="kt_content">
-    <!--begin::Subheader-->
-
-    <!--end::Subheader-->
-
     <!--begin::Entry-->
     <div class="d-flex flex-column-fluid mt-10">
         <!--begin::Container-->
@@ -154,8 +150,7 @@
         let tanggalSelesai = '';
 
     $(function () {
-        
-   
+    
           var table = $('.yajra-datatable').DataTable({
               responsive: true,
               processing: true,
