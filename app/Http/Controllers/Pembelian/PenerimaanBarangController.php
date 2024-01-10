@@ -657,7 +657,7 @@ class PenerimaanBarangController extends Controller
                 $product = Product::find($a->product_id);
                 $stok = $product->stok;
 
-                if ($stok < $a->qty) {
+                if ($stok <= $a->qty) {
                     return redirect()->route('penerimaanbarang.index')->with('gagal','Barang '.$product->nama.' telah dilakukan penjualan  , silahkan hapus surat jalan terlebih dahulu');   
                 }
                 $hpp = $product->hpp;
@@ -681,13 +681,10 @@ class PenerimaanBarangController extends Controller
                         
                         $harganonexpired->update([
                             'qty' => $stokNonExpired
-                        ]);                   
-                        
+                        ]);                                           
                     }
                 }
-                
-
-                
+                                
                 $pesanan_pembelian_detail_id = $a->pesanan_pembelian_detail_id;
                 $stok_baru = $stok - $a->qty;
                 //input inv trans
