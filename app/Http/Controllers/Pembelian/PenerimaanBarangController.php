@@ -672,8 +672,10 @@ class PenerimaanBarangController extends Controller
                                                   ->where('diskon_rupiah',$pesananPembelianDetail->diskon_rp)
                                                   ->where('supplier_id',$pesananpembelian->supplier_id)
                                                   ->first();
+                $typeproduct = Product::where('id',$pesananPembelianDetail->product_id)->first();
 
                 if ($harganonexpired) {
+                    dd('tes');
                     if ($harganonexpired->qty <= $a->qty) {
                         return redirect()->route('penerimaanbarang.index')->with('gagal','Barang '.$product->nama.' telah dilakukan penjualan  , silahkan hapus surat jalan terlebih dahulu');   
                     }else{
