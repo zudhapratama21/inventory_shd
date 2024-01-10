@@ -674,7 +674,7 @@ class PenerimaanBarangController extends Controller
                                                   ->first();
 
                 if ($harganonexpired) {
-                    if ($harganonexpired->qty < $a->qty) {
+                    if ($harganonexpired->qty <= $a->qty) {
                         return redirect()->route('penerimaanbarang.index')->with('gagal','Barang '.$product->nama.' telah dilakukan penjualan  , silahkan hapus surat jalan terlebih dahulu');   
                     }else{
                         $stokNonExpired = $harganonexpired->qty - $a->qty;
