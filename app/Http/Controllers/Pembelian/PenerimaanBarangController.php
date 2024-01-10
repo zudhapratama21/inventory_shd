@@ -658,7 +658,7 @@ class PenerimaanBarangController extends Controller
                 $stok = $product->stok;
 
                 if ($stok <= $a->qty) {
-                    dd('tes')
+                    dd('tes');
                     return redirect()->route('penerimaanbarang.index')->with('gagal','Barang '.$product->nama.' telah dilakukan penjualan  , silahkan hapus surat jalan terlebih dahulu');   
                 }
                 $hpp = $product->hpp;
