@@ -657,8 +657,7 @@ class PenerimaanBarangController extends Controller
                 $product = Product::find($a->product_id);
                 $stok = $product->stok;
 
-                if ($stok <= $a->qty) {
-                    dd('tes');
+                if ($stok < $a->qty) {                    
                     return redirect()->route('penerimaanbarang.index')->with('gagal','Barang '.$product->nama.' telah dilakukan penjualan  , silahkan hapus surat jalan terlebih dahulu');   
                 }
                 $hpp = $product->hpp;
@@ -676,7 +675,7 @@ class PenerimaanBarangController extends Controller
                 $typeproduct = Product::where('id',$pesananPembelianDetail->product_id)->first();
 
                 if ($harganonexpired) {                    
-                    if ($harganonexpired->qty <= $a->qty) {
+                    if ($harganonexpired->qty < $a->qty) {
                         return redirect()->route('penerimaanbarang.index')->with('gagal','Barang '.$product->nama.' telah dilakukan penjualan  , silahkan hapus surat jalan terlebih dahulu');   
                     }else{
                         $stokNonExpired = $harganonexpired->qty - $a->qty;
