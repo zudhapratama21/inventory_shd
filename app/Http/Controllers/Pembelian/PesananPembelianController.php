@@ -532,7 +532,7 @@ class PesananPembelianController extends Controller
         $pesananpembeliandetail = PesananPembelianDetail::with('products.merks')            
             ->where('pesanan_pembelian_id', '=', $pesananpembelian->id)->get();
         $jmlBaris  = $pesananpembeliandetail->count();
-        $perBaris = 13;
+        $perBaris = 10;
         $totalPage = ceil($jmlBaris / $perBaris);
         // dd($totalPage);
        

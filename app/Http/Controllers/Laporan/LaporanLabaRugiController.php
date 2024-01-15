@@ -44,14 +44,14 @@ class LaporanLabaRugiController extends Controller
     {
 
         $results = DB::table('faktur_penjualan_details as fpd')
-            ->join('faktur_penjualans as fp', 'fpd.faktur_penjualan_id', '=', 'fp.id')
-            ->join('pesanan_penjualans as pp', 'fp.pesanan_penjualan_id', '=', 'pp.id')
-            ->join('products as p', 'p.id', '=', 'fpd.product_id')
-            ->join('merks as m', 'p.merk_id', '=', 'm.id')
-            ->join('suppliers as s', 'm.supplier_id', '=', 's.id')
-            ->join('customers as c', 'fp.customer_id', '=', 'c.id')
-            ->where('fpd.deleted_at', '=', null)
-            ->orderBy('fp.tanggal');
+                        ->join('faktur_penjualans as fp', 'fpd.faktur_penjualan_id', '=', 'fp.id')
+                        ->join('pesanan_penjualans as pp', 'fp.pesanan_penjualan_id', '=', 'pp.id')
+                        ->join('products as p', 'p.id', '=', 'fpd.product_id')
+                        ->join('merks as m', 'p.merk_id', '=', 'm.id')
+                        ->join('suppliers as s', 'm.supplier_id', '=', 's.id')
+                        ->join('customers as c', 'fp.customer_id', '=', 'c.id')
+                        ->where('fpd.deleted_at', '=', null)
+                        ->orderBy('fp.tanggal');
 
         if ($request->year) {
             $res = $results->whereYear('fp.tanggal', $request->year);
@@ -78,15 +78,18 @@ class LaporanLabaRugiController extends Controller
         }
 
         $data = $sales->select(
-                'c.nama as nama_customer',
-                'p.nama as nama_product',
-                'fp.tanggal as tanggal_penjualan',
-                'fpd.total as total_penjualan',
-                'fpd.cn_total as cn_total',
-            )->get();
+                    'c.nama as nama_customer',
+                    'p.nama as nama_product',
+                    'fp.tanggal as tanggal_penjualan',
+                    'fpd.total as total_penjualan',
+                    'fpd.qty as qty_barang',
+                    'fpd.cn_total as cn_total',
+                )->get();
 
             
         $count = count($data);
+        $tmp = null;
+
         for ($i = 0; $i < $count - 1; $i++) {
             for ($j = $i + 1; $j < $count; $j++) {
                 $awal = $data[$i]->total_penjualan - ($data[$i]->cn_total ? $data[$i]->cn_total : 0);
@@ -103,17 +106,17 @@ class LaporanLabaRugiController extends Controller
         $hasil = $data;
         return DataTables::of($hasil)
             ->addIndexColumn()
-            ->editColumn('tanggal', function ($data) {
-                return $data->tanggal_penjualan;
+            ->editColumn('tanggal', function ($k) {
+                return $k->tanggal_penjualan;
             })
-            ->editColumn('customer', function ($data) {
-                return $data->nama_customer;
+            ->editColumn('customer', function ($k) {
+                return $k->nama_customer;
             })
-            ->editColumn('product', function ($data) {
-                return $data->nama_product;
+            ->editColumn('product', function ($k) {
+                return $k->nama_product;
             })
-            ->editColumn('total', function ($data) {
-                return 'Rp.' . number_format($data->total_penjualan - $data->cn_total, 0, ',', '.');
+            ->editColumn('total', function ($k) {
+                return 'Rp.' . number_format($k->total_penjualan - $k->cn_total, 0, ',', '.');
             })
             ->make(true);
     }

@@ -108,7 +108,7 @@
                             <td style="font-size: 60%; border:none; width:12%;text-align:right">HARGA</td>
                             <td style="font-size: 60%; border:none; width:6%;text-align:center">DISK.(%)</td>
                             <td style="font-size: 60%; border:none; width:10%;text-align:left">DISK.(RP)</td>
-                            <td style="font-size: 60%; border:none; width:10%;text-align:right">SUBTOTAL</td>
+                            <td style="font-size: 60%; border:none; width:10%;text-align:left">SUBTOTAL</td>
                             <td style="font-size: 60%; border:none; width:10%;text-align:right">TOTAL DISC</td>
                             <td style=" font-size: 60%;border:none; width:10%;text-align:right">TOTAL</td>
                         </tr>
@@ -134,7 +134,7 @@
                                     }}</td>
                                 <td style="font-size: 70%; text-align:left">{{ number_format($a->diskon_rp, 2, ',', '.')
                                     }}</td>
-                                <td style="font-size: 70%; text-align:right">{{ number_format($a->subtotal, 2, ',', '.')
+                                <td style="font-size: 70%; text-align:left">{{ number_format($a->subtotal, 2, ',', '.')
                                     }}</td>
                                 <td style="font-size: 70%; text-align:right">{{ number_format($a->total_diskon, 2, ',',
                                     '.') }}</td>

@@ -216,6 +216,7 @@
                                             <th>Tanggal</th>
                                             <th>Customer</th>
                                             <th>Product</th>
+                                            <th>Qty</th>
                                             <th>Total Penjualan</th>
                                         </tr>
                                     </thead>
@@ -259,7 +260,7 @@
 
         // ============================ TEMPLATE GRAFIK =====================================
         let options = {
-            type: 'line',
+            type: 'bar',
             data: {
                 labels: null,
                 datasets: [{
@@ -525,7 +526,7 @@
                 responsive: true,
                 processing: true,
                 serverSide: true,
-                autoWidth: false,
+                order: [],
                 ajax: {
                     type: 'POST',
                     url: "{{ route('laporanlabarugi.datatable') }}",
@@ -538,8 +539,7 @@
                         return params;
                     }
                 },
-                columns: [
-                    //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                columns: [                    
                     {
                         data: 'tanggal',
                         name: 'tanggal'
@@ -553,12 +553,15 @@
                         name: 'nama_product'
                     },
                     {
+                        data: 'qty_barang',
+                        name: 'qty_barang'
+                    },
+                    {
                         data: 'total',
                         name: 'total_penjualan'
                     },
                 ],
                 columnDefs: [
-
                     {
                         responsivePriority: 3,
                         targets: 2,
@@ -572,8 +575,6 @@
                         responsivePriority: 2,
                         targets: -1
                     },
-
-
                 ],
             });
         }
