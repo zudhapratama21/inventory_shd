@@ -34,7 +34,7 @@
                 <div style="transform: rotate(270deg);position: fixed;margin-left:-200px;width: 600px;margin-top:240px;">
                    <h1 style="margin-top: 5px; margin-bottom: 10px;color:rgb(5, 2, 186)">PT BRILIAN SUKSES BERKAH</h1>
                    <h3 style="margin-top: 0px; margin-bottom: 3px;">Juanda Regency Blok H-06, JL. Raya Bypass Juanda NO.11
-                    Rai <br> Pabean-Sedati, Sidoarjo
+                    <br> Pabean-Sedati, Sidoarjo
                     Kode Pos : 61253</h3>
                    {{-- <h3 style="margin-top: 0px;margin-bottom: 5px;">NPWP : 03.113.119.6-615.000</h3> --}}
                 </div>
