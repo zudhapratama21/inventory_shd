@@ -489,7 +489,8 @@ class FakturPenjualanController extends Controller
                 'biaya_lain'  => $rupiah,
                 'no_seri_pajak' => $request->no_seri_pajak,
                 'no_pajak' => $pajak->no_pajak,
-                'tanggal' => $tanggal
+                'tanggal' => $tanggal,
+                'keterangan' => $request->keterangan
             ]);
 
              // ubah status menjadi aktif
