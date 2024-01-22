@@ -444,8 +444,8 @@ class FakturPenjualanController extends Controller
 
     public function update(Request $request,$id)
     {                
-
-        // dd($request->all());
+        
+        dd($request->all());
         DB::beginTransaction();
         try {
              // ambil data dari temp     
