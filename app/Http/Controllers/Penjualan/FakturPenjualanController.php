@@ -717,7 +717,7 @@ class FakturPenjualanController extends Controller
         //     $textkoma='Koma '.implode(' ',$datakoma);
              
         // }
-        $responseText = $text;
+        $responseText = $text . ' Rupiah';
         
     
         $pdf = PDF::loadView('penjualan.fakturpenjualan.kwitansi',[
