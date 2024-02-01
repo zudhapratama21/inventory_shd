@@ -70,7 +70,7 @@
 
                                     <div class="form-group">
                                         <label for="">Outlet</label>
-                                        <select name="outlet_id" class="form-control" id="kt_select2_1">
+                                        <select name="outlet_id" class="form-control" id="kt_select2_1" required>
                                             <option value="" selected disabled>======= Pilih Outlet =================
                                             </option>
                                             @foreach ($outlet as $item)
@@ -83,7 +83,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="">Bulan</label>
-                                                <select name="bulan" class="form-control" id="kt_select2_8">
+                                                <select name="bulan" class="form-control" id="kt_select2_8" required>
                                                     @foreach ($bulan as $item)
                                                         @if (\Carbon\Carbon::parse(now())->format('m') == $item['id'])
                                                             <option value="{{ $item['id'] }}" selected>{{ $item['nama'] }}
