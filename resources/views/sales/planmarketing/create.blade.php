@@ -98,7 +98,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="">Tahun</label>
-                                                <select name="tahun" id="kt_select2_9" class="form-control"
+                                                <select name="tahun" id="kt_select2_2" class="form-control"
                                                     onchange="filterYear()">
                                                     @php
                                                         $year = 2020;

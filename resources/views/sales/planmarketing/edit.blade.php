@@ -71,10 +71,12 @@
                                     @method('PUT')
                                     <div class="form-group">
                                         <label for="">Outlet</label>
-                                        <select name="outlet_id" class="form-control" id="kt_select2_1">
+                                        <select name="outlet_id" class="form-control" id="kt_select2_1" required>
                                             @foreach ($outlet as $item)
                                                 @if ($planmarketing->outlet_id == $item->id)
-                                                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                                                    <option value="{{ $item->id }}" selected>{{ $item->nama }}</option>
+                                                @else
+                                                <option value="{{ $item->id }}">{{ $item->nama }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
@@ -85,28 +87,14 @@
                                             <div class="form-group">
                                                 <label for="">Bulan</label>
                                                 <input type="text" name="bulan" class="form-control"
-                                                    value="{{ \Carbon\Carbon::parse(now())->format('m') }}" readonly>
+                                                    value="{{ $planmarketing->bulan }}" readonly>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="">Tahun</label>
-                                                <select name="tahun" id="kt_select2_9" class="form-control"
-                                                    onchange="filterYear()">
-                                                    @php
-                                                        $year = 2020;
-                                                        $now = date('Y') + 1;
-                                                    @endphp
-                                                    @foreach (range($now, $year) as $x)
-                                                        @if ($planmarketing->tahun == date('Y'))
-                                                            <option value="{{ $x }}" selected>
-                                                                {{ $x }}</option>
-                                                        @else
-                                                            <option value="{{ $x }}">{{ $x }}
-                                                            </option>
-                                                        @endif
-                                                    @endforeach
-                                                </select>
+                                                <input type="text" name="tahun" class="form-control"
+                                                value="{{ $planmarketing->tahun }}" readonly>
                                             </div>
                                         </div>
                                     </div>

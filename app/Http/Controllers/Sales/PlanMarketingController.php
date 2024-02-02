@@ -21,7 +21,7 @@ class PlanMarketingController extends Controller
 
     public function index()
     {
-        
+
         $title = "Plan Marketing";
         $day = Day::get();
         $bulan =  [];
@@ -71,7 +71,7 @@ class PlanMarketingController extends Controller
             $bulan = $year->where('bulan', $request->bulan);
         }
         $bulan->where('user_id', auth()->user()->id)
-            ->orderBy('id', 'asc');
+            ->orderBy('id', 'desc');
 
         return DataTables::of($planmarketing)
             ->addIndexColumn()
@@ -233,9 +233,28 @@ class PlanMarketingController extends Controller
 
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         DB::beginTransaction();
         try {
-            $planmarketing = PlanMarketing::where('id', $id)->first();
+            $planmarketing = PlanMarketing::
+                with(['planmarketingdetailminggu1' => function ($query) {
+                    $query->where('minggu', 1)->with('day');
+                }])
+                ->with(['planmarketingdetailminggu2' => function ($query) {
+                    $query->where('minggu', 2)->with('day');
+                }])
+                ->with(['planmarketingdetailminggu3' => function ($query) {
+                    $query->where('minggu', 3)->with('day');
+                }])
+                ->with(['planmarketingdetailminggu4' => function ($query) {
+                    $query->where('minggu', 4)->with('day');
+                }])
+                ->with(['planmarketingdetailminggu5' => function ($query) {
+                    $query->where('minggu', 5)->with('day');
+                }])
+                ->where('id', $id)->first();
+
+
             $planmarketing->planmarketingdetailminggu1()->delete();
             $planmarketing->planmarketingdetailminggu2()->delete();
             $planmarketing->planmarketingdetailminggu3()->delete();
