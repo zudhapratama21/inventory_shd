@@ -118,7 +118,7 @@
 
                             </td>
                             <td width="40%" style=' text-align:center; vertical-align:top;border: 1px double white'>
-                                <h3 style="margin-top: -10px">Surabaya, {{ \Carbon\Carbon::now()->format("d F Y") }}</h3>
+                                <h3 style="margin-top: -10px">Surabaya, {{ $tanggal }}</h3>
                                 <br /><br /> <br /><br /> <br /> <br />
                                 <h3>                                                                       
                                     <u>HEPPY WAHYU</u> <br />

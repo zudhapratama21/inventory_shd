@@ -724,7 +724,8 @@ class FakturPenjualanController extends Controller
             'faktur' => $fakturpenjualan->no_kpa,
             'text' => $responseText,
             'grandtotal' => $fakturpenjualan->grandtotal,
-            'customer' => $customer->nama
+            'customer' => $customer->nama,
+            'tanggal' => Carbon::parse($fakturpenjualan->tanggal)->format('d F Y')
         ])->setPaper('a4','landscape');
 
 
