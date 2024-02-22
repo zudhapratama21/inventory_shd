@@ -18,7 +18,8 @@ class KunjunganSales extends Model
         'aktifitas',
         'ttd',
         'image',
-        'user_id'
+        'user_id',
+        'jam_buat'
     ];
     
     public function user()

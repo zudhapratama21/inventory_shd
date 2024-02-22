@@ -39,7 +39,7 @@ class KunjunganTeknisiController extends Controller
                     return $kj->user->name;
                 })
                 ->editColumn('time',function (KunjunganTeknisi $kj){
-                    return $kj->created_at ? with(new Carbon($kj->created_at))->format('H:i') : '';
+                    return $kj->jam_buat ? with(new Carbon($kj->jam_buat))->format('H:i') : with(new Carbon($kj->created_at))->format('H:i');
                 })
                 ->addColumn('action', function ($row) {    
                     $id = $row->id;        
@@ -102,7 +102,8 @@ class KunjunganTeknisiController extends Controller
             'aktifitas' => $request->aktifitas,
             'ttd' => $request->ttd,
             'image' => $nameFile,
-            'user_id' => auth()->user()->id
+            'user_id' => auth()->user()->id,
+            'jam_buat' => Carbon::parse(now())->format('H:i')
         ]);
 
 

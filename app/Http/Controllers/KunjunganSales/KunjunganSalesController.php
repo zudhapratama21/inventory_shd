@@ -44,6 +44,9 @@ class KunjunganSalesController extends Controller
                 ->editColumn('sales_name', function (KunjunganSales $kj) {
                     return $kj->user->name;
                 })
+                ->editColumn('created_at',function (KunjunganSales $kj){
+                    return $kj->jam_buat ? with(new Carbon($kj->jam_buat))->format('H:i') : with(new Carbon($kj->created_at))->format('H:i');
+                })
                 ->addColumn('action', function ($row) {    
                     $id = $row->id;        
                     $sales_id = $row->user_id;                                              
@@ -106,7 +109,8 @@ class KunjunganSalesController extends Controller
             'aktifitas' => $request->aktifitas,
             'ttd' => $request->ttd,
             'image' => $nameFile,
-            'user_id' => auth()->user()->id
+            'user_id' => auth()->user()->id,
+            'jam_buat' => Carbon::parse(now())->format('H:i')
         ]);
 
 
@@ -156,7 +160,7 @@ class KunjunganSalesController extends Controller
             $folderPath = public_path('ttd/');
 
             if ($kunjungan->ttd) {
-                unlink($folderPath . $kunjungan->ttd);
+                // unlink($folderPath . $kunjungan->ttd);
             }
 
             $image_parts = explode(";base64,", $request->signed);
