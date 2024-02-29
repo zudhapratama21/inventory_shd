@@ -247,10 +247,14 @@ class PerformaSalesController extends Controller
         $laba = array();  
         $data=[]; 
                         
+        $grandtotal = 0;
+
         foreach ($hasil as $key => $value) {
             $data[(int)$value->tanggal_penjualan] = [
                 'grandtotal' => (int) ( $value->grandtotal_penjualan - $value->total_ppn - $value->total_cn - $value->total_ongkir)
             ];
+
+            $grandtotal += ( $value->grandtotal_penjualan - $value->total_ppn- $value->total_ongkir - $value->total_cn);
         }
         
         
@@ -296,7 +300,8 @@ class PerformaSalesController extends Controller
         return response()->json([
             'laba' => $laba,
             'bulan' => $months,
-            'targetsales' => $dataTargetSales
+            'targetsales' => $dataTargetSales,
+            'total_penjualan' => number_format($grandtotal, 0, ',', '.') 
         ]);
     }
 
