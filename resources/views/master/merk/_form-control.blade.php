@@ -18,6 +18,24 @@
         @enderror
     </div>
 
+    <div class="form-group">
+        <label for="S">Supplier</label>
+        <select name="supplier_id" id="kt_select2_1" class="form-control" required>
+
+            @foreach ($supplier as $item)
+                @if ($merk)
+                    @if ($merk->supplier_id == $item->id)
+                    <option value="{{$item->id}}" selected>{{$item->nama}}</option>           
+                    @else
+                    <option value="{{$item->id}}">{{$item->nama}}</option>    
+                    @endif
+                @else
+                <option value="{{$item->id}}">{{$item->nama}}</option>    
+                @endif                    
+            @endforeach            
+        </select>
+    </div>
+
 </div>
 
 </div>

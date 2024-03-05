@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Imports\MerkImport;
+use App\Models\Supplier;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -48,7 +49,8 @@ class MerkController extends Controller
     {
         $title = "MERK";
         $merk = new Merk;
-        return view('master.merk.create', compact('title', 'merk'));
+        $supplier =Supplier::get();
+        return view('master.merk.create', compact('title', 'merk','supplier'));
     }
 
 
@@ -68,7 +70,8 @@ class MerkController extends Controller
     public function edit(Merk $merk)
     {
         $title = "Merk";
-        return view('master.merk.edit', compact('title', 'merk'));
+        $supplier =Supplier::get();
+        return view('master.merk.edit', compact('title', 'merk','supplier'));
     }
 
 
