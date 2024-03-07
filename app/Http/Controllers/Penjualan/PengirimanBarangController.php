@@ -530,14 +530,19 @@ class PengirimanBarangController extends Controller
         $pengirimanbarang_kode = $pengirimanbarang->kode;
         $pesanan_penjualan_id = $pengirimanbarang->pesanan_penjualan_id;
 
-
-
         //validasi :
         $jmlExp = StokExpDetail::where('id_sj', '=', $id)->count();
         //dd($jmlExp);
+
+        // cek produk non expired 
+        $jmlnonexp = HargaNonExpiredDetail::where('id_sj', '=', $id)->count();
         
         if ($jmlExp > 0) {
             return redirect()->route('pengirimanbarang.index')->with('gagal', 'Gagal Menghapus Pengiriman Barang, Silahkan hapus data expired date terlebih dahulu !');
+        }
+
+        if ($jmlnonexp > 0) {
+            return redirect()->route('pengirimanbarang.index')->with('gagal', 'Gagal Menghapus Pengiriman Barang, Silahkan hapus produk terlebih dahulu !');
         }
 
         $detailSJ = PengirimanBarangDetail::where('pengiriman_barang_id', '=', $id)->get();        
