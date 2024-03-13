@@ -17,7 +17,8 @@ class KunjunganTeknisi extends Model
         'ttd',
         'image',
         'user_id',
-        'jam_buat'
+        'jam_buat',
+        'hari_buat'
     ];
 
   

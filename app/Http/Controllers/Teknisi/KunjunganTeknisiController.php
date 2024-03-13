@@ -121,8 +121,8 @@ class KunjunganTeknisiController extends Controller
     {
         $img = $request->file('image');
         $signed = $request->input('signed');
-        $tanggal = Carbon::parse(now())->format('Y-m-d');
-        $kunjungan = KunjunganTeknisi::where('id',$id)->first();
+        
+        $kunjungan = KunjunganTeknisi::where('id',$id)->first();        
 
         $ttd = $signed ? $signed: $kunjungan->ttd;
         $nameFile = $img ? $img : $kunjungan->image;
@@ -163,8 +163,7 @@ class KunjunganTeknisiController extends Controller
             $ttd = $name; 
         }
 
-        $kunjungan->update([
-            'tanggal' => $tanggal,
+        $kunjungan->update([            
             'customer' => $request->customer,
             'aktifitas' => $request->aktifitas,
             'ttd' => $ttd,

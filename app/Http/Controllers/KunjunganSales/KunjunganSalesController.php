@@ -110,7 +110,8 @@ class KunjunganSalesController extends Controller
             'ttd' => $request->ttd,
             'image' => $nameFile,
             'user_id' => auth()->user()->id,
-            'jam_buat' => Carbon::parse(now())->format('H:i')
+            'jam_buat' => Carbon::parse(now())->format('H:i'),
+            'hari_buat' => Carbon::parse(now())->format('Y-m-d'),
         ]);
 
 
@@ -178,8 +179,7 @@ class KunjunganSalesController extends Controller
             $ttd = $name; 
         }
 
-        $kunjungan->update([
-            'tanggal' => $tanggal,
+        $kunjungan->update([            
             'customer' => $request->customer,
             'aktifitas' => $request->aktifitas,
             'ttd' => $ttd,
@@ -260,8 +260,7 @@ class KunjunganSalesController extends Controller
 
                     return view('penjualan.fakturpenjualan._formAction', compact('id', 'status', 'showUrl','editUrl'));
                 })            
-                ->make(true);
-        
+                ->make(true);        
     }
 
 
