@@ -217,7 +217,9 @@ class PesananPenjualanController extends Controller
         $penjualan = FakturPenjualanDetail::where('product_id', $request->id)->with('fakturpenjualan.customers')->take(30)->orderBy('id', 'desc')->get();
         $pembelian = FakturPembelianDetail::where('product_id', $request->id)->with('fakturpembelian.suppliers')->take(30)->orderBy('id', 'desc')->get();
         $mode = "new";
-        return view('penjualan.pesananpenjualan._setbarang', compact('product', 'mode', 'penjualan', 'pembelian'));
+
+        $hargaProduk = FakturPenjualanDetail::where('product_id', $request->id)->orderBy('id', 'desc')->latest()->first();
+        return view('penjualan.pesananpenjualan._setbarang', compact('product', 'mode', 'penjualan', 'pembelian','hargaProduk'));
     }
 
     public function inputtempso(Request $request)
