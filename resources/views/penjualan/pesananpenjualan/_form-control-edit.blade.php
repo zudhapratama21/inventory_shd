@@ -22,7 +22,7 @@
             <div class="input-group date">
                 @if($pesananpenjualan->tanggal <> null)
                     <input type="text" class="form-control" name="tanggal" readonly
-                        value="{{ $pesananpenjualan->tanggal->format("d/m/Y") }}" id="tgl1" required/>
+                        value="{{ $pesananpenjualan->tanggal->format("d-m-Y") }}" id="tgl1" required/>
                     @else
                     <input type="text" class="form-control" name="tanggal" readonly value="{{ $tglNow }}" id="tgl1" required/>
                     @endif
