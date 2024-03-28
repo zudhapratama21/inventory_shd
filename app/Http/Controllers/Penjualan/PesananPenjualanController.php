@@ -590,7 +590,7 @@ class PesananPenjualanController extends Controller
         $komoditass = Komoditas::get();
         $kategoris = Kategoripesanan::get();
         $saless = Sales::get();
-        $tglNow = Carbon::now()->format('d-m-Y');
+        $tglNow = Carbon::now()->format('d/m/Y');
 
         //delete temp
         $deletedTempDetil = TempSo::where('created_at', '<', Carbon::today())->delete();
