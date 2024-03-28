@@ -99,6 +99,7 @@
                                                     <option value="tidak hadir">Tidak Hadir</option>
                                                     <option value="terlambat">Terlambat</option>
                                                     <option value="ontime">Ontime</option>
+                                                    <option value="weekend">WeekEnd</option>
                                                 </select>
                                             </div>
 
