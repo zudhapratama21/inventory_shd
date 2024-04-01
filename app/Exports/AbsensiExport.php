@@ -62,8 +62,8 @@ class AbsensiExport implements FromView
             $group = $filtertanggalakhir->where('ab.deleted_at',null)->groupBy('k.nama')->select('k.nama as nama_karyawan', 'k.id as id_karyawan', 'd.nama as nama_divisi', 'ab.clock_in as clock_in', 'ab.clock_out as clock_out', 'ab.work_time as work_time', 'ab.tanggal as tanggal_absensi', 'ab.status as status')->get();
 
             $lembur = DB::table('lembur as lb')->whereYear('lb.tanggal', $this->data['tahun'])
-                        ->where('ab.tanggal','>=',$tanggalawal)
-                        ->where('ab.tanggal','<=',$tanggalakhir)                        
+                        ->where('lb.tanggal','>=',$tanggalawal)
+                        ->where('lb.tanggal','<=',$tanggalakhir)                        
                         ->select('lb.*')
                         ->get();
         }
