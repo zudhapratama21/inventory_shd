@@ -128,7 +128,7 @@
               columns: [
                 //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                   {data: 'kode', name: 'kode'},
-                   {data: 'kategori', name: 'kategori.nama'},
+                  {data: 'kategori', name: 'kategori.nama'},
                   {data: 'nama', name: 'nama'},
                   {data: 'alamat', name: 'alamat'},
                   {data: 'kota', name: 'namakota.name'},
