@@ -72,7 +72,7 @@
                                         <label class="col-lg-2 col-form-label">Harga</label>
                                         <div class="col-lg-10">
                                             <input type="text" class="form-control" id="hargajual" name="hargajual"
-                                                value="{{$hargaProduk ? number_format($hargaProduk->hargajual, 0, ',', '.') : 0}}" />
+                                                value="{{$hargaProduk ? $hargaProduk->hargajual : 0}}" />
                                         </div>
                                     </div>
 
