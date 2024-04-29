@@ -91,7 +91,7 @@ class AbsensiController extends Controller
             'clock_in' => Carbon::parse($request->clock_in)->format('H:i:s'),
             'clock_out' => Carbon::parse($request->clock_out)->format('H:i:s'),
             'work_time' => Carbon::parse($request->work_time)->format('H:i:s'),
-            'tanggal' => Carbon::parse($request->tanggak)->format('Y-m-d'),
+            'tanggal' => Carbon::parse($request->tanggal)->format('Y-m-d'),
             'status' => $request->status,
             'keterangan' => $request->keterangan
         ]);
