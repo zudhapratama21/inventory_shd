@@ -6,6 +6,7 @@ use App\Exports\AbsensiExport;
 use App\Http\Controllers\Controller;
 use App\Imports\AbsensiImport;
 use App\Models\HRD\Absensi;
+use App\Models\HRD\Karyawan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -75,6 +76,29 @@ class AbsensiController extends Controller
         $data = $request->all();        
         return Excel::download(new AbsensiExport($data), 'absensi.xlsx');
     }
+
+    public function create ()
+    {        
+        $karyawan = Karyawan::get();        
+        $title = 'Absensi';
+        return view('hrd.absensi.create',compact('karyawan','title'));
+    }
+
+    public function store (Request $request)
+    {
+        $absensi = Absensi::create([
+            'karyawan_id' => $request->karyawan_id,
+            'clock_in' => Carbon::parse($request->clock_in)->format('H:i:s'),
+            'clock_out' => Carbon::parse($request->clock_out)->format('H:i:s'),
+            'work_time' => Carbon::parse($request->work_time)->format('H:i:s'),
+            'tanggal' => Carbon::parse($request->tanggak)->format('Y-m-d'),
+            'status' => $request->status,
+            'keterangan' => $request->keterangan
+        ]);
+
+        return redirect()->route('absensi.index')->with('status','Data Berhasil Ditambahkan');
+    }
+
 
     public function edit ($id)
     {        

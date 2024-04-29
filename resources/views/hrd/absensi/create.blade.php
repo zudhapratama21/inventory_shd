@@ -54,8 +54,7 @@
                                 </div>
 
                                 <div class="card-toolbar">
-                                    <a href="{{ route('cuti.index') }}"
-                                        class="btn btn-light-danger font-weight-bold mr-2">
+                                    <a href="{{ route('cuti.index') }}" class="btn btn-light-danger font-weight-bold mr-2">
                                         <i class="flaticon2-left-arrow-1"></i> Back
                                     </a>
                                 </div>
@@ -63,16 +62,16 @@
                             <!--begin::Form-->
                             <div class="card-body">
 
-                                <form class="form" method="post" action="{{ route('cuti.store') }}"
+                                <form class="form" method="post" action="{{ route('absensi.store') }}"
                                     enctype="multipart/form-data">
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="">Karyawan</label>
-                                                <select name="karyawan_id" id="kt_select2_1" class="form-control">
+                                                <select name="karyawan_id" id="" class="form-control">
                                                     @foreach ($karyawan as $item)
-                                                        <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                                                        <option value="{{$item->id}}">{{$item->nama}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -82,11 +81,38 @@
                                                 <input type="date" name="tanggal" class="form-control" required>
                                             </div>
 
-                                            
                                             <div class="form-group">
-                                                <label for="">Alasan</label>
-                                                <input type="text" name="alasan" class="form-control" required>
+                                                <label for="">Clock In</label>
+                                                <input type="time" name="clock_in" class="form-control" required>
                                             </div>
+
+                                            <div class="form-group">
+                                                <label for="">Clock Out</label>
+                                                <input type="time" name="clock_out" class="form-control" required>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="">Work Time</label>
+                                                <input type="time" name="work_time" class="form-control" required>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="">Status</label>
+                                                <select name="status" id="" class="form-control">
+                                                    <option value="ijin">Ijin</option>
+                                                    <option value="tidak hadir">Tidak Hadir</option>
+                                                    <option value="terlambat">Terlambat</option>
+                                                    <option value="ontime">Ontime</option>
+                                                    <option value="weekend">WeekEnd</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="">Keterangan</label>
+                                                <input type="text" name="keterangan" 
+                                                    class="form-control">
+                                            </div>
+
                                         </div>
 
                                         <div class="col-md-4">
