@@ -519,7 +519,7 @@ class PesananPembelianController extends Controller
     public function show(PesananPembelian $pesananpembelian)
     {
         $title = "Pesanan Pembelian Detail";
-        $pesananpembeliandetails = PesananPembelianDetail::with('products')
+        $pesananpembeliandetails = PesananPembelianDetail::with('products.merks')
             ->where('pesanan_pembelian_id', '=', $pesananpembelian->id)->get();
 
         return view('pembelian.pesananpembelian.show', compact('title', 'pesananpembelian', 'pesananpembeliandetails'));

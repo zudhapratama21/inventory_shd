@@ -102,7 +102,7 @@
                                         @foreach($pesananpembeliandetails as $a)
                                         <tr class="font-weight-boldest">
                                             <td class="pl-0 pt-7">{{ $a->products->kode }}</td>
-                                            <td class="text-left pt-7">{{ $a->products->nama }}</td>
+                                            <td class="text-left pt-7">{{ $a->products->merks ? $a->products->merks->nama : '-'  }}  {{ $a->products->nama }}</td>
                                             <td class="text-left pt-7">{{ $a->satuan }}</td>
                                             <td class=" pt-7 text-left">{{ $a->qty }}</td>
                                             <td class=" pt-7 text-left">{{ number_format($a->hargabeli, 2, ',', '.') }}

@@ -27,7 +27,7 @@ class ProductExpiredImport implements ToModel
             $this->now = Carbon::parse(now())->subMinutes(1)->format('H:i:s');
             
             // ngecek apakah expired datenya ada 
-            // cek produk    
+            // cek produk
             
               $product = Product::where('kode',$row[0])->first();                 
               if ($product) {
@@ -65,7 +65,7 @@ class ProductExpiredImport implements ToModel
                     $stokExpDetail->harga_beli = $row[6];                                        
                     $stokExpDetail->diskon_persen_beli = $row[7];                                        
                     $stokExpDetail->diskon_rupiah_beli = $row[8];                                                            
-                    $stokExpDetail->save();          
+                    $stokExpDetail->save();         
                     
                     // cek stok berdasarkan     qty
                     // kurangi dari qty inputan - stok 
