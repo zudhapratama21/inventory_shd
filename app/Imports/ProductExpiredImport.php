@@ -29,7 +29,7 @@ class ProductExpiredImport implements ToModel
             // ngecek apakah expired datenya ada 
             // cek produk
             
-              $product = Product::where('kode',$row[0])->first();                 
+              $product = Product::where('kode',$row[0])->first();                    
               if ($product) {
             
                     // stok exp berdasarkan exp nya 
@@ -40,11 +40,13 @@ class ProductExpiredImport implements ToModel
                    
                     
                     // ubah stok yang lama menjadi 0                      
-                    StokExp::where('product_id',$product->id)     
-                       ->whereTime('updated_at', '<',  $this->now)                          
+                    $sukses = StokExp::where('product_id',$product->id)     
+                    //    ->whereTime('updated_at', '<',  $this->now)                          
                         ->update([
                            'qty' => 0
                         ]); 
+
+                    
 
                     //tidak ada data, harus insert stok
                     $datas['tanggal'] = $tanggal;
