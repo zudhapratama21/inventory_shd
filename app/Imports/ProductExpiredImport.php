@@ -39,12 +39,17 @@ class ProductExpiredImport implements ToModel
                     // $now = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject(now()->subMinutes(1)))->format('H-i-s');                                  
                    
                     
-                    // ubah stok yang lama menjadi 0                      
-                    $sukses = StokExp::where('product_id',$product->id)     
-                    //    ->whereTime('updated_at', '<',  $this->now)                          
-                        ->update([
-                           'qty' => 0
-                        ]); 
+                    // ubah stok yang lama menjadi 0
+                    if ($this->no == 1) {
+                        $sukses = StokExp::where('product_id',$product->id)     
+                        ->whereTime('created_at', '<',  $this->now)                          
+                            ->update([
+                            'qty' => 0
+                            ]); 
+                    }                      
+                    
+
+                    // dd($sukses);
 
                     
 
