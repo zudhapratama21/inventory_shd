@@ -41,8 +41,7 @@ class ProductExpiredImport implements ToModel
                     
                     // ubah stok yang lama menjadi 0
                     if ($this->no == 1) {
-                        $sukses = StokExp::where('product_id',$product->id)     
-                        ->whereTime('created_at', '<',  $this->now)                          
+                        $sukses = StokExp::where('product_id',$product->id)                                                     
                             ->update([
                             'qty' => 0
                             ]); 
