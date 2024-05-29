@@ -43,7 +43,7 @@ class ProductExpiredImport implements ToModel
                     if ($this->no == 1) {
                         $sukses = StokExp::where('product_id',$product->id)                                                     
                             ->update([
-                            'qty' => 0
+                                  'qty' => 0
                             ]); 
                     }                      
                     

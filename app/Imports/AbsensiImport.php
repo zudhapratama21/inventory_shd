@@ -19,8 +19,7 @@ class AbsensiImport implements ToModel
 
         if ($this->no > 0) {
             $karyawan = Karyawan::where('no_emp',$row[0])->first();
-            if ($karyawan) {
-                dd($row[5]);
+            if ($karyawan) {                
                 $timetanggal = DateTime::createFromFormat('d/m/Y', $row[5])->format('Y-m-d');            
 
                 if ($row[9] == null && $row[10] == null) {
