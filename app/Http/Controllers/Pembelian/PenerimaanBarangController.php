@@ -44,7 +44,9 @@ class PenerimaanBarangController extends Controller
 
 
         $title = "Penerimaan Barang";
-        $penerimaanbarang = PenerimaanBarang::with(['suppliers',  'statusPB', 'po'])->orderByDesc('id');
+        $penerimaanbarang = PenerimaanBarang::with(['suppliers',  'statusPB', 'po','PenerimaanBarangDetails' => function ($query) {
+                $query->where('status_exp',0);
+        }])->orderByDesc('id');
 
         if (request()->ajax()) {
             return Datatables::of($penerimaanbarang)
@@ -60,7 +62,7 @@ class PenerimaanBarangController extends Controller
                 })
                 ->addColumn('status', function (PenerimaanBarang $pb) {
                     $status_penerimaan = $pb->status_pb_id;
-                    $status_exp = $pb->status_exp ? $pb->status_exp : 0;            
+                    $status_exp = $pb->PenerimaanBarangDetails ? 1 : 0;            
                     return view('pembelian.penerimaanbarang.partials.status',compact('status_penerimaan','status_exp'));                    
                 })
                 ->editColumn('tanggal', function (PenerimaanBarang $pb) {
