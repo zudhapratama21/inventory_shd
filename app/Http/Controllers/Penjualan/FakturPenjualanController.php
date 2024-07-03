@@ -470,6 +470,12 @@ class FakturPenjualanController extends Controller
 
             // nokpa
             $kpa = NoKPA::where('no_kpa',$request->kpa_id)->first();
+
+            if ($fj->no_kpa !== $kpa->no_kpa) {
+                NoKPA::where('no_kpa',$fj->no_kpa)->update([
+                    'status' => 'Aktif'
+                ]);
+            }
                            
             $biaya = TempBiaya::where('jenis', '=', "FJ")
                 ->where('user_id', '=', Auth::user()->id)
