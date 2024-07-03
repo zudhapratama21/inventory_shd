@@ -83,7 +83,8 @@ class FakturPenjualanController extends Controller
         $title = "Daftar Pesanan Penjualan";
         $pengirimanbarangs = PengirimanBarang::with('customers', 'statusSJ')
             ->where('status_sj_id', '=', '1')
-            ->get();
+            ->orderBy('id','desc');
+            // ->get();
             
         if (request()->ajax()) {
             return Datatables::of($pengirimanbarangs)
