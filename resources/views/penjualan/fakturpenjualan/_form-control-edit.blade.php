@@ -47,15 +47,7 @@
     <div class="form-group row">
         <label class="col-lg-1 col-form-label text-right">No. KPA:</label>
         <div class="col-lg-4">
-            <select name="kpa_id" id="kt_select2_2" class="form-control nokpa" required>
-                @foreach ($nokpa as $item)
-                    @if ($fakturpenjualan->no_kpa== $item->no_kpa)
-                        <option value="{{$item->id}}" selected>{{$item->no_kpa}}</option>
-                    @else
-                        <option value="{{$item->id}}">{{$item->no_kpa}}</option>
-                    @endif
-                @endforeach
-            </select>
+            <input type="text" name="no_seri_pajak" class="form-control form-control-solid" value="{{$fakturpenjualan->no_kpa}}"   id="no__seri_pajak" />
 
             @error('no_kpa')
                <div class="invalid-feedback">{{ $message }}</div>
