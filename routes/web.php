@@ -635,6 +635,9 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
 
         //==============================================  LABA RUGI =======================================================================
         Route::get('{fakturpenjualan}/labarugi', [LabaRugiController::class, 'show'])->name('fakturpenjualan.labarugi.show');
+
+        Route::get('syncronisasi', [FakturPenjualanController::class, 'syncronisasi'])->name('fakturpenjualan.syncronisasi');
+
       
     });
 

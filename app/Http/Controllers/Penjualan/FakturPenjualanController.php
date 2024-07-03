@@ -219,6 +219,8 @@ class FakturPenjualanController extends Controller
 
     public function store(Request $request, PengirimanBarang $pengirimanbarang)
     {
+        // dd($request->all());
+
         $request->validate([
             'tanggal' => ['required'],            
         ]);
@@ -328,9 +330,9 @@ class FakturPenjualanController extends Controller
         ]);
  
         // // ubah status no kpa menjadi tidak aktif
-        // $kpa->update([
-        //     'status' => 'Tidak Aktif'
-        // ]);
+        $kpa->update([
+            'status' => 'Tidak Aktif'
+        ]);
 
     
         //$ongkir_header = $ongkir_det;
@@ -412,6 +414,12 @@ class FakturPenjualanController extends Controller
         $pajak = NoFakturPajak::where('id',$fakturpenjualan->pajak_id)->update([
             'status' => $request->status_pajak
         ]);
+
+        // ubah kpa jadi tidak aktif
+        $kpa = NoKPA::where('no_kpa',$fakturpenjualan->no_kpa)->update([
+            'status' => 'Aktif'
+        ]);
+        
 
         //hapus Piutang 
         $hapuspiutang = Piutang::where('faktur_penjualan_id', $id)->delete();
@@ -739,6 +747,20 @@ class FakturPenjualanController extends Controller
         // ]);
 
        
+    }
+
+
+    public function syncronisasi ()
+    {
+       $fakturpenjualan = FakturPenjualan::get();
+
+       foreach ($fakturpenjualan as $value) {
+            NoKPA::where('no_kpa',$value->no_kpa)->update([
+                'status' => 'Tidak Aktif'
+            ]);
+       }
+
+       return back();
     }
 
  
