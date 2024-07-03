@@ -469,7 +469,7 @@ class FakturPenjualanController extends Controller
             $pajak = NoFakturPajak::where('id',$request->pajak_id)->first();
 
             // nokpa
-            $kpa = NoKPA::where('id',$request->kpa_id)->first();
+            $kpa = NoKPA::where('no_kpa',$request->kpa_id)->first();
                            
             $biaya = TempBiaya::where('jenis', '=', "FJ")
                 ->where('user_id', '=', Auth::user()->id)
