@@ -123,6 +123,9 @@
            <td></td>
            <td></td>
            <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
            <td><u><b>GRANDTOTAL</b></u></td>
             <td><b>{{$totHargaJual}}</b></td>
             <td><b>{{$totSubtotal}}</b></td>
