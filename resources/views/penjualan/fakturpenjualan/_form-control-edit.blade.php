@@ -48,7 +48,7 @@
         <label class="col-lg-1 col-form-label text-right">No. KPA:</label>
         <div class="col-lg-4">
             <select name="kpa_id" id="kt_select2_2" class="form-control nokpa" required>
-                <option value="{{$fakturpenjualan->no_kpa}}">{{$fakturpenjualan->no_kpa}}</option>                    
+                <option value="{{$fakturpenjualan->no_kpa}}" selected>{{$fakturpenjualan->no_kpa}}</option>                    
 
                 @foreach ($nokpa as $item)                
                         <option value="{{$item->no_kpa}}">{{$item->no_kpa}}</option>                    
