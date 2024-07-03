@@ -134,7 +134,7 @@
             <td><b>{{ $totCN ? $totCN : 0 }}</b></td>
             <td><b>{{$totTotal + (11/100 * $totTotal)}}</b></td>
             <td></td>
-            <td><b>{{$totTotal - (11/100 * $totTotal) - ($totCN ? $totCN : 0)}}</b></td>
+            <td><b>{{$totTotal - ($totCN ? $totCN : 0)}}</b></td>
             <td></td>
         </tr>
 
