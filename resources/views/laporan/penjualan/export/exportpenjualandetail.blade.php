@@ -88,7 +88,7 @@
                 <td>{{$item->cn_total ? $item->cn_total : 0 }}</td>
                 <td>{{$item->total_det + (11/100 * $item->total_det)}}</td>
                 <td>{{$item->ongkir_det}}</td>
-                <td>{{$item->total_det + (11/100 * $item->total_det) - ($item->cn_total ? $item->cn_total : 0)}}</td>
+                <td>{{$item->total_det - (11/100 * $item->total_det) - ($item->cn_total ? $item->cn_total : 0)}}</td>
                 <td>{{$item->nama_sales}}</td>
                 <td>{{$item->nama_pembuat}}</td>
                 <td>{{$item->keterangan}}</td>                                            
