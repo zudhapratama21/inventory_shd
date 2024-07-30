@@ -95,6 +95,7 @@ class AbsensiExport implements FromView
             $nominalLembur=0;
             $error = 0;
             $pengurangan = 0;
+            $totalMenit=0;
             foreach ($group as $item) {
                 foreach ($result as $asset) {
                     if ($asset->nama_karyawan == $item->nama_karyawan) {
@@ -104,6 +105,13 @@ class AbsensiExport implements FromView
                             $ijin += 1;
                         } elseif ($asset->status == 'terlambat') {
                             $terlambat += 1;
+
+                            $absensi = strtotime($asset->clock_in);
+                            $batas = strtotime('08:10');
+                            // dd($batas);
+                            $diff = (int)$absensi - $batas;  
+                            $menit = $diff/60;                                              
+                            $totalMenit += $menit; 
                         } elseif ($asset->status == 'tidak hadir') {
                             $tidak_hadir += 1;
                         }elseif ($asset->status == 'error') {
@@ -142,7 +150,8 @@ class AbsensiExport implements FromView
                     'lembur' => $jumlah_jam,
                     'tidak_hadir' => $tidak_hadir,
                     'error' => $error , 
-                    'pengurangan' =>$pengurangan
+                    'pengurangan' =>$pengurangan,
+                    'totalMenit' => $totalMenit
                 ];
 
                 $ontime = 0;
@@ -152,6 +161,7 @@ class AbsensiExport implements FromView
                 $tidak_hadir = 0;
                 $error = 0;
                 $pengurangan=0;
+                $totalMenit=0;
             }
 
             foreach ($divisi as $asset) {
@@ -166,6 +176,7 @@ class AbsensiExport implements FromView
                             'tidak_hadir' => $item['tidak_hadir'],
                             'error' => $item['error'],
                             'pengurangan' => $item['pengurangan'],
+                            'totalMenit' => $item['totalMenit']
                         ];
                     }
                 }

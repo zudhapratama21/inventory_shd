@@ -21,11 +21,14 @@ class LabaRugiController extends Controller
 
         $title = "Laba Rugi Detail";
         $fakturpenjualan =  FakturPenjualanDetail::where('faktur_penjualan_id', $id)
-            ->with('fakturpenjualan.customers')
-            ->with('products')
-            ->with('pengirimanbarangdetail.stokexpdetail')
-            ->with('pengirimanbarangdetail.harganonexpireddetail')
-            ->get();
+                            ->with('fakturpenjualan.customers')
+                            ->with('products')
+                            ->with('pengirimanbarangdetail.stokexpdetail')
+                            ->with('pengirimanbarangdetail.harganonexpireddetail')
+                            ->get();
+
+
+            
             
 
 
@@ -43,26 +46,26 @@ class LabaRugiController extends Controller
                     $total_diskon = ($nonexpired->diskon_persen_beli * $subtotal/100) + $nonexpired->diskon_rupiah_beli;
                     $hpp = ($subtotal - $total_diskon) * 1.11;
                     $labarugi[] = array(
-                        'tanggal' => Carbon::parse($item->fakturpenjualan->tanggal)->format('d/m/Y'),
-                        'no_kpa' => $item->fakturpenjualan->no_kpa,
-                        'products' => $item->products->nama,
-                        'customer' => $item->fakturpenjualan->customers->nama,
-                        'qty' => $item->qty,
-                        'hargajual' => $item->hargajual,
-                        'diskon_persen' => $item->diskon_persen,
-                        'diskon_rp' => $item->diskon_rp,
-                        'total_diskon' => $item->total_diskon,
-                        'subtotal' => $item->subtotal - $item->total_diskon,                       
-                        'total' => $total,
-                        'cn_rupiah' => $item->cn_rupiah,
-                        'nett' => $nett,
-                        'harga_beli' => $nonexpired->harga_beli,
-                        'diskon_beli_persen' => $nonexpired->diskon_persen_beli,
-                        'diskon_beli_rupiah' => $nonexpired->diskon_rupiah_beli,
-                        'total_diskon_beli' => $total_diskon,
-                        'hpp' => $hpp,
-                        'laba_kotor' =>  $nett - $hpp
-                    );
+                            'tanggal' => Carbon::parse($item->fakturpenjualan->tanggal)->format('d/m/Y'),
+                            'no_kpa' => $item->fakturpenjualan->no_kpa,
+                            'products' => $item->products->nama,
+                            'customer' => $item->fakturpenjualan->customers->nama,
+                            'qty' => $item->qty,
+                            'hargajual' => $item->hargajual,
+                            'diskon_persen' => $item->diskon_persen,
+                            'diskon_rp' => $item->diskon_rp,
+                            'total_diskon' => $item->total_diskon,
+                            'subtotal' => $item->subtotal - $item->total_diskon,                       
+                            'total' => $total,
+                            'cn_rupiah' => $item->cn_rupiah,
+                            'nett' => $nett,
+                            'harga_beli' => $nonexpired->harga_beli,
+                            'diskon_beli_persen' => $nonexpired->diskon_persen_beli,
+                            'diskon_beli_rupiah' => $nonexpired->diskon_rupiah_beli,
+                            'total_diskon_beli' => $total_diskon,
+                            'hpp' => $hpp,
+                            'laba_kotor' =>  $nett - $hpp
+                            );
                 }
             } else {
 
@@ -100,9 +103,7 @@ class LabaRugiController extends Controller
         // $biayalain = BiayaLain::where('fakturpenjualan_id', $id)->with('jenisbiaya')->get();
 
 
-
-
-
+        
         return view('penjualan.fakturpenjualan.laporan.labarugi', compact(
             'title',
             'labarugi'
