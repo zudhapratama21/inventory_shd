@@ -121,7 +121,7 @@
                                 <h3 style="margin-top: -10px">Sidoarjo, {{ $tanggal }}</h3>
                                 <br /><br /> <br /><br /> <br /> <br />
                                 <h3>                                                                       
-                                    <u>HEPPY WAHYU</u> <br />
+                                    <u>HEPPY WAHYU PURNOMO</u> <br />
                                     Direktur
                                 </h3>
                             </td>

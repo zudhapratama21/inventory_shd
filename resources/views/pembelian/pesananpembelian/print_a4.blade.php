@@ -241,7 +241,7 @@
                                                                     F Y") }}
 
                                     <br /><br /> <br /><br /> <br /> <br />
-                                    <u>HEPPY WAHYU</u> <br />
+                                    <u>HEPPY WAHYU PURNOMO</u> <br />
                                     Direktur
                                 </td>
                             </tr>
