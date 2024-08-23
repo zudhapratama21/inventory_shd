@@ -44,6 +44,11 @@ class KunjunganSalesController extends Controller
                 ->editColumn('sales_name', function (KunjunganSales $kj) {
                     return $kj->user->name;
                 })
+                ->addColumn('aktifitas', function (KunjunganSales $kj) {
+                    return view('kunjungansales.partial.text',[
+                        'text' => $kj->aktifitas
+                    ]);
+                })
                 ->editColumn('created_at',function (KunjunganSales $kj){
                     return $kj->jam_buat ? with(new Carbon($kj->jam_buat))->format('H:i') : with(new Carbon($kj->created_at))->format('H:i');
                 })

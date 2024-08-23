@@ -10,8 +10,8 @@
 
     <div class="form-group">
         <label>Aktivitas :</label>
-        <textarea type="text" name="aktifitas" value="{{ old('aktifitas') }}"
-        class="form-control" placeholder="Masukkan aktifitas"  id="" cols="30" rows="5" required></textarea>
+        <textarea type="text" name="aktifitas" value=""
+        class="form-control" placeholder="Masukkan aktifitas" id="kt-ckeditor-1" cols="30" rows="5" >-</textarea>
        
         @error('aktifitas')
         <div class="invalid-feedback">{{ $message }}</div>

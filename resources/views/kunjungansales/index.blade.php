@@ -100,6 +100,11 @@
 <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6"') }}"></script>
 <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
 <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
+<script src="{{ asset('/assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js?v=7.0.6') }} "></script>
+        <!--end::Page Vendors-->
+
+        <!--begin::Page Scripts(used by this page)-->
+        <script src="{{ asset('/assets/js/pages/crud/forms/editors/ckeditor-classic.js?v=7.0.6') }} "></script>
 
 
 
