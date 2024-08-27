@@ -14,7 +14,7 @@
         class="form-control" placeholder="Masukkan aktifitas" id="kt-ckeditor-1" cols="30" rows="5" >-</textarea>
        
         @error('aktifitas')
-        <div class="invalid-feedback">{{ $message }}</div>
+        <div class="invalid-feedback">{{ $message }}</div>  
         @enderror
     </div>
 

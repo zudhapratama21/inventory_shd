@@ -58,6 +58,11 @@ class LaporanSalesController extends Controller
                 ->editColumn('user', function (KunjunganSales $sj) {
                     return $sj->user->name;
                 })
+                ->addColumn('aktifitas', function (KunjunganSales $kj) {
+                    return view('laporan,sales.partial.text',[
+                        'text' => $kj->aktifitas
+                    ]);
+                })
                 ->addColumn('action', function ($row) {
                     $id = $row->id;
                     $tanggal = Carbon::parse($row->tanggal)->format('d-F-Y');

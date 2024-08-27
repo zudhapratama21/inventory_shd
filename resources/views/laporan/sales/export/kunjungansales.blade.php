@@ -22,7 +22,7 @@
                 <td>{{ date('H:i', strtotime($item->created_at)) }}</td>
                 <td>{{$item->nama_sales}}</td>
                 <td>{{$item->customer}}</td>
-                <td>{{$item->aktifitas}}</td>   
+                <td>{!! $item->aktifitas !!}</td>   
             </tr>
         @endforeach
     </tbody>
