@@ -59,7 +59,7 @@ class LaporanSalesController extends Controller
                     return $sj->user->name;
                 })
                 ->addColumn('aktifitas', function (KunjunganSales $kj) {
-                    return view('laporan,sales.partial.text',[
+                    return view('laporan.sales.partial.text',[
                         'text' => $kj->aktifitas
                     ]);
                 })
