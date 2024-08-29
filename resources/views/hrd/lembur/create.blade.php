@@ -93,7 +93,7 @@
 
                                     <div class="form-group">
                                         <label for="">Jumlah jam</label>
-                                        <input type="number" name="jumlah_jam" class="form-control" required>
+                                        <input type="text" name="jumlah_jam" class="form-control" required>
                                     </div>
 
                                     <div class="form-group">
