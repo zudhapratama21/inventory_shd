@@ -165,11 +165,11 @@ class PengirimanBarangController extends Controller
         
         //validasi
         //1. cek item sudah dimasukkan apa belum
-        // $jmlItem = TempSj::where('product_id', '=', $product_id)->where('user_id',auth()->user()->id)->count();
+        $jmlItem = TempSj::where('product_id', '=', $product_id)->where('user_id',auth()->user()->id)->count();
         
         if ($qty_kirim > 0) {
             if ($qty_kirim <= $stok) {
-                // if ($jmlItem == 0) {
+                if ($jmlItem == 0) {
                     //2. cek qty yg diinput berlebihan/tidak
                     if ($qty_kirim <= $qty_sisa) {
                         $datas['pesanan_penjualan_detail_id'] = $id_detail;
@@ -184,9 +184,9 @@ class PengirimanBarangController extends Controller
                     } else {
                         $request->session()->flash('status', 'Qty melebihi pesanan, periksa kembali inputan anda!');
                     }
-                // } else {
-                //     $request->session()->flash('status', 'Produk sudah diinputkan, silahkan periksa kembali inputan anda!');
-                // }
+                } else {
+                    $request->session()->flash('status', 'Produk sudah diinputkan, silahkan periksa kembali inputan anda!');
+                }
             } else {
                 $request->session()->flash('status', 'Stok tidak mencukupi!' . print_r($product));
             }
