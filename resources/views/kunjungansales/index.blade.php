@@ -127,7 +127,7 @@
                 //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                   {data: 'tanggal', name: 'tanggal'},
                   {data: 'created_at', name: 'created_at'},
-                  {data: 'sales_name', name:'sales_name'},
+                  {data: 'user', name:'user.name'},
                   {data: 'customer', name:'customer'},
                   {data: 'aktifitas', name:'aktifitas'},
                   {
