@@ -1009,6 +1009,21 @@ Route::middleware('has.role')->prefix('sales')->group(function () {
 
         Route::post('/import', [OutletController::class, 'import'])->name('outlet.import');  
     });
+
+    Route::prefix('rencanakunjungan')->group(function () {
+        Route::post('/datatable', [KunjunganSalesController::class, 'datatable'])->name('rencanakunjungan.datatable'); 
+        Route::get('/show/{rencanakunjungan}', [KunjunganSalesController::class, 'show'])->name('rencanakunjungan.show');        
+        Route::get('', [KunjunganSalesController::class, 'index'])->name('rencanakunjungan.index');          
+        
+         
+        Route::get('/create', [KunjunganSalesController::class, 'create'])->name('rencanakunjungan.create');        
+        Route::post('/store', [KunjunganSalesController::class, 'store'])->name('rencanakunjungan.store');        
+        Route::get('/{rencanakunjungan}/edit', [KunjunganSalesController::class, 'edit'])->name('rencanakunjungan.edit');       
+        Route::PUT('/{rencanakunjungan}/update', [KunjunganSalesController::class, 'update'])->name('rencanakunjungan.update');                   
+        Route::post('/delete', [KunjunganSalesController::class, 'delete'])->name('rencanakunjungan.delete');       
+        Route::delete('/delete', [KunjunganSalesController::class, 'destroy'])->name('rencanakunjungan.destroy');       
+        
+    });
     
 });
 

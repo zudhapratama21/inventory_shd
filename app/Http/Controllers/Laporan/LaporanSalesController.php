@@ -53,7 +53,7 @@ class LaporanSalesController extends Controller
                     return $sj->tanggal ? with(new Carbon($sj->tanggal))->format('d-m-Y') : '';
                 })
                 ->editColumn('created_at', function (KunjunganSales $sj) {
-                    return $sj->created_at ? with(new Carbon($sj->created_at))->format('H:i') : '';
+                    return $sj->jam_buat ? with(new Carbon($sj->jam_buat))->format('H:i') : with(new Carbon($sj->created_at))->format('H:i');
                 })
                 ->editColumn('user', function (KunjunganSales $sj) {
                     return $sj->user->name;
