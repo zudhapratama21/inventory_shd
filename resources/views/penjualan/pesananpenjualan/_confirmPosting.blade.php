@@ -29,7 +29,7 @@
                                         <rect fill="#000000" x="11" y="17" width="2" height="2" rx="1" />
                                     </g>
                                 </svg>
-                                <!--end::Svg Icon--></span>
+                            </span>
                         </div>
                         <div class="col-md-10 " style="display: inline;">
                             <div class="align-middle">
@@ -60,7 +60,7 @@
                     <div class="row">
                         <div class="col-md-2">
                             <span class="svg-icon svg-icon-primary svg-icon-4x">
-                                <!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\themes\metronic\theme\html\demo2\dist/../src/media/svg/icons\Code\Warning-2.svg--><svg
+                                <svg
                                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                                     width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -72,7 +72,7 @@
                                         <rect fill="#000000" x="11" y="17" width="2" height="2" rx="1" />
                                     </g>
                                 </svg>
-                                <!--end::Svg Icon--></span>
+                            </span>
                         </div>
                         <div class="col-md-10 " style="display: inline;">
                             <div class="align-middle">

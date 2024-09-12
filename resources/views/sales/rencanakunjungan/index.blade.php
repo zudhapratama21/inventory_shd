@@ -50,12 +50,12 @@
                                             </g>
                                         </svg>
                                         <!--end::Svg Icon--></span> </span>
-                                <h3 class="card-label">Data Kunjungan Sales</h3>
+                                <h3 class="card-label">Data Rencana Kunjungan</h3>
                             </div>
                             <div class="card-toolbar">
                                 <!--begin::Button-->                            
-                                @can('kunjungansales-create')
-                                <a href="{{ route('kunjungansales.create') }}"
+                                @can('rencanakunjungan-create')
+                                <a href="{{ route('rencanakunjungan.create') }}"
                                     class="btn btn-primary font-weight-bolder">
                                     <i class="flaticon2-add"></i>
                                    Kunjungan Sales
@@ -115,7 +115,7 @@
               serverSide: true,
               scrollX:true,
               ajax: {
-                    url : "{{ route('kunjungansales.datatable') }}", 
+                    url : "{{ route('rencanakunjungan.datatable') }}", 
                     type : "POST",
                      data: function(params) {
                         params._token = "{{ csrf_token() }}";                
@@ -127,9 +127,9 @@
                 //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                   {data: 'tanggal', name: 'tanggal'},
                   {data: 'created_at', name: 'created_at'},
-                  {data: 'sales_name', name:'sales_name'},
-                  {data: 'customer', name:'customer'},
-                  {data: 'aktifitas', name:'aktifitas'},
+                  {data: 'user', name:'user'},
+                  {data: 'outlet', name:'outlet'},
+                  {data: 'aktivitas', name:'aktivitas'},
                   {
                       data: 'action', 
                       render: function(data){
@@ -177,5 +177,40 @@
                 }
             });
         }
+
+        function deleteData(id) {
+        Swal.fire({
+        title: "Apakah Anda Yakin ?",
+        text: "Kamu Tidak Akan Bisa Mengembalikan Data Ini !",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Hapus!"
+        }).then(function(result) {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('rencanakunjungan.delete') }}',
+                    dataType: 'html',
+                    headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
+                    data: {
+                        'id':id,
+                        "_token": "{{ csrf_token() }}"},
+                    
+                    success: function (data){
+                        Swal.fire(
+                                "Terhapus!",
+                                "Anda Berhasil menghapus Data",
+                                "success"
+                                 )
+                       
+                        $('.yajra-datatable').DataTable().ajax.reload(null,false);
+                    },
+                    error: function(data){
+                        console.log(data);
+                    }
+                });               
+            }
+        });
+    }
 </script>
 @endpush

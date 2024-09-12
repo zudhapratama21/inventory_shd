@@ -50,11 +50,11 @@
                             <div class="card-body">
 
                                 <form class="form" method="POST"
-                                    action="{{ route('kunjungansales.update', ['kunjungansales' => $kunjungan->id]) }}"
+                                    action="{{ route('rencanakunjungan.update', ['rencanakunjungan' => $rencanakunjungan->id]) }}"
                                     enctype="multipart/form-data">
                                     @csrf
                                     @method('PUT')
-                                    @include('kunjungansales.partial._form-edit')
+                                    @include('sales.rencanakunjungan.partial._form-edit')
                                 </form>
 
                             </div>

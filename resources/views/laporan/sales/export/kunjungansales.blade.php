@@ -19,7 +19,7 @@
             <tr>
                 <td>{{$no++}}</td>
                 <td>{{ date('d/m/Y', strtotime($item->tanggal)) }}</td>
-                <td>{{ date('H:i', strtotime($item->created_at)) }}</td>
+                <td>{{ date('H:i', strtotime($item->jam_buat)) }}</td>
                 <td>{{$item->nama_sales}}</td>
                 <td>{{$item->customer}}</td>
                 <td>{{$item->aktifitas}}</td>                   

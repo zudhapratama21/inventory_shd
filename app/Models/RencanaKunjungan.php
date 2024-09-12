@@ -18,13 +18,20 @@ class RencanaKunjungan extends Model
         'aktivitas',
         'updated_by',
         'deleted_by',
-        'created_by'
+        'created_by',
+        'user_id',
+        'jam_buat'
     ];
 
    
     public function outlet()
     {
         return $this->belongsTo(Outlet::class, 'outlet_id', 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
     
 }

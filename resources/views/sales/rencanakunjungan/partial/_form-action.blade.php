@@ -20,8 +20,8 @@
 
 
         @if ($sales_id == auth()->user()->id)                    
-            @can('kunjungansales-edit')        
-            <a href="{{ route('kunjungansales.edit', ['kunjungansales' => $id]) }}" class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3">
+            @can('rencanakunjungan-edit')        
+            <a href="{{ route('rencanakunjungan.edit', ['rencanakunjungan' => $id]) }}" class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3">
                 <span class="svg-icon svg-icon-md svg-icon-primary">
                     <!--begin::Svg Icon | path:assets/media/svg/icons/Communication/Write.svg--><svg
                         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
@@ -40,8 +40,8 @@
                     <!--end::Svg Icon--></span> </a>  
             @endcan
 
-            @can('kunjungansales-delete')
-            <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3" data-toggle="modal" data-target="#kunjungansales">
+            @can('rencanakunjungan-delete')
+            <a href="#" onclick="deleteData({{$id}})"  class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3" >
                 <span class="svg-icon svg-icon-md svg-icon-primary">
                     <!--begin::Svg Icon | path:assets/media/svg/icons/General/Trash.svg--><svg
                         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
@@ -56,7 +56,7 @@
                                 fill="#000000" opacity="0.3" />
                         </g>
                     </svg>
-                    <!--end::Svg Icon--></span> </a>
+                </span> </a>
             @endcan
 
         @endif

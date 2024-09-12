@@ -38,6 +38,7 @@ use App\Http\Controllers\Laporan\LaporanStokController;
 use App\Http\Controllers\Laporan\LaporanPembayaranController;
 use App\Http\Controllers\Laporan\LaporanPembelianController;
 use App\Http\Controllers\Laporan\laporanPlanMarketingController;
+use App\Http\Controllers\Laporan\LaporanRencanaKunjunganController;
 use App\Http\Controllers\Laporan\LaporanSalesController;
 use App\Http\Controllers\Master\ProductGroupController;
 use App\Http\Controllers\Master\KategoriPesananController;
@@ -60,6 +61,7 @@ use App\Http\Controllers\Pembayaran\PembayaranPiutangController;
 use App\Http\Controllers\Penjualan\BiayaLainController;
 use App\Http\Controllers\Penjualan\LabaRugiController;
 use App\Http\Controllers\Permissions\AssignPermissionController;
+use App\Http\Controllers\RencanaKunjunganController;
 use App\Http\Controllers\Sales\OutletController;
 use App\Http\Controllers\Sales\PerformaSalesController;
 use App\Http\Controllers\Sales\PlanMarketingController;
@@ -820,6 +822,15 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
         
     });
 
+    Route::prefix('laporanrencanakunjungan')->group(function () {
+    
+        Route::get('', [LaporanRencanaKunjunganController::class, 'index'])->name('laporanrencanakunjungan.index');        
+        Route::post('/datatable', [LaporanRencanaKunjunganController::class, 'datatable'])->name('laporanrencanakunjungan.datatable');
+        Route::get('/{id}/show', [LaporanRencanaKunjunganController::class, 'show'])->name('laporanrencanakunjungan.show');
+        Route::post('/print', [LaporanRencanaKunjunganController::class, 'print'])->name('laporanrencanakunjungan.print');        
+        
+    });
+
 
 });
 
@@ -1011,17 +1022,16 @@ Route::middleware('has.role')->prefix('sales')->group(function () {
     });
 
     Route::prefix('rencanakunjungan')->group(function () {
-        Route::post('/datatable', [KunjunganSalesController::class, 'datatable'])->name('rencanakunjungan.datatable'); 
-        Route::get('/show/{rencanakunjungan}', [KunjunganSalesController::class, 'show'])->name('rencanakunjungan.show');        
-        Route::get('', [KunjunganSalesController::class, 'index'])->name('rencanakunjungan.index');          
+        Route::post('/datatable', [RencanaKunjunganController::class, 'datatable'])->name('rencanakunjungan.datatable'); 
+        Route::get('/show/{rencanakunjungan}', [RencanaKunjunganController::class, 'show'])->name('rencanakunjungan.show');        
+        Route::get('', [RencanaKunjunganController::class, 'index'])->name('rencanakunjungan.index');          
         
          
-        Route::get('/create', [KunjunganSalesController::class, 'create'])->name('rencanakunjungan.create');        
-        Route::post('/store', [KunjunganSalesController::class, 'store'])->name('rencanakunjungan.store');        
-        Route::get('/{rencanakunjungan}/edit', [KunjunganSalesController::class, 'edit'])->name('rencanakunjungan.edit');       
-        Route::PUT('/{rencanakunjungan}/update', [KunjunganSalesController::class, 'update'])->name('rencanakunjungan.update');                   
-        Route::post('/delete', [KunjunganSalesController::class, 'delete'])->name('rencanakunjungan.delete');       
-        Route::delete('/delete', [KunjunganSalesController::class, 'destroy'])->name('rencanakunjungan.destroy');       
+        Route::get('/create', [RencanaKunjunganController::class, 'create'])->name('rencanakunjungan.create');        
+        Route::post('/store', [RencanaKunjunganController::class, 'store'])->name('rencanakunjungan.store');        
+        Route::get('/{rencanakunjungan}/edit', [RencanaKunjunganController::class, 'edit'])->name('rencanakunjungan.edit');       
+        Route::PUT('/{rencanakunjungan}/update', [RencanaKunjunganController::class, 'update'])->name('rencanakunjungan.update');                   
+        Route::post('/delete', [RencanaKunjunganController::class, 'delete'])->name('rencanakunjungan.delete');             
         
     });
     

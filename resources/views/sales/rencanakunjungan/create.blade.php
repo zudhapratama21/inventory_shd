@@ -39,7 +39,7 @@
                                         </svg>
                                         <!--end::Svg Icon--></span>
                                 </span>
-                                <h3 class="card-label">Tambah Kunjungan Sales</h3>
+                                <h3 class="card-label">Tambah Rencana Kunjungan</h3>
                             </div>
 
                             <div class="card-toolbar">
@@ -49,9 +49,9 @@
                         <!--begin::Form-->
                         <div class="card-body">
 
-                            <form class="form" method="POST" action="{{ route('kunjungansales.store') }}" enctype="multipart/form-data">
+                            <form class="form" method="POST" action="{{ route('rencanakunjungan.store') }}" enctype="multipart/form-data">
                                 @csrf
-                                @include('kunjungansales.partial._form-add')
+                                @include('sales.rencanakunjungan.partial._form-add')
                             </form>
 
                         </div>
