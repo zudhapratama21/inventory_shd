@@ -35,8 +35,9 @@ class ProductExpiredImport implements ToModel
                     // stok exp berdasarkan exp nya 
                     // insert masing-masing exp stok dan exp date sesuai dengan product id dan tanggal 
                     // cek jika ada tanggal yang sama maka ditambah
+                    
                     $tanggal = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[4]))->format('Y-m-d');    
-                    // $now = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject(now()->subMinutes(1)))->format('H-i-s');                                  
+                    // $now = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject(now()->subMinutes(1)))->format('H-i-s');                                                      
                    
                     
                     // ubah stok yang lama menjadi 0
@@ -73,7 +74,7 @@ class ProductExpiredImport implements ToModel
                     $stokExpDetail->diskon_rupiah_beli = $row[8];                                                            
                     $stokExpDetail->save();         
                     
-                    // cek stok berdasarkan     qty
+                    // cek stok berdasarkan qty
                     // kurangi dari qty inputan - stok 
                     $stok = $row[2];  
                     $tahun = Carbon::now()->format('y');

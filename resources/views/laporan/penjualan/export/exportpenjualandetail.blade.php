@@ -6,6 +6,8 @@
             <th>ID Produk</th>
             <th>ID Pengiriman</th>
             <th>Tanggal</th>
+            <th>Bulan</th>
+            <th>Tahun</th>
             <th>Kode Faktur</th>
             <th>No KPA</th>
             <th>Kode SO</th>
@@ -56,6 +58,8 @@
                 <th>{{$item->id_product}}</th>
                 <th>{{$item->id_pengiriman}}</th>
                 <td>{{ date('d/m/Y', strtotime($item->tanggal)) }}</td>
+                <td>{{ date('m', strtotime($item->tanggal)) }}</td>
+                <td>{{ date('Y', strtotime($item->tanggal)) }}</td>
                 <td>{{$item->kode}}</td>
                 <td>{{$item->no_kpa}}</td>
                 <td>{{$item->kode_SP}}</td>

@@ -138,7 +138,7 @@
                                     <select name="chart_year" class="form-control" id="kt_select2_7"
                                         onchange="filterYearKategori()">
                                         @php
-                                            $year = 2020;
+                                            $year = 2020;https://e-katalog.lkpp.go.id/katalog/produk/detail/83636355?type=regency&location_id=290
                                         @endphp
                                         @foreach (range(date('Y'), $year) as $x)
                                             <option value="{{ $x }}">{{ $x }}</option>
@@ -227,6 +227,15 @@
                                     <div class="card-label">
                                         <div class="font-weight-bolder">Top Produk</div>
                                     </div>
+                                </div>
+
+                                <div class="card-toolbar">
+
+                                    <a href="{{ route('fakturpenjualan.syncronisasi') }}"
+                                        class="btn btn-success font-weight-bolder mr-4">
+                                        <i class="flaticon-download "></i>
+                                        Download Excel
+                                    </a>
                                 </div>
                             </div>
                             <!--end::Header-->
@@ -328,6 +337,15 @@
                                         <div class="font-weight-bolder">Top Customer</div>
                                     </div>
                                 </div>
+
+                                <div class="card-toolbar">
+
+                                    <a href="{{ route('fakturpenjualan.syncronisasi') }}"
+                                        class="btn btn-success font-weight-bolder mr-4">
+                                        <i class="flaticon-download "></i>
+                                        Download Excel
+                                    </a>
+                                </div>  
                             </div>
                             <!--end::Header-->
 

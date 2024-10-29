@@ -16,7 +16,7 @@ class AbsensiImport implements ToModel
     public function model(array $row)
     {
         $status = null;
-
+        
         if ($this->no > 0) {
             $karyawan = Karyawan::where('no_emp',$row[0])->first();
             if ($karyawan) {                
@@ -37,8 +37,14 @@ class AbsensiImport implements ToModel
                         else{
                             $status = 'tidak hadir';
                         }                    
-                    }        
-                }elseif ($row[9] !== null && $row[10] !== null) {
+                    }   
+                         
+                }
+                elseif ($row[9] == "" && $row[10] !=="") {
+                    
+                    $status = 'error';
+                }
+                elseif ($row[9] !== null && $row[10] !== null) {
                     $day = Carbon::parse($timetanggal)->format('l');
                     if ($day == 'Saturday' || $day == 'Sunday') {                          
                         $status = 'weekend';                                          
@@ -48,9 +54,7 @@ class AbsensiImport implements ToModel
                         $status = 'ontime';
                     }
                 }
-                elseif ($row[9] == null && $row[10] !== null) {
-                    $status = 'error';
-                }
+                
                 else{
                    
                 }
