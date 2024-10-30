@@ -19,7 +19,7 @@
                     <!--end::Svg Icon--></span>
             </a>        
             
-            <a href="whatsapp://send?text=Assalamualaikum wr wb %0ABagaimana untuk hasil aktifitas {{$aktifitas}} pada {{$tanggal}} di {{$customer}} ?&app_absent=0&phone={{$nomor}}" 
+            <a href="whatsapp://send?text=Assalamualaikum wr wb %0ABagaimana untuk hasil aktifitas {{!! $aktifitas !!}} pada {{$tanggal}} di {{$customer}} ?&app_absent=0&phone={{$nomor}}" 
                       target="_blank" class="btn btn-icon btn-light btn-hover-success btn-sm mr-3" >
                       <span class="svg-icon svg-icon-md svg-icon-success"><!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\themes\metronic\theme\html\demo2\dist/../src/media/svg/icons\Communication\Chat2.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
