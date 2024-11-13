@@ -722,7 +722,7 @@ class FakturPenjualanController extends Controller
 
         $digit=(int)$fakturpenjualan->grandtotal;
         // $koma = $fakturpenjualan->grandtotal - (double)$digit;
-        $text = wordOfNumber($fakturpenjualan->grandtotal);
+        $text = wordOfNumber(round($fakturpenjualan->grandtotal));
       
 
         // if ($koma>0) {

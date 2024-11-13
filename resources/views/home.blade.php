@@ -138,7 +138,8 @@
                                     <select name="chart_year" class="form-control" id="kt_select2_7"
                                         onchange="filterYearKategori()">
                                         @php
-                                            $year = 2020;https://e-katalog.lkpp.go.id/katalog/produk/detail/83636355?type=regency&location_id=290
+                                            $year = 2020;
+                                            https: //e-katalog.lkpp.go.id/katalog/produk/detail/83636355?type=regency&location_id=290
                                         @endphp
                                         @foreach (range(date('Y'), $year) as $x)
                                             <option value="{{ $x }}">{{ $x }}</option>
@@ -231,11 +232,20 @@
 
                                 <div class="card-toolbar">
 
-                                    <a href="{{ route('fakturpenjualan.syncronisasi') }}"
-                                        class="btn btn-success font-weight-bolder mr-4">
-                                        <i class="flaticon-download "></i>
-                                        Download Excel
-                                    </a>
+                                    <form method="POST" action="{{ route('home.exporttopproduct') }}">
+                                        @csrf
+                                        <input type="hidden" name="tahun" value="2024" id="tahun">
+                                        <input type="hidden" name="bulan_product" value="all" id="bulan_product">
+                                        <input type="hidden" name="kategori_product" value="all" id="kategori_product">
+
+                                        <button type="submit"
+                                            class="btn btn-success font-weight-bolder mr-4">
+                                            <i class="flaticon-download "></i>
+                                            Download Excel
+                                        </button>
+                                    </form>
+
+
                                 </div>
                             </div>
                             <!--end::Header-->
@@ -333,6 +343,7 @@
                             <!--begin::Header-->
                             <div class="card-header border-0 pt-5">
                                 <div class="card-title">
+                                    
                                     <div class="card-label">
                                         <div class="font-weight-bolder">Top Customer</div>
                                     </div>
@@ -340,12 +351,19 @@
 
                                 <div class="card-toolbar">
 
-                                    <a href="{{ route('fakturpenjualan.syncronisasi') }}"
-                                        class="btn btn-success font-weight-bolder mr-4">
-                                        <i class="flaticon-download "></i>
-                                        Download Excel
-                                    </a>
-                                </div>  
+                                    <form method="POST" action="{{ route('home.exporttopcustomer') }}">
+                                        @csrf
+                                        <input type="hidden" name="tahun_customer" value="2024" id="tahun_customer">
+                                        <input type="hidden" name="bulan_customer" value="all" id="bulan_customer">
+                                        <input type="hidden" name="kategori_customer" value="all" id="kategori_customer">
+
+                                        <button type="submit"
+                                            class="btn btn-success font-weight-bolder mr-4">
+                                            <i class="flaticon-download "></i>
+                                            Download Excel
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                             <!--end::Header-->
 
@@ -1032,7 +1050,9 @@
 
         function filteryearbestproduk() {
             let e = document.getElementById("kt_select2_8");
+            
             year = e.options[e.selectedIndex].value;
+            $('#tahun').val(year);
 
             $('.yajra-datatable').DataTable().ajax.reload(null, false);
         }
@@ -1040,6 +1060,7 @@
         function filterbulanbestproduk() {
             let e = document.getElementById("kt_select2_4");
             bulan = e.options[e.selectedIndex].value;
+            $('#bulan_product').val(bulan);
 
             $('.yajra-datatable').DataTable().ajax.reload(null, false);
         }
@@ -1053,6 +1074,7 @@
         function filterkategoribestproduk() {
             let e = document.getElementById("kt_select2_11");
             kategori = e.options[e.selectedIndex].value;
+            $('#kategori_product').val(kategori);
             $('.yajra-datatable').DataTable().ajax.reload(null, false);
         }
 
@@ -1228,6 +1250,7 @@
         function filteryeartopcustomer() {
             let e = document.getElementById("kt_select2_13");
             topcustomeryear = e.options[e.selectedIndex].value;
+            $('#tahun_customer').val(topcustomeryear);
             $('.yajra-datatabletopcustomer').DataTable().ajax.reload(null, false);
         }
 
@@ -1235,12 +1258,14 @@
             console.log('masuk');
             let e = document.getElementById("kt_select2_15");
             topcustomerbulan = e.options[e.selectedIndex].value;
+            $('#bulan_customer').val(topcustomerbulan);
             $('.yajra-datatabletopcustomer').DataTable().ajax.reload(null, false);
         }
 
         function filterkategoritopcustomer() {
             let e = document.getElementById("kt_select2_16");
             topcustomerkategori = e.options[e.selectedIndex].value;
+            $('#kategori_customer').val(topcustomerkategori);
             $('.yajra-datatabletopcustomer').DataTable().ajax.reload(null, false);
         }
     </script>

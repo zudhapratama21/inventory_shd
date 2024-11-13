@@ -1,8 +1,8 @@
-<?php
-    namespace App\Http\Controllers;
+    
+    <?php
+    namespace App\Http\Controllers; 
 
-use App\Exports\TopCustomerExport;
-use App\Exports\TopProductExport;
+    use App\Exports\TopProductExport;
     use App\Models\Kategoripesanan;
     use App\Models\Product;
     use Carbon\Carbon;    
@@ -572,9 +572,7 @@ use App\Exports\TopProductExport;
 
         public function exportTopCustomer (Request $request)
         {
-            $data = $request->all();                        
-            $now = Carbon::parse(now())->format('Y-m-d');
-            return Excel::download(new TopCustomerExport($data), 'LAPORANTOPCUSTOMER-' . $now . '.xlsx');
+        
         }
     }
 
