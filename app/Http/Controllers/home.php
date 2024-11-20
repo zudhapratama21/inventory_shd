@@ -1,7 +1,6 @@
+<?php
     
-    <?php
     namespace App\Http\Controllers; 
-
     use App\Exports\TopProductExport;
     use App\Models\Kategoripesanan;
     use App\Models\Product;

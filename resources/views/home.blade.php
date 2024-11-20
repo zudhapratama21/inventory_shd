@@ -441,7 +441,112 @@
 
                 {{-- END TOP CUSTOMER --}}
 
-                <!--end::Dashboard-->
+                {{-- TOP PRINCIPLE --}}
+                <div class="row">
+                    <div class="col-xl-12">
+                        <!--begin::Tiles Widget 1-->
+                        <div class="card card-custom gutter-b card-stretch">
+                            <!--begin::Header-->
+                            <div class="card-header border-0 pt-5">
+                                <div class="card-title">
+                                    
+                                    <div class="card-label">
+                                        <div class="font-weight-bolder">Top Principle</div>
+                                    </div>
+                                </div>
+
+                                <div class="card-toolbar">
+
+                                    <form method="POST" action="{{ route('home.exporttopcustomer') }}">
+                                        @csrf
+                                        <input type="hidden" name="tahun_customer" value="2024" id="tahun_customer">
+                                        <input type="hidden" name="bulan_customer" value="all" id="bulan_customer">
+                                        <input type="hidden" name="kategori_customer" value="all" id="kategori_customer">
+
+                                        <button type="submit"
+                                            class="btn btn-success font-weight-bolder mr-4">
+                                            <i class="flaticon-download "></i>
+                                            Download Excel
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            <!--end::Header-->
+
+                            {{-- Grafik --}}
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="">Tahun</label>
+                                            <select name="chart_year" class="form-control" id="topprincipletahun"
+                                                onchange="filteryeartopprinciple()">
+                                                @php
+                                                    $year = 2020;
+                                                @endphp
+                                                @foreach (range(date('Y'), $year) as $x)
+                                                    <option value="{{ $x }}">{{ $x }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="">Bulan</label>
+                                            <select name="chart_year" class="form-control" id="topprinciplebulan"
+                                                onchange="filterbulantopprinciple()">
+                                                <option value="All" selected>Semua</option>
+                                                @foreach ($bulan as $item)
+                                                    <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="">Kategori Pesanan</label>
+                                            <select name="chart_year" class="form-control" id="topprinciplekategori"
+                                                onchange="filterkategoritopprinciple()">
+                                                <option value="All" selected>Semua</option>
+                                                @foreach ($kategori as $x)
+                                                    <option value="{{ $x->id }}">{{ $x->nama }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                {{-- <canvas id="chartbestproduk" height="100"></canvas> --}}
+
+                                <table
+                                    class="table table-separate table-head-custom table-checkable table  yajra-datatabletopprinciple collapsed ">
+                                    <thead>
+                                        <tr>
+                                            <th>Bulan Transaksi</th>
+                                            <th>Nama Supplier</th>
+                                            <th>Qty</th>
+                                            <th>Total Penjualan</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            {{-- end Of Grafik --}}
+
+                        </div>
+                        <!--end::Tiles Widget 1-->
+                    </div>
+                </div>
+
+                {{-- END OF TOP PRINCIPLE --}}
+
             </div>
             <!--end::Container-->
         </div>
@@ -451,6 +556,7 @@
     {{-- modal Customer --}}
     @include('partial.modal.produk')
     @include('partial.modal.customer')
+    @include('partial.modal.principle')
 @endsection
 
 @push('script')
@@ -477,6 +583,7 @@
         let tipe = 'harga';
         let product_id = null;
         let customer_id = null;
+        let supplier_id = null;
 
         // var bulan = @json($bulan);
 
@@ -484,6 +591,13 @@
         let topcustomeryear = {{ now()->format('Y') }};
         let topcustomerbulan = 'All';
         let topcustomerkategori = 'All';
+
+
+        // variable top principle
+        let topprincipleyear = {{ now()->format('Y') }};
+        let topprinciplebulan = 'All';
+        let topprinciplekategori = 'All';
+
 
 
         $(document).ready(function() {
@@ -495,6 +609,10 @@
             datatableCustomer();
             datatabletopcustomer();
             datatablelistproduct();
+            datatabletopPrinciple();
+            datatableProductByPrinciple();
+
+
         })
 
         // chart Bar Pejualan
@@ -1206,10 +1324,10 @@
                 serverSide: true,
                 order: [],
                 ajax: {
-                    url: "{{ route('datatable.topCustomerProduct') }}",
+                    url: "{{ route('datatable.productbyprinciple') }}",
                     type: "POST",
                     data: function(params) {
-                        params.year = topcustomeryear,
+                            params.year = topcustomeryear,
                             params.bulan = topcustomerbulan,
                             params.customer = customer_id,
                             params.kategori = topcustomerkategori,
@@ -1268,5 +1386,149 @@
             $('#kategori_customer').val(topcustomerkategori);
             $('.yajra-datatabletopcustomer').DataTable().ajax.reload(null, false);
         }
+
+
+
+        // ========================= DATATABLE TOP PRINCIPLE =============================================
+
+        function datatabletopPrinciple(params) {
+            var tabletopcustomer = $('.yajra-datatabletopprinciple').DataTable({
+                responsive: true,
+                processing: true,
+                serverSide: true,
+                order: [],
+                ajax: {
+                    url: "{{ route('datatable.topPrinciple') }}",
+                    type: "POST",
+                    data: function(params) {
+                            params.year = topprincipleyear,
+                            params.bulan = topprinciplebulan,
+                            params.kategori = topprinciplekategori,
+                            params._token = "{{ csrf_token() }}";
+                        return params;
+                    }
+                },
+                columns: [
+                    //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    {
+                        data: 'tanggal',
+                        name: 'tanggal'
+                    },
+                    {
+                        data: 'nama_supplier',
+                        name: 'nama_supplier'
+                    },
+                    {
+                        data: 'stok_produk',
+                        name: 'stok_produk'
+                    },
+                    {
+                        data: 'total',
+                        name: 'total'
+                    },
+                    {
+                        data: 'action',
+                        render: function(data) {
+                            return htmlDecode(data);
+                        },
+                        className: "nowrap",
+                    },
+
+                ],
+                columnDefs: [
+
+                    {
+                        responsivePriority: 1,
+                        targets: 0
+                    },
+                    {
+                        responsivePriority: 2,
+                        targets: -1
+                    },
+                ],
+            });
+        }
+
+        function filteryeartopprinciple() {
+            let e = document.getElementById("topprincipletahun");
+            topprincipleyear = e.options[e.selectedIndex].value;
+            $('#tahun_principle').val(topprincipleyear);
+            $('.yajra-datatabletopprinciple').DataTable().ajax.reload(null, false);
+        }
+
+        function filterbulantopprinciple() {
+            console.log('masuk');
+            let e = document.getElementById("topprinciplebulan");
+            topprinciplebulan = e.options[e.selectedIndex].value;
+            $('#bulan_principle').val(topprinciplebulan);
+            $('.yajra-datatabletopprinciple').DataTable().ajax.reload(null, false);
+        }
+
+        function filterkategoritopprinciple() {
+            let e = document.getElementById("topprinciplekategori");
+            topprinciplekategori = e.options[e.selectedIndex].value;
+            $('#kategori_principle').val(topprinciplekategori);
+            $('.yajra-datatabletopprinciple').DataTable().ajax.reload(null, false);
+        }
+
+        function datatableProductByPrinciple() {
+            var tabletopcustomer = $('.yajra-datatableproductbyprinciple').DataTable({
+                responsive: true,
+                processing: true,
+                serverSide: true,
+                order: [],
+                ajax: {
+                    url: "{{ route('datatable.productbyprinciple') }}",
+                    type: "POST",
+                    data: function(params) {
+                            params.year = topprincipleyear,
+                            params.bulan = topprinciplebulan,
+                            params.kategori = topprinciplekategori,
+                            params.supplier = supplier_id,
+                            params._token = "{{ csrf_token() }}";
+                        return params;
+                    }
+                },
+                columns: [
+                    //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    {
+                        data: 'nama_produk',
+                        name: 'nama_produk'
+                    },
+                    {
+                        data: 'nama_merekx',
+                        name: 'nama_merekx'
+                    },
+                    {
+                        data: 'stok_produk',
+                        name: 'stok_produk'
+                    },
+                    {
+                        data: 'total',
+                        name: 'total'
+                    },                   
+
+                ],
+                columnDefs: [
+
+                    {
+                        responsivePriority: 1,
+                        targets: 0
+                    },
+                    {
+                        responsivePriority: 2,
+                        targets: -1
+                    },
+                ],
+            });
+        }
+
+        function showProductByPrinciple(id) {
+            $('#productbyprinciple').modal('show');
+            supplier_id = id;
+            $('.yajra-datatableproductbyprinciple').DataTable().ajax.reload(null, false);
+        }
+
+        
     </script>
 @endpush

@@ -88,6 +88,10 @@ Route::middleware('auth', 'verified')->group(function () {
 
     Route::post('/exportTopProduct', [HomeController::class, 'exportTopProduk'])->name('home.exporttopproduct');
     Route::post('/exportTopCustomer', [HomeController::class, 'exportTopCustomer'])->name('home.exporttopcustomer');   
+
+    // lis top principle
+    Route::post('/datatabletopprinciple', [HomeController::class, 'datatableTopPrinciple'])->name('datatable.topPrinciple');
+    Route::post('/datatabletopproductbyprinciple', [HomeController::class, 'datatableProdukbyPrinciple'])->name('datatable.productbyprinciple');
     
     
 
