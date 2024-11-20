@@ -197,11 +197,11 @@
     <script src="{{ asset('assets/js/pages/widgets.js?v=7.0.6') }}"></script>
 
     <!--begin::Page Scripts(used by this page)-->
-    <script src="{{ asset('assets/js/pages/crud/datatables/basic/scrollable.js?v=7.0.6') }}"></script>
+    {{-- <script src="{{ asset('assets/js/pages/crud/datatables/basic/scrollable.js?v=7.0.6') }}"></script>
 
     <script src="{{ asset('assets/js/pages/features/miscellaneous/sweetalert2.js?v=7.0.6') }}"></script>
 
-    <script src="{{ asset('assets/js/pages/features/miscellaneous/sweetalert2.js?v=7.0.6') }}"></script>
+    <script src="{{ asset('assets/js/pages/features/miscellaneous/sweetalert2.js?v=7.0.6') }}"></script> --}}
 
     <!--begin::Page Scripts(used by this page)-->
     <script src="{{ asset('assets/js/pages/features/charts/apexcharts.js?v=7.0.6') }} "></script>
