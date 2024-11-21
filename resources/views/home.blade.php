@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    {{-- <div class="content  d-flex flex-column flex-column-fluid" id="kt_content">
+    <div class="content  d-flex flex-column flex-column-fluid" id="kt_content">
         <!--begin::Subheader-->
         <div class="subheader py-2 py-lg-12  subheader-transparent " id="kt_subheader">
             <div class=" container  d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
@@ -551,7 +551,7 @@
             <!--end::Container-->
         </div>
         <!--end::Entry-->
-    </div> --}}
+    </div>
 
     {{-- modal Customer --}}
     @include('partial.modal.produk')
@@ -559,11 +559,12 @@
     @include('partial.modal.principle')
 @endsection
 
-{{-- @push('script')
+@push('script')
     <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6"') }}"></script>
     <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
     <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
     <script src="{{ asset('/assets/js/pages/crud/forms/widgets/bootstrap-datepicker.js?v=7.0.6') }}"></script>
+    <script src="{{ asset('/assets/js/pages/features/charts/apexcharts.js?v=7.0.6') }} "></script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -1496,8 +1497,8 @@
                         name: 'nama_produk'
                     },
                     {
-                        data: 'nama_merekx',
-                        name: 'nama_merekx'
+                        data: 'nama_merek',
+                        name: 'nama_merek'
                     },
                     {
                         data: 'stok_produk',
@@ -1531,4 +1532,4 @@
 
         
     </script>
-@endpush --}}
+@endpush
