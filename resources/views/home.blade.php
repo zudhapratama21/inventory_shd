@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('content')
+@section('tes')
     <div class="content  d-flex flex-column flex-column-fluid" id="kt_content">
         <!--begin::Subheader-->
         <div class="subheader py-2 py-lg-12  subheader-transparent " id="kt_subheader">
@@ -559,7 +559,7 @@
     @include('partial.modal.principle')
 @endsection
 
-@push('script')
+{{-- @push('script')
     <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6"') }}"></script>
     <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
     <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
@@ -1532,4 +1532,4 @@
 
         
     </script>
-@endpush
+@endpush --}}
