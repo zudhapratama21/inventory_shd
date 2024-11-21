@@ -198,9 +198,7 @@
 
     <!--begin::Page Scripts(used by this page)-->
     
-    <!--end::Page Scripts-->
-
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <!--end::Page Scripts-->    
 
     <!--end::Page Scripts-->
     @stack('script')
