@@ -254,7 +254,7 @@ class PerformaSalesController extends Controller
                 'grandtotal' => (int) ( $value->grandtotal_penjualan - $value->total_ppn - $value->total_cn - $value->total_ongkir)
             ];
 
-            $grandtotal += ( $value->grandtotal_penjualan - $value->total_ppn- $value->total_ongkir - $value->total_cn);
+            $grandtotal += ( $value->grandtotal_penjualan - $value->total_ppn - $value->total_ongkir - $value->total_cn);
         }
         
         

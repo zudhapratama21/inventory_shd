@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Exports\TopCustomerExport;
 use App\Exports\TopProductExport;
+use App\Models\Customer;
 use App\Models\Kategoripesanan;
+use App\Models\Merk;
 use App\Models\Product;
+use App\Models\Sales;
+use App\Models\Supplier;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +22,11 @@ class HomeController extends Controller
     {
         $kategori = Kategoripesanan::get();
         $produk = Product::get();
+        $customer = Customer::get();
+        $supplier = Supplier::get();
+        $merk = Merk::get();
+        $sales = Sales::get();
+
         $months =  [];
         for ($i = 1; $i <= 12; $i++) {
             $databulan = '1-' . $i . '-2023';
@@ -30,7 +39,11 @@ class HomeController extends Controller
         return view('home', [
             'kategori' => $kategori,
             'bulan' => $months,
-            'produk' => $produk
+            'produk' => $produk,
+            'sales' => $sales,
+            'supplier' => $supplier,
+            'customer' => $customer,
+            'merk' => $merk,
         ]);
     }
 
@@ -38,7 +51,11 @@ class HomeController extends Controller
     public function chartyear(Request $request)
     {
         $results = DB::table('faktur_penjualans as fp')
+            ->join('faktur_penjualan_details as fdp', 'fdp.faktur_penjualan_id', '=', 'fp.id')
             ->join('pesanan_penjualans as pp', 'fp.pesanan_penjualan_id', '=', 'pp.id')
+            ->join('products as p', 'fdp.product_id', '=', 'p.id')
+            ->join('merks as m', 'm.id', '=', 'p.merk_id')
+            ->join('suppliers as s', 's.id', '=', 'm.supplier_id')
             ->where('fp.deleted_at', '=', null)
             ->orderBy('fp.tanggal');
 
@@ -54,26 +71,57 @@ class HomeController extends Controller
         } else {
             $kategori = $res;
         }
-        $bulan = $kategori;
-        $tipe = $bulan->groupBy(DB::raw("DATE_FORMAT(fp.tanggal, '%m-%Y')"))
+
+
+        if ($request->principlegrafik !== 'All') {
+            $principle = $kategori->where('m.supplier_id', $request->principlegrafik);
+        } else {
+            $principle = $kategori;
+        }
+
+        if ($request->customergrafik !== 'All') {
+            $customer = $principle->where('pp.customer_id', $request->customergrafik);
+        } else {
+            $customer = $principle;
+        }
+
+        if ($request->merkgrafik !== 'All') {
+            $merk = $customer->where('p.merk_id', $request->merkgrafik);
+        } else {
+            $merk = $customer;
+        }
+
+        if ($request->salesgrafik !== 'All') {
+            $sales = $merk->where('pp.sales_id', $request->salesgrafik);
+        } else {
+            $sales = $merk;
+        }
+
+        $bulan = $sales;
+        $tipe = $bulan
+            ->groupBy(DB::raw("DATE_FORMAT(fp.tanggal, '%m-%Y')"))
             ->select(
                 DB::raw("DATE_FORMAT(fp.tanggal, '%m') as tanggal_penjualan"),
-                DB::raw("sum(fp.grandtotal) as grandtotal_penjualan"),
-                DB::raw("sum(fp.ppn) as ppn_penjualan"),
-                DB::raw("sum(fp.total_cn) as total_cn"),
-                DB::raw("sum(fp.ongkir) as total_ongkir"),
+                DB::raw("sum(fdp.total) as grandtotal_penjualan"),
+                DB::raw("sum(fdp.cn_total) as total_cn"),
+                DB::raw("sum(fdp.ongkir) as total_ongkir"),
             );
 
         $hasil = $tipe->get();
 
+
         $laba = array();
         $data = [];
+        $grandtotal = 0;
 
         foreach ($hasil as $key => $value) {
             $data[(int)$value->tanggal_penjualan] = [
-                'grandtotal' => $value->grandtotal_penjualan - $value->total_cn - $value->ppn_penjualan - $value->total_ongkir
+                'grandtotal' => $value->grandtotal_penjualan - $value->total_cn
             ];
+
+            $grandtotal += ($value->grandtotal_penjualan - $value->total_cn);
         }
+
 
 
         for ($i = 0; $i <= 12; $i++) {
@@ -101,7 +149,8 @@ class HomeController extends Controller
 
         return response()->json([
             'laba' => $laba,
-            'bulan' => $months
+            'bulan' => $months,
+            'total_penjualan' => number_format($grandtotal, 0, ',', '.')
         ]);
     }
 
@@ -221,7 +270,10 @@ class HomeController extends Controller
             ->join('faktur_penjualan_details as fdp', 'fdp.faktur_penjualan_id', '=', 'fp.id')
             ->join('pesanan_penjualans as pp', 'fp.pesanan_penjualan_id', '=', 'pp.id')
             ->join('products as p', 'fdp.product_id', '=', 'p.id')
-            ->where('fp.deleted_at', '=', null);
+            ->join('merks as m', 'm.id', '=', 'p.merk_id')
+            ->join('suppliers as s', 's.id', '=', 'm.supplier_id')
+            ->where('fp.deleted_at', '=', null)
+            ->orderBy('fp.tanggal');
 
         if ($request->year) {
             $res = $results->whereYear('fp.tanggal', $request->year);
@@ -242,7 +294,22 @@ class HomeController extends Controller
             $kategori = $bulan;
         }
 
-        $hasil = $kategori
+        if ($request->sales !== 'All') {
+            $sales = $kategori->where('pp.sales_id', $request->sales);
+        } else {
+            $sales = $kategori;
+        }
+
+        if ($request->merk !== 'All') {
+            $merk = $sales->where('p.merk_id', $request->merk);
+        } else {
+            $merk = $sales;
+        }
+
+
+
+
+        $hasil = $merk
             ->groupBy('fdp.product_id')
             ->select(
                 'p.nama',
@@ -311,6 +378,9 @@ class HomeController extends Controller
             ->join('faktur_penjualan_details as fdp', 'fdp.faktur_penjualan_id', '=', 'fp.id')
             ->join('pesanan_penjualans as pp', 'fp.pesanan_penjualan_id', '=', 'pp.id')
             ->join('customers as c', 'fp.customer_id', '=', 'c.id')
+            ->join('products as p', 'fdp.product_id', '=', 'p.id')
+            ->join('merks as m', 'm.id', '=', 'p.merk_id')
+            ->join('suppliers as s', 's.id', '=', 'm.supplier_id')
             ->where('fp.deleted_at', '=', null)
             ->where('fdp.product_id', $request->product_id);
 
@@ -333,7 +403,20 @@ class HomeController extends Controller
             $kategori = $bulan;
         }
 
-        $hasil = $kategori
+        if ($request->sales !== 'All') {
+            $sales = $kategori->where('pp.sales_id', $request->sales);
+        } else {
+            $sales = $kategori;
+        }
+
+        if ($request->merk !== 'All') {
+            $merk = $sales->where('p.merk_id', $request->merk);
+        } else {
+            $merk = $sales;
+        }
+
+
+        $hasil = $merk
             ->groupBy('fp.customer_id')
             ->select(
                 'c.nama',
@@ -414,7 +497,13 @@ class HomeController extends Controller
             $kategori = $bulan;
         }
 
-        $hasil = $kategori
+        if ($request->sales !== 'All') {
+            $sales = $kategori->where('pp.sales_id', $request->sales);
+        } else {
+            $sales = $kategori;
+        }
+
+        $hasil = $sales
             ->groupBy('fp.customer_id')
             ->select(
                 'c.nama',
@@ -477,11 +566,13 @@ class HomeController extends Controller
     public function listProduct(Request $request)
     {
         $results = DB::table('faktur_penjualans as fp')
-            ->join('faktur_penjualan_details as fdp', 'fdp.faktur_penjualan_id', '=', 'fp.id')
-            ->join('pesanan_penjualans as pp', 'fp.pesanan_penjualan_id', '=', 'pp.id')
-            ->join('products as p', 'fdp.product_id', '=', 'p.id')
-            ->join('customers as c', 'fp.customer_id', '=', 'c.id')
-            ->where('fp.deleted_at', '=', null);
+                    ->join('faktur_penjualan_details as fdp', 'fdp.faktur_penjualan_id', '=', 'fp.id')
+                    ->join('pesanan_penjualans as pp', 'fp.pesanan_penjualan_id', '=', 'pp.id')
+                    ->join('products as p', 'fdp.product_id', '=', 'p.id')
+                    ->join('merks as m', 'm.id', '=', 'p.merk_id')
+                    ->join('suppliers as s', 's.id', '=', 'm.supplier_id')
+                    ->where('fp.deleted_at', '=', null)
+                    ->orderBy('fp.tanggal');
 
         if ($request->year) {
             $res = $results->whereYear('fp.tanggal', $request->year);
@@ -502,13 +593,20 @@ class HomeController extends Controller
             $kategori = $bulan;
         }
 
-        $hasil = $kategori
+        if ($request->sales !== 'All') {
+            $sales = $kategori->where('pp.sales_id', $request->sales);
+        } else {
+            $sales = $kategori;
+        }
+
+        $hasil = $sales
             ->where('fp.customer_id', $request->customer)
             ->groupBy('fdp.product_id')
             ->select(
                 'p.nama',
                 'p.id',
                 'p.kode',
+                'm.nama as nama_merk',
                 DB::raw("DATE_FORMAT(fp.tanggal, '%m') as tanggal_penjualan"),
                 DB::raw("DATE_FORMAT(fp.tanggal, '%Y') as tahun_penjualan"),
                 DB::raw("sum(fdp.qty) as stok_produk"),
@@ -607,7 +705,13 @@ class HomeController extends Controller
             $kategori = $bulan;
         }
 
-        $hasil = $kategori
+        if ($request->sales !== 'All') {
+            $sales = $kategori->where('pp.sales_id', $request->sales);
+        } else {
+            $sales = $kategori;
+        }
+
+        $hasil = $sales
             ->groupBy('s.id')
             ->select(
                 's.nama as nama_supplier',
@@ -701,8 +805,14 @@ class HomeController extends Controller
             $kategori = $bulan;
         }
 
-        $hasil = $kategori
-            ->where('m.supplier_id',$request->supplier)
+        if ($request->sales !== 'All') {
+            $sales = $kategori->where('pp.sales_id', $request->sales);
+        } else {
+            $sales = $kategori;
+        }
+
+        $hasil = $sales
+            ->where('m.supplier_id', $request->supplier)
             ->groupBy('p.id')
             ->select(
                 'p.nama as nama_produk',

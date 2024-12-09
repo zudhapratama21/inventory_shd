@@ -14,7 +14,8 @@
                     <table class="table yajra-datatabletopproduct collapsed ">
                         <thead class="datatable-head">
                             <tr>                                
-                                <th>Nama Produk</th>
+                                <th>Nama Produk</th>    
+                                <th>Merk</th>
                                 <th>Qty</th>
                                 <th>Total Penjualan</th>
                             </tr>

@@ -116,7 +116,7 @@ class LaporanPenjualanDetailExport implements FromView
                 )->get();     
 
 
-                // dd($filter[0]);
+                
                 foreach ($filter as $key ) {
                     $totHargaJual += $key->hargajual_det;
                     $totCN += $key->cn_total;

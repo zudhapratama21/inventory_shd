@@ -38,8 +38,8 @@
             <th>Total Diskon Produk</th>
             <th>PPN(11%)</th>
             <th>Disc CN</th>
-            <th>Total Produk</th>
             <th>Ongkir Produk</th>
+            <th>Total Produk</th>            
             <th>Harga Bersih</th>
             <th>Sales</th>
             <th>Pembuat</th>                                        
@@ -90,8 +90,8 @@
                 <td>{{$item->total_diskon_det}}</td>
                 <td>{{11/100 * $item->total_det}}</td>
                 <td>{{$item->cn_total ? $item->cn_total : 0 }}</td>
-                <td>{{$item->total_det + (11/100 * $item->total_det)}}</td>
                 <td>{{$item->ongkir_det}}</td>
+                <td>{{$item->total_det + $item->ongkir_det  + (11/100 *  ($item->total_det + $item->ongkir_det))}}</td>                
                 <td>{{$item->total_det - ($item->cn_total ? $item->cn_total : 0)}}</td>
                 <td>{{$item->nama_sales}}</td>
                 <td>{{$item->nama_pembuat}}</td>
@@ -99,48 +99,6 @@
                 <td>{{$item->keterangan_det}}</td>
             </tr>
         @endforeach
-
-        <tr>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td><u><b>GRANDTOTAL</b></u></td>
-            <td><b>{{$totHargaJual}}</b></td>
-            <td><b>{{$totSubtotal}}</b></td>
-            <td><b>{{$totDiskon}}</b></td>
-            <td><b>{{11/100 * $totTotal}}</b></td>
-            <td><b>{{ $totCN ? $totCN : 0 }}</b></td>
-            <td><b>{{$totTotal + (11/100 * $totTotal)}}</b></td>
-            <td></td>
-            <td><b>{{$totTotal - ($totCN ? $totCN : 0)}}</b></td>
-            <td></td>
-        </tr>
 
         
        

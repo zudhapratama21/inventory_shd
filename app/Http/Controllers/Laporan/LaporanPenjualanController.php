@@ -105,6 +105,9 @@ class LaporanPenjualanController extends Controller
         $penjualan = DB::table('faktur_penjualans as fp')
                     ->join('pengiriman_barangs as pb','fp.pengiriman_barang_id','=','pb.id')
                     ->join('users as u','fp.created_by','=','u.id')
+                    ->join('customers as cs','fp.customer_id','=','cs.id')
+                    ->join('pesanan_penjualans as pp','fp.pesanan_penjualan_id','=','pp.id')
+                    ->join('sales as s','pp.sales_id','=','s.id')
                     ->where('fp.deleted_at','=',null);                    
 
                     
@@ -131,21 +134,17 @@ class LaporanPenjualanController extends Controller
 
         if ($data['customer'] == 'all') {            
 
-            $customerfilter = $tanggalFilter->join('customers as cs','fp.customer_id','=','cs.id');                     
+            $customerfilter = $tanggalFilter;                     
             
         }else{
-            $customerfilter = $penjualan->join('customers as cs','fp.customer_id','=','cs.id')
-                              ->where('fp.customer_id','=',$data['customer']);
+            $customerfilter = $penjualan->where('fp.customer_id','=',$data['customer']);
         }
 
         if ($data['sales'] == 'all') {
-            $salesfilter = $customerfilter->join('pesanan_penjualans as pp','fp.pesanan_penjualan_id','=','pp.id')
-                          ->join('sales as s','pp.sales_id','=','s.id');                
+            $salesfilter = $customerfilter;
                           
         }else{
-            $salesfilter = $customerfilter->join('pesanan_penjualans as pp','fp.pesanan_penjualan_id','=','pp.id')
-                          ->join('sales as s','pp.sales_id','=','s.id')
-                          ->where('pp.sales_id','=',$data['sales']);                
+            $salesfilter = $customerfilter->where('pp.sales_id','=',$data['sales']);                
         }      
 
 
