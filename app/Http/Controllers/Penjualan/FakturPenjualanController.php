@@ -16,6 +16,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Auth;
 use App\Models\FakturPenjualanDetail;
+use App\Models\Hutang;
 use App\Models\LogNoFakturPajak;
 use App\Models\NoFakturPajak;
 use App\Models\NoKPA;
@@ -24,6 +25,7 @@ use App\Models\PesananPenjualanDetail;
 use App\Models\TempBiaya;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 use function App\Traits\textKoma;
 use function App\Traits\wordOfNumber;
@@ -63,6 +65,10 @@ class FakturPenjualanController extends Controller
                 ->editColumn('no_kpa', function (FakturPenjualan $sj) {
                     return $sj->no_kpa;
                 })
+                ->editColumn('status_diterima', function (FakturPenjualan $sj) {
+                    $status = $sj->status_diterima;
+                    return view('penjualan.fakturpenjualan.partial.statusditerima',compact('status'));
+                })                
                 ->addColumn('action', function ($row) {
                     $editUrl = route('fakturpenjualan.edit', ['fakturpenjualan' => $row->id]);
                     $showUrl = route('fakturpenjualan.show', ['fakturpenjualan' => $row->id]);
@@ -768,6 +774,76 @@ class FakturPenjualanController extends Controller
        }
 
        return back();
+    }
+
+    public function tandaTerima (Request $request , $id)
+    {
+        $img = $request->file('foto_bukti');        
+        $nameFile = null;
+        $tanggal = Carbon::parse($request->tanggal_terima)->format('Y-m-d');
+       
+        if ($img) {                  
+            $dataFoto =$img->getClientOriginalName();
+            $waktu = time();
+            $name = $waktu.$dataFoto;
+            $nameFile = Storage::putFileAs('bukti_tandaterima',$img,$name);            
+            $nameFile = $name;
+        }
+
+        $tandaterima = FakturPenjualan::where('id',$id)->update([
+            'tanggal_diterima' => $tanggal,
+            'status_diterima' => $request->status_diterima,
+            'foto_bukti' => $nameFile,
+            'no_resi' => $request->no_resi,
+            'status_tanggaltop' => $request->top_status
+        ]);
+
+        if ($request->top_status == 'ya') {
+            Piutang::where('faktur_penjualan_id',$id)->update([
+                'tanggal_top' => $tanggal
+            ]);
+        }
+        
+        return back();
+    }
+
+    public function editTandaTerima(Request $request,$id)
+    {
+            // dd($request->all());
+            $img = $request->file('foto_bukti');        
+            
+            $tanggal = Carbon::parse($request->tanggal_terima)->format('Y-m-d');
+
+            $fakturpenjualan = FakturPenjualan::where('id',$id)->first();
+            $nameFile = $fakturpenjualan->foto_bukti;
+        
+            if ($img) {                 
+                if ($request->foto_bukti) {
+                    Storage::disk('public')->delete($fakturpenjualan->foto_bukti);  
+                } 
+
+                $dataFoto =$img->getClientOriginalName();
+                $waktu = time();
+                $name = $waktu.$dataFoto;
+                $nameFile = Storage::putFileAs('bukti_tandaterima',$img,$name);            
+                $nameFile = $name;
+            }
+
+            $tandaterima = $fakturpenjualan->update([
+                'tanggal_diterima' => $tanggal,
+                'status_diterima' => $request->status_diterima,
+                'foto_bukti' => $nameFile,
+                'no_resi' => $request->no_resi,
+                'status_tanggaltop' => $request->top_status
+            ]);
+
+            if ($request->top_status == 'ya') {
+                Piutang::where('faktur_penjualan_id',$id)->update([
+                    'tanggal_top' => $tanggal
+                ]);
+            }
+
+            return back();
     }
 
  

@@ -22,18 +22,6 @@
                         </div>
                     </div>
                 @endif
-
-                @if (session('error'))
-                    <div class="alert alert-custom alert-success fade show pb-2 pt-2" role="alert">
-                        <div class="alert-icon"><i class="flaticon-warning"></i></div>
-                        <div class="alert-text">{{ session('error') }}</div>
-                        <div class="alert-close">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true"><i class="ki ki-close"></i></span>
-                            </button>
-                        </div>
-                    </div>
-                @endif
                 <div class="row">
 
                     <div class="col-lg-12">
@@ -61,24 +49,28 @@
                                                 </g>
                                             </svg>
                                             <!--end::Svg Icon--></span> </span>
-                                    <h3 class="card-label">Data Faktur Penjualan</h3>
+                                    <h3 class="card-label">Data Surat Menyurat</h3>
                                 </div>
                                 <div class="card-toolbar">
 
-                                    <a href="{{ route('fakturpenjualan.syncronisasi') }}"
-                                        class="btn btn-danger font-weight-bolder mr-4">
-                                        <i class="flaticon2-trash "></i>
-                                        Syncronisasi (Jangan Di Klik)
-                                    </a>
 
-
+                                    <!-- Example single danger button-->
+                                    <div class="btn-group mr-2">
+                                        <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false"> <i class="flaticon2-settings"></i>
+                                            Setting</button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item " href="{{ route('pembuat.index') }}">Pembuat</a>
+                                            <a class="dropdown-item " href="{{ route('tipesurat.index') }}">Tipe Surat</a>
+                                        </div>
+                                    </div>
+                                                            
                                     <!--begin::Button-->
-
-                                    @can('fakturpenjualan-create')
-                                        <a href="{{ route('fakturpenjualan.listsj') }}"
-                                            class="btn btn-primary font-weight-bolder ">
+                                    @can('suratmenyurat-create')
+                                        <a href="{{ route('suratmenyurat.create') }}"
+                                            class="btn btn-primary font-weight-bolder">
                                             <i class="flaticon2-add"></i>
-                                            Faktur Penjualan
+                                            Surat Menyurat
                                         </a>
                                     @endcan
 
@@ -87,17 +79,17 @@
                             </div>
                             <div class="card-body">
                                 <!--begin: Datatable-->
-                                <table class="table yajra-datatable collapsed ">
-                                    <thead class="datatable-head">
+                                <table
+                                    class="table table-separate table-head-custom table-checkable table  yajra-datatable collapsed ">
+                                    <thead>
                                         <tr>
-                                            <th>Kode</th>
-                                            <th>No KPA</th>
                                             <th>Tanggal</th>
-                                            <th>No. Surat Pesanan</th>
-                                            <th>No. Pengiriman</th>
-                                            <th>Customer</th>
-                                            <th>Status Diterima ?</th>
-                                            <th style="width: 15%">Action</th>
+                                            <th>Nomor Surat</th>
+                                            <th>Pembuat</th>
+                                            <th>Tipe Surat</th>   
+                                            <th>Kepada</th>   
+                                            <th>Request</th>                                                                                     
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -116,56 +108,55 @@
     </div>
     <!--end::Content-->
     <div id="modal-confirm-delete"></div>
-    <div id="modal-show-detail"></div>
 @endsection
 @push('script')
-    <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6') }}"></script>
+    <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6"') }}"></script>
     <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
     <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
 
 
 
-
     <script type="text/javascript">
         $(function() {
-
             var table = $('.yajra-datatable').DataTable({
-                //   responsive: true,
+                responsive: true,
                 processing: true,
                 serverSide: true,
-                autoWidth: true,
-                scrollX: true,
-                ajax: "{{ route('fakturpenjualan.index') }}",
+                ajax: {
+                    url: "{{ route('suratmenyurat.datatable') }}",
+                    type: "POST",
+                    data: function(params) {
+                        params._token = "{{ csrf_token() }}";
+                        return params;
+                    }
+
+                },
                 columns: [
                     //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {
-                        data: 'kode',
-                        name: 'kode'
-                    },
-                    {
-                        data: 'no_kpa',
-                        name: 'no_kpa'
-                    },
                     {
                         data: 'tanggal',
                         name: 'tanggal'
                     },
                     {
-                        data: 'kode_so',
-                        name: 'so.kode'
+                        data: 'kode',
+                        name: 'kode'
                     },
                     {
-                        data: 'kode_sj',
-                        name: 'sj.kode'
+                        data: 'pembuat',
+                        name: 'pembuat.user.name'
                     },
                     {
-                        data: 'customer',
-                        name: 'customers.nama'
+                        data: 'tipesurat',
+                        name: 'tipesurat.nama'
                     },
                     {
-                        data: 'status_diterima',
-                        name: 'status_diterima'
-                    },
+                        data: 'kepada',
+                        name: 'kepada'
+                    },   
+                    {
+                        data: 'request',
+                        name: 'request'
+                    },                 
                     {
                         data: 'action',
                         render: function(data) {
@@ -177,25 +168,17 @@
                 columnDefs: [
 
                     {
-                        responsivePriority: 3,
-                        targets: 2,
-
-                    },
-                    {
-                        responsivePriority: 10001,
-                        targets: 4
+                        responsivePriority: 1,
+                        targets: 0
                     },
                     {
                         responsivePriority: 2,
                         targets: -1
                     },
-
-
                 ],
             });
 
         });
-
 
         function htmlDecode(data) {
             var txt = document.createElement('textarea');
@@ -206,7 +189,7 @@
         function show_confirm(data_id) {
             $.ajax({
                 type: 'POST',
-                url: '{{ route('fakturpenjualan.delete') }}',
+                url: '{{ route('biayaoperational.delete') }}',
                 dataType: 'html',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -223,6 +206,44 @@
                 },
                 error: function(data) {
                     console.log(data);
+                }
+            });
+        }
+
+        function deleteData(id) {
+            Swal.fire({
+                title: "Apakah Anda Yakin ?",
+                text: "Kamu Tidak Akan Bisa Mengembalikan Data Ini !",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, Hapus!"
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ route('suratmenyurat.delete') }}',
+                        dataType: 'html',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {
+                            'id': id,
+                            "_token": "{{ csrf_token() }}"
+                        },
+
+                        success: function(data) {
+                            Swal.fire(
+                                "Terhapus!",
+                                "Anda Berhasil menghapus Data",
+                                "success"
+                            )
+
+                            $('.yajra-datatable').DataTable().ajax.reload(null, false);
+                        },
+                        error: function(data) {
+                            console.log(data);
+                        }
+                    });
                 }
             });
         }

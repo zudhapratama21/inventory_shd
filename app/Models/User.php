@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Blameable;
+use App\Models\HRD\Pembuat;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -74,6 +75,12 @@ class User extends Authenticatable implements MustVerifyEmail
     public function rencanakunjungan()
     {
         return $this->hasMany(RencanaKunjungan::class, 'user_id');
+    }
+
+   
+    public function pembuat()
+    {
+        return $this->hasOne(Pembuat::class, 'user_id');
     }
    
 }

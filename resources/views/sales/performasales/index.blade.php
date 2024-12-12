@@ -35,9 +35,7 @@
                                         </g>
                                     </svg>
                                     <!--end::Svg Icon--></span> </span>
-                            <h3 class="card-label">Grafik Performa Sales</h3>
-
-                           
+                            <h3 class="card-label">Grafik Performa Sales</h3>                           
                         </div>                            
                     </div>
                     
@@ -84,7 +82,7 @@
 
                         </div>
                             <canvas class="row" id="chartperformasales">
-                                    
+                                                                    
                             </canvas>
                     </div>
                 </div>

@@ -11,7 +11,10 @@ use App\Http\Controllers\HRD\AbsensiController;
 use App\Http\Controllers\HRD\CutiController;
 use App\Http\Controllers\HRD\KaryawanController;
 use App\Http\Controllers\HRD\LemburController;
+use App\Http\Controllers\HRD\PembuatController;
 use App\Http\Controllers\HRD\SettingCutiController;
+use App\Http\Controllers\HRD\SuratMenyuratController;
+use App\Http\Controllers\HRD\TipeSuratController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\Konversi\KonversiController;
 use App\Http\Controllers\KunjunganSales\KunjunganSalesController;
@@ -648,6 +651,9 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
 
         Route::get('syncronisasi', [FakturPenjualanController::class, 'syncronisasi'])->name('fakturpenjualan.syncronisasi');
 
+        Route::post('tandaterima/{id}', [FakturPenjualanController::class, 'tandaTerima'])->name('fakturpenjualan.tandaterima');
+        Route::put('edittandaterima/{id}', [FakturPenjualanController::class, 'editTandaTerima'])->name('fakturpenjualan.edittandaterima');
+
       
     });
 
@@ -1182,5 +1188,41 @@ Route::middleware('has.role')->prefix('hrd')->group(function () {
 
 
 
+
+
+});
+
+Route::prefix('surat')->group(function () {
+    Route::get('', [SuratMenyuratController::class, 'index'])->name('suratmenyurat.index');
+    Route::get('/create', [SuratMenyuratController::class, 'create'])->name('suratmenyurat.create');
+    Route::post('/store', [SuratMenyuratController::class, 'store'])->name('suratmenyurat.store');
+
+    Route::post('/datatable', [SuratMenyuratController::class, 'datatable'])->name('suratmenyurat.datatable');
+
+    Route::get('{id}/edit', [SuratMenyuratController::class, 'edit'])->name('suratmenyurat.edit');
+
+    Route::PUT('{id}/update', [SuratMenyuratController::class, 'update'])->name('suratmenyurat.update');
+
+    Route::post('delete', [SuratMenyuratController::class, 'destroy'])->name('suratmenyurat.delete');
+});
+  
+Route::prefix('pembuat')->group(function () {
+    Route::get('', [PembuatController::class, 'index'])->name('pembuat.index');
+    Route::get('/create', [PembuatController::class, 'create'])->name('pembuat.create');
+    Route::post('/store', [PembuatController::class, 'store'])->name('pembuat.store');
+
+    Route::PUT('{id}/update', [PembuatController::class, 'update'])->name('pembuat.update');
+
+    Route::get('{id}/delete', [PembuatController::class, 'delete'])->name('pembuat.delete');
+});
+
+Route::prefix('tipesurat')->group(function () {
+    Route::get('', [TipeSuratController::class, 'index'])->name('tipesurat.index');
+    Route::get('/create', [TipeSuratController::class, 'create'])->name('tipesurat.create');
+    Route::post('/store', [TipeSuratController::class, 'store'])->name('tipesurat.store');
+
+    Route::PUT('{id}/update', [TipeSuratController::class, 'update'])->name('tipesurat.update');
+
+    Route::get('{id}/delete', [TipeSuratController::class, 'delete'])->name('tipesurat.delete');
 });
 

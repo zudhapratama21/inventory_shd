@@ -36,6 +36,11 @@ class FakturPenjualan extends Model
         'biaya_lain',
         'no_seri_pajak',
         'no_pajak',
+        'tanggal_diterima',
+        'status_diterima',
+        'foto_bukti',
+        'no_resi',
+        'status_tanggaltop'
     ];
 
     protected $dates = ['tanggal'];
