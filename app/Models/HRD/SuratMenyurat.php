@@ -21,7 +21,8 @@ class SuratMenyurat extends Model
         'isi',
         'status',
         'file',
-        'request'
+        'request',
+        'publish'
     ];
 
   

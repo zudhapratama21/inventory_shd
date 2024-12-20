@@ -1,38 +1,43 @@
 <?php
 
-namespace App\Http\Controllers\Penjualan;
+namespace App\Exports;
 
-use App\Http\Controllers\Controller;
-use App\Models\BiayaLain;
-use App\Models\FakturPenjualan;
 use App\Models\FakturPenjualanDetail;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromView;
 
-class LabaRugiController extends Controller
+class LabaRugiExport implements FromView
 {
-    public function  show($id)
+
+    protected $data ;
+
+    public function __construct($data)
     {
+        $this->data = $data;
+
+    }
+    public function view(): View
+    {   
+
         $totalHpp = 0;
         $totalHargaBeli = 0;
         $totalPpnBeli = 0;
         $totalLaba = 0;
-
-        $title = "Laba Rugi Detail";
-        $fakturpenjualan =  FakturPenjualanDetail::where('faktur_penjualan_id', $id)
-                            ->with('fakturpenjualan.customers')
-                            ->with('products')
-                            ->with('pengirimanbarangdetail.stokexpdetail')
-                            ->with('pengirimanbarangdetail.harganonexpireddetail')
-                            ->get();
+        $fakturpenjualan =  FakturPenjualanDetail::with('fakturpenjualan.customers')
+                                    ->with('products')
+                                    ->with('pengirimanbarangdetail.stokexpdetail')
+                                    ->with('pengirimanbarangdetail.harganonexpireddetail')
+                                    ->where('tanggal','>=',$this->data['tanggal_awal'])
+                                    ->where('tanggal','<=',$this->data['tanggal_akhir'])
+                                    ->get();
 
             // dd($fakturpenjualan);
         foreach ($fakturpenjualan as $item) {
 
             $total =  $item->subtotal - $item->total_diskon;
             $nett = $total - $item->cn_rupiah;
-
 
             if ($item->products->status_exp == 0) {
                 foreach ($item->pengirimanbarangdetail->harganonexpireddetail as $nonexpired) {
@@ -92,10 +97,7 @@ class LabaRugiController extends Controller
                 }
             }
         }
-                
-        return view('penjualan.fakturpenjualan.laporan.labarugi', compact(
-            'title',
-            'labarugi'
-        ));
+
+        return  view('laporan.labarugi.laporan.export.labarugi',compact('labarugi'));
     }
 }

@@ -59,6 +59,9 @@
                                             <!--end::Svg Icon--></span> </span>
                                     <h3 class="card-label">Grafik Penjualan Principal</h3>
                                 </div>
+                                <div class="card-toolbar">
+                                    <a href="{{ route('laporanlabarugi.filter') }}" class="btn btn-primary"><i class="fas fa-download"></i> Download Laporan</a>
+                                </div>
                             </div>
                             <div class="card-body">
                                 <div class="row">

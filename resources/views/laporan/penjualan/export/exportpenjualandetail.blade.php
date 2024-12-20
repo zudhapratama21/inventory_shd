@@ -4,6 +4,7 @@
             <th>No</th>
             <th>ID Faktur</th>
             <th>ID Produk</th>
+            <th>status exp</th>
             <th>ID Pengiriman</th>
             <th>Tanggal</th>
             <th>Bulan</th>
@@ -56,6 +57,7 @@
                 <td>{{$no++}}</td>
                 <th>{{$item->id}}</th>
                 <th>{{$item->id_product}}</th>
+                <th>{{$item->status_exp}}</th>
                 <th>{{$item->id_pengiriman}}</th>
                 <td>{{ date('d/m/Y', strtotime($item->tanggal)) }}</td>
                 <td>{{ date('m', strtotime($item->tanggal)) }}</td>

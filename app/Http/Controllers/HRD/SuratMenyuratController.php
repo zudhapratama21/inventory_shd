@@ -52,9 +52,13 @@ class SuratMenyuratController extends Controller
                     return $kj->request;
                 })
                 ->addColumn('action', function ($row) {    
-                    $id = $row->id;                                                                     
+                    $id = $row->id;   
+                    $pembuat = $row->pembuat_id;
+                    $publish = $row->publish;                                                                  
                     return view('hrd.suratmenyurat.action',[
-                        'id' => $id                        
+                        'id' => $id,
+                        'pembuat' => $pembuat,
+                        'publish' => $publish            
                     ]);
                 })
 
@@ -73,7 +77,7 @@ class SuratMenyuratController extends Controller
         $waktu = time();
         $name = $waktu.$dataFoto;
         $nameFile = Storage::putFileAs('suratmenyurat',$img,$name);            
-        $nama = $nameFile;
+        $nama = $name;
     }
 
     $suratmenyurat = SuratMenyurat::create([
@@ -85,7 +89,8 @@ class SuratMenyuratController extends Controller
             'isi' => $request->isi,
             'status' => $request->status,
             'file' => $nama,
-            'request' => $request->requests
+            'request' => $request->requests,
+            'publish' => $request->publish
       ]);
 
       return redirect()->route('suratmenyurat.index')->with('status','Data Berhasil Ditambahkan');
@@ -175,10 +180,8 @@ class SuratMenyuratController extends Controller
 
    public function update (Request $request , $id)
    {
-    
-    
 
-    $suratmenyurat =SuratMenyurat::where('id',$id)->first();
+         $suratmenyurat =SuratMenyurat::where('id',$id)->first();
         $img = $request->file('file');
         $nama = $suratmenyurat->file;
         if ($img) { 
@@ -198,7 +201,8 @@ class SuratMenyuratController extends Controller
          'isi' => $request->isi,
          'status' => $request->status,
          'file' => $nama,
-         'request' => $request->requests
+         'request' => $request->requests,
+         'publish' => $request->publish
       ]);
 
       return redirect()->route('suratmenyurat.index')->with('status','Data Berhasil Diubah');

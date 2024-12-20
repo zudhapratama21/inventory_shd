@@ -129,6 +129,15 @@
                                         <br>
                                         <input type="file" name="file" class="form-control mt-2">
                                     </div>
+
+                                    <div class="form-group">
+                                        <label for="">Publish ? </label>
+                                        <select name="publish" id="" class="form-control" required>
+                                            <option value="{{$surat->publish}}" selected>{{$surat->publish}}</option>                                            
+                                            <option value="ya" >Iya</option>                                            
+                                            <option value="tidak" >Tidak</option>                                            
+                                        </select>
+                                    </div>
                                     
                                     <div class="col-md-4">
                                         <button type="submit" class="btn btn-primary"> <i class="flaticon2-reload"></i>

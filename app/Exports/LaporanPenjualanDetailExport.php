@@ -112,7 +112,7 @@ class LaporanPenjualanDetailExport implements FromView
                 ,'s.nama as nama_sales','u.name as nama_pembuat'
                 ,'cs.nama as nama_customer','p.nama as nama_produk'
                 ,'m.nama as nama_merk','p.kode as kode_produk'
-                ,'km.nama as nama_komoditas','kp.nama as nama_kategori_pesanan','cc.nama as nama_kategori_customer'
+                ,'km.nama as nama_komoditas','kp.nama as nama_kategori_pesanan','cc.nama as nama_kategori_customer','p.status_exp as status_exp'
                 )->get();     
 
 

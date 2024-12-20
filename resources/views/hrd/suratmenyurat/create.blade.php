@@ -110,6 +110,14 @@
                                         <input type="file" name="file" class="form-control" >
                                     </div>
 
+                                    <div class="form-group">
+                                        <label for="">Publish ? </label>
+                                        <select name="publish" id="" class="form-control" required>
+                                            <option value="ya" selected>Iya</option>                                            
+                                            <option value="tidak" >Tidak</option>                                            
+                                        </select>
+                                    </div>
+
                                     <div class="col-md-4">
                                         <button type="submit" class="btn btn-primary"> <i class="flaticon2-reload"></i> Dapatkan Kode</button>
                                     </div>

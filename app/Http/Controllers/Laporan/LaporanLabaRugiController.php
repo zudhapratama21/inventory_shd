@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Laporan;
 
+use App\Exports\LabaRugiExport;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\FakturPenjualan;
@@ -11,6 +12,7 @@ use App\Models\Supplier;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class LaporanLabaRugiController extends Controller
@@ -44,14 +46,14 @@ class LaporanLabaRugiController extends Controller
     {
 
         $results = DB::table('faktur_penjualan_details as fpd')
-                        ->join('faktur_penjualans as fp', 'fpd.faktur_penjualan_id', '=', 'fp.id')
-                        ->join('pesanan_penjualans as pp', 'fp.pesanan_penjualan_id', '=', 'pp.id')
-                        ->join('products as p', 'p.id', '=', 'fpd.product_id')
-                        ->join('merks as m', 'p.merk_id', '=', 'm.id')
-                        ->join('suppliers as s', 'm.supplier_id', '=', 's.id')
-                        ->join('customers as c', 'fp.customer_id', '=', 'c.id')
-                        ->where('fpd.deleted_at', '=', null)
-                        ->orderBy('fp.tanggal');
+            ->join('faktur_penjualans as fp', 'fpd.faktur_penjualan_id', '=', 'fp.id')
+            ->join('pesanan_penjualans as pp', 'fp.pesanan_penjualan_id', '=', 'pp.id')
+            ->join('products as p', 'p.id', '=', 'fpd.product_id')
+            ->join('merks as m', 'p.merk_id', '=', 'm.id')
+            ->join('suppliers as s', 'm.supplier_id', '=', 's.id')
+            ->join('customers as c', 'fp.customer_id', '=', 'c.id')
+            ->where('fpd.deleted_at', '=', null)
+            ->orderBy('fp.tanggal');
 
         if ($request->year) {
             $res = $results->whereYear('fp.tanggal', $request->year);
@@ -78,15 +80,15 @@ class LaporanLabaRugiController extends Controller
         }
 
         $data = $sales->select(
-                    'c.nama as nama_customer',
-                    'p.nama as nama_product',
-                    'fp.tanggal as tanggal_penjualan',
-                    'fpd.total as total_penjualan',
-                    'fpd.qty as qty_barang',
-                    'fpd.cn_total as cn_total',
-                )->get();
+            'c.nama as nama_customer',
+            'p.nama as nama_product',
+            'fp.tanggal as tanggal_penjualan',
+            'fpd.total as total_penjualan',
+            'fpd.qty as qty_barang',
+            'fpd.cn_total as cn_total',
+        )->get();
 
-            
+
         $count = count($data);
         $tmp = null;
 
@@ -124,18 +126,22 @@ class LaporanLabaRugiController extends Controller
 
     public function chartprinciple(Request $request)
     {
+
+        // dd($request->all());
         $results = DB::table('faktur_penjualan_details as fpd')
             ->join('faktur_penjualans as fp', 'fpd.faktur_penjualan_id', '=', 'fp.id')
-            ->join('pesanan_penjualans as pp', 'fp.pesanan_penjualan_id', '=', 'pp.id')
-            ->join('products as p', 'p.id', '=', 'fpd.product_id')
-            ->join('merks as m', 'p.merk_id', '=', 'm.id')
-            ->join('suppliers as s', 'm.supplier_id', '=', 's.id')
+            // ->join('pesanan_penjualans as pp', 'fp.pesanan_penjualan_id', '=', 'pp.id')
+            ->join('pengiriman_barang_details as pbd', 'pbd.id', '=', 'fpd.pengiriman_barang_detail_id')
+            // ->join('products as p', 'p.id', '=', 'fpd.product_id')
+            // ->join('merks as m', 'p.merk_id', '=', 'm.id')
+            // ->join('suppliers as s', 'm.supplier_id', '=', 's.id')
+            ->join('harga_non_expired_detail as hned', 'pbd.id', '=', 'hned.id_sj_detail')
             ->where('fpd.deleted_at', '=', null)
-            ->orderBy('fp.tanggal');
-
+            ->where('hned.deleted_at', '=', null)
+            ->where('pbd.deleted_at', '=', null);            
 
         if ($request->year) {
-            $res = $results->whereYear('fp.tanggal', $request->year);
+            $res = $results->whereYear('fp.tanggal', 2024);
         } else {
             $res = $results;
         }
@@ -157,6 +163,25 @@ class LaporanLabaRugiController extends Controller
         } else {
             $sales = $merk;
         }
+
+        $penjualanNonExpired =  $sales          
+            ->groupBy(DB::raw("DATE_FORMAT(fp.tanggal, '%m-%Y')"))
+            ->select(                
+                DB::raw("sum(fpd.total) as total_penjualan"),
+                DB::raw("sum(fpd.cn_total) as cn_total"),
+                // DB::raw("sum(fpd.qty * hned.harga_beli) as harga_beli_total"),
+                // DB::raw("sum(hned.harga_beli * hned.diskon_persen_beli / 100) as diskon_persen_beli_total"),
+                // DB::raw("sum(hned.harga_beli     - hned.diskon_rupiah_beli) as diskon_rupiah_beli_total"),
+            )
+            ->get();
+
+        // dd($penjualanNonExpired);
+
+
+        $penjualanExpired = $this->labarugiExpired($request);
+
+        dd($penjualanExpired);
+
 
         $tipe = $sales->groupBy(DB::raw("DATE_FORMAT(fp.tanggal, '%m-%Y')"))
             ->select(
@@ -204,5 +229,75 @@ class LaporanLabaRugiController extends Controller
             'laba' => $laba,
             'bulan' => $months
         ]);
+    }
+
+    public function labarugiExpired($request)
+    {
+        // dd($request->all());
+        $results = DB::table('faktur_penjualan_details as fpd')
+            ->join('faktur_penjualans as fp', 'fpd.faktur_penjualan_id', '=', 'fp.id')
+            // ->join('pesanan_penjualans as pp', 'fp.pesanan_penjualan_id', '=', 'pp.id')
+            ->join('pengiriman_barang_details as pbd', 'pbd.id', '=', 'fpd.pengiriman_barang_detail_id')
+            // ->join('products as p', 'p.id', '=', 'fpd.product_id')
+            // ->join('merks as m', 'p.merk_id', '=', 'm.id')
+            // ->join('suppliers as s', 'm.supplier_id', '=', 's.id')
+            ->join('stok_exp_details as sed','pbd.id','=','sed.id_sj_detail')
+            ->where('fpd.deleted_at', '=', null)
+            ->where('sed.deleted_at', '=', null)
+            ->where('pbd.deleted_at', '=', null)
+            ->orderBy('fp.tanggal');
+
+        if ($request->year) {
+            $res = $results->whereYear('fp.tanggal', 2024);
+        } else {
+            $res = $results;
+        }
+
+        if ($request->principle !== 'All') {
+            $principle = $res->where('m.supplier_id', $request->principle);
+        } else {
+            $principle = $res;
+        }
+
+        if ($request->merk !== 'All') {
+            $merk = $principle->where('m.id', $request->merk);
+        } else {
+            $merk = $principle;
+        }
+
+        if ($request->sales !== 'All') {
+            $sales = $merk->where('pp.sales_id', $request->sales);
+        } else {
+            $sales = $merk;
+        }
+
+          $penjualanExpired = $sales
+                              
+                              ->groupBy(DB::raw("DATE_FORMAT(fp.tanggal, '%m-%Y')"))
+                              ->select(                                
+                                //   DB::raw("DATE_FORMAT(fp.tanggal, '%m') as tanggal_penjualan"),
+                                  DB::raw("sum(fpd.total) as total_penjualan"),
+                                  DB::raw("sum(fpd.cn_total) as cn_total"),
+                                //   DB::raw("sum(fpd.qty * sed.harga_beli) as harga_beli_total"),
+                                //   DB::raw("sum(sed.harga_beli * sed.diskon_persen_beli / 100) as diskon_persen_beli_total"),
+                                //   DB::raw("sum(sed.harga_beli - sed.diskon_rupiah_beli) as diskon_rupiah_beli_total"),
+                              )                              
+                              ->get();
+
+        return $penjualanExpired;
+
+    }
+
+    public function filterLabaRugi()
+    {
+        $title = 'Laporan Laba Rugi';
+         return view('laporan.labarugi.laporan.filter',compact('title'));
+    }
+
+    public function exportLabaRugi (Request $request)
+    {
+       $data = $request->all();
+       $now = Carbon::parse(now())->format('Y-m-d');
+       return Excel::download(new LabaRugiExport($data), 'laporanlabarugi-'.$now.'.xlsx');
     }
 }

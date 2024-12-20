@@ -814,6 +814,8 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
         Route::post('/chartprinciple', [LaporanLabaRugiController::class, 'chartprinciple'])->name('laporanlabarugi.chartprinciple');
 
 
+        Route::get('/filter', [LaporanLabaRugiController::class, 'filterLabaRugi'])->name('laporanlabarugi.filter');        
+
         
     });
 
