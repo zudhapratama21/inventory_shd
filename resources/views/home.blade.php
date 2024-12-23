@@ -65,11 +65,11 @@
                                     </h3>
                                 </div>
 
-                                <div class="card-toolbar"> 
+                                <div class="card-toolbar">
                                     <h6 class="badge badge-info">Total Penjualan : </h6>
-                                    
-                                        <input type="text" class="form-control text-right" id="grandtotal" name="grandtotal" value="0"
-                                        readonly="readonly">                                    
+
+                                    <input type="text" class="form-control text-right" id="grandtotal" name="grandtotal"
+                                        value="0" readonly="readonly">
                                 </div>
 
 
@@ -164,7 +164,7 @@
                                 <!--begin::Chart-->
                                 {{-- <div id="penjualanchart"></div> --}}
                                 <div>
-                                    <canvas id="myChart" height="100"></canvas>                                    
+                                    <canvas id="myChart" height="100"></canvas>
                                 </div>
                                 <!--end::Chart-->
                             </div>
@@ -175,7 +175,7 @@
                     </div>
                 </div>
 
-            
+
                 <!--begin::Row-->
                 <div class="row">
                     <div class="col-md-6">
@@ -214,60 +214,62 @@
 
                         </div>
                         <!--end::Tiles Widget 1-->
-                    </div>                    
+                    </div>
                 </div>
                 <div class="row">
-                    <!--begin::Tiles Widget 1-->
-                    <div class="card card-custom gutter-b card-stretch">
-                        <!--begin::Header-->
-                        <div class="card-header border-0 pt-5">
-                            <div class="card-title">
-                                <div class="card-label">
-                                    <div class="font-weight-bolder">Grafik Penjualan Produk</div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--end::Header-->
-
-                        {{-- Grafik --}}
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="">Tahun</label>
-                                        <select name="chart_year" class="form-control" id="grafikproduk_tahun"
-                                            onchange="filteryearproduk()">
-                                            @php
-                                                $year = 2020;
-                                            @endphp
-                                            @foreach (range(date('Y'), $year) as $x)
-                                                <option value="{{ $x }}">{{ $x }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="">Produk</label>
-                                        <select name="chart_year" class="form-control" id="kt_select2_3"
-                                            onchange="filterProduk()">
-                                            @foreach ($produk as $item)
-                                                <option value="{{ $item->id }}">{{ $item->kode }} -
-                                                    {{ $item->nama }}</option>
-                                            @endforeach
-                                        </select>
+                    <div class="col-xl-12">
+                        <!--begin::Tiles Widget 1-->
+                        <div class="card card-custom gutter-b card-stretch">
+                            <!--begin::Header-->
+                            <div class="card-header border-0 pt-5">
+                                <div class="card-title">
+                                    <div class="card-label">
+                                        <div class="font-weight-bolder">Grafik Penjualan Produk</div>
                                     </div>
                                 </div>
                             </div>
+                            <!--end::Header-->
+
+                            {{-- Grafik --}}
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="">Tahun</label>
+                                            <select name="chart_year" class="form-control" id="grafikproduk_tahun"
+                                                onchange="filteryearproduk()">
+                                                @php
+                                                    $year = 2020;
+                                                @endphp
+                                                @foreach (range(date('Y'), $year) as $x)
+                                                    <option value="{{ $x }}">{{ $x }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="">Produk</label>
+                                            <select name="chart_year" class="form-control" id="kt_select2_3"
+                                                onchange="filterProduk()">
+                                                @foreach ($produk as $item)
+                                                    <option value="{{ $item->id }}">{{ $item->kode }} -
+                                                        {{ $item->nama }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
 
 
-                            <canvas id="produkChart" height="100"></canvas>
+                                <canvas id="produkChart" height="100"></canvas>
+                            </div>
+
+                            {{-- end Of Grafik --}}
+
                         </div>
-
-                        {{-- end Of Grafik --}}
-
+                        <!--end::Tiles Widget 1-->
                     </div>
-                    <!--end::Tiles Widget 1-->
                 </div>
                 <!--end::Row-->
 
@@ -360,7 +362,7 @@
                                         </div>
                                     </div>
 
-                                     <div class="col-md-3">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Sales</label>
                                             <select name="chart_year" class="form-control" id="kt_select2_7"
@@ -678,7 +680,7 @@
         const produk_chart = document.getElementById('produkChart');
         const best_produk = document.getElementById('chartbestproduk');
 
-        
+
 
 
         // =================================== VARIABLE UNTUK GRAFIK PENJUALAN =====================================
@@ -704,7 +706,7 @@
         let bulan = 'All';
         let dataBulan = null;
         let chart = null;
-        let produk = {{ $produk[0]->id }};        
+        let produk = {{ $produk[0]->id }};
         let product_id = null;
         let customer_id = null;
         let supplier_id = null;
@@ -724,8 +726,8 @@
         let sales_principle = 'All';
 
 
-         // =========================================================================================================================
-         $(document).ready(function() {
+        // =========================================================================================================================
+        $(document).ready(function() {
             chartyear();
             chart_kategori();
             chartProduk();
@@ -740,13 +742,56 @@
 
         // ============================================================================================================================
 
-       
+
         // ==================================================================== CHART UNTUK GRAFIK BAR PENJUALAN =======================================
         let options = {
             type: 'bar',
-            data: { labels: null, datasets: [{ label: 'Penjualan', data: null, pointStyle: 'circle', pointRadius: 10, pointHoverRadius: 15, }] },
+            data: {
+                labels: null,
+                datasets: [{
+                    label: 'Penjualan',
+                    data: null,
+                    pointStyle: 'circle',
+                    pointRadius: 10,
+                    pointHoverRadius: 15,
+                }]
+            },
             options: {
-                responsive: true, plugins: { title: { display: true, text: (ctx) => 'Data Dalam Persen Rupiah ', }, legend: { labels: {  font: { size: 11 } } } }, scales: { y: { stacked: true, ticks: { font: { size: 12, } } }, x: { ticks: { font: { size: 12, } } } } }, interaction: { intersect: false, }
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: (ctx) => 'Data Dalam Persen Rupiah ',
+                    },
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 11
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        stacked: true,
+                        ticks: {
+                            font: {
+                                size: 12,
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 12,
+                            }
+                        }
+                    }
+                }
+            },
+            interaction: {
+                intersect: false,
+            }
         }
 
         // ==================================================================== CHART UNTUK GRAFIK BAR PENJUALAN =======================================
@@ -761,15 +806,15 @@
                 },
                 data: {
                     'year': year,
-                    'kategori': kategori,                    
-                    'principlegrafik' : principlegrafik,
-                    'customergrafik' : customergrafik,
-                    'merkgrafik' : merkgrafik,
-                    'salesgrafik' : salesgrafik,
+                    'kategori': kategori,
+                    'principlegrafik': principlegrafik,
+                    'customergrafik': customergrafik,
+                    'merkgrafik': merkgrafik,
+                    'salesgrafik': salesgrafik,
                     "_token": "{{ csrf_token() }}"
                 },
-                success: function(data) {                    
-                    res = JSON.parse("[" + data + "]");                                            
+                success: function(data) {
+                    res = JSON.parse("[" + data + "]");
                     dataLaba = res[0].laba;
                     dataBulan = res[0].bulan;
                     let grandtotalpenjualan = res[0].total_penjualan;
@@ -782,11 +827,11 @@
                 },
                 error: function(data) {
                     console.log(data);
-                }   
+                }
             });
         }
 
-        function chartGrafikUpdate(){
+        function chartGrafikUpdate() {
             $.ajax({
                 type: 'POST',
                 url: '{{ route('chart.year') }}',
@@ -796,11 +841,11 @@
                 },
                 data: {
                     'year': year,
-                    'kategori': kategori,                                        
-                    'principlegrafik' : principlegrafik,
-                    'customergrafik' : customergrafik,
-                    'merkgrafik' : merkgrafik,
-                    'salesgrafik' : salesgrafik,
+                    'kategori': kategori,
+                    'principlegrafik': principlegrafik,
+                    'customergrafik': customergrafik,
+                    'merkgrafik': merkgrafik,
+                    'salesgrafik': salesgrafik,
                     "_token": "{{ csrf_token() }}"
                 },
                 success: function(data) {
@@ -815,7 +860,7 @@
                     options.data.labels = dataBulan;
                     options.data.datasets[0].data = dataLaba;
                     chart.destroy();
-                    
+
                     chart = new Chart(ctx, options);
                     chart.update();
                 },
@@ -825,9 +870,9 @@
             });
         }
 
-        
+
         function hitungtotalgrafik(data) {
-            console.log(data);            
+            console.log(data);
             $('#grandtotal').val(data);
         }
 
@@ -860,21 +905,46 @@
             merkgrafik = e.options[e.selectedIndex].value;
             chartGrafikUpdate();
         }
-        function filtersalesgrafik() {  
+
+        function filtersalesgrafik() {
             let e = document.getElementById("kt_select2_2");
             salesgrafik = e.options[e.selectedIndex].value;
             chartGrafikUpdate();
         }
 
-        
+
 
         //========================================================= end of Chart Penjualan Bar =====================================================
 
         //=========================================================CHART UNTUK DOUGNOT  =====================================================
         let dougnut = {
             type: 'bar',
-            data: { labels: null, datasets: [{ label: 'Grafik Penjualan Per Kategori', data: null, borderWidth: 1, backgroundColor: ['#FF6384', '#36A2EB'], }] },
-            options: { responsive: true, plugins: { title: { display: true, text: (ctx) => 'Data Dalam Persen Rupiah ', }, }, scales: { y: { stacked: true } } }, interaction: { intersect: false, }
+            data: {
+                labels: null,
+                datasets: [{
+                    label: 'Grafik Penjualan Per Kategori',
+                    data: null,
+                    borderWidth: 1,
+                    backgroundColor: ['#FF6384', '#36A2EB'],
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: (ctx) => 'Data Dalam Persen Rupiah ',
+                    },
+                },
+                scales: {
+                    y: {
+                        stacked: true
+                    }
+                }
+            },
+            interaction: {
+                intersect: false,
+            }
         }
 
         // Chart dougnut Kategori Penjualan
@@ -903,7 +973,7 @@
                 }
             });
         }
-        
+
         function filterYearKategori() {
             let e = document.getElementById("chart_kategori");
             year = e.options[e.selectedIndex].value;
@@ -949,7 +1019,39 @@
                     pointHoverRadius: 15,
                 }]
             },
-            options: { responsive: true, plugins: { title: { display: true, text: (ctx) => 'Data Dalam Persen Rupiah ', }, legend: { labels: {  font: { size: 11 } } } }, scales: { y: { stacked: true, ticks: { font: { size: 12, } } }, x: { ticks: { font: { size: 12, } } } } },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: (ctx) => 'Data Dalam Persen Rupiah ',
+                    },
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 11
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        stacked: true,
+                        ticks: {
+                            font: {
+                                size: 12,
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 12,
+                            }
+                        }
+                    }
+                }
+            },
             interaction: {
                 intersect: false,
             }
@@ -982,7 +1084,7 @@
             });
         }
 
-        function chartProdukUpdate(){
+        function chartProdukUpdate() {
             $.ajax({
                 type: 'POST',
                 url: '{{ route('chart.produk') }}',
@@ -1122,13 +1224,13 @@
 
         function filtersalesbestproduk() {
             let e = document.getElementById("kt_select2_7");
-            salesProduk = e.options[e.selectedIndex].value;        
+            salesProduk = e.options[e.selectedIndex].value;
             $('.yajra-datatable').DataTable().ajax.reload(null, false);
         }
 
         function filtermerkbestproduk() {
             let e = document.getElementById("kt_select2_8");
-            merkProduk = e.options[e.selectedIndex].value;        
+            merkProduk = e.options[e.selectedIndex].value;
             $('.yajra-datatable').DataTable().ajax.reload(null, false);
         }
 
@@ -1150,12 +1252,12 @@
                     url: "{{ route('datatable.listcustomer') }}",
                     type: "POST",
                     data: function(params) {
-                            params.bulan = bulanProduk,
+                        params.bulan = bulanProduk,
                             params.tipe = tipe,
                             params.kategori = kategoriProduk,
                             params.sales = salesProduk,
                             params.merk = merkProduk,
-                            params.product_id = product_id,                            
+                            params.product_id = product_id,
                             params._token = "{{ csrf_token() }}";
                         return params;
                     }
@@ -1204,12 +1306,12 @@
                     url: "{{ route('datatable.topCustomer') }}",
                     type: "POST",
                     data: function(params) {
-                          params.year = topcustomeryear,
-                          params.bulan = topcustomerbulan,
-                          params.kategori = topcustomerkategori,
-                          params.sales = salescustomer,
-                          params._token = "{{ csrf_token() }}";
-                          return params;
+                        params.year = topcustomeryear,
+                            params.bulan = topcustomerbulan,
+                            params.kategori = topcustomerkategori,
+                            params.sales = salescustomer,
+                            params._token = "{{ csrf_token() }}";
+                        return params;
                     }
                 },
                 columns: [
@@ -1266,7 +1368,7 @@
                     url: "{{ route('datatable.topCustomerProduct') }}",
                     type: "POST",
                     data: function(params) {
-                            params.year = topcustomeryear,
+                        params.year = topcustomeryear,
                             params.bulan = topcustomerbulan,
                             params.customer = customer_id,
                             params.kategori = topcustomerkategori,
@@ -1347,7 +1449,7 @@
                     url: "{{ route('datatable.topPrinciple') }}",
                     type: "POST",
                     data: function(params) {
-                            params.year = topprincipleyear,
+                        params.year = topprincipleyear,
                             params.bulan = topprinciplebulan,
                             params.kategori = topprinciplekategori,
                             params.sales = sales_principle,
@@ -1415,7 +1517,7 @@
             $('.yajra-datatabletopprinciple').DataTable().ajax.reload(null, false);
         }
 
-        
+
         function filtersalestopprinciple() {
             let e = document.getElementById("sales_principle");
             sales_principle = e.options[e.selectedIndex].value;
