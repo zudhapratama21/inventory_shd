@@ -37,7 +37,7 @@ class LabaRugiController extends Controller
             if ($item->products->status_exp == 0) {
                 foreach ($item->pengirimanbarangdetail->harganonexpireddetail as $nonexpired) {
 
-                    $subtotal = $item->qty * $nonexpired->harga_beli;
+                    $subtotal = $item->nonexpired * $nonexpired->harga_beli * -1;
                     $total_diskon = ($nonexpired->diskon_persen_beli * $subtotal/100) + $nonexpired->diskon_rupiah_beli;
                     $hpp = ($subtotal - $total_diskon) * 1.11;
                     $labarugi[] = array(
@@ -65,7 +65,7 @@ class LabaRugiController extends Controller
             } else {
 
                 foreach ($item->pengirimanbarangdetail->stokexpdetail as $expired) {
-                    $subtotalexpired = $item->qty * $expired->harga_beli;
+                    $subtotalexpired = $expired->qty * $expired->harga_beli * -1;
                     $total_diskon_expired = ($expired->diskon_persen_beli * $subtotalexpired/100) + $expired->diskon_rupiah_beli;
                     $hpp_expired = ($subtotalexpired - $total_diskon_expired) * 1.11;
                     $labarugi[] = array(

@@ -21,6 +21,9 @@ class LabaRugiExport implements FromView
     public function view(): View
     {   
 
+        $tanggalAwal = Carbon::parse($this->data['tanggal_awal'])->format('Y-m-d');
+        $tanggalAkhir = Carbon::parse($this->data['tanggal_akhir'])->format('Y-m-d');
+
         $totalHpp = 0;
         $totalHargaBeli = 0;
         $totalPpnBeli = 0;
@@ -29,8 +32,8 @@ class LabaRugiExport implements FromView
                                     ->with('products')
                                     ->with('pengirimanbarangdetail.stokexpdetail')
                                     ->with('pengirimanbarangdetail.harganonexpireddetail')
-                                    ->where('tanggal','>=',$this->data['tanggal_awal'])
-                                    ->where('tanggal','<=',$this->data['tanggal_akhir'])
+                                    // ->where('tanggal','>=',$tanggalAwal)
+                                    // ->where('tanggal','<=',$tanggalAkhir)
                                     ->get();
 
             // dd($fakturpenjualan);
@@ -42,9 +45,9 @@ class LabaRugiExport implements FromView
             if ($item->products->status_exp == 0) {
                 foreach ($item->pengirimanbarangdetail->harganonexpireddetail as $nonexpired) {
 
-                    $subtotal = $item->qty * $nonexpired->harga_beli;
+                    $subtotal = $nonexpired->qty * $nonexpired->harga_beli * -1;
                     $total_diskon = ($nonexpired->diskon_persen_beli * $subtotal/100) + $nonexpired->diskon_rupiah_beli;
-                    $hpp = ($subtotal - $total_diskon) * 1.11;
+                     $hpp = ($subtotal - $total_diskon) * 1.11;
                     $labarugi[] = array(
                             'tanggal' => Carbon::parse($item->fakturpenjualan->tanggal)->format('d/m/Y'),
                             'no_kpa' => $item->fakturpenjualan->no_kpa,
@@ -70,7 +73,7 @@ class LabaRugiExport implements FromView
             } else {
 
                 foreach ($item->pengirimanbarangdetail->stokexpdetail as $expired) {
-                    $subtotalexpired = $item->qty * $expired->harga_beli;
+                    $subtotalexpired = $expired->qty * $expired->harga_beli * -1;
                     $total_diskon_expired = ($expired->diskon_persen_beli * $subtotalexpired/100) + $expired->diskon_rupiah_beli;
                     $hpp_expired = ($subtotalexpired - $total_diskon_expired) * 1.11;
                     $labarugi[] = array(

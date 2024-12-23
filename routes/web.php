@@ -816,6 +816,7 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
 
         Route::get('/filter', [LaporanLabaRugiController::class, 'filterLabaRugi'])->name('laporanlabarugi.filter');        
 
+        Route::post('/filter', [LaporanLabaRugiController::class, 'exportLabaRugi'])->name('laporanlabarugi.filter');        
         
     });
 

@@ -65,6 +65,7 @@ class HomeController extends Controller
         } else {
             $res = $results;
         }
+        
 
         if ($request->kategori !== 'All') {
             $kategori = $res->where('pp.kategoripesanan_id', $request->kategori);

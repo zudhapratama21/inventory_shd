@@ -294,7 +294,7 @@ class LaporanLabaRugiController extends Controller
          return view('laporan.labarugi.laporan.filter',compact('title'));
     }
 
-    public function exportLabaRugi (Request $request)
+    public function exportLabaRugi(Request $request)
     {
        $data = $request->all();
        $now = Carbon::parse(now())->format('Y-m-d');

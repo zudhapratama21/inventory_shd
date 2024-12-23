@@ -1096,15 +1096,15 @@
         function filteryearbestproduk() {
             let e = document.getElementById("produk_tahun");
 
-            year = e.options[e.selectedIndex].value;
-            $('#tahun').val(year);
+            tahunProduk = e.options[e.selectedIndex].value;
+            $('#tahun').val(tahunProduk);
             $('.yajra-datatable').DataTable().ajax.reload(null, false);
         }
 
         function filterbulanbestproduk() {
             let e = document.getElementById("produk_bulan");
-            bulan = e.options[e.selectedIndex].value;
-            $('#bulan_product').val(bulan);
+            bulanProduk = e.options[e.selectedIndex].value;
+            $('#bulan_product').val(bulanProduk);
             $('.yajra-datatable').DataTable().ajax.reload(null, false);
         }
 
@@ -1116,8 +1116,8 @@
 
         function filterkategoribestproduk() {
             let e = document.getElementById("produk_kategori");
-            kategori = e.options[e.selectedIndex].value;
-            $('#kategori_product').val(kategori);
+            kategoriProduk = e.options[e.selectedIndex].value;
+            $('#kategori_product').val(kategoriProduk);
             $('.yajra-datatable').DataTable().ajax.reload(null, false);
         }
 
