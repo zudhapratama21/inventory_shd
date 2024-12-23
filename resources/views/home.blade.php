@@ -214,61 +214,60 @@
 
                         </div>
                         <!--end::Tiles Widget 1-->
-                    </div>
-
-                    <div class="col-xl-6">
-                        <!--begin::Tiles Widget 1-->
-                        <div class="card card-custom gutter-b card-stretch">
-                            <!--begin::Header-->
-                            <div class="card-header border-0 pt-5">
-                                <div class="card-title">
-                                    <div class="card-label">
-                                        <div class="font-weight-bolder">Grafik Penjualan Produk</div>
-                                    </div>
+                    </div>                    
+                </div>
+                <div class="row">
+                    <!--begin::Tiles Widget 1-->
+                    <div class="card card-custom gutter-b card-stretch">
+                        <!--begin::Header-->
+                        <div class="card-header border-0 pt-5">
+                            <div class="card-title">
+                                <div class="card-label">
+                                    <div class="font-weight-bolder">Grafik Penjualan Produk</div>
                                 </div>
                             </div>
-                            <!--end::Header-->
-
-                            {{-- Grafik --}}
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="">Tahun</label>
-                                            <select name="chart_year" class="form-control" id="grafikproduk_tahun"
-                                                onchange="filteryearproduk()">
-                                                @php
-                                                    $year = 2020;
-                                                @endphp
-                                                @foreach (range(date('Y'), $year) as $x)
-                                                    <option value="{{ $x }}">{{ $x }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="">Produk</label>
-                                            <select name="chart_year" class="form-control" id="kt_select2_3"
-                                                onchange="filterProduk()">
-                                                @foreach ($produk as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->kode }} -
-                                                        {{ $item->nama }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <canvas id="produkChart" height="100"></canvas>
-                            </div>
-
-                            {{-- end Of Grafik --}}
-
                         </div>
-                        <!--end::Tiles Widget 1-->
+                        <!--end::Header-->
+
+                        {{-- Grafik --}}
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="">Tahun</label>
+                                        <select name="chart_year" class="form-control" id="grafikproduk_tahun"
+                                            onchange="filteryearproduk()">
+                                            @php
+                                                $year = 2020;
+                                            @endphp
+                                            @foreach (range(date('Y'), $year) as $x)
+                                                <option value="{{ $x }}">{{ $x }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="">Produk</label>
+                                        <select name="chart_year" class="form-control" id="kt_select2_3"
+                                            onchange="filterProduk()">
+                                            @foreach ($produk as $item)
+                                                <option value="{{ $item->id }}">{{ $item->kode }} -
+                                                    {{ $item->nama }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <canvas id="produkChart" height="100"></canvas>
+                        </div>
+
+                        {{-- end Of Grafik --}}
+
                     </div>
+                    <!--end::Tiles Widget 1-->
                 </div>
                 <!--end::Row-->
 
