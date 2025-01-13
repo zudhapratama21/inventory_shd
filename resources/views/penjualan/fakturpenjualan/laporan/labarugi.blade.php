@@ -36,6 +36,7 @@
                                     </svg>
                                     <!--end::Svg Icon--></span> </span>
                             <h3 class="card-label">Laba / Rugi</h3>
+                            <input type="text" value="{{$labakotor}}">
 
 
                         </div>
@@ -44,10 +45,7 @@
                     <div class="card-body">
                         <table class="table table-separate table-head-custom table-checkable" id="kt_datatable1">
                             <thead>
-                                <tr>
-                                    <th>Tanggal</th>
-                                    <th>No KPA</th>
-                                    <th>Customer</th>
+                                <tr>                                                                 
                                     <th>Products</th>
                                     <th>QTY</th>
                                     <th>Harga Jual</th>
@@ -56,6 +54,7 @@
                                     <th>Total Diskon</th>
                                     <th>Total</th>                                                                        
                                     <th>CN</th>
+                                    <th>PPH(1.5%)</th>
                                     <th>Harga Jual Nett</th>
                                     <th>Harga Beli</th>
                                     <th>Diskon Beli (%)</th>
@@ -67,10 +66,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($labarugi as $item)
-                                    <tr>
-                                        <td>{{ $item['tanggal'] }}</td>
-                                        <td>{{ $item['no_kpa'] }}</td>
-                                        <td>{{ $item['customer'] }}</td>
+                                    <tr>                                                                              
                                         <td>{{ $item['products'] }}</td>
                                         <td>{{ $item['qty'] }}</td>
                                         <td>{{ number_format($item['hargajual'], 2, ',', '.') }}</td>
@@ -79,6 +75,7 @@
                                         <td>{{ number_format($item['total_diskon'], 2, ',', '.') }}</td>                                                                               
                                         <td>{{ number_format($item['total'], 2, ',', '.') }}</td>
                                         <td>{{ number_format($item['cn_rupiah'], 2, ',', '.') }}</td>
+                                        <td>{{ number_format($item['pph'], 2, ',', '.') }}</td>
                                         <td>{{ number_format($item['nett'], 2, ',', '.') }}</td>
                                         <td>{{ number_format($item['harga_beli'], 2, ',', '.') }}</td>
                                         <td>{{ number_format($item['diskon_beli_persen'], 2, ',', '.') }}</td>
@@ -100,8 +97,8 @@
     </div>
     <!--end::Content-->
 @endsection
-@push('script')
-    <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6"') }}"></script>
-    <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
-    <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
+@push('script')    
+     <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }} "></script>     
+    <script src="{{ asset('/assets/js/pages/crud/datatables/basic/scrollable.js?v=7.0.6') }} "></script>
+      
 @endpush

@@ -765,15 +765,29 @@ class FakturPenjualanController extends Controller
 
     public function syncronisasi ()
     {
-       $fakturpenjualan = FakturPenjualan::get();
+    //    $fakturpenjualan = FakturPenjualan::get();
 
-       foreach ($fakturpenjualan as $value) {
-            NoKPA::where('no_kpa',$value->no_kpa)->update([
-                'status' => 'Tidak Aktif'
-            ]);
-       }
+    //    foreach ($fakturpenjualan as $value) {
+    //         NoKPA::where('no_kpa',$value->no_kpa)->update([
+    //             'status' => 'Tidak Aktif'
+    //         ]);
+    //    }
 
-       return back();
+    //    return back();
+
+          $fakturpenjualandetail = FakturPenjualanDetail::with('fakturpenjualan.customers')->get();
+          foreach ($fakturpenjualandetail as $value) {
+               if ($value->fakturpenjualan->customers->kategori_id == 13 || $value->fakturpenjualan->customers->kategori_id == 17) {
+                    if ($value->total > 2000000) {
+                        $value->update([
+                            'pph' => 1.5,
+                            'total_pph' => 1.5 * $value->total / 100
+                        ]);
+                    }
+               }
+          }
+          return back();
+          
     }
 
     public function tandaTerima (Request $request , $id)

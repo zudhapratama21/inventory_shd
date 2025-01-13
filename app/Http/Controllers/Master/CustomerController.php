@@ -34,20 +34,20 @@ class CustomerController extends Controller
     {
 
         $title = "CUSTOMER";
-        $customers = Customer::with(['kategori', 'salesman', 'namakota', 'prov'])->get();
+        $customers = Customer::with(['kategori', 'salesman', 'namakota', 'prov']);
         if (request()->ajax()) { 
             return Datatables::of($customers)
                 ->addIndexColumn()
-                ->addColumn('kategori', function (Customer $custs) {
+                ->editColumn('kategori', function (Customer $custs) {
                     return $custs->kategori->nama;
                 })
-                ->addColumn('sales', function (Customer $custsx) {
+                ->editColumn('sales', function (Customer $custsx) {
                     return $custsx->salesman->nama;
                 })
-                ->addColumn('kota', function (Customer $custsy) {
+                ->editColumn('kota', function (Customer $custsy) {
                     return $custsy->namakota->name;
                 })
-                ->addColumn('provinsi', function (Customer $custsy) {
+                ->editColumn('provinsi', function (Customer $custsy) {
                     return $custsy->prov->name;
                 })
                 ->addColumn('action', function ($row) {

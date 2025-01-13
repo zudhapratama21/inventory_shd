@@ -731,7 +731,6 @@
             chartyear();
             chart_kategori();
             chartProduk();
-            // chartbestproduk();
             datatable();
             datatableCustomer();
             datatabletopcustomer();
@@ -749,49 +748,11 @@
             data: {
                 labels: null,
                 datasets: [{
-                    label: 'Penjualan',
-                    data: null,
-                    pointStyle: 'circle',
-                    pointRadius: 10,
-                    pointHoverRadius: 15,
+                    label: 'Penjualan', data: null, pointStyle: 'circle', pointRadius: 10, pointHoverRadius: 15,
                 }]
             },
             options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: (ctx) => 'Data Dalam Persen Rupiah ',
-                    },
-                    legend: {
-                        labels: {
-                            font: {
-                                size: 11
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        stacked: true,
-                        ticks: {
-                            font: {
-                                size: 12,
-                            }
-                        }
-                    },
-                    x: {
-                        ticks: {
-                            font: {
-                                size: 12,
-                            }
-                        }
-                    }
-                }
-            },
-            interaction: {
-                intersect: false,
-            }
+                responsive: true, plugins: { title: { display: true, text: (ctx) => 'Data Dalam Persen Rupiah ', }, legend: { labels: { font: { size: 11 } } } }, scales: { y: { stacked: true, ticks: { font: { size: 12, } } }, x: { ticks: { font: { size: 12, } } } } }, interaction: { intersect: false, }
         }
 
         // ==================================================================== CHART UNTUK GRAFIK BAR PENJUALAN =======================================
@@ -871,8 +832,7 @@
         }
 
 
-        function hitungtotalgrafik(data) {
-            console.log(data);
+        function hitungtotalgrafik(data) {            
             $('#grandtotal').val(data);
         }
 
@@ -912,8 +872,7 @@
             chartGrafikUpdate();
         }
 
-
-
+        
         //========================================================= end of Chart Penjualan Bar =====================================================
 
         //=========================================================CHART UNTUK DOUGNOT  =====================================================

@@ -2,6 +2,7 @@
     <thead>
         <tr>
             <th>Tanggal</th>
+            <th>Bulan</th>
             <th>No KPA</th>
             <th>Customer</th>
             <th>Products</th>
@@ -25,6 +26,7 @@
         @foreach ($labarugi as $item)
             <tr>
                 <td>{{ $item['tanggal'] }}</td>
+                <td>{{ $item['bulan'] }}</td>                
                 <td>{{ $item['no_kpa'] }}</td>
                 <td>{{ $item['customer'] }}</td>
                 <td>{{ $item['products'] }}</td>

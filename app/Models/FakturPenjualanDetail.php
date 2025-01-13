@@ -22,7 +22,7 @@ class FakturPenjualanDetail extends Model
         return $this->belongsTo(FakturPenjualan::class, 'faktur_penjualan_id', 'id');
     }
 
-  
+    
     public function pengirimanbarangdetail()
     {
         return $this->belongsTo(PengirimanBarangDetail::class, 'pengiriman_barang_detail_id', 'id');
