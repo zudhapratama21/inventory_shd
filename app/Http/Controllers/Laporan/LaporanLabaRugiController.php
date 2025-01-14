@@ -91,7 +91,7 @@ class LaporanLabaRugiController extends Controller
                     $cn = $subtotalPenjualan * $item->cn_persen / 100;
                     $nett = $subtotalPenjualan - $cn - $pph;
 
-                    $labarugi[] = array(                        
+                    $labarugi[] = array(
                         'no_kpa' => $item->fakturpenjualan->no_kpa,
                         'products' => $item->products->nama,
                         'customer' => $item->fakturpenjualan->customers->nama,
@@ -129,7 +129,7 @@ class LaporanLabaRugiController extends Controller
                     }
                     $cnExpired = $subtotalPenjualanExpired * $item->cn_persen / 100;
                     $nettExpired = $subtotalPenjualanExpired - $cnExpired - $pph;
-                    $labarugi[] = array(                        
+                    $labarugi[] = array(
                         'no_kpa' => $item->fakturpenjualan->no_kpa,
                         'products' => $item->products->nama,
                         'customer' => $item->fakturpenjualan->customers->nama,
@@ -250,7 +250,8 @@ class LaporanLabaRugiController extends Controller
                     $cn = $subtotalPenjualan * $item->cn_persen / 100;
                     $nett = $subtotalPenjualan - $cn - $pph;
 
-                    $labarugi[] = array(                        
+                    $labarugi[] = array(
+                        'tanggal' => Carbon::parse($item->fakturpenjualan->tanggal)->format('m'),
                         'no_kpa' => $item->fakturpenjualan->no_kpa,
                         'products' => $item->products->nama,
                         'customer' => $item->fakturpenjualan->customers->nama,
@@ -288,7 +289,8 @@ class LaporanLabaRugiController extends Controller
                     }
                     $cnExpired = $subtotalPenjualanExpired * $item->cn_persen / 100;
                     $nettExpired = $subtotalPenjualanExpired - $cnExpired - $pph;
-                    $labarugi[] = array(                        
+                    $labarugi[] = array(
+                        'tanggal' => Carbon::parse($item->fakturpenjualan->tanggal)->format('m'),
                         'no_kpa' => $item->fakturpenjualan->no_kpa,
                         'products' => $item->products->nama,
                         'customer' => $item->fakturpenjualan->customers->nama,
@@ -403,7 +405,7 @@ class LaporanLabaRugiController extends Controller
                     $cn = $subtotalPenjualan * $item->cn_persen / 100;
                     $nett = $subtotalPenjualan - $cn - $pph;
 
-                    $labarugi[] = array(                        
+                    $labarugi[] = array(
                         'no_kpa' => $item->fakturpenjualan->no_kpa,
                         'products' => $item->products->nama,
                         'products_id' => $item->products->id,
@@ -443,7 +445,7 @@ class LaporanLabaRugiController extends Controller
 
                     $cnExpired = $subtotalPenjualanExpired * $item->cn_persen / 100;
                     $nettExpired = $subtotalPenjualanExpired - $cnExpired - $pph;
-                    $labarugi[] = array(                        
+                    $labarugi[] = array(
                         'no_kpa' => $item->fakturpenjualan->no_kpa,
                         'products' => $item->products->nama,
                         'products_id' => $item->products->id,
@@ -476,21 +478,185 @@ class LaporanLabaRugiController extends Controller
         });
 
 
+        usort($labarugi, function ($a, $b) {
+            return strcmp($a['no_kpa'], $b['no_kpa']);
+        });
+
+
+
         return DataTables::of($labarugi)
             ->addIndexColumn()
+            ->make(true);
+    }
+
+    public function datatableCustomerProductReview(Request $request)
+    {
+        $fakturpenjualan =  FakturPenjualanDetail::whereHas('fakturpenjualan.SO', function ($q) use ($request) {
+            if ($request->sales !== 'All') {
+                $q->where('sales_id', $request->sales);
+            }
+            if ($request->kategori !== 'All') {
+                $q->where('kategoripesanan_id', $request->kategori);
+            }
+        })
+            ->with('pengirimanbarangdetail.stokexpdetail')
+            ->with('pengirimanbarangdetail.harganonexpireddetail')
+            ->whereHas('fakturpenjualan', function ($q) use ($request) {
+                $q->whereYear('tanggal', '=', $request->year);
+
+                if ($request->bulan !== 'All') {
+                    $q->whereMonth('tanggal', $request->bulan);
+                }
+
+                $q->where('customer_id', $request->customer_id);
+            })
+            ->get();
+
+
+        $labarugi = [];
+        foreach ($fakturpenjualan as $item) {
+            if ($item->products->status_exp == 0) {
+                foreach ($item->pengirimanbarangdetail->harganonexpireddetail as $nonexpired) {
+
+                    $subtotal = $nonexpired->qty * $nonexpired->harga_beli * -1;
+                    $total_diskon = ($nonexpired->diskon_persen_beli * $subtotal / 100) + $nonexpired->diskon_rupiah_beli;
+                    $hpp = ($subtotal - $total_diskon) * 1.11;
+
+                    //  penjualan
+                    $totalJual = $nonexpired->qty * $item->hargajual * -1;
+                    $subtotalPenjualan  = $totalJual - ($totalJual * $item->diskon_persen / 100) - $item->diskon_rp;
+                    if ($item->pph) {
+                        $pph = $subtotalPenjualan * $item->pph / 100;
+                    } else {
+                        $pph = 0;
+                    }
+
+                    $cn = $subtotalPenjualan * $item->cn_persen / 100;
+                    $nett = $subtotalPenjualan - $cn - $pph;
+
+                    $labarugi[] = array(
+                        'no_kpa' => $item->fakturpenjualan->no_kpa,
+                        'products' => $item->products->nama,
+                        'products_id' => $item->products->id,
+                        'qty' => $nonexpired->qty * -1,
+                        'hargajual' => number_format($item->hargajual, 0, ',', '.'),
+                        'pph' => number_format($pph, 0, ',', '.'),
+                        'diskon_persen' =>  $item->diskon_persen,
+                        'diskon_rp' => $item->diskon_rp,
+                        'total_diskon' => number_format($item->total_diskon, 0, ',', '.'),
+                        'subtotal' => number_format($subtotalPenjualan, 0, ',', '.'),
+                        'cn_persen' =>  $item->cn_persen ? $item->cn_persen : 0,
+                        'cn_rupiah' => number_format($cn, 0, ',', '.'),
+                        'nett' => number_format($subtotalPenjualan - $cn, 0, ',', '.'),
+                        'harga_beli' => number_format($nonexpired->harga_beli, 0, ',', '.'),
+                        'diskon_beli_persen' => $nonexpired->diskon_persen_beli,
+                        'diskon_beli_rupiah' => $nonexpired->diskon_rupiah_beli,
+                        'total_diskon_beli' => number_format($total_diskon, 0, ',', '.'),
+                        'ppn_beli' => number_format(($subtotal - $total_diskon) * 11 / 100, 0, ',', '.'),
+                        'hpp' => number_format($hpp, 0, ',', '.'),
+                        'laba_kotor' => $nett - $hpp
+                    );
+                }
+            } else {
+                foreach ($item->pengirimanbarangdetail->stokexpdetail as $expired) {
+                    $subtotalexpired = $expired->qty * $expired->harga_beli * -1;
+                    $total_diskon_expired = ($expired->diskon_persen_beli * $subtotalexpired / 100) + $expired->diskon_rupiah_beli;
+                    $hpp_expired = ($subtotalexpired - $total_diskon_expired) * 1.11;
+
+                    //  penjualan
+                    $totalJual = $expired->qty * $item->hargajual * -1;
+                    $subtotalPenjualanExpired  = $totalJual - ($totalJual * $item->diskon_persen / 100) - $item->diskon_rp;
+                    if ($item->pph) {
+                        $pph = $subtotalPenjualanExpired * $item->pph / 100;
+                    } else {
+                        $pph = 0;
+                    }
+
+                    $cnExpired = $subtotalPenjualanExpired * $item->cn_persen / 100;
+                    $nettExpired = $subtotalPenjualanExpired - $cnExpired - $pph;
+                    $labarugi[] = array(
+                        'no_kpa' => $item->fakturpenjualan->no_kpa,
+                        'products' => $item->products->nama,
+                        'products_id' => $item->products->id,
+                        'qty' => $expired->qty * -1,
+                        'hargajual' => number_format($item->hargajual, 0, ',', '.'),
+                        'pph' => number_format($pph, 0, ',', '.'),
+                        'diskon_persen' =>  $item->diskon_persen,
+                        'diskon_rp' => $item->diskon_rp,
+                        'total_diskon' => number_format($item->total_diskon, 0, ',', '.'),
+                        'subtotal' => number_format($subtotalPenjualanExpired, 0, ',', '.'),
+                        'cn_persen' => number_format($item->cn_persen, 0, ',', '.'),
+                        'cn_rupiah' => number_format($cnExpired, 0, ',', '.'),
+                        'nett' =>  number_format($nettExpired, 0, ',', '.'),
+                        'harga_beli' => number_format($expired->harga_beli, 0, ',', '.'),
+                        'diskon_beli_persen' => number_format($expired->diskon_persen_beli, 0, ',', '.'),
+                        'diskon_beli_rupiah' => number_format($expired->diskon_rupiah_beli, 0, ',', '.'),
+                        'total_diskon_beli' => number_format($total_diskon_expired, 0, ',', '.'),
+                        'ppn_beli' => number_format(($subtotalexpired - $total_diskon_expired) * 11 / 100, 0, ',', '.'),
+                        'hpp' => number_format($hpp_expired, 0, ',', '.'),
+                        'laba_kotor' => $nettExpired - $hpp_expired
+                    );
+                }
+            }
+        }
+
+        // Array untuk menyimpan laba kotor per customer
+        $labaKotorPerSupplier = [];
+
+        // Iterasi data transaksi
+        foreach ($labarugi as $transaksi) {
+            $productId = $transaksi['products_id'];
+            $productName = $transaksi['products'];
+            $labaKotor = $transaksi['laba_kotor'];
+            $qty = $transaksi['qty'];
+
+            // Jika customer belum ada dalam array, inisialisasi
+            if (!isset($labaKotorPerSupplier[$productId])) {
+                $labaKotorPerSupplier[$productId] = [
+                    'nama' => $productName,
+                    'id' => $productId,
+                    'laba_kotor' => 0,
+                    'qty' => 0
+                ];
+            }
+
+            // Tambahkan laba kotor ke customer yang sesuai
+            $labaKotorPerSupplier[$productId]['laba_kotor'] += $labaKotor;
+            $labaKotorPerSupplier[$productId]['qty'] += $qty;
+        }
+
+        // Format ulang hasil sebagai array indeks numerik
+        $output = array_values($labaKotorPerSupplier);
+
+        // Urutkan berdasarkan laba kotor dari terbesar ke terkecil
+        usort($output, function ($a, $b) {
+            return $b['laba_kotor'] <=> $a['laba_kotor'];
+        });
+
+
+        return DataTables::of($output)
+            ->addIndexColumn()
+            ->editColumn('laba_kotor', function ($k) {
+                return  number_format($k['laba_kotor'], 0, ',', '.');
+            })
             ->make(true);
     }
 
     public function filterLabaRugi()
     {
         $title = 'Laporan Laba Rugi';
-        return view('laporan.labarugi.laporan.filter', compact('title'));
+        $supplier = Supplier::with('namakota')->get();
+        $merk = Merk::get();
+        $sales = Sales::get();
+        $customer = Customer::get();
+        $kategori = Kategoripesanan::get();
+        return view('laporan.labarugi.laporan.filter', compact('title','supplier','merk','sales','customer','kategori'));
     }
 
     public function exportLabaRugi(Request $request)
     {
         $data = $request->all();
-        $now = Carbon::parse(now())->format('Y-m-d');
+        $now = Carbon::parse(now())->format('Y-m-d');        
         return Excel::download(new LabaRugiExport($data), 'laporanlabarugi-' . $now . '.xlsx');
     }
 
@@ -538,7 +704,7 @@ class LaporanLabaRugiController extends Controller
                     $cn = $subtotalPenjualan * $item->cn_persen / 100;
                     $nett = $subtotalPenjualan - $cn - $pph;
 
-                    $labarugi[] = array(                        
+                    $labarugi[] = array(
                         'no_kpa' => $item->fakturpenjualan->no_kpa,
                         'products' => $item->products->nama,
                         'supplier' => $item->products->merks->supplier->nama,
@@ -576,7 +742,7 @@ class LaporanLabaRugiController extends Controller
                     }
                     $cnExpired = $subtotalPenjualanExpired * $item->cn_persen / 100;
                     $nettExpired = $subtotalPenjualanExpired - $cnExpired - $pph;
-                    $labarugi[] = array(                        
+                    $labarugi[] = array(
                         'no_kpa' => $item->fakturpenjualan->no_kpa,
                         'products' => $item->products->nama,
                         'supplier' => $item->products->merks->supplier->nama,
@@ -696,7 +862,7 @@ class LaporanLabaRugiController extends Controller
                     $cn = $subtotalPenjualan * $item->cn_persen / 100;
                     $nett = $subtotalPenjualan - $cn - $pph;
 
-                    $labarugi[] = array(                        
+                    $labarugi[] = array(
                         'no_kpa' => $item->fakturpenjualan->no_kpa,
                         'product' => $item->products->nama,
                         'product_id' => $item->products->id,
@@ -733,7 +899,7 @@ class LaporanLabaRugiController extends Controller
                     }
                     $cnExpired = $subtotalPenjualanExpired * $item->cn_persen / 100;
                     $nettExpired = $subtotalPenjualanExpired - $cnExpired - $pph;
-                    $labarugi[] = array(                        
+                    $labarugi[] = array(
                         'no_kpa' => $item->fakturpenjualan->no_kpa,
                         'product' => $item->products->nama,
                         'product_id' => $item->products->id,
@@ -756,7 +922,6 @@ class LaporanLabaRugiController extends Controller
                 }
             }
         }
-        $total_laba_kotor = [];
 
         // Array untuk menyimpan laba kotor per customer
         $labaKotorPerSupplier = [];
@@ -860,9 +1025,9 @@ class LaporanLabaRugiController extends Controller
                     $cn = $subtotalPenjualan * $item->cn_persen / 100;
                     $nett = $subtotalPenjualan - $cn - $pph;
 
-                    $labarugi[] = array(                        
+                    $labarugi[] = array(
                         'no_kpa' => $item->fakturpenjualan->no_kpa,
-                        'products' => $item->products->nama,                        
+                        'products' => $item->products->nama,
                         'product_id' => $item->products->id,
                         'merk' => $item->products->merks->nama,
                         'qty' => $nonexpired->qty * -1,
@@ -898,9 +1063,9 @@ class LaporanLabaRugiController extends Controller
                     }
                     $cnExpired = $subtotalPenjualanExpired * $item->cn_persen / 100;
                     $nettExpired = $subtotalPenjualanExpired - $cnExpired - $pph;
-                    $labarugi[] = array(                        
+                    $labarugi[] = array(
                         'no_kpa' => $item->fakturpenjualan->no_kpa,
-                        'products' => $item->products->nama,                        
+                        'products' => $item->products->nama,
                         'product_id' => $item->products->id,
                         'merk' => $item->products->merks->nama,
                         'qty' => $expired->qty * -1,
@@ -1010,9 +1175,9 @@ class LaporanLabaRugiController extends Controller
                     $q->whereMonth('tanggal', $request->bulan);
                 }
             })
-            ->where('product_id',$request->product_id)
+            ->where('product_id', $request->product_id)
             ->get();
-        
+
         // dd($fakturpenjualan);
 
         $labarugi = [];
@@ -1035,10 +1200,10 @@ class LaporanLabaRugiController extends Controller
                     $cn = $subtotalPenjualan * $item->cn_persen / 100;
                     $nett = $subtotalPenjualan - $cn - $pph;
 
-                    $labarugi[] = array(                        
+                    $labarugi[] = array(
                         'no_kpa' => $item->fakturpenjualan->no_kpa,
-                        'customers' => $item->fakturpenjualan->customers->nama,                        
-                        'customer_id' => $item->fakturpenjualan->customers->id,                       
+                        'customers' => $item->fakturpenjualan->customers->nama,
+                        'customer_id' => $item->fakturpenjualan->customers->id,
                         'qty' => $nonexpired->qty * -1,
                         'hargajual' => $item->hargajual,
                         'diskon_persen' => $item->diskon_persen,
@@ -1072,10 +1237,10 @@ class LaporanLabaRugiController extends Controller
                     }
                     $cnExpired = $subtotalPenjualanExpired * $item->cn_persen / 100;
                     $nettExpired = $subtotalPenjualanExpired - $cnExpired - $pph;
-                    $labarugi[] = array(                        
+                    $labarugi[] = array(
                         'no_kpa' => $item->fakturpenjualan->no_kpa,
-                        'customers' => $item->fakturpenjualan->customers->nama,                        
-                        'customer_id' => $item->fakturpenjualan->customers->id,                       
+                        'customers' => $item->fakturpenjualan->customers->nama,
+                        'customer_id' => $item->fakturpenjualan->customers->id,
                         'qty' => $expired->qty * -1,
                         'hargajual' => $item->hargajual,
                         'diskon_persen' => $item->diskon_persen,
@@ -1104,14 +1269,14 @@ class LaporanLabaRugiController extends Controller
         foreach ($labarugi as $transaksi) {
             $customerId = $transaksi['customer_id'];
             $customerName = $transaksi['customers'];
-            $labaKotor = $transaksi['laba_kotor'];            
+            $labaKotor = $transaksi['laba_kotor'];
             $qty = $transaksi['qty'];
 
             // Jika customer belum ada dalam array, inisialisasi
             if (!isset($labaKotorPerSupplier[$customerId])) {
                 $labaKotorPerSupplier[$customerId] = [
                     'nama' => $customerName,
-                    'id' => $customerId,        
+                    'id' => $customerId,
                     'laba_kotor' => 0,
                     'qty' => 0
                 ];
@@ -1135,12 +1300,161 @@ class LaporanLabaRugiController extends Controller
             ->addIndexColumn()
             ->editColumn('nama', function ($k) {
                 return $k['nama'];
-            })           
+            })
             ->editColumn('qty', function ($k) {
                 return $k['qty'];
             })
             ->editColumn('laba_kotor', function ($k) {
                 return  number_format($k['laba_kotor'], 0, ',', '.');
+            })
+            ->make(true);
+    }
+
+    public function datatableCN(Request $request)
+    {
+        $fakturpenjualan =  FakturPenjualanDetail::whereHas('fakturpenjualan.SO', function ($q) use ($request) {
+            if ($request->sales !== 'All') {
+                $q->where('sales_id', $request->sales);
+            }
+            if ($request->kategori !== 'All') {
+                $q->where('kategoripesanan_id', $request->kategori);
+            }
+        })
+            ->with('pengirimanbarangdetail.stokexpdetail')
+            ->with('pengirimanbarangdetail.harganonexpireddetail')
+            ->whereHas('fakturpenjualan', function ($q) use ($request) {
+                $q->whereYear('tanggal', '=', $request->year);
+
+                if ($request->bulan !== 'All') {
+                    $q->whereMonth('tanggal', $request->bulan);
+                }
+            })
+            ->get();
+
+
+        $labarugi = [];
+        foreach ($fakturpenjualan as $item) {
+
+            if ($item->products->status_exp == 0) {
+                foreach ($item->pengirimanbarangdetail->harganonexpireddetail as $nonexpired) {
+
+                    $subtotal = $nonexpired->qty * $nonexpired->harga_beli * -1;
+                    $total_diskon = ($nonexpired->diskon_persen_beli * $subtotal / 100) + $nonexpired->diskon_rupiah_beli;
+                    $hpp = ($subtotal - $total_diskon) * 1.11;
+
+                    //  penjualan
+                    $totalJual = $nonexpired->qty * $item->hargajual * -1;
+                    $subtotalPenjualan  = $totalJual - ($totalJual * $item->diskon_persen / 100) - $item->diskon_rp;
+                    if ($item->pph) {
+                        $pph = $subtotalPenjualan * $item->pph / 100;
+                    } else {
+                        $pph = 0;
+                    }
+                    $cn = $subtotalPenjualan * $item->cn_persen / 100;
+                    $nett = $subtotalPenjualan - $cn - $pph;
+
+                    $labarugi[] = array(
+                        'no_kpa' => $item->fakturpenjualan->no_kpa,
+                        'products' => $item->products->nama,
+                        'customer' => $item->fakturpenjualan->customers->nama,
+                        'customer_id' => $item->fakturpenjualan->customers->id,
+                        'qty' => $nonexpired->qty,
+                        'hargajual' => $item->hargajual,
+                        'diskon_persen' => $item->diskon_persen,
+                        'diskon_rp' => $item->diskon_rp,
+                        'total_diskon' => $item->total_diskon,
+                        'subtotal' => $subtotalPenjualan,
+                        'total' => $subtotalPenjualan,
+                        'cn_rupiah' => $cn,
+                        'nett' => $subtotalPenjualan - $cn,
+                        'harga_beli' => $nonexpired->harga_beli,
+                        'diskon_beli_persen' => $nonexpired->diskon_persen_beli,
+                        'diskon_beli_rupiah' => $nonexpired->diskon_rupiah_beli,
+                        'total_diskon_beli' => $total_diskon,
+                        'hpp' => $hpp,
+                        'laba_kotor' =>  $nett - $hpp
+                    );
+                }
+            } else {
+                foreach ($item->pengirimanbarangdetail->stokexpdetail as $expired) {
+                    $subtotalexpired = $expired->qty * $expired->harga_beli * -1;
+                    $total_diskon_expired = ($expired->diskon_persen_beli * $subtotalexpired / 100) + $expired->diskon_rupiah_beli;
+                    $hpp_expired = ($subtotalexpired - $total_diskon_expired) * 1.11;
+
+                    //  penjualan
+                    $totalJual = $expired->qty * $item->hargajual * -1;
+                    $subtotalPenjualanExpired  = $totalJual - ($totalJual * $item->diskon_persen / 100) - $item->diskon_rp;
+                    if ($item->pph) {
+                        $pph = $subtotalPenjualanExpired * $item->pph / 100;
+                    } else {
+                        $pph = 0;
+                    }
+                    $cnExpired = $subtotalPenjualanExpired * $item->cn_persen / 100;
+                    $nettExpired = $subtotalPenjualanExpired - $cnExpired - $pph;
+                    $labarugi[] = array(
+                        'no_kpa' => $item->fakturpenjualan->no_kpa,
+                        'products' => $item->products->nama,
+                        'customer' => $item->fakturpenjualan->customers->nama,
+                        'customer_id' => $item->fakturpenjualan->customers->id,
+                        'qty' => $expired->qty,
+                        'hargajual' => $item->hargajual,
+                        'diskon_persen' => $item->diskon_persen,
+                        'diskon_rp' => $item->diskon_rp,
+                        'total_diskon' => $item->total_diskon,
+                        'subtotal' => $subtotalPenjualanExpired,
+                        'total' => $subtotalPenjualanExpired,
+                        'cn_rupiah' => $cnExpired,
+                        'nett' => $nettExpired,
+                        'harga_beli' => $expired->harga_beli,
+                        'diskon_beli_persen' => $expired->diskon_persen_beli,
+                        'diskon_beli_rupiah' => $expired->diskon_rupiah_beli,
+                        'total_diskon_beli' => $total_diskon_expired,
+                        'hpp' => $hpp_expired,
+                        'laba_kotor' =>  $nettExpired - $hpp_expired
+                    );
+                }
+            }
+        }
+        $total_laba_kotor = [];
+
+        // Array untuk menyimpan laba kotor per customer
+        $labaKotorPerCustomer = [];
+
+        // Iterasi data transaksi
+        foreach ($labarugi as $transaksi) {
+            $customerId = $transaksi['customer_id'];
+            $customerName = $transaksi['customer'];
+            $cn = $transaksi['cn_rupiah'];
+
+            // Jika customer belum ada dalam array, inisialisasi
+            if (!isset($labaKotorPerCustomer[$customerId])) {
+                $labaKotorPerCustomer[$customerId] = [
+                    'nama' => $customerName,
+                    'id' => $customerId,
+                    'cn_rupiah' => 0,
+                ];
+            }
+
+            // Tambahkan laba kotor ke customer yang sesuai
+            $labaKotorPerCustomer[$customerId]['cn_rupiah'] += $cn;
+        }
+
+        // Format ulang hasil sebagai array indeks numerik
+        $output = array_values($labaKotorPerCustomer);
+
+        // Urutkan berdasarkan laba kotor dari terbesar ke terkecil
+        usort($output, function ($a, $b) {
+            return $b['cn_rupiah'] <=> $a['cn_rupiah'];
+        });
+
+
+        return DataTables::of($output)
+            ->addIndexColumn()
+            ->editColumn('nama', function ($k) {
+                return $k['nama'];
+            })
+            ->editColumn('cn_rupiah', function ($k) {
+                return  number_format($k['cn_rupiah'], 0, ',', '.');
             })
             ->make(true);
     }

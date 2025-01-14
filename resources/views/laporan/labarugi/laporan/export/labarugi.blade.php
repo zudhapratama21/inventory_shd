@@ -6,12 +6,15 @@
             <th>No KPA</th>
             <th>Customer</th>
             <th>Products</th>
+            <th>Merk</th>
+            <th>Supplier</th>
             <th>QTY</th>
             <th>Harga Jual</th>
             <th>Diskon Jual (%)</th>
             <th>Diskon Jual (Rp.)</th>
             <th>Total Diskon</th>
-            <th>Total</th>                                                                        
+            <th>Total</th>
+            <th>PPH (1.5%)</th>                                                                        
             <th>CN</th>
             <th>Harga Jual Nett</th>
             <th>Harga Beli</th>
@@ -20,6 +23,7 @@
             <th>Total Diskon Beli</th>
             <th>HPP</th>
             <th>Laba Kotor</th>
+            <th>Sales</th>
         </tr>
     </thead>
     <tbody>
@@ -30,20 +34,24 @@
                 <td>{{ $item['no_kpa'] }}</td>
                 <td>{{ $item['customer'] }}</td>
                 <td>{{ $item['products'] }}</td>
-                <td>{{ $item['qty'] }}</td>
-                <td>{{ number_format($item['hargajual'], 2, ',', '.') }}</td>
+                <td>{{ $item['merk'] }}</td>
+                <td>{{ $item['supplier'] }}</td>
+                <td>{{ $item['qty'] * -1  }}</td>
+                <td>{{ $item['hargajual'] }}</td>
                 <td>{{ $item['diskon_persen'] }}</td>
                 <td>{{ $item['diskon_rp'] }}</td>
-                <td>{{ number_format($item['total_diskon'], 2, ',', '.') }}</td>                                                                               
-                <td>{{ number_format($item['total'], 2, ',', '.') }}</td>
-                <td>{{ number_format($item['cn_rupiah'], 2, ',', '.') }}</td>
-                <td>{{ number_format($item['nett'], 2, ',', '.') }}</td>
-                <td>{{ number_format($item['harga_beli'], 2, ',', '.') }}</td>
-                <td>{{ number_format($item['diskon_beli_persen'], 2, ',', '.') }}</td>
-                <td>{{ number_format($item['diskon_beli_rupiah'], 2, ',', '.') }}</td>
-                <td>{{ number_format($item['total_diskon_beli'], 2, ',', '.') }}</td>
-                <td>{{ number_format($item['hpp'], 2, ',', '.') }}</td>
-                <td>{{ number_format($item['laba_kotor'], 2, ',', '.') }}</td>
+                <td>{{ $item['total_diskon'] }}</td>                                                                               
+                <td>{{ $item['total'] }}</td>
+                <td>{{ $item['pph'] }}</td>
+                <td>{{ $item['cn_rupiah'] }}</td>
+                <td>{{ $item['nett'] }}</td>
+                <td>{{ $item['harga_beli'] }}</td>
+                <td>{{ $item['diskon_beli_persen'] }}</td>
+                <td>{{ $item['diskon_beli_rupiah'] }}</td>
+                <td>{{ $item['total_diskon_beli'] }}</td>
+                <td>{{ $item['hpp'] }}</td>
+                <td>{{ $item['laba_kotor'] }}</td>
+                <td>{{ $item['sales'] }}</td>
             </tr>
         @endforeach
     </tbody>

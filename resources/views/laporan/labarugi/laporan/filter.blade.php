@@ -60,19 +60,11 @@
                                         </svg>
                                         <!--end::Svg Icon--></span>
                                 </span>
-                                <h3 class="card-label">Masukkan Periode Tanggal </h3>
-                            </div>
-
-                            <div class="card-toolbar">
-                                {{-- <a href="{{ route('assignpermission.index') }}"
-                                class="btn btn-light-danger font-weight-bold mr-2">
-                                <i class="flaticon2-left-arrow-1"></i> Back
-                                </a> --}}
-                            </div>
+                                <h3 class="card-label">Masukkan Filter </h3>
+                            </div>                            
                         </div>
                         <!--begin::Form-->
                         <div class="card-body">
-
                             <form class="form" method="POST" action="{{ route('laporanlabarugi.filter') }}">
                                 @csrf
                                 <div class="card-body">
@@ -91,26 +83,56 @@
 
                                     </div>                                    
 
-                                    {{-- <div class="form-group">
+                                    <div class="form-group">
                                         <label for="">Customer</label>
                                         <select name="customer" id="kt_select2_1" class="form-control">
-                                            <option value="all">Semua</option>
+                                            <option value="All">Semua</option>
                                             
                                             @foreach ($customer as $item)
                                                 <option value="{{$item->id}}">{{$item->nama}}</option>
                                             @endforeach
                                         </select>
-                                    </div> --}}
+                                    </div>
 
-                                    {{-- <div class="form-group">
+                                    <div class="form-group">
                                         <label for="">Sales</label>
-                                        <select name="sales" id="kt_select2_2" class="form-control select2">
-                                            <option value="all">Semua</option>
+                                        <select name="sales" class="form-control">
+                                            <option value="All">Semua</option>
                                             @foreach ($sales as $item)                                            
                                                 <option value="{{$item->id}}">{{$item->nama}}</option>
                                             @endforeach
                                         </select>
-                                    </div>                                  --}}
+                                    </div>      
+                                    
+                                    <div class="form-group">
+                                        <label for="">Merk</label>
+                                        <select name="merk" id="kt_select2_2" class="form-control select2">
+                                            <option value="All">Semua</option>
+                                            @foreach ($merk as $item)                                            
+                                                <option value="{{$item->id}}">{{$item->nama}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>     
+
+                                    <div class="form-group">
+                                        <label for="">Supplier</label>
+                                        <select name="supplier" id="kt_select2_3" class="form-control select2">
+                                            <option value="All">Semua</option>
+                                            @foreach ($supplier as $item)                                            
+                                                <option value="{{$item->id}}">{{$item->nama}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>    
+
+                                    <div class="form-group">
+                                        <label for="">Kategori</label>
+                                        <select name="kategori" class="form-control">
+                                            <option value="All">Semua</option>
+                                            @foreach ($kategori as $item)                                            
+                                                <option value="{{$item->id}}">{{$item->nama}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>    
 
                                 </div>
 

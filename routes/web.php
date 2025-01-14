@@ -809,6 +809,8 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
         Route::post('/result', [LaporanLabaRugiController::class, 'datatable'])->name('laporanlabarugi.datatable');
         Route::post('/datatablecustomerperproduct', [LaporanLabaRugiController::class, 'datatableCustomerProduct'])->name('laporanlabarugi.datatablecustomerproduct');
 
+        Route::post('/datatablecustomerperproductreview', [LaporanLabaRugiController::class, 'datatableCustomerProductReview'])->name('laporanlabarugi.datatablecustomerreview');
+
         Route::post('/datatableprinciple', [LaporanLabaRugiController::class, 'datatablePrinciple'])->name('laporanlabarugi.principle');
         Route::post('/principleperproduct', [LaporanLabaRugiController::class, 'datatablePrinciplePerProduct'])->name('laporanlabarugi.principleperproduct');
 
@@ -816,6 +818,8 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
         Route::post('/datatableproduct', [LaporanLabaRugiController::class, 'datatableProduct'])->name('laporanlabarugi.product');
         Route::post('/productpercustomer', [LaporanLabaRugiController::class, 'datatableProductPerCustomer'])->name('laporanlabarugi.productpercustomer');        
 
+        // ========================================== datatable cn ======================================================================================
+        Route::post('/datatablecn', [LaporanLabaRugiController::class, 'datatableCN'])->name('laporanlabarugi.cn');
 
         Route::get('/{id}/show', [LaporanLabaRugiController::class, 'show'])->name('laporanlabarugi.show');
 

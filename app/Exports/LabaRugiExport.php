@@ -11,91 +11,137 @@ use Maatwebsite\Excel\Concerns\FromView;
 class LabaRugiExport implements FromView
 {
 
-    protected $data ;
+    protected $data;
 
     public function __construct($data)
     {
         $this->data = $data;
-
     }
     public function view(): View
-    {   
+    {
+        $request = $this->data;
+        $requesttanggal = [
+            'tanggalawal' => $this->data['tanggal_awal'] ? Carbon::parse($this->data['tanggal_awal'])->format('Y-m-d') : null,
+            'tanggalakhir' => $this->data['tanggal_akhir'] ? Carbon::parse($this->data['tanggal_akhir'])->format('Y-m-d') : null
+        ];         
+            
 
-        $tanggalAwal = Carbon::parse($this->data['tanggal_awal'])->format('Y-m-d');
-        $tanggalAkhir = Carbon::parse($this->data['tanggal_akhir'])->format('Y-m-d');
-       
-        $fakturpenjualan =  FakturPenjualanDetail::with('fakturpenjualan.customers')
-                                    ->with('products')
-                                    ->with('pengirimanbarangdetail.stokexpdetail')
-                                    ->with('pengirimanbarangdetail.harganonexpireddetail')
-                                    // ->whereHas('fakturpenjualan',function($q){
-                                    //         $q->where('customer_id',615);
-                                    // })                                    
-                                    ->get();
+        $fakturpenjualan =  FakturPenjualanDetail::whereHas('fakturpenjualan.SO', function ($q) use ($request) {
+                                        if ($request['sales'] !== 'All') {
+                                            $q->where('sales_id', $request['sales']);
+                                        }
+                                        if ($request['kategori'] !== 'All') {
+                                            $q->where('kategoripesanan_id', $request['kategori']);
+                                        }
 
-            // dd($fakturpenjualan);
-        foreach ($fakturpenjualan as $item) {            
+                                        if ($request['customer'] !== 'All') {
+                                            $q->where('customer_id', $request['customer']);
+                                        }
+                                })
+                                ->whereHas('products.merks.supplier', function ($q) use ($request) {
+                                    if ($request['supplier'] !== 'All') {
+                                        $q->where('id', $request['supplier']);
+                                    }
+                                }) 
+                                ->with('pengirimanbarangdetail.stokexpdetail')
+                                ->with('pengirimanbarangdetail.harganonexpireddetail')
+                                ->whereHas('fakturpenjualan', function ($q) use ($requesttanggal) {
+                                    if (isset($requesttanggal['tanggalawal'])) {
+                                        $q->where('tanggal','>=',$requesttanggal['tanggalawal']);    
+                                    }
+
+                                    if (isset($requesttanggal['tanggalakhir'])) {
+                                        $q->where('tanggal','<=',$requesttanggal['tanggalakhir']);    
+                                    }
+                                    
+                                })->with('fakturpenjualan.SO.sales')
+                                ->get();
+        
+        //  dd($fakturpenjualan);
+
+        // dd($fakturpenjualan);
+        foreach ($fakturpenjualan as $item) {
 
             if ($item->products->status_exp == 0) {
                 foreach ($item->pengirimanbarangdetail->harganonexpireddetail as $nonexpired) {
 
                     $subtotal = $nonexpired->qty * $nonexpired->harga_beli * -1;
-                    $total_diskon = ($nonexpired->diskon_persen_beli * $subtotal/100) + $nonexpired->diskon_rupiah_beli;
+                    $total_diskon = ($nonexpired->diskon_persen_beli * $subtotal / 100) + $nonexpired->diskon_rupiah_beli;
                     $hpp = ($subtotal - $total_diskon) * 1.11;
 
                     //  penjualan
                     $totalJual = $nonexpired->qty * $item->hargajual * -1;
                     $subtotalPenjualan  = $totalJual - ($totalJual * $item->diskon_persen / 100) - $item->diskon_rp;
-                    $cn = $subtotalPenjualan * $item->cn_persen/100;
-                    $nett = $subtotalPenjualan - $cn;
 
-                    $labarugi[] = array(
-                            'tanggal' => Carbon::parse($item->fakturpenjualan->tanggal)->format('d/m/Y'),
-                            'bulan' => Carbon::parse($item->fakturpenjualan->tanggal)->format('m'),
-                            'no_kpa' => $item->fakturpenjualan->no_kpa,
-                            'products' => $item->products->nama,
-                            'customer' => $item->fakturpenjualan->customers->nama,
-                            'qty' => $nonexpired->qty,
-                            'hargajual' => $item->hargajual,
-                            'diskon_persen' => $item->diskon_persen,
-                            'diskon_rp' => $item->diskon_rp,
-                            'total_diskon' => $item->total_diskon,
-                            'subtotal' => $subtotalPenjualan,                       
-                            'total' => $subtotalPenjualan,
-                            'cn_rupiah' => $cn,
-                            'nett' => $subtotalPenjualan - $cn,
-                            'harga_beli' => $nonexpired->harga_beli,
-                            'diskon_beli_persen' => $nonexpired->diskon_persen_beli,
-                            'diskon_beli_rupiah' => $nonexpired->diskon_rupiah_beli,
-                            'total_diskon_beli' => $total_diskon,
-                            'hpp' => $hpp,
-                            'laba_kotor' =>  $nett - $hpp
-                            );
-                }
-            } else {
-                foreach ($item->pengirimanbarangdetail->stokexpdetail as $expired) {
-                    $subtotalexpired = $expired->qty * $expired->harga_beli * -1;
-                    $total_diskon_expired = ($expired->diskon_persen_beli * $subtotalexpired/100) + $expired->diskon_rupiah_beli;
-                    $hpp_expired = ($subtotalexpired - $total_diskon_expired) * 1.11;
+                    if ($item->pph) {
+                        $pph = $subtotalPenjualan * $item->pph / 100;
+                    } else {
+                        $pph = 0;
+                    }
 
-                      //  penjualan
-                      $totalJual = $expired->qty * $item->hargajual * -1;
-                      $subtotalPenjualanExpired  = $totalJual - ($totalJual * $item->diskon_persen / 100) - $item->diskon_rp;
-                      $cnExpired = $subtotalPenjualanExpired * $item->cn_persen/100;
-                      $nettExpired = $subtotalPenjualanExpired - $cnExpired;
+                    $cn = $subtotalPenjualan * $item->cn_persen / 100;
+                    $nett = $subtotalPenjualan - $cn - $pph;
+
                     $labarugi[] = array(
                         'tanggal' => Carbon::parse($item->fakturpenjualan->tanggal)->format('d/m/Y'),
                         'bulan' => Carbon::parse($item->fakturpenjualan->tanggal)->format('m'),
                         'no_kpa' => $item->fakturpenjualan->no_kpa,
                         'products' => $item->products->nama,
+                        'merk' => $item->products->merks->nama,
+                        'supplier' => $item->products->merks->supplier->nama,
+                        'customer' => $item->fakturpenjualan->customers->nama,
+                        'qty' => $nonexpired->qty,
+                        'hargajual' => $item->hargajual,
+                        'diskon_persen' => $item->diskon_persen,
+                        'diskon_rp' => $item->diskon_rp,
+                        'total_diskon' => $item->total_diskon,
+                        'subtotal' => $subtotalPenjualan,
+                        'total' => $subtotalPenjualan,
+                        'pph' => $pph,
+                        'cn_rupiah' => $cn,
+                        'nett' => $subtotalPenjualan - $cn,
+                        'harga_beli' => $nonexpired->harga_beli,
+                        'diskon_beli_persen' => $nonexpired->diskon_persen_beli,
+                        'diskon_beli_rupiah' => $nonexpired->diskon_rupiah_beli,
+                        'total_diskon_beli' => $total_diskon,
+                        'hpp' => $hpp,
+                        'laba_kotor' =>  $nett - $hpp,
+                        'sales' => $item->fakturpenjualan->SO->sales->nama
+                    );
+                }
+            } else {
+                foreach ($item->pengirimanbarangdetail->stokexpdetail as $expired) {
+                    $subtotalexpired = $expired->qty * $expired->harga_beli * -1;
+                    $total_diskon_expired = ($expired->diskon_persen_beli * $subtotalexpired / 100) + $expired->diskon_rupiah_beli;
+                    $hpp_expired = ($subtotalexpired - $total_diskon_expired) * 1.11;
+
+                    //  penjualan
+                    $totalJual = $expired->qty * $item->hargajual * -1;
+                    $subtotalPenjualanExpired  = $totalJual - ($totalJual * $item->diskon_persen / 100) - $item->diskon_rp;
+                    if ($item->pph) {
+                        $pph = $subtotalPenjualanExpired * $item->pph / 100;
+                    } else {
+                        $pph = 0;
+                    }
+
+                    $cnExpired = $subtotalPenjualanExpired * $item->cn_persen / 100;
+                    $nettExpired = $subtotalPenjualanExpired - $cnExpired - $pph;
+                    $labarugi[] = array(
+                        'tanggal' => Carbon::parse($item->fakturpenjualan->tanggal)->format('d/m/Y'),
+                        'bulan' => Carbon::parse($item->fakturpenjualan->tanggal)->format('m'),
+                        'no_kpa' => $item->fakturpenjualan->no_kpa,
+                        'products' => $item->products->nama,
+                        'merk' => $item->products->merks->nama,
+                        'supplier' => $item->products->merks->supplier->nama,
                         'customer' => $item->fakturpenjualan->customers->nama,
                         'qty' => $expired->qty,
                         'hargajual' => $item->hargajual,
                         'diskon_persen' => $item->diskon_persen,
                         'diskon_rp' => $item->diskon_rp,
                         'total_diskon' => $item->total_diskon,
-                        'subtotal' => $subtotalPenjualanExpired,                        
+                        'subtotal' => $subtotalPenjualanExpired,
                         'total' => $subtotalPenjualanExpired,
+                        'pph' => $pph,
                         'cn_rupiah' => $cnExpired,
                         'nett' => $nettExpired,
                         'harga_beli' => $expired->harga_beli,
@@ -103,12 +149,17 @@ class LabaRugiExport implements FromView
                         'diskon_beli_rupiah' => $expired->diskon_rupiah_beli,
                         'total_diskon_beli' => $total_diskon_expired,
                         'hpp' => $hpp_expired,
-                        'laba_kotor' =>  $nettExpired - $hpp_expired
+                        'laba_kotor' =>  $nettExpired - $hpp_expired,
+                        'sales' => $item->fakturpenjualan->SO->sales->nama
                     );
                 }
             }
         }
 
-        return  view('laporan.labarugi.laporan.export.labarugi',compact('labarugi'));
+        usort($labarugi, function ($a, $b) {
+            return strcmp($a['no_kpa'], $b['no_kpa']);
+        });
+
+        return  view('laporan.labarugi.laporan.export.labarugi', compact('labarugi'));
     }
 }
