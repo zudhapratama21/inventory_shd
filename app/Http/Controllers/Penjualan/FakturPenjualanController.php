@@ -16,12 +16,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Auth;
 use App\Models\FakturPenjualanDetail;
+use App\Models\HargaNonExpiredDetail;
 use App\Models\Hutang;
 use App\Models\LogNoFakturPajak;
 use App\Models\NoFakturPajak;
 use App\Models\NoKPA;
 use App\Models\PengirimanBarangDetail;
 use App\Models\PesananPenjualanDetail;
+use App\Models\StokExpDetail;
 use App\Models\TempBiaya;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -765,28 +767,49 @@ class FakturPenjualanController extends Controller
 
     public function syncronisasi ()
     {
-    //    $fakturpenjualan = FakturPenjualan::get();
+        //    $fakturpenjualan = FakturPenjualan::get();
 
-    //    foreach ($fakturpenjualan as $value) {
-    //         NoKPA::where('no_kpa',$value->no_kpa)->update([
-    //             'status' => 'Tidak Aktif'
-    //         ]);
-    //    }
+        //    foreach ($fakturpenjualan as $value) {
+        //         NoKPA::where('no_kpa',$value->no_kpa)->update([
+        //             'status' => 'Tidak Aktif'
+        //         ]);
+        //    }
 
-    //    return back();
+        //    return back();
 
-          $fakturpenjualandetail = FakturPenjualanDetail::with('fakturpenjualan.customers')->get();
-          foreach ($fakturpenjualandetail as $value) {
-               if ($value->fakturpenjualan->customers->kategori_id == 13 || $value->fakturpenjualan->customers->kategori_id == 17) {
-                    if ($value->total > 2000000) {
-                        $value->update([
-                            'pph' => 1.5,
-                            'total_pph' => 1.5 * $value->total / 100
-                        ]);
-                    }
-               }
+        //   $fakturpenjualandetail = FakturPenjualanDetail::with('fakturpenjualan.customers')->get();
+        //   foreach ($fakturpenjualandetail as $value) {
+        //        if ($value->fakturpenjualan->customers->kategori_id == 13 || $value->fakturpenjualan->customers->kategori_id == 17) {
+        //             if ($value->total > 2000000) {
+        //                 $value->update([
+        //                     'pph' => 1.5,
+        //                     'total_pph' => 1.5 * $value->total / 100
+        //                 ]);
+        //             }
+        //        }
+        //   }
+        //   return back();
+
+          $fakturpenjualandetail = FakturPenjualanDetail::whereHas('fakturpenjualan' , function ($q){
+                $q->where('customer_id' , 672);
+          })->get();
+
+          foreach ($fakturpenjualandetail as $key) {
+                if ($key->hargajual  == 0) {
+                    HargaNonExpiredDetail::where('id_sj_detail',$key->pengiriman_barang_detail_id)->update([
+                        'qty' => 0
+                    ]);
+
+                    StokExpDetail::where('id_sj_detail',$key->pengiriman_barang_detail_id)->update([
+                        'qty' => 0
+                    ]);
+                }
           }
+
           return back();
+        
+        
+        
           
     }
 
