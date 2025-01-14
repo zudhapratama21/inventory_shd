@@ -109,7 +109,7 @@
                                 <td style="font-size: 60%; border:none; width:10%;text-align:left">DISK.(RP)</td>
                                 <td style="font-size: 60%; border:none; width:10%;text-align:left">SUBTOTAL</td>
                                 <td style="font-size: 60%; border:none; width:10%;text-align:right">TOTAL DISC</td>
-                                <td style=" font-size: 60%;border:none; width:10%;text-align:right">TOTAL</td>
+                                <td style="font-size: 60%;border:none; width:10%;text-align:right">TOTAL</td>
                             </tr>
                             <tr>
                                 <td colspan="10">
@@ -126,7 +126,7 @@
                                     <tr class="" style="vertical-align: top">
                                         <td style="font-size: 70%; ">{{ $j++ }}</td>
                                         <td style="font-size: 70%; ">{{ $a->qty }} {{ $a->satuan }}</td>
-                                        <td style="font-size: 70%;font-family: DejaVu Sans; sans-serif; ">
+                                        <td style="font-size: 70%;font-family: DejaVu Sans; sans-serif;">
                                             {{ $a->products->nama }}</td>
                                         <td style="font-size: 70%; text-align:right;">{{ $a->products->merks->nama }}
                                         </td>
@@ -276,3 +276,5 @@
 </body>
 
 </html>
+
+

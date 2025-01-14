@@ -230,6 +230,13 @@ class LaporanLabaRugiController extends Controller
 
         $labarugi = [];
         foreach ($fakturpenjualan as $item) {
+            $bulannominal = Carbon::parse($item->fakturpenjualan->tanggal)->format('m') ;
+            if ($bulannominal < 10) {
+                $bulan = ltrim($bulannominal, '0');
+            }else{
+                $bulan = $bulannominal;
+            }
+            
 
             if ($item->products->status_exp == 0) {
                 foreach ($item->pengirimanbarangdetail->harganonexpireddetail as $nonexpired) {
@@ -251,7 +258,7 @@ class LaporanLabaRugiController extends Controller
                     $nett = $subtotalPenjualan - $cn - $pph;
 
                     $labarugi[] = array(
-                        'tanggal' => Carbon::parse($item->fakturpenjualan->tanggal)->format('m'),
+                        'tanggal' => $bulan,
                         'no_kpa' => $item->fakturpenjualan->no_kpa,
                         'products' => $item->products->nama,
                         'customer' => $item->fakturpenjualan->customers->nama,
@@ -290,7 +297,7 @@ class LaporanLabaRugiController extends Controller
                     $cnExpired = $subtotalPenjualanExpired * $item->cn_persen / 100;
                     $nettExpired = $subtotalPenjualanExpired - $cnExpired - $pph;
                     $labarugi[] = array(
-                        'tanggal' => Carbon::parse($item->fakturpenjualan->tanggal)->format('m'),
+                        'tanggal' => $bulan,
                         'no_kpa' => $item->fakturpenjualan->no_kpa,
                         'products' => $item->products->nama,
                         'customer' => $item->fakturpenjualan->customers->nama,
@@ -315,48 +322,46 @@ class LaporanLabaRugiController extends Controller
             }
         }
 
-        // dd($labarugi);
+        // Array untuk menyimpan total laba kotor per bulan
+        $laba_kotor_per_bulan = [];
 
+        $databulan=[];
 
-        $laba = array();
-        $grandtotal = 0;
-
+        // Inisialisasi laba kotor untuk semua bulan dari Januari (1) sampai Desember (12) dengan nilai 0
         for ($i = 0; $i <= 12; $i++) {
-            if ($i == 0) {
-                $laba[$i] = 0;
-            } else {
-                $angka = 0;
-                foreach ($labarugi as $value) {
-                    if ($value['tanggal'] == $i) {
-                        $angka += $value['laba_kotor'];
-                        $laba[$i] = $angka;
-                    }
-                }
-            }
+            $laba_kotor_per_bulan[$i] = 0;
 
-            $databulan = '1-' . $i . '-2023';
+            $months = '1-' . $i . '-2023';
             if ($i == 0) {
-                $months[] = [0];
+                $databulan[] = [0];
             } else {
-                $months[] = [
-                    Carbon::parse($databulan)->format('F')
+                $databulan[] = [
+                    Carbon::parse($months)->format('F')
                 ];
             }
         }
-        $profit = [];
-        for ($i = 0; $i <= 12; $i++) {
-            if (!isset($laba[$i])) {
-                $profit[$i] = 0;
-            } else {
-                $profit[$i] = $laba[$i];
-                $grandtotal += $laba[$i];
-            }
+
+        // Iterasi untuk menghitung total laba kotor per bulan
+        foreach ($labarugi as $item) {
+            $bulan = $item['tanggal'];
+            $laba_kotor = $item['laba_kotor'];
+
+            // Tambahkan laba kotor ke bulan yang sesuai
+            $laba_kotor_per_bulan[$bulan] += $laba_kotor;
         }
 
+        // Urutkan laba kotor berdasarkan bulan (key)
+        ksort($laba_kotor_per_bulan);
+
+        // Menghitung grand total dari semua laba kotor per bulan
+        $grandTotal = array_sum($laba_kotor_per_bulan);
+
+
+
         return response()->json([
-            'laba' => $profit,
-            'bulan' => $months,
-            'grandtotal' => number_format($grandtotal, 0, ',', '.')
+            'laba' => $laba_kotor_per_bulan,
+            'bulan' => $databulan,
+            'grandtotal' => number_format($grandTotal, 0, ',', '.')
         ]);
     }
 
@@ -650,13 +655,13 @@ class LaporanLabaRugiController extends Controller
         $sales = Sales::get();
         $customer = Customer::get();
         $kategori = Kategoripesanan::get();
-        return view('laporan.labarugi.laporan.filter', compact('title','supplier','merk','sales','customer','kategori'));
+        return view('laporan.labarugi.laporan.filter', compact('title', 'supplier', 'merk', 'sales', 'customer', 'kategori'));
     }
 
     public function exportLabaRugi(Request $request)
     {
         $data = $request->all();
-        $now = Carbon::parse(now())->format('Y-m-d');        
+        $now = Carbon::parse(now())->format('Y-m-d');
         return Excel::download(new LabaRugiExport($data), 'laporanlabarugi-' . $now . '.xlsx');
     }
 
