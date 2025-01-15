@@ -277,7 +277,7 @@ class FakturPenjualanController extends Controller
         }
         // end cek status exp date SJ
 
-        $SOdata = PesananPenjualan::find($id_so);
+        $SOdata = PesananPenjualan::with('customers')->find($id_so);
         $ppn_so = $SOdata->ppn;
         $diskon_rupiah_so = $SOdata->diskon_rupiah;
         $diskon_persen_so = $SOdata->diskon_persen;
@@ -332,6 +332,8 @@ class FakturPenjualanController extends Controller
 
         // log no kpa
 
+       
+
 
         // ubah status menjadi tidak aktif
         $pajak->update([
@@ -359,7 +361,15 @@ class FakturPenjualanController extends Controller
             $detil->total_diskon = $pb->total_diskon;
             $detil->total = $pb->total;
             $detil->ongkir = $pb->ongkir;
-            $detil->keterangan = $pb->keterangan;
+            $detil->keterangan = $pb->keterangan;            
+
+            if ($SOdata->customers->kategori_id == 17 || $SOdata->customers->kategori_id == 13) {
+                if ($pb->total > 2000000) {
+                    $detil->pph = 1.5;
+                    $detil->total_pph = $pb->total * 1.5 /100;
+                }
+            }
+            
             $detil->save();
         }
         #################### update Status PB ##################
@@ -806,11 +816,50 @@ class FakturPenjualanController extends Controller
                 }
           }
 
-          return back();
-        
-        
-        
-          
+          return back();          
+    }
+
+    public function syncronisasi2 ($id)
+    {
+        //    $fakturpenjualan = FakturPenjualan::get();
+
+        //    foreach ($fakturpenjualan as $value) {
+        //         NoKPA::where('no_kpa',$value->no_kpa)->update([
+        //             'status' => 'Tidak Aktif'
+        //         ]);
+        //    }
+
+        //    return back();
+
+        //   $fakturpenjualandetail = FakturPenjualanDetail::with('fakturpenjualan.customers')->get();
+        //   foreach ($fakturpenjualandetail as $value) {
+        //        if ($value->fakturpenjualan->customers->kategori_id == 13 || $value->fakturpenjualan->customers->kategori_id == 17) {
+        //             if ($value->total > 2000000) {
+        //                 $value->update([
+        //                     'pph' => 1.5,
+        //                     'total_pph' => 1.5 * $value->total / 100
+        //                 ]);
+        //             }
+        //        }
+        //   }
+        //   return back();
+
+          $fakturpenjualandetail = FakturPenjualanDetail::whereHas('fakturpenjualan' , function ($q) use ($id){
+                $q->where('id' , $id);
+          })->get();
+
+          foreach ($fakturpenjualandetail as $key) {
+                if ($key->hargajual  == 0) {
+                    HargaNonExpiredDetail::where('id_sj_detail',$key->pengiriman_barang_detail_id)->update([
+                        'qty' => 0
+                    ]);
+
+                    StokExpDetail::where('id_sj_detail',$key->pengiriman_barang_detail_id)->update([
+                        'qty' => 0
+                    ]);
+                }
+          }
+          return back();          
     }
 
     public function tandaTerima (Request $request , $id)

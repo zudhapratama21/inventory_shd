@@ -88,10 +88,12 @@
                             </div>
                         </div>
                         <!-- end: Invoice header-->
+                        
 
                         <!-- begin: Invoice body-->
-                        <div class="row justify-content-center py-8 px-8 py-md-10 px-md-0">
+                        <div class="row justify-content-center py-8 px-8 py-md-10 px-md-0">                            
                             <div class="col-md-9">
+                                <a href="{{ route('fakturpenjualan.syncronisasi2', ['id'=>$fakturpenjualan->id]) }}" class="btn btn-primary btn-sm"><i class="flaticon2-reload-1"></i> Atur Qty</a>
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead>

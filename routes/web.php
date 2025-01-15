@@ -650,6 +650,7 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
         Route::get('{fakturpenjualan}/labarugi', [LabaRugiController::class, 'show'])->name('fakturpenjualan.labarugi.show');
 
         Route::get('syncronisasi', [FakturPenjualanController::class, 'syncronisasi'])->name('fakturpenjualan.syncronisasi');
+        Route::get('{id}/syncronisasi2', [FakturPenjualanController::class, 'syncronisasi2'])->name('fakturpenjualan.syncronisasi2');
 
         Route::post('tandaterima/{id}', [FakturPenjualanController::class, 'tandaTerima'])->name('fakturpenjualan.tandaterima');
         Route::put('edittandaterima/{id}', [FakturPenjualanController::class, 'editTandaTerima'])->name('fakturpenjualan.edittandaterima');
