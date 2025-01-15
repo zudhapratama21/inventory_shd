@@ -787,36 +787,36 @@ class FakturPenjualanController extends Controller
 
         //    return back();
 
-        //   $fakturpenjualandetail = FakturPenjualanDetail::with('fakturpenjualan.customers')->get();
-        //   foreach ($fakturpenjualandetail as $value) {
-        //        if ($value->fakturpenjualan->customers->kategori_id == 13 || $value->fakturpenjualan->customers->kategori_id == 17) {
-        //             if ($value->total > 2000000) {
-        //                 $value->update([
-        //                     'pph' => 1.5,
-        //                     'total_pph' => 1.5 * $value->total / 100
-        //                 ]);
-        //             }
-        //        }
-        //   }
-        //   return back();
-
-          $fakturpenjualandetail = FakturPenjualanDetail::whereHas('fakturpenjualan' , function ($q){
-                $q->where('customer_id' , 672);
-          })->get();
-
-          foreach ($fakturpenjualandetail as $key) {
-                if ($key->hargajual  == 0) {
-                    HargaNonExpiredDetail::where('id_sj_detail',$key->pengiriman_barang_detail_id)->update([
-                        'qty' => 0
-                    ]);
-
-                    StokExpDetail::where('id_sj_detail',$key->pengiriman_barang_detail_id)->update([
-                        'qty' => 0
-                    ]);
-                }
+          $fakturpenjualandetail = FakturPenjualanDetail::with('fakturpenjualan.customers')->get();
+          foreach ($fakturpenjualandetail as $value) {
+               if ($value->fakturpenjualan->customers->kategori_id == 13 || $value->fakturpenjualan->customers->kategori_id == 17) {
+                    if ($value->total > 2000000) {
+                        $value->update([
+                            'pph' => 1.5,
+                            'total_pph' => 1.5 * $value->total / 100
+                        ]);
+                    }
+               }
           }
+          return back();
 
-          return back();          
+        //   $fakturpenjualandetail = FakturPenjualanDetail::whereHas('fakturpenjualan' , function ($q){
+        //         $q->where('customer_id' , 672);
+        //   })->get();
+
+        //   foreach ($fakturpenjualandetail as $key) {
+        //         if ($key->hargajual  == 0) {
+        //             HargaNonExpiredDetail::where('id_sj_detail',$key->pengiriman_barang_detail_id)->update([
+        //                 'qty' => 0
+        //             ]);
+
+        //             StokExpDetail::where('id_sj_detail',$key->pengiriman_barang_detail_id)->update([
+        //                 'qty' => 0
+        //             ]);
+        //         }
+        //   }
+
+        //   return back();          
     }
 
     public function syncronisasi2 ($id)
