@@ -518,7 +518,12 @@
                                             </svg>
                                             <!--end::Svg Icon--></span> </span>
                                     <h3 class="card-label">Total CN</h3>
-                                </div>                               
+                                </div>   
+                                
+                                <div class="card-toolbar">
+                                    <label for="">Total CN</label>
+                                    <input type="text" value="" id="totalcn" class="form-control" readonly>
+                                </div>
                             </div>
                             <div class="card-body">
                                 <div class="row">
@@ -580,7 +585,8 @@
                                     <thead class="datatable-head">
                                         <tr>
                                             <th>Nama</th>
-                                            <th>Total</th>                                                                                                                                
+                                            <th>Laba Kotor</th>
+                                            <th>Total CN</th>                                                                                                                                
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -682,6 +688,7 @@
             datatableproductpercustomer();
             datatableCustomerProductReview();
             datatablecn();
+            totalcn();
         });
 
         function labarugichart() {
@@ -1381,7 +1388,11 @@
                     {
                         data: 'nama',
                         name: 'nama'
-                    },                    
+                    },  
+                    {
+                        data: 'laba_kotor',
+                        name: 'laba_kotor'
+                    },                     
                     {
                         data: 'cn_rupiah',
                         name: 'cn_rupiah'
@@ -1409,27 +1420,53 @@
             let e = document.getElementById("yearcn");
             yearcn = e.options[e.selectedIndex].value;
             $('.yajra-datatablecn').DataTable().ajax.reload(null, false);
+            totalcn();
         }
 
         function filterbulancn() {
             let e = document.getElementById("bulancn");
             bulancn = e.options[e.selectedIndex].value;
             $('.yajra-datatablecn').DataTable().ajax.reload(null, false);
+            totalcn();
         }
 
         function filterkategoricn() {
             let e = document.getElementById("kategoricn");
             kategoricn = e.options[e.selectedIndex].value;
             $('.yajra-datatablecn').DataTable().ajax.reload(null, false);
+            totalcn();
         }
 
         function filtersalescn() {
             let e = document.getElementById("salescn");
             salescn = e.options[e.selectedIndex].value;
             $('.yajra-datatablecn').DataTable().ajax.reload(null, false);
+            totalcn();
         }
 
-
+        function totalcn(){
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('laporanlabarugi.totalcn') }}',
+                dataType: 'html',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {                    
+                    year : yearcn,                 
+                    bulan : bulancn,
+                    sales : salescn,
+                    kategori : kategoricn,
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(data) {                    
+                    $('#totalcn').val(data);       
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            });
+        }
 
 
 

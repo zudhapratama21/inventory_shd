@@ -821,6 +821,7 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
 
         // ========================================== datatable cn ======================================================================================
         Route::post('/datatablecn', [LaporanLabaRugiController::class, 'datatableCN'])->name('laporanlabarugi.cn');
+        Route::post('/totalCN', [LaporanLabaRugiController::class, 'totalCN'])->name('laporanlabarugi.totalcn');
 
         Route::get('/{id}/show', [LaporanLabaRugiController::class, 'show'])->name('laporanlabarugi.show');
 
