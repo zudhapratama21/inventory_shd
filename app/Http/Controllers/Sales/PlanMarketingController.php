@@ -110,22 +110,24 @@ class PlanMarketingController extends Controller
             ->make(true);
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        $bulan =  [];
-        for ($i = 1; $i <= 12; $i++) {
-            $databulan = '1-' . $i . '-2023';
-            $bulan[] = [
-                'nama' => Carbon::parse($databulan)->format('F'),
-                'id' => $i
-            ];
-        }
+        // $bulan =  [];
+        // for ($i = 1; $i <= 12; $i++) {
+        //     $databulan = '1-' . $i . '-2023';
+        //     $bulan[] = [
+        //         'nama' => Carbon::parse($databulan)->format('F'),
+        //         'id' => $i
+        //     ];
+        // }
 
 
-        $title = 'Plan Marketing';
+        // $title = 'Plan Marketing';
         $outlet = Outlet::get();
-        $day = Day::get();
-        return view('sales.planmarketing.create', compact('outlet', 'title', 'day', 'bulan'));
+
+        // dd($request);
+        
+        return view('sales.planmarketing.partial.modal', compact('outlet','request'));
     }
 
 

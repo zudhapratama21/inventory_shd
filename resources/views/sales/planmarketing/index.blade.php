@@ -94,8 +94,9 @@
                                                 @endphp
                                                 @foreach (range($now, $year) as $x)
                                                     @if ($x == date('Y'))
-                                                        <option value="{{ $x }}" selected>{{ $x }}</option>
-                                                    @else   
+                                                        <option value="{{ $x }}" selected>{{ $x }}
+                                                        </option>
+                                                    @else
                                                         <option value="{{ $x }}">{{ $x }}</option>
                                                     @endif
                                                 @endforeach
@@ -157,6 +158,16 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-lg-12 mt-10">
+                        <div class="card">
+                            <div class="card-body">                                
+                                <div id="calender"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
             </div>
             <!--end::Container-->
@@ -207,11 +218,16 @@
             </div>
         </div>
     </div>
+    <div id="modal-setbarang"></div>
+{{-- @include('sales.planmarketing.partial.modal') --}}
 @endsection
 @push('script')
     <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6') }}"></script>
     <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
     <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
+    <script src="{{ asset('/assets/plugins/custom/fullcalendar/fullcalendar.bundle.js?v=7.0.6') }} "></script>
+    <script src="{{ asset('/assets/js/pages/features/calendar/basic.js?v=7.0.6') }}"></script>
+
     <script type="text/javascript">
         let tahun = {{ now()->format('Y') }};
         let bulan = {{ now()->format('m') }};
@@ -219,7 +235,136 @@
 
         $(function() {
             datatable();
+            calender();
         });
+
+        function calender() {
+                    var todayDate = moment().startOf('day');
+                    var YM = todayDate.format('YYYY-MM');
+                    var YESTERDAY = todayDate.clone().subtract(1, 'day').format('YYYY-MM-DD');
+                    var TODAY = todayDate.format('YYYY-MM-DD');
+                    var TOMORROW = todayDate.clone().add(1, 'day').format('YYYY-MM-DD');
+
+                    var calendarEl = document.getElementById('calender');
+                    var calendar = new FullCalendar.Calendar(calendarEl, {
+                        plugins: ['bootstrap', 'interaction', 'dayGrid', 'timeGrid', 'list'],
+                        themeSystem: 'bootstrap',
+                        isRTL: KTUtil.isRTL(),
+                        // header: {
+                        //     left: 'prev,next today',
+                        //     center: 'title',
+                        //     right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                        // },
+                        height: 800,
+                        contentHeight: 780,
+                        aspectRatio: 3, 
+                        nowIndicator: true,
+                        now: TODAY + 'T09:25:00', // just for demo
+                        views: {
+                            dayGridMonth: {
+                                buttonText: 'month'
+                            },
+                            // timeGridWeek: {
+                            //     buttonText: 'week'
+                            // },
+                            // timeGridDay: {
+                            //     buttonText: 'day'
+                            // }
+                        },
+                        defaultView: 'dayGridMonth',
+                        defaultDate: TODAY,
+                        editable: true,
+                        eventLimit: true, 
+                        navLinks: true,
+                        events: [
+                            {
+                                title: 'fikri',
+                                start: '2025-01-01',                                
+                                description: 'Toto lorem ipsum dolor sit incid idunt ut',  
+                                className: 'fc-event-danger fc-event-solid-warning'                           
+                            },
+                            {
+                                title: 'fikri',
+                                start: '2025-01-01',                                
+                                description: 'Toto lorem ipsum dolor sit incid idunt ut',  
+                                className: 'fc-event-danger fc-event-solid-warning'                           
+                            },
+                            {
+                                title: 'fikri',
+                                start: '2025-01-01',                                
+                                description: 'Toto lorem ipsum dolor sit incid idunt ut',  
+                                className: 'fc-event-danger fc-event-solid-warning'                           
+                            },
+                            {
+                                title: 'fikri',
+                                start: '2025-01-01',                                
+                                description: 'Toto lorem ipsum dolor sit incid idunt ut',  
+                                className: 'fc-event-danger fc-event-solid-warning'                          
+                            },
+                            {
+                                title: 'fikri',
+                                start: '2025-01-01',                                
+                                description: 'Toto lorem ipsum dolor sit incid idunt ut',  
+                                className: 'fc-event-danger fc-event-solid-warning'                           
+                            },
+                            {
+                                title: 'fikri',
+                                start: '2025-01-01',                                
+                                description: 'Toto lorem ipsum dolor sit incid idunt ut',  
+                                className: 'fc-event-danger fc-event-solid-warning'                           
+                            }
+
+                        ],
+                        dateClick:function(info){                              
+                            
+                            $.ajax({
+                                type: 'POST',
+                                url : '{{route('planmarketing.create')}}',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                data : {
+                                    start_date : info.dateStr,        
+                                    "_token": "{{ csrf_token() }}"                            
+                                },
+                                success : function (res) {                                                                    
+                                    $('#modal-setbarang').html(res);
+                                    $('#modalplan').modal('show');
+
+                                    $('#form-action').on('input', function (e){
+                                        e.preventDefault();
+
+                                        // let 
+
+                                        
+                                    });
+
+                                }
+                            });
+
+
+                        },
+                        eventRender: function(info) {
+                            var element = $(info.el);
+                            if (info.event.extendedProps && info.event.extendedProps.description) {
+                                if (element.hasClass('fc-day-grid-event')) {
+                                    element.data('content', info.event.extendedProps.description);
+                                    element.data('placement', 'top');
+                                    KTApp.initPopover(element);
+                                } else if (element.hasClass('fc-time-grid-event')) {
+                                    element.find('.fc-title').append(
+                                        '&lt;div class=&quot;fc-description&quot;&gt;' + info.event.extendedProps.description + '&lt;/div&gt;');
+                                } else if (element.find('.fc-list-item-title').lenght !== 0) {
+                                    element.find('.fc-list-item-title').append(
+                                        '&lt;div class=&quot;fc-description&quot;&gt;' + info.event.extendedProps.description + '&lt;/div&gt;');
+                                }
+                            }
+                        }
+                    });
+
+                    calendar.render();
+                
+        }
 
         function datatable() {
             var table = $('.yajra-datatable').DataTable({

@@ -4,7 +4,9 @@
             <th>Tanggal</th>
             <th>Bulan</th>
             <th>No KPA</th>
+            <th>Pengiriman Barang ID</th>
             <th>Customer</th>
+            <th>Products ID</th>
             <th>Products</th>
             <th>Merk</th>
             <th>Supplier</th>
@@ -32,8 +34,11 @@
                 <td>{{ $item['tanggal'] }}</td>
                 <td>{{ $item['bulan'] }}</td>                
                 <td>{{ $item['no_kpa'] }}</td>
+                <td>{{ $item['pengirimanbarangdetail_id'] }}</td>
                 <td>{{ $item['customer'] }}</td>
+                <td>{{ $item['products_id'] }}</td>
                 <td>{{ $item['products'] }}</td>
+
                 <td>{{ $item['merk'] }}</td>
                 <td>{{ $item['supplier'] }}</td>
                 <td>{{ $item['qty'] * -1  }}</td>

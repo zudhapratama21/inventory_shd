@@ -91,7 +91,7 @@
                                                         @else
                                                             <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
                                                         @endif
-                                                    @endforeach
+                                                    @endforeach 
                                                 </select>
                                             </div>
                                         </div>

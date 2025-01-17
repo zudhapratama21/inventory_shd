@@ -1028,7 +1028,8 @@ Route::middleware('has.role')->prefix('sales')->group(function () {
 
     Route::prefix('planmarketing')->group(function () {        
         Route::get('', [PlanMarketingController::class, 'index'])->name('planmarketing.index');                  
-        Route::get('/create', [PlanMarketingController::class, 'create'])->name('planmarketing.create');  
+        Route::post('/create', [PlanMarketingController::class, 'create'])->name('planmarketing.create');  
+
         Route::post('/store', [PlanMarketingController::class, 'store'])->name('planmarketing.store');                  
         Route::post('/datatable', [PlanMarketingController::class, 'datatable'])->name('planmarketing.datatable');  
 

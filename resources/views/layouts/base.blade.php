@@ -26,6 +26,8 @@
     <link href="{{ asset('assets/css/style.bundle.css?v=7.0.6') }}" rel="stylesheet" type="text/css" />
     <!--end::Global Theme Styles-->
 
+    <link href="{{ asset('assets/plugins/custom/fullcalendar/fullcalendar.bundle.css?v=7.0.6') }}" rel="stylesheet" type="text/css" />
+
     <!--begin::Layout Themes(used by all pages)-->
     <!--end::Layout Themes-->
     <link rel="shortcut icon" href="{{ asset('logo_bsb_2.png') }}" />
