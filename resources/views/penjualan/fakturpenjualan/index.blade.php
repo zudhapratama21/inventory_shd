@@ -66,10 +66,18 @@
                                 <div class="card-toolbar">
 
                                     <a href="{{ route('fakturpenjualan.syncronisasi') }}"
+                                        class="btn btn-success font-weight-bolder mr-4" data-toggle="modal" data-target="#revision">
+                                        <i class="flaticon2-heart-rate-monitor"></i>
+                                        Import Revision
+                                    </a>
+
+                                    <a href="{{ route('fakturpenjualan.syncronisasi') }}"
                                         class="btn btn-danger font-weight-bolder mr-4">
                                         <i class="flaticon2-trash "></i>
                                         Syncronisasi (Jangan Di Klik)
                                     </a>
+
+
 
 
                                     <!--begin::Button-->
@@ -117,6 +125,44 @@
     <!--end::Content-->
     <div id="modal-confirm-delete"></div>
     <div id="modal-show-detail"></div>
+
+    <div id="xcontohmodal">
+        <div class="modal fade" id="revision" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Import Revision</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i aria-hidden="true" class="ki ki-close"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="height: 400px;">
+                        <form action="{{ route('fakturpenjualan.revision') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="form-group">
+                                <label for="">Upload Excel</label>
+                                <input type="file" name="file_revision" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary btn-sm">Processs</button>
+                            </div>
+
+
+                        </form>                     
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light-primary font-weight-bold"
+                            data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+    
+        </div>
+    </div>
+
+    
 @endsection
 @push('script')
     <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6') }}"></script>

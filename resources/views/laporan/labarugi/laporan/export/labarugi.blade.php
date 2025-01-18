@@ -34,11 +34,10 @@
                 <td>{{ $item['tanggal'] }}</td>
                 <td>{{ $item['bulan'] }}</td>                
                 <td>{{ $item['no_kpa'] }}</td>
-                <td>{{ $item['pengirimanbarangdetail_id'] }}</td>
+                <td>{{ $item['id'] }}</td>
                 <td>{{ $item['customer'] }}</td>
                 <td>{{ $item['products_id'] }}</td>
                 <td>{{ $item['products'] }}</td>
-
                 <td>{{ $item['merk'] }}</td>
                 <td>{{ $item['supplier'] }}</td>
                 <td>{{ $item['qty'] * -1  }}</td>

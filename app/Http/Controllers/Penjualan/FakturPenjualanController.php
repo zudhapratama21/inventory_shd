@@ -13,6 +13,7 @@ use App\Models\PengirimanBarang;
 use App\Models\PesananPenjualan;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
+use App\Imports\RevisionPenjualanImport;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Auth;
 use App\Models\FakturPenjualanDetail;
@@ -28,6 +29,7 @@ use App\Models\TempBiaya;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 use function App\Traits\textKoma;
 use function App\Traits\wordOfNumber;
@@ -930,6 +932,13 @@ class FakturPenjualanController extends Controller
             }
 
             return back();
+    }
+
+
+    public function revision (Request $request)
+    {
+        Excel::import(new RevisionPenjualanImport, $request->file('file_revision')); 
+        return back(); 
     }
 
  

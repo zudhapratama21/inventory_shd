@@ -655,6 +655,9 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
         Route::post('tandaterima/{id}', [FakturPenjualanController::class, 'tandaTerima'])->name('fakturpenjualan.tandaterima');
         Route::put('edittandaterima/{id}', [FakturPenjualanController::class, 'editTandaTerima'])->name('fakturpenjualan.edittandaterima');
 
+        Route::post('revision}', [FakturPenjualanController::class, 'revision'])->name('fakturpenjualan.revision');
+
+
       
     });
 
