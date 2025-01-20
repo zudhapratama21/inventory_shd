@@ -1430,6 +1430,7 @@ class LaporanLabaRugiController extends Controller
             $customerName = $transaksi['customer'];
             $cn = $transaksi['cn_rupiah'];
             $labakotor = $transaksi['laba_kotor'];
+            $penjualan = $transaksi['nett'];
 
             // Jika customer belum ada dalam array, inisialisasi
             if (!isset($labaKotorPerCustomer[$customerId])) {
@@ -1437,13 +1438,15 @@ class LaporanLabaRugiController extends Controller
                     'nama' => $customerName,
                     'id' => $customerId,
                     'cn_rupiah' => 0,
-                    'laba_kotor' => 0
+                    'laba_kotor' => 0,
+                    'omset' => 0
                 ];
             }
 
             // Tambahkan laba kotor ke customer yang sesuai
             $labaKotorPerCustomer[$customerId]['cn_rupiah'] += $cn;
             $labaKotorPerCustomer[$customerId]['laba_kotor'] += $labakotor;
+            $labaKotorPerCustomer[$customerId]['omset'] += $penjualan;
         }
 
         // Format ulang hasil sebagai array indeks numerik
@@ -1459,6 +1462,9 @@ class LaporanLabaRugiController extends Controller
             ->addIndexColumn()
             ->editColumn('nama', function ($k) {
                 return $k['nama'];
+            })
+            ->editColumn('omset', function ($k) {
+                return  number_format($k['omset'], 0, ',', '.');
             })
             ->editColumn('laba_kotor', function ($k) {
                 return  number_format($k['laba_kotor'], 0, ',', '.');

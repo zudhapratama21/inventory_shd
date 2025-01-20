@@ -585,6 +585,7 @@
                                     <thead class="datatable-head">
                                         <tr>
                                             <th>Nama</th>
+                                            <th>Omset</th>
                                             <th>Laba Kotor</th>
                                             <th>Total CN</th>                                                                                                                                
                                         </tr>
@@ -1389,6 +1390,10 @@
                         data: 'nama',
                         name: 'nama'
                     },  
+                    {
+                        data: 'omset',
+                        name: 'omset'
+                    },
                     {
                         data: 'laba_kotor',
                         name: 'laba_kotor'
