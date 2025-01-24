@@ -66,7 +66,7 @@
 
                             <form class="form" method="post" action="{{ route('product.create') }}">
                                 @csrf
-                                @include('master.product._form-control', ['submit' => 'Save'])
+                                @include('master.product._form-control', ['submit' => 'Save','status' => 2])
                             </form>
                         </div>
                         <!--end::Card-->

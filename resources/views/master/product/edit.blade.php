@@ -67,7 +67,7 @@
                             <form class="form" method="post" action="{{ route('product.update', $product) }}">
                                 @csrf
                                 @method('put')
-                                @include('master.product._form-control', ['submit' => 'Update'])
+                                @include('master.product._form-control', ['submit' => 'Update','status' => 1])
                             </form>
                         </div>
                         <!--end::Card-->

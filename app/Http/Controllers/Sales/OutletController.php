@@ -25,13 +25,7 @@ class OutletController extends Controller
         $outlet = Outlet::with('user')->orderBy('id','asc');
 
         return DataTables::of($outlet)
-                ->addIndexColumn()
-                ->addColumn('nama', function (Outlet $ot) {
-                    return $ot->nama;
-                })
-                ->addColumn('area', function (Outlet $ot) {
-                    return $ot->area;
-                })
+                ->addIndexColumn()              
                 ->editColumn('user', function (Outlet $ot) {
                     return $ot->user->name;
                 })

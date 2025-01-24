@@ -843,7 +843,12 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
     
         Route::get('', [LaporanSalesController::class, 'index'])->name('laporansales.index');        
         Route::post('/datatable', [LaporanSalesController::class, 'datatable'])->name('laporansales.datatable');
+        Route::get('/list', [LaporanSalesController::class, 'list'])->name('laporansales.list');
         Route::get('/{id}/show', [LaporanSalesController::class, 'show'])->name('laporansales.show');
+
+        Route::post('/datatablesales', [LaporanSalesController::class, 'datatablesales'])->name('laporansales.datatablesales');
+
+
         Route::post('/print', [LaporanSalesController::class, 'print'])->name('laporansales.print');        
         
     });
@@ -1037,12 +1042,14 @@ Route::middleware('has.role')->prefix('sales')->group(function () {
         Route::post('/datatable', [PlanMarketingController::class, 'datatable'])->name('planmarketing.datatable');  
 
         Route::get('{id}/edit', [PlanMarketingController::class, 'edit'])->name('planmarketing.edit');  
-        Route::put('{id}/update', [PlanMarketingController::class, 'update'])->name('planmarketing.update');  
+        Route::post('update', [PlanMarketingController::class, 'update'])->name('planmarketing.update');  
 
         Route::post('/destroy', [PlanMarketingController::class, 'destroy'])->name('planmarketing.delete');  
 
 
         Route::post('/remind', [PlanMarketingController::class, 'remind'])->name('planmarketing.remind');  
+
+        Route::get('/list', [PlanMarketingController::class, 'list'])->name('planmarketing.list');  
 
     });
 
@@ -1059,15 +1066,15 @@ Route::middleware('has.role')->prefix('sales')->group(function () {
     });
 
     Route::prefix('rencanakunjungan')->group(function () {
-        Route::post('/datatable', [RencanaKunjunganController::class, 'datatable'])->name('rencanakunjungan.datatable'); 
+        Route::get('/datatable', [RencanaKunjunganController::class, 'datatable'])->name('rencanakunjungan.datatable'); 
         Route::get('/show/{rencanakunjungan}', [RencanaKunjunganController::class, 'show'])->name('rencanakunjungan.show');        
         Route::get('', [RencanaKunjunganController::class, 'index'])->name('rencanakunjungan.index');          
         
          
-        Route::get('/create', [RencanaKunjunganController::class, 'create'])->name('rencanakunjungan.create');        
+        Route::post('/create', [RencanaKunjunganController::class, 'create'])->name('rencanakunjungan.create');        
         Route::post('/store', [RencanaKunjunganController::class, 'store'])->name('rencanakunjungan.store');        
-        Route::get('/{rencanakunjungan}/edit', [RencanaKunjunganController::class, 'edit'])->name('rencanakunjungan.edit');       
-        Route::PUT('/{rencanakunjungan}/update', [RencanaKunjunganController::class, 'update'])->name('rencanakunjungan.update');                   
+        Route::get('/{id}/edit', [RencanaKunjunganController::class, 'edit'])->name('rencanakunjungan.edit');       
+        Route::post('/update', [RencanaKunjunganController::class, 'update'])->name('rencanakunjungan.update');                   
         Route::post('/delete', [RencanaKunjunganController::class, 'delete'])->name('rencanakunjungan.delete');             
         
     });

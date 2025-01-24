@@ -5,6 +5,7 @@ namespace App\Http\Controllers\KunjunganSales;
 use App\Http\Controllers\Controller;
 use App\Models\FakturPenjualan;
 use App\Models\KunjunganSales;
+use App\Models\Outlet;
 use App\Models\Sales;
 use App\Traits\CodeTrait;
 use Carbon\Carbon;
@@ -34,7 +35,7 @@ class KunjunganSalesController extends Controller
 
     public function datatable(Request $request)
     {
-        $kunjungan = KunjunganSales::with('user')->orderBy('id','desc');
+        $kunjungan = KunjunganSales::with('user','outlet')->orderBy('id','desc');
 
         return DataTables::of($kunjungan)
                 ->addIndexColumn()
@@ -43,6 +44,9 @@ class KunjunganSalesController extends Controller
                 })
                 ->editColumn('user', function (KunjunganSales $kj) {
                     return $kj->user->name;
+                })
+                ->editColumn('customer', function (KunjunganSales $kj) {
+                    return $kj->outlet ? $kj->outlet->nama : $kj->customer;
                 })
                 ->addColumn('aktifitas', function (KunjunganSales $kj) {
                     return view('kunjungansales.partial.text',[
@@ -54,26 +58,21 @@ class KunjunganSalesController extends Controller
                 })
                 ->addColumn('action', function ($row) {    
                     $id = $row->id;        
-                    $sales_id = $row->user_id;                                              
-                    return view('kunjungansales.partial._form-action',[
-                        'id' => $id,
-                        'sales_id' => $sales_id
-                    ]);
+                    $sales_id = $row->user_id;                                    
+                    return view('kunjungansales.partial._form-action',compact('id','sales_id'));
                 })
-
                 ->make(true);
     }
 
     public function create()
     {
         $title = 'Kunjungan Sales';
-        return view('kunjungansales.create',compact('title'));
+        $outlet = Outlet::get();
+        return view('kunjungansales.create',compact('title','outlet'));
     }
 
     public function store(Request $request)
-    {
-        // dd($request->all());
-
+    {    
         $img = $request->file('image');
         $signed = $request->input('signed');
         $nameFile = null;
@@ -109,9 +108,9 @@ class KunjunganSalesController extends Controller
         }
 
         KunjunganSales::create([
-            'tanggal' => $tanggal,
-            'customer' => $request->customer,
+            'tanggal' => $tanggal,            
             'aktifitas' => $request->aktifitas,
+            'outlet_id' => $request->outlet_id,
             'ttd' => $request->ttd,
             'image' => $nameFile,
             'user_id' => auth()->user()->id,
@@ -134,12 +133,12 @@ class KunjunganSalesController extends Controller
     {
         $title = 'Kunjungan Sales';
         $kunjungan = KunjunganSales::where('id',$id)->first();
-        return view('kunjungansales.edit',compact('title','kunjungan'));
+        $outlet = Outlet::get();
+        return view('kunjungansales.edit',compact('title','kunjungan','outlet'));
     }
 
     public function update(Request $request,$id)
-    {
-        
+    {        
         $img = $request->file('image');
         $signed = $request->input('signed');
         $tanggal = Carbon::parse(now())->format('Y-m-d');
@@ -184,9 +183,9 @@ class KunjunganSalesController extends Controller
             $ttd = $name; 
         }
 
-        $kunjungan->update([            
-            'customer' => $request->customer,
+        $kunjungan->update([                        
             'aktifitas' => $request->aktifitas,
+            'outlet_id' => $request->outlet_id,
             'ttd' => $ttd,
             'image' => $nameFile,
             'user_id' => auth()->user()->id
@@ -198,7 +197,7 @@ class KunjunganSalesController extends Controller
 
     public function destroy(Request $request)
     {
-        $id = $request->id;
+        $id = $request->id;        
         $kunjungan=KunjunganSales::where('id',$id)->first();
 
         if ($kunjungan->image) {

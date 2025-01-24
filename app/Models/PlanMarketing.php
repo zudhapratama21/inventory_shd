@@ -9,11 +9,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PlanMarketing extends Model
 {
-    use HasFactory,SoftDeletes,Blameable;
+    use HasFactory, SoftDeletes, Blameable;
     protected $table = 'plan_marketings';
     protected $fillable = [
-        'tahun',
-        'bulan',
+        'tanggal',
         'outlet_id',
         'user_id',
         'created_by',
@@ -26,7 +25,7 @@ class PlanMarketing extends Model
         return $this->belongsTo(Outlet::class, 'outlet_id', 'id');
     }
 
-   
+
     public function planmarketingdetailminggu1()
     {
         return $this->hasMany(PLanMarketingDetail::class, 'planmarketing_id');
@@ -52,10 +51,9 @@ class PlanMarketing extends Model
         return $this->hasMany(PLanMarketingDetail::class, 'planmarketing_id');
     }
 
-   
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
-
 }

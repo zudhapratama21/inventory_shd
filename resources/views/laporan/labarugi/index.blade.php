@@ -64,7 +64,8 @@
                                     <input type="text" value="" id="grandtotal" class="form-control" readonly>
                                 </div>
                                 <div class="card-toolbar">
-                                    <a href="{{ route('laporanlabarugi.filter') }}" class="btn btn-primary"><i class="fas fa-download"></i> Download Laporan</a>
+                                    <a href="{{ route('laporanlabarugi.filter') }}" class="btn btn-primary"><i
+                                            class="fas fa-download"></i> Download Laporan</a>
                                 </div>
                             </div>
                             <div class="card-body">
@@ -72,7 +73,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Tahun</label>
-                                            <select name="chart_year" class="form-control" id="tahunLabaRugi" onchange="filterYear()">
+                                            <select name="chart_year" class="form-control" id="tahunLabaRugi"
+                                                onchange="filterYear()">
                                                 @php
                                                     $year = 2020;
                                                 @endphp
@@ -85,7 +87,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Principle</label>
-                                            <select id="kt_select2_2"  name="customer_id" class="form-control"
+                                            <select id="kt_select2_2" name="customer_id" class="form-control"
                                                 onchange="filterprinciple()">
                                                 <option value="All">Semua</option>
                                                 @foreach ($supplier as $item)
@@ -98,7 +100,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Merk</label>
-                                            <select id="kt_select2_5"  name="customer_id" class="form-control"
+                                            <select id="kt_select2_5" name="customer_id" class="form-control"
                                                 onchange="filtermerk()">
                                                 <option value="All">Semua</option>
                                                 @foreach ($merk as $item)
@@ -111,8 +113,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Sales</label>
-                                            <select id="salesLabaRugi"  name="customer_id"
-                                                class="form-control" onchange="filterSales()">
+                                            <select id="salesLabaRugi" name="customer_id" class="form-control"
+                                                onchange="filterSales()">
                                                 <option value="All">Semua</option>
                                                 @foreach ($sales as $item)
                                                     <option value="{{ $item->id }}">{{ $item->nama }} </option>
@@ -123,8 +125,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Customer</label>
-                                            <select id="kt_select2_3"  name="customer_id"
-                                                class="form-control" onchange="filterCustomer()">
+                                            <select id="kt_select2_3" name="customer_id" class="form-control"
+                                                onchange="filterCustomer()">
                                                 <option value="All">Semua</option>
                                                 @foreach ($customer as $item)
                                                     <option value="{{ $item->id }}">{{ $item->nama }} -
@@ -140,7 +142,10 @@
                                 <!--begin::Chart-->
                                 {{-- <div id="penjualanchart"></div> --}}
                                 <div>
-                                    <canvas id="chartprinciple" height="100"></canvas>
+                                    <div class="example-preview" id="kt_blockui_content">
+                                        <canvas id="chartprinciple" height="100"></canvas>
+                                    </div>
+
                                 </div>
                                 <!--end::Chart-->
 
@@ -179,14 +184,15 @@
                                             </svg>
                                             <!--end::Svg Icon--></span> </span>
                                     <h3 class="card-label">Top Profit Customer</h3>
-                                </div>                               
+                                </div>
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Tahun</label>
-                                            <select name="chart_year" class="form-control" onchange="filterYearCustomer()" id="yearcustomer">
+                                            <select name="chart_year" class="form-control"
+                                                onchange="filterYearCustomer()" id="yearcustomer">
                                                 @php
                                                     $year = 2020;
                                                 @endphp
@@ -195,13 +201,13 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                    </div>                                   
+                                    </div>
 
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Bulan</label>
-                                            <select  name="customer_id"
-                                                class="form-control" id="bulancustomer" onchange="filterBulanCustomer()">
+                                            <select name="customer_id" class="form-control" id="bulancustomer"
+                                                onchange="filterBulanCustomer()">
                                                 <option value="All">Semua</option>
                                                 @foreach ($months as $item)
                                                     <option value="{{ $item['id'] }}">{{ $item['nama'] }} </option>
@@ -213,8 +219,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Kategori Pesanan</label>
-                                            <select   name="customer_id"
-                                                class="form-control" id="kategoricustomer" onchange="filterKategoriCustomer()">
+                                            <select name="customer_id" class="form-control" id="kategoricustomer"
+                                                onchange="filterKategoriCustomer()">
                                                 <option value="All">Semua</option>
                                                 @foreach ($kategori as $item)
                                                     <option value="{{ $item->id }}">{{ $item->nama }} </option>
@@ -225,8 +231,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Sales</label>
-                                            <select name="customer_id"
-                                                class="form-control" id="salescustomer" onchange="filterSalesCustomer()">
+                                            <select name="customer_id" class="form-control" id="salescustomer"
+                                                onchange="filterSalesCustomer()">
                                                 <option value="All">Semua</option>
                                                 @foreach ($sales as $item)
                                                     <option value="{{ $item->id }}">{{ $item->nama }} </option>
@@ -242,8 +248,8 @@
                                     <thead class="datatable-head">
                                         <tr>
                                             <th>Nama</th>
-                                            <th>Laba Kotor</th>    
-                                            <th>Action</th>                                        
+                                            <th>Laba Kotor</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -284,14 +290,15 @@
                                             </svg>
                                             <!--end::Svg Icon--></span> </span>
                                     <h3 class="card-label">Top Profit Principle</h3>
-                                </div>                               
+                                </div>
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Tahun</label>
-                                            <select name="chart_year" class="form-control" onchange="filteryearprinciple()" id="yearprinciple">
+                                            <select name="chart_year" class="form-control"
+                                                onchange="filteryearprinciple()" id="yearprinciple">
                                                 @php
                                                     $year = 2020;
                                                 @endphp
@@ -300,13 +307,13 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                    </div>                                   
+                                    </div>
 
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Bulan</label>
-                                            <select  name="principle_id"
-                                                class="form-control" id="bulanprinciple" onchange="filterbulanprinciple()">
+                                            <select name="principle_id" class="form-control" id="bulanprinciple"
+                                                onchange="filterbulanprinciple()">
                                                 <option value="All">Semua</option>
                                                 @foreach ($months as $item)
                                                     <option value="{{ $item['id'] }}">{{ $item['nama'] }} </option>
@@ -318,8 +325,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Kategori Pesanan</label>
-                                            <select   name="principle_id"
-                                                class="form-control" id="kategoriprinciple" onchange="filterkategoriprinciple()">
+                                            <select name="principle_id" class="form-control" id="kategoriprinciple"
+                                                onchange="filterkategoriprinciple()">
                                                 <option value="All">Semua</option>
                                                 @foreach ($kategori as $item)
                                                     <option value="{{ $item->id }}">{{ $item->nama }} </option>
@@ -330,8 +337,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Sales</label>
-                                            <select name="customer_id"
-                                                class="form-control" id="salesprinciple" onchange="filtersalesprinciple()">
+                                            <select name="customer_id" class="form-control" id="salesprinciple"
+                                                onchange="filtersalesprinciple()">
                                                 <option value="All">Semua</option>
                                                 @foreach ($sales as $item)
                                                     <option value="{{ $item->id }}">{{ $item->nama }} </option>
@@ -347,8 +354,8 @@
                                     <thead class="datatable-head">
                                         <tr>
                                             <th>Nama</th>
-                                            <th>Laba Kotor</th>    
-                                            <th>Action</th>                                        
+                                            <th>Laba Kotor</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -388,14 +395,15 @@
                                             </svg>
                                             <!--end::Svg Icon--></span> </span>
                                     <h3 class="card-label">Top Profit Product</h3>
-                                </div>                               
+                                </div>
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Tahun</label>
-                                            <select name="chart_year" class="form-control" onchange="filteryearproduct()" id="yearproduct">
+                                            <select name="chart_year" class="form-control" onchange="filteryearproduct()"
+                                                id="yearproduct">
                                                 @php
                                                     $year = 2020;
                                                 @endphp
@@ -404,13 +412,13 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                    </div>                                   
+                                    </div>
 
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Bulan</label>
-                                            <select  name="product_id"
-                                                class="form-control" id="bulanproduct" onchange="filterbulanproduct()">
+                                            <select name="product_id" class="form-control" id="bulanproduct"
+                                                onchange="filterbulanproduct()">
                                                 <option value="All">Semua</option>
                                                 @foreach ($months as $item)
                                                     <option value="{{ $item['id'] }}">{{ $item['nama'] }} </option>
@@ -422,8 +430,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Kategori Pesanan</label>
-                                            <select   name="product_id"
-                                                class="form-control" id="kategoriproduct" onchange="filterkategoriproduct()">
+                                            <select name="product_id" class="form-control" id="kategoriproduct"
+                                                onchange="filterkategoriproduct()">
                                                 <option value="All">Semua</option>
                                                 @foreach ($kategori as $item)
                                                     <option value="{{ $item->id }}">{{ $item->nama }} </option>
@@ -434,8 +442,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Sales</label>
-                                            <select name="customer_id"
-                                                class="form-control" id="salesproduct" onchange="filtersalesproduct()">
+                                            <select name="customer_id" class="form-control" id="salesproduct"
+                                                onchange="filtersalesproduct()">
                                                 <option value="All">Semua</option>
                                                 @foreach ($sales as $item)
                                                     <option value="{{ $item->id }}">{{ $item->nama }} </option>
@@ -446,8 +454,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Merk</label>
-                                            <select name="customer_id"
-                                                class="form-control" id="kt_select2_4" onchange="filtermerkproduct()">
+                                            <select name="customer_id" class="form-control" id="kt_select2_4"
+                                                onchange="filtermerkproduct()">
                                                 <option value="All">Semua</option>
                                                 @foreach ($merk as $item)
                                                     <option value="{{ $item->id }}">{{ $item->nama }} </option>
@@ -458,8 +466,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Principle</label>
-                                            <select name="customer_id"
-                                                class="form-control" id="kt_select2_7" onchange="filterprincipleproduct()">
+                                            <select name="customer_id" class="form-control" id="kt_select2_7"
+                                                onchange="filterprincipleproduct()">
                                                 <option value="All">Semua</option>
                                                 @foreach ($supplier as $item)
                                                     <option value="{{ $item->id }}">{{ $item->nama }} </option>
@@ -471,19 +479,21 @@
                                 </div>
 
                                 <!--begin: Datatable-->
-                                <table class="table yajra-datatableproduct collapsed ">
-                                    <thead class="datatable-head">
-                                        <tr>
-                                            <th>Nama</th>
-                                            <th>Merk</th>
-                                            <th>Qty</th>                                            
-                                            <th>Laba Kotor</th>    
-                                            <th>Action</th>                                        
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
+                                <div class="example-preview" id="block_produk">
+                                    <table class="table yajra-datatableproduct collapsed ">
+                                        <thead class="datatable-head">
+                                            <tr>
+                                                <th>Nama</th>
+                                                <th>Merk</th>
+                                                <th>Qty</th>
+                                                <th>Laba Kotor</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
                                 <!--end: Datatable-->
 
                             </div>
@@ -518,8 +528,18 @@
                                             </svg>
                                             <!--end::Svg Icon--></span> </span>
                                     <h3 class="card-label">Total CN</h3>
-                                </div>   
-                                
+                                </div>
+                                <div class="card-toolbar">
+                                    <label for="">Total Omset</label>
+                                    <input type="text" value="" id="totalomset" class="form-control" readonly>
+                                </div>
+
+                                <div class="card-toolbar">
+                                    <label for="">Total Laba Kotor</label>
+                                    <input type="text" value="" id="totallabakotor" class="form-control"
+                                        readonly>
+                                </div>
+
                                 <div class="card-toolbar">
                                     <label for="">Total CN</label>
                                     <input type="text" value="" id="totalcn" class="form-control" readonly>
@@ -530,7 +550,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Tahun</label>
-                                            <select name="chart_year" class="form-control" onchange="filteryearcn()" id="yearcn">
+                                            <select name="chart_year" class="form-control" onchange="filteryearcn()"
+                                                id="yearcn">
                                                 @php
                                                     $year = 2020;
                                                 @endphp
@@ -539,13 +560,13 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                    </div>                                   
+                                    </div>
 
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Bulan</label>
-                                            <select  name="cn_id"
-                                                class="form-control" id="bulancn" onchange="filterbulancn()">
+                                            <select name="cn_id" class="form-control" id="bulancn"
+                                                onchange="filterbulancn()">
                                                 <option value="All">Semua</option>
                                                 @foreach ($months as $item)
                                                     <option value="{{ $item['id'] }}">{{ $item['nama'] }} </option>
@@ -557,8 +578,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Kategori Pesanan</label>
-                                            <select   name="cn_id"
-                                                class="form-control" id="kategoricn" onchange="filterkategoricn()">
+                                            <select name="cn_id" class="form-control" id="kategoricn"
+                                                onchange="filterkategoricn()">
                                                 <option value="All">Semua</option>
                                                 @foreach ($kategori as $item)
                                                     <option value="{{ $item->id }}">{{ $item->nama }} </option>
@@ -569,15 +590,15 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Sales</label>
-                                            <select name="customer_id"
-                                                class="form-control" id="salescn" onchange="filtersalescn()">
+                                            <select name="customer_id" class="form-control" id="salescn"
+                                                onchange="filtersalescn()">
                                                 <option value="All">Semua</option>
                                                 @foreach ($sales as $item)
                                                     <option value="{{ $item->id }}">{{ $item->nama }} </option>
                                                 @endforeach
                                             </select>
                                         </div>
-                                    </div>                                
+                                    </div>
                                 </div>
 
                                 <!--begin: Datatable-->
@@ -587,7 +608,7 @@
                                             <th>Nama</th>
                                             <th>Omset</th>
                                             <th>Laba Kotor</th>
-                                            <th>Total CN</th>                                                                                                                                
+                                            <th>Total CN</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -614,13 +635,16 @@
     <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6') }}"></script>
     <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
     <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
+    <!--begin::Page Scripts(used by this page)-->
+    <script src="{{ asset('assets/js/pages/features/miscellaneous/blockui.js?v=7.0.6') }} "></script>
+    <!--end::Page Scripts-->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
     <script type="text/javascript">
         const ctx = document.getElementById('chartprinciple');
-        
-        
+
+
         // =================================== TOP CUSTOMER =======================================
         let yearCustomer = {{ now()->format('Y') }};
         let bulanCustomer = 'All';
@@ -629,7 +653,7 @@
         let customer_id = null;
 
         // =======================================================================================  
-        
+
         // ========================================== TOP PRINCIPLE =============================
         let yearPrinciple = {{ now()->format('Y') }};
         let bulanPrinciple = 'All';
@@ -641,7 +665,7 @@
 
         // =================================================== VARIABLE CHART =========================================
         let yearLabaRugi = {{ now()->format('Y') }};
-        let principleLabaRugi= 'All';
+        let principleLabaRugi = 'All';
         let merkLabaRugi = 'All';
         let salesLabaRugi = 'All';
         let customerLabaRugi = 'All';
@@ -662,7 +686,7 @@
         let yearcn = {{ now()->format('Y') }};
         let bulancn = 'All';
         let salescn = 'All';
-        let kategoricn = 'All';                
+        let kategoricn = 'All';
         // ======================================================================================================
 
         // ============================ TEMPLATE GRAFIK =====================================
@@ -671,11 +695,49 @@
             data: {
                 labels: null,
                 datasets: [{
-                    label: 'Penjualan', data: null, pointStyle: 'circle', pointRadius: 10, pointHoverRadius: 15,
+                    label: 'Penjualan',
+                    data: null,
+                    pointStyle: 'circle',
+                    pointRadius: 10,
+                    pointHoverRadius: 15,
                 }]
             },
             options: {
-                responsive: true, plugins: { title: { display: true, text: (ctx) => 'Data Dalam Persen Rupiah ', }, legend: { labels: { font: { size: 11 } } } }, scales: { y: { stacked: true, ticks: { font: { size: 12, } } }, x: { ticks: { font: { size: 12, } } } } }, interaction: { intersect: false, }
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: (ctx) => 'Data Dalam Persen Rupiah ',
+                    },
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 11
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        stacked: true,
+                        ticks: {
+                            font: {
+                                size: 12,
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 12,
+                            }
+                        }
+                    }
+                }
+            },
+            interaction: {
+                intersect: false,
+            }
         }
 
 
@@ -705,7 +767,7 @@
                     'principle': principleLabaRugi,
                     'merk': merkLabaRugi,
                     'sales': salesLabaRugi,
-                    'customer' : customerLabaRugi,
+                    'customer': customerLabaRugi,
                     "_token": "{{ csrf_token() }}"
                 },
 
@@ -714,7 +776,7 @@
                     dataLaba = res[0].laba;
                     dataBulan = res[0].bulan;
                     let grandtotalpenjualan = res[0].grandtotal;
-                    
+
                     options.data.labels = dataBulan;
                     options.data.datasets[0].data = dataLaba;
                     chart = new Chart(ctx, options);
@@ -727,7 +789,7 @@
             });
         }
 
-        function chartLabaRugiUpdate(){
+        function chartLabaRugiUpdate() {
             $.ajax({
                 type: 'POST',
                 url: '{{ route('laporanlabarugi.chartprinciple') }}',
@@ -740,10 +802,16 @@
                     'principle': principleLabaRugi,
                     'merk': merkLabaRugi,
                     'sales': salesLabaRugi,
-                    'customer' : customerLabaRugi,
+                    'customer': customerLabaRugi,
                     "_token": "{{ csrf_token() }}"
                 },
-
+                beforeSend: function() {
+                    KTApp.block('#kt_blockui_content', {
+                        overlayColor: '#000000',
+                        state: 'primary',
+                        message: 'Processing...'
+                    });
+                },
                 success: function(data) {
                     res = JSON.parse("[" + data + "]");
                     dataLaba = res[0].laba;
@@ -759,10 +827,14 @@
                 },
                 error: function(data) {
                     console.log(data);
+                },
+                // Menyembunyikan blok UI menggunakan KTApp.unblock setelah request selesai
+                complete: function() {
+                    KTApp.unblock('#kt_blockui_content');
                 }
             });
         }
-        
+
 
 
         function htmlDecode(data) {
@@ -771,9 +843,9 @@
             return txt.value;
         }
 
-        function hitungtotalgrafik(data) {            
+        function hitungtotalgrafik(data) {
             $('#grandtotal').val(data);
-        }        
+        }
 
         function filterYear() {
             let e = document.getElementById("tahunLabaRugi");
@@ -822,33 +894,31 @@
                     type: 'POST',
                     url: "{{ route('laporanlabarugi.datatable') }}",
                     data: function(params) {
-                        params.year = yearCustomer,                        
-                        params.bulan = bulanCustomer,
-                        params.sales = salesCustomer,
-                        params.kategori = kategoriCustomer,
-                        params._token = "{{ csrf_token() }}";
+                        params.year = yearCustomer,
+                            params.bulan = bulanCustomer,
+                            params.sales = salesCustomer,
+                            params.kategori = kategoriCustomer,
+                            params._token = "{{ csrf_token() }}";
                         return params;
                     }
                 },
-                columns: [                    
-                    {
+                columns: [{
                         data: 'nama',
                         name: 'nama'
                     },
                     {
                         data: 'laba_kotor',
                         name: 'laba_kotor'
-                    },  
+                    },
                     {
                         data: 'action',
                         render: function(data) {
                             return htmlDecode(data);
                         },
                         className: "nowrap",
-                    },              
+                    },
                 ],
-                columnDefs: [
-                    {
+                columnDefs: [{
                         responsivePriority: 3,
                         targets: 1,
 
@@ -863,7 +933,7 @@
                     },
                 ],
             });
-        }              
+        }
 
         function htmlDecode(data) {
             var txt = document.createElement('textarea');
@@ -895,29 +965,29 @@
             $('.yajra-datatable').DataTable().ajax.reload(null, false);
         }
 
-        function showCustomer(id){
+        function showCustomer(id) {
             $('#listproduk').modal('show');
-            customer_id = id ;            
+            customer_id = id;
             $('.yajra-datatabletopproduct').DataTable().ajax.reload(null, false);
-        }   
+        }
 
-        function showCustomerReview(id){
+        function showCustomerReview(id) {
             $('#listprodukreview').modal('show');
-            customer_id = id ;            
+            customer_id = id;
             $('.yajra-datatabletopproductreview').DataTable().ajax.reload(null, false);
-        }  
+        }
 
         function datatableCustomerProduct() {
-            var tablecustomer = $('.yajra-datatabletopproduct').DataTable({                
+            var tablecustomer = $('.yajra-datatabletopproduct').DataTable({
                 processing: true,
                 serverSide: true,
-                scrollX: true,                               
+                scrollX: true,
                 order: [],
                 ajax: {
                     url: "{{ route('laporanlabarugi.datatablecustomerproduct') }}",
                     type: "POST",
                     data: function(params) {
-                            params.year = yearCustomer,                        
+                        params.year = yearCustomer,
                             params.bulan = bulanCustomer,
                             params.sales = salesCustomer,
                             params.kategori = kategoriCustomer,
@@ -1019,16 +1089,16 @@
         }
 
         function datatableCustomerProductReview() {
-            var tablecustomer = $('.yajra-datatabletopproductreview').DataTable({                
+            var tablecustomer = $('.yajra-datatabletopproductreview').DataTable({
                 processing: true,
                 serverSide: true,
-                scrollX: true,                               
+                scrollX: true,
                 order: [],
                 ajax: {
                     url: "{{ route('laporanlabarugi.datatablecustomerreview') }}",
                     type: "POST",
                     data: function(params) {
-                            params.year = yearCustomer,                        
+                        params.year = yearCustomer,
                             params.bulan = bulanCustomer,
                             params.sales = salesCustomer,
                             params.kategori = kategoriCustomer,
@@ -1037,15 +1107,14 @@
                         return params;
                     }
                 },
-                columns: [                                      
-                    {
+                columns: [{
                         data: 'nama',
                         name: 'nama'
                     },
                     {
                         data: 'qty',
                         name: 'qty'
-                    },                 
+                    },
                     {
                         data: 'laba_kotor',
                         name: 'laba_kotor'
@@ -1076,33 +1145,31 @@
                     type: 'POST',
                     url: "{{ route('laporanlabarugi.principle') }}",
                     data: function(params) {
-                        params.year = yearPrinciple,                        
-                        params.bulan = bulanPrinciple,
-                        params.sales = salesPrinciple,
-                        params.kategori = kategoriPrinciple,
-                        params._token = "{{ csrf_token() }}";
+                        params.year = yearPrinciple,
+                            params.bulan = bulanPrinciple,
+                            params.sales = salesPrinciple,
+                            params.kategori = kategoriPrinciple,
+                            params._token = "{{ csrf_token() }}";
                         return params;
                     }
                 },
-                columns: [                    
-                    {
+                columns: [{
                         data: 'nama',
                         name: 'nama'
                     },
                     {
                         data: 'laba_kotor',
                         name: 'laba_kotor'
-                    },  
+                    },
                     {
                         data: 'action',
                         render: function(data) {
                             return htmlDecode(data);
                         },
                         className: "nowrap",
-                    },              
+                    },
                 ],
-                columnDefs: [
-                    {
+                columnDefs: [{
                         responsivePriority: 3,
                         targets: 1,
 
@@ -1117,7 +1184,7 @@
                     },
                 ],
             });
-        } 
+        }
 
         function filteryearprinciple() {
             let e = document.getElementById("yearprinciple");
@@ -1143,13 +1210,13 @@
             $('.yajra-datatableprinciple').DataTable().ajax.reload(null, false);
         }
 
-        
 
-        function showPrinciple(id){
+
+        function showPrinciple(id) {
             $('#listprodukprinciple').modal('show');
-            principle_id = id ;            
+            principle_id = id;
             $('.yajra-datatableprincipleperproduct').DataTable().ajax.reload(null, false);
-        }   
+        }
 
         function datatableprincipleperproduct() {
             var table = $('.yajra-datatableprincipleperproduct').DataTable({
@@ -1161,17 +1228,16 @@
                     type: 'POST',
                     url: "{{ route('laporanlabarugi.principleperproduct') }}",
                     data: function(params) {
-                        params.year = yearPrinciple,                 
-                        params.bulan = bulanPrinciple,
-                        params.sales = salesPrinciple,
-                        params.kategori = kategoriPrinciple,
-                        params.supplier_id = principle_id,
-                        params._token = "{{ csrf_token() }}";
+                        params.year = yearPrinciple,
+                            params.bulan = bulanPrinciple,
+                            params.sales = salesPrinciple,
+                            params.kategori = kategoriPrinciple,
+                            params.supplier_id = principle_id,
+                            params._token = "{{ csrf_token() }}";
                         return params;
                     }
                 },
-                columns: [                    
-                    {
+                columns: [{
                         data: 'nama',
                         name: 'nama'
                     },
@@ -1182,10 +1248,9 @@
                     {
                         data: 'laba_kotor',
                         name: 'laba_kotor'
-                    }                              
+                    }
                 ],
-                columnDefs: [
-                    {
+                columnDefs: [{
                         responsivePriority: 3,
                         targets: 1,
 
@@ -1200,7 +1265,7 @@
                     },
                 ],
             });
-        } 
+        }
 
         // ============================================================== END OF DATATABLE ==================================================
 
@@ -1215,18 +1280,29 @@
                     type: 'POST',
                     url: "{{ route('laporanlabarugi.product') }}",
                     data: function(params) {
-                        params.year = yearproduct,                        
-                        params.bulan = bulanproduct,
-                        params.sales = salesproduct,
-                        params.kategori = kategoriproduct,
-                        params.merk = merkproduct,
-                        params.supplier = principleproduct,
-                        params._token = "{{ csrf_token() }}";
+                        params.year = yearproduct,
+                            params.bulan = bulanproduct,
+                            params.sales = salesproduct,
+                            params.kategori = kategoriproduct,
+                            params.merk = merkproduct,
+                            params.supplier = principleproduct,
+                            params._token = "{{ csrf_token() }}";
                         return params;
+                    },
+                    beforeSend: function() {
+                        // Menampilkan loading overlay menggunakan KTApp.block sebelum request AJAX dimulai
+                        KTApp.block('#block_produk', {
+                            overlayColor: '#000000', // Warna overlay
+                            state: 'primary', // Status (warna)
+                            message: 'Processing...' // Pesan loading
+                        });
+                    },
+                    complete: function() {
+                        // Menyembunyikan loading overlay setelah request selesai
+                        KTApp.unblock('#block_produk');
                     }
                 },
-                columns: [                    
-                    {
+                columns: [{
                         data: 'nama',
                         name: 'nama'
                     },
@@ -1241,17 +1317,16 @@
                     {
                         data: 'laba_kotor',
                         name: 'laba_kotor'
-                    },  
+                    },
                     {
                         data: 'action',
                         render: function(data) {
                             return htmlDecode(data);
                         },
                         className: "nowrap",
-                    },              
+                    },
                 ],
-                columnDefs: [
-                    {
+                columnDefs: [{
                         responsivePriority: 3,
                         targets: 1,
 
@@ -1264,7 +1339,7 @@
                         responsivePriority: 2,
                         targets: -1
                     },
-                ],
+                ]
             });
         }
 
@@ -1304,12 +1379,12 @@
             $('.yajra-datatableproduct').DataTable().ajax.reload(null, false);
         }
 
-        function showProduct(id){
+        function showProduct(id) {
             $('#listprodukcustomer').modal('show');
-            product_id = id ;            
+            product_id = id;
             $('.yajra-datatableproductpercustomer').DataTable().ajax.reload(null, false);
-        } 
-        
+        }
+
         function datatableproductpercustomer() {
             var table = $('.yajra-datatableproductpercustomer').DataTable({
                 responsive: true,
@@ -1320,22 +1395,21 @@
                     type: 'POST',
                     url: "{{ route('laporanlabarugi.productpercustomer') }}",
                     data: function(params) {
-                        params.year = yearproduct,                        
-                        params.bulan = bulanproduct,
-                        params.sales = salesproduct,
-                        params.kategori = kategoriproduct,
-                        params.merk = merkproduct,
-                        params.supplier = principleproduct,
-                        params.product_id = product_id,
-                        params._token = "{{ csrf_token() }}";
+                        params.year = yearproduct,
+                            params.bulan = bulanproduct,
+                            params.sales = salesproduct,
+                            params.kategori = kategoriproduct,
+                            params.merk = merkproduct,
+                            params.supplier = principleproduct,
+                            params.product_id = product_id,
+                            params._token = "{{ csrf_token() }}";
                         return params;
                     }
                 },
-                columns: [                    
-                    {
+                columns: [{
                         data: 'nama',
                         name: 'nama'
-                    },                    
+                    },
                     {
                         data: 'qty',
                         name: 'qty'
@@ -1343,10 +1417,9 @@
                     {
                         data: 'laba_kotor',
                         name: 'laba_kotor'
-                    },                      
+                    },
                 ],
-                columnDefs: [
-                    {
+                columnDefs: [{
                         responsivePriority: 3,
                         targets: 1,
 
@@ -1377,19 +1450,19 @@
                     type: 'POST',
                     url: "{{ route('laporanlabarugi.cn') }}",
                     data: function(params) {
-                        params.year = yearcn,                 
-                        params.bulan = bulancn,
-                        params.sales = salescn,
-                        params.kategori = kategoricn,                        
-                        params._token = "{{ csrf_token() }}";
+                        params.year = yearcn,
+                            params.bulan = bulancn,
+                            params.sales = salescn,
+                            params.kategori = kategoricn,
+                            params._token = "{{ csrf_token() }}";
                         return params;
                     }
+                    
                 },
-                columns: [                    
-                    {
+                columns: [{
                         data: 'nama',
                         name: 'nama'
-                    },  
+                    },
                     {
                         data: 'omset',
                         name: 'omset'
@@ -1397,14 +1470,13 @@
                     {
                         data: 'laba_kotor',
                         name: 'laba_kotor'
-                    },                     
+                    },
                     {
                         data: 'cn_rupiah',
                         name: 'cn_rupiah'
-                    }                              
+                    }
                 ],
-                columnDefs: [
-                    {
+                columnDefs: [{
                         responsivePriority: 3,
                         targets: 1,
 
@@ -1417,9 +1489,9 @@
                         responsivePriority: 2,
                         targets: -1
                     },
-                ],
+                ]               
             });
-        } 
+        }
 
         function filteryearcn() {
             let e = document.getElementById("yearcn");
@@ -1449,34 +1521,32 @@
             totalcn();
         }
 
-        function totalcn(){
+        function totalcn() {
             $.ajax({
                 type: 'POST',
                 url: '{{ route('laporanlabarugi.totalcn') }}',
-                dataType: 'html',
+                dataType: 'json',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                data: {                    
-                    year : yearcn,                 
-                    bulan : bulancn,
-                    sales : salescn,
-                    kategori : kategoricn,
+                data: {
+                    year: yearcn,
+                    bulan: bulancn,
+                    sales: salescn,
+                    kategori: kategoricn,
                     "_token": "{{ csrf_token() }}"
                 },
                 success: function(data) {                    
-                    $('#totalcn').val(data);       
+
+                    $('#totalcn').val(data.total_cn_rupiah);
+                    $('#totallabakotor').val(data
+                        .total_laba_kotor); // Menampilkan 'total_laba_kotor' di elemen HTML
+                    $('#totalomset').val(data.total_nett);
                 },
                 error: function(data) {
-                    console.log(data);
+                    // console.log(data);
                 }
             });
         }
-
-
-
-
-
-
     </script>
 @endpush

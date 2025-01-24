@@ -18,7 +18,11 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\FakturPembelianDetail;
 use App\Models\FakturPenjualanDetail;
+use App\Models\HargaNonExpired;
+use App\Models\PenerimaanBarangDetail;
 use App\Models\PesananPembelianDetail;
+use App\Models\StokExp;
+use App\Models\StokExpDetail;
 use Barryvdh\DomPDF\Facade as PDF;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -615,7 +619,8 @@ class PesananPembelianController extends Controller
             'no_so' => $request->no_so,
             'no_so_customer' => $request->no_so_customer
         ]);
-        // dd($hasil);
+        
+
 
         return redirect()->route('pesananpembelian.index')->with('status', 'Pesanan Pembelian berhasil diubah !');
     }
@@ -763,8 +768,7 @@ class PesananPembelianController extends Controller
         $diskon = $request->diskon_persen;
 
         if ($request->ppn > 0) {
-            $harga = $harga / (1 + $request->ppn/100);
-            
+            $harga = $harga / (1 + $request->ppn/100);            
         }
 
         $ongkir1 = $request->ongkir;
@@ -795,10 +799,43 @@ class PesananPembelianController extends Controller
 
         // kalkulasi header
         $totaldetail = PesananPembelianDetail::where('pesanan_pembelian_id',$PP->pesanan_pembelian_id)->sum('total');
-        $ongkirdetail =PesananPembelianDetail::where('pesanan_pembelian_id',$PP->pesanan_pembelian_id)->sum('ongkir');        
+        $ongkirdetail = PesananPembelianDetail::where('pesanan_pembelian_id',$PP->pesanan_pembelian_id)->sum('ongkir');        
         $totalDiskon = PesananPembelianDetail::where('pesanan_pembelian_id',$PP->pesanan_pembelian_id)->sum('total_diskon');
         // hitung semua data baru di detail dan kalkulasi total dan ongkir
         $pesanan = PesananPembelian::where('id',$PP->pesanan_pembelian_id)->first();
+
+        // cek dulu penerimaan barang detail ada atau tidak (jamak)
+        $penerimaanbarangdetail = PenerimaanBarangDetail::with('PenerimaanBarangs','products')->where('pesanan_pembelian_detail_id',$request->id)->get();
+        // cek dulu product merupakan exp or not
+        if ($penerimaanbarangdetail) {
+            foreach ($penerimaanbarangdetail as $item) {
+                // cek expired product
+                if ($penerimaanbarangdetail->products->status_exp == 1) {                   
+                    // cek dlu di stok exp detail
+                    // cari penerimaan barang detail lalu ubah data harga beli 
+                    $stokexp = StokExpDetail::where('id_pb_detail',$penerimaanbarangdetail->id)->get();
+                    foreach ($stokexp as $item) {
+                        StokExp::where('id',$stokexp->stok_exp_id)->update([
+                            'harga_beli' => $harga,
+                            'diskon_persen' => $diskonpersen,
+                            'diskon_rupiah' => $request->diskon_rp,
+                        ]);
+                    }
+
+                }else{
+                    HargaNonExpired::where('supplier_id',$item->PenerimaanBarangs->supplier_id)
+                    ->where('product_id',$item->product_id)
+                    ->where('penerimaanbarang_id',$item->penerimaan_barang_id)
+                    ->update([
+                        'harga_beli' => $harga,
+                        'diskon_persen' => $diskonpersen,
+                        'diskoon_rupiah' => $request->diskon_rp
+                    ]);
+                }
+            }
+        }
+      
+        // jika ada maka cari supplier , product_id , dan penerimaan_id
 
 
         // hitung total di header 

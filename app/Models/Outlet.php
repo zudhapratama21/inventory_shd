@@ -26,5 +26,16 @@ class Outlet extends Model
         return $this->hasMany(PlanMarketing::class, 'outlet_id');
     }
 
+   
+    public function rencanakunnjungan()
+    {
+        return $this->hasMany(RencanaKunjungan::class, 'outlet_id');
+    }
+
+    public function kunjungansales()
+    {
+        return $this->hasMany(KunjunganSales::class, 'outlet_id');
+    }
+
     
 }

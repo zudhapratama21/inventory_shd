@@ -16,6 +16,7 @@ class KunjunganSales extends Model
         'customer',
         'tanggal',
         'aktifitas',
+        'outlet_id',
         'ttd',
         'image',
         'user_id',
@@ -26,6 +27,12 @@ class KunjunganSales extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+   
+    public function outlet()
+    {
+        return $this->belongsTo(Outlet::class, 'outlet_id', 'id');
     }
 
     

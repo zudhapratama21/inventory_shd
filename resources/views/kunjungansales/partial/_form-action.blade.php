@@ -41,7 +41,7 @@
             @endcan
 
             @can('kunjungansales-delete')
-            <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3" data-toggle="modal" data-target="#kunjungansales">
+            <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3" data-toggle="modal" data-target="#kunjungansales{{$id}}">
                 <span class="svg-icon svg-icon-md svg-icon-primary">
                     <!--begin::Svg Icon | path:assets/media/svg/icons/General/Trash.svg--><svg
                         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
@@ -66,14 +66,14 @@
 {{-- Confirm Delete --}}
 
 <!-- Modal-->
-<div class="modal fade" id="kunjungansales" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="kunjungansales{{$id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
           
             <form id="destroy-form" action="{{ route('kunjungansales.destroy') }}" method="POST">
                 @csrf
-                @method('delete')
+                @method('delete')                
                 <input type="hidden" name="id" value="{{ $id }}">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Are You Sure?</h5>

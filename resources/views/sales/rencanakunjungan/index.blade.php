@@ -1,216 +1,264 @@
 @extends('layouts.app', ['title' => $title])
 
 @section('content')
-<!--begin::Content-->
-<div class="content  d-flex flex-column flex-column-fluid" id="kt_content">
-    <!--begin::Subheader-->
+    <!--begin::Content-->
+    <div class="content  d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
 
-    <!--end::Subheader-->
+        <!--end::Subheader-->
 
-    <!--begin::Entry-->
-    <div class="d-flex flex-column-fluid mt-10">
-        <!--begin::Container-->
-        <div class=" container ">
-            @if (session('status'))
-            <div class="alert alert-custom alert-success fade show pb-2 pt-2" role="alert">
-                <div class="alert-icon"><i class="flaticon-warning"></i></div>
-                <div class="alert-text">{{ session('status') }}</div>
-                <div class="alert-close">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true"><i class="ki ki-close"></i></span>
-                    </button>
-                </div>
-            </div>
-
-            @endif
-            <div class="row">
-
-                <div class="col-lg-12">
-                    <!--begin::Card-->
-                    <div class="card card-custom">
-                        <div class="card-header py-3">
-                            <div class="card-title">
-                                <span class="card-icon">
-                                    <span class="svg-icon svg-icon-md svg-icon-primary">
-                                        <!--begin::Svg Icon | path:assets/media/svg/icons/Shopping/Chart-bar1.svg--><svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
-                                            viewBox="0 0 24 24" version="1.1">
-                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                <rect x="0" y="0" width="24" height="24" />
-                                                <rect fill="#000000" opacity="0.3" x="12" y="4" width="3" height="13"
-                                                    rx="1.5" />
-                                                <rect fill="#000000" opacity="0.3" x="7" y="9" width="3" height="8"
-                                                    rx="1.5" />
-                                                <path
-                                                    d="M5,19 L20,19 C20.5522847,19 21,19.4477153 21,20 C21,20.5522847 20.5522847,21 20,21 L4,21 C3.44771525,21 3,20.5522847 3,20 L3,4 C3,3.44771525 3.44771525,3 4,3 C4.55228475,3 5,3.44771525 5,4 L5,19 Z"
-                                                    fill="#000000" fill-rule="nonzero" />
-                                                <rect fill="#000000" opacity="0.3" x="17" y="11" width="3" height="6"
-                                                    rx="1.5" />
-                                            </g>
-                                        </svg>
-                                        <!--end::Svg Icon--></span> </span>
-                                <h3 class="card-label">Data Rencana Kunjungan</h3>
-                            </div>
-                            <div class="card-toolbar">
-                                <!--begin::Button-->                            
-                                @can('rencanakunjungan-create')
-                                <a href="{{ route('rencanakunjungan.create') }}"
-                                    class="btn btn-primary font-weight-bolder">
-                                    <i class="flaticon2-add"></i>
-                                   Kunjungan Sales
-                                </a>
-                                @endcan
-
-
-                                <!--end::Button-->
-                            </div>
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid mt-10">
+            <!--begin::Container-->
+            <div class=" container ">
+                @if (session('status'))
+                    <div class="alert alert-custom alert-success fade show pb-2 pt-2" role="alert">
+                        <div class="alert-icon"><i class="flaticon-warning"></i></div>
+                        <div class="alert-text">{{ session('status') }}</div>
+                        <div class="alert-close">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true"><i class="ki ki-close"></i></span>
+                            </button>
                         </div>
-                        <div class="card-body">
-                            <!--begin: Datatable-->                         
-                            <table class="table yajra-datatable collapsed">
-                                <thead class="datatable-head">
-                                    <tr>                                        
-                                        <th>Tanggal</th>
-                                        <th>Jam</th>
-                                        <th>Sales</th>
-                                        <th>Customer</th>
-                                        <th>Aktivitas</th>                                       
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                            <!--end: Datatable-->
+                    </div>
+                @endif
+                <div class="row">
 
+                    <div class="col-lg-12">
+                        <div class="card mt-10">
+                            <div class="card-header">
+                                <h3>Rencana Aktivitas</h3>
+                            </div>
+                            <div class="card-body">
+                                <div id="calender"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <!--end::Container-->
         </div>
-        <!--end::Container-->
+        <!--end::Entry-->
     </div>
-    <!--end::Entry-->
-</div>
-<!--end::Content-->
-<div id="modal-confirm-delete"></div>
+    <!--end::Content-->
+    <div id="modal-setbarang"></div>
 @endsection
 @push('script')
-<script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6"') }}"></script>
-<script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
-<script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
-<script src="{{ asset('/assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js?v=7.0.6') }} "></script>
-        <!--end::Page Vendors-->
+    <script src="{{ asset('/assets/plugins/custom/fullcalendar/fullcalendar.bundle.js?v=7.0.6') }} "></script>
+    <script src="{{ asset('/assets/js/pages/features/calendar/basic.js?v=7.0.6') }}"></script>
 
-        <!--begin::Page Scripts(used by this page)-->
-        <script src="{{ asset('/assets/js/pages/crud/forms/editors/ckeditor-classic.js?v=7.0.6') }} "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
+        integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css"
+        integrity="sha512-O03ntXoVqaGUTAeAmvQ2YSzkCvclZEcPQu1eqloPaHfJ5RuNGiS4l+3duaidD801P50J28EHyonCV06CUlTSag=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
 
 
 
-<script type="text/javascript">
-    $(function () {          
-          var table = $('.yajra-datatable').DataTable({
-              processing: true,
-              serverSide: true,
-              scrollX:true,
-              ajax: {
-                    url : "{{ route('rencanakunjungan.datatable') }}", 
-                    type : "POST",
-                     data: function(params) {
-                        params._token = "{{ csrf_token() }}";                
-                        return params;
-                       }
 
-              },
-              columns: [
-                //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                  {data: 'tanggal', name: 'tanggal'},
-                  {data: 'created_at', name: 'created_at'},
-                  {data: 'user', name:'user'},
-                  {data: 'outlet', name:'outlet'},
-                  {data: 'aktivitas', name:'aktivitas'},
-                  {
-                      data: 'action', 
-                      render: function(data){
-                          return htmlDecode(data);
-                      },
-                      className:"nowrap",
-                  },
-              ],
-              columnDefs: [
 
-                {
-                    responsivePriority: 1,
-                    targets: 0
-                },
-                {
-                    responsivePriority: 2,
-                    targets: -1
-                },
-            ],
+
+    <script type="text/javascript">
+        $(function() {            
+            calender();            
         });
-          
-    });
 
-    function htmlDecode(data){
-        var txt = document.createElement('textarea');
-        txt.innerHTML=data;
-        return txt.value;
-    }
 
-    function show_confirm(data_id){
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('biayaoperational.delete') }}',
-                dataType: 'html',
-                headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
-                data: {id:data_id, "_token": "{{ csrf_token() }}"},
-                
-                success: function (data){
-                    console.log(data);
-                    $('#modal-confirm-delete').html(data);
-                    $('#exampleModal').modal('show');
-                },
-                error: function(data){
-                    console.log(data);
-                }
-            });
-        }
+        function calender() {
+            var todayDate = moment().startOf('day');
+            var YM = todayDate.format('YYYY-MM');
+            var YESTERDAY = todayDate.clone().subtract(1, 'day').format('YYYY-MM-DD');
+            var TODAY = todayDate.format('YYYY-MM-DD');
+            var TOMORROW = todayDate.clone().add(1, 'day').format('YYYY-MM-DD');
 
-        function deleteData(id) {
-        Swal.fire({
-        title: "Apakah Anda Yakin ?",
-        text: "Kamu Tidak Akan Bisa Mengembalikan Data Ini !",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Yes, Hapus!"
-        }).then(function(result) {
-            if (result.value) {
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('rencanakunjungan.delete') }}',
-                    dataType: 'html',
-                    headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
-                    data: {
-                        'id':id,
-                        "_token": "{{ csrf_token() }}"},
-                    
-                    success: function (data){
-                        Swal.fire(
-                                "Terhapus!",
-                                "Anda Berhasil menghapus Data",
-                                "success"
-                                 )
-                       
-                        $('.yajra-datatable').DataTable().ajax.reload(null,false);
+            var calendarEl = document.getElementById('calender');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                plugins: ['bootstrap', 'interaction', 'dayGrid', 'timeGrid', 'list'],
+                themeSystem: 'bootstrap',
+                isRTL: KTUtil.isRTL(),
+                height: 800,
+                contentHeight: 780,
+                aspectRatio: 3,
+                nowIndicator: true,
+                now: TODAY + 'T09:25:00',
+                views: {
+                    dayGridMonth: {
+                        buttonText: 'month'
                     },
-                    error: function(data){
-                        console.log(data);
-                    }
-                });               
-            }
-        });
-    }
-</script>
+
+                },
+                defaultView: 'dayGridMonth',
+                defaultDate: TODAY,
+                editable: true,
+                eventLimit: true,
+                navLinks: true,
+                events: `{{ route('rencanakunjungan.datatable') }}`,
+                dateClick: function(info) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ route('rencanakunjungan.create') }}',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {
+                            start_date: info.dateStr,
+                            "_token": "{{ csrf_token() }}"
+                        },
+                        success: function(res) {
+
+
+                            $('#modal-setbarang').html(res);
+                            $('#modalrencana').modal('show');
+                            let editor1;
+                            ClassicEditor
+                                .create(document.querySelector('#editor'))
+                                .then(editor => {
+                                    editor1 = editor;
+                                })
+                                .catch(error => {
+                                    console.error(error);
+                                });
+
+                            $('#form-action').on('submit', function(event) {
+                                event.preventDefault();
+                                let e = document.getElementById("kt_select2_4");
+                                let outlet = e.options[e.selectedIndex].value;
+                                let tanggal = document.getElementById("tanggal").value;
+                                const aktivitasValue = editor1.getData();
+                                
+                                
+
+
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ route('rencanakunjungan.store') }}',
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
+                                            .attr('content')
+                                    },
+                                    data: {
+                                        outlet_id: outlet,
+                                        tanggal: tanggal,
+                                        aktivitas: aktivitasValue,
+                                        "_token": "{{ csrf_token() }}"
+                                    },
+                                    success: function() {
+                                        $('#modalrencana').modal('hide');
+                                        iziToast.success({
+                                            title: 'Success',
+                                            message: 'Data Berhasil Ditambahkan',
+                                            position: 'topRight',
+                                        });
+                                        calendar.refetchEvents();
+                                    }
+                                });
+
+                            })
+
+
+
+                        }
+                    });
+
+                },
+                eventClick: function({event}) {
+                    $.ajax({
+                        type: 'GET',
+                        url: `{{ url('sales/rencanakunjungan') }}/${event.id}/edit`,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {
+                            "_token": "{{ csrf_token() }}"
+                        },
+                        success: function(res) {
+                            $('#modal-setbarang').html(res);
+                            $('#modalrencanaedit').modal('show');
+                            let editor1;
+                            ClassicEditor
+                                .create(document.querySelector('#editor'))
+                                .then(editor => {
+                                    editor1 = editor;
+                                })
+                                .catch(error => {
+                                    console.error(error);
+                                });
+
+                            $('#form-action').on('submit', function(event) {
+                                event.preventDefault();
+
+                                let data_id = document.getElementById("data_id").value;
+                                let e = document.getElementById("kt_select2_4");
+                                let outlet = e.options[e.selectedIndex].value;
+                                let tanggal = document.getElementById("tanggal").value;
+                                const aktivitasValue = editor1.getData();
+
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ route('rencanakunjungan.update') }}',
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
+                                            .attr('content')
+                                    },
+                                    data: {
+                                        data_id: data_id,
+                                        outlet_id: outlet,                                        
+                                        aktivitas: aktivitasValue,
+                                        "_token": "{{ csrf_token() }}"
+                                    },
+                                    success: function() {
+                                        $('#modalrencanaedit').modal('hide');
+                                        iziToast.success({
+                                            title: 'Success',
+                                            message: 'Data Berhasil Diubah',
+                                            position: 'topRight',
+                                        });
+                                        calendar.refetchEvents();
+                                    }
+                                });
+
+                            })
+
+                            $('#delete-btn').on('click', function(event) {
+                                event.preventDefault();
+                                let data_id = document.getElementById("data_id").value;
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ route('rencanakunjungan.delete') }}',
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
+                                            .attr('content')
+                                    },
+                                    data: {
+                                        data_id: data_id,
+                                        "_token": "{{ csrf_token() }}"
+                                    },
+                                    success: function() {
+                                        $('#modalrencanaedit').modal('hide');
+                                        iziToast.success({
+                                            title: 'Success',
+                                            message: 'Data Berhasil Dihapus',
+                                            position: 'topRight',
+                                        });
+                                        calendar.refetchEvents();
+                                    }
+                                });
+
+                            });
+
+                        }
+                    });
+
+
+
+                },              
+            });
+
+            calendar.render();
+
+        }
+    </script>
 @endpush
