@@ -445,10 +445,10 @@ class FakturPenjualanController extends Controller
         //hapus Piutang 
         $hapuspiutang = Piutang::where('faktur_penjualan_id', $id)->delete();
 
-        //ubah status PB
-        $SJ = PengirimanBarang::find($id_sj);
-        $SJ->status_sj_id = 1;
-        $SJ->save();
+        // //ubah status PB
+        // $SJ = PengirimanBarang::find($id_sj);
+        // $SJ->status_sj_id = 1;
+        // $SJ->save();
 
         return redirect()->route('fakturpenjualan.index')->with('status', 'Data Faktur Penjualan Berhasil Dihapus !');
     }
