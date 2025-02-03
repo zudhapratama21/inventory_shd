@@ -60,6 +60,7 @@ class BiayaLainController extends Controller
         $biayalain = BiayaLain::create([
             'jenisbiaya_id' => $request->jenisbiaya_id ,
             'fakturpenjualan_id' => $request->fakturpenjualan_id,
+            'pengurangan_cn' => $request->pengurangan_cn,
             'nominal' => $request->nominal,
             'keterangan' => $request->keterangan,
         ]); 
@@ -78,13 +79,14 @@ class BiayaLainController extends Controller
     }
 
     public function update(Request $request)
-    {
-        // $biayalain = BiayaLain::where('id',$request->id)->update([
-        //     'jenisbiaya_id' => $request->jenisbiaya_id ,
-        //     'fakturpenjualan_id' => $request->fakturpenjualan_id,
-        //     'nominal' => $request->nominal,
-        //     'keterangan' => $request->keterangan,
-        // ]); 
+    {        
+        $biayalain = BiayaLain::where('id',$request->id)->update([
+               'jenisbiaya_id' => $request->jenisbiaya_id ,
+                'fakturpenjualan_id' => $request->fakturpenjualan_id,
+                'pengurangan_cn' => $request->pengurangan_cn,
+                'nominal' => $request->nominal,
+                'keterangan' => $request->keterangan,            
+        ]); 
         
         return response()->json('tes'); 
     }

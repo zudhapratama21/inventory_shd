@@ -37,6 +37,15 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+
+                        <div class="form-group">
+                            <label for="">Pengurangan CN ?</label>
+                            <select name="pengurangan_cn" class="form-control" id="pengurangan_cn" selected>
+                                <option value="0">No</option>
+                                <option value="1">Ya</option>
+                            </select>
+                
+                        </div>
                     
                         <div class="form-group">
                             <label>Keterangan :</label>

@@ -219,7 +219,16 @@ class KunjunganSalesController extends Controller
     public function indexpenjulaan()
     {
         $title = 'Penjualan Sales';
-        return view('sales.index',compact('title'));
+        $bulan =  [];
+        for ($i = 1; $i <= 12; $i++) {
+            $databulan = '1-' . $i . '-2023';
+            $bulan[] = [
+                'nama' => Carbon::parse($databulan)->format('F'),
+                'id' => $i
+            ];
+        }
+
+        return view('sales.index',compact('title','bulan'));
     }
 
     public function datatablepenjualan(Request $request)
@@ -235,9 +244,12 @@ class KunjunganSalesController extends Controller
             }
           
             $fakturpenjualan = FakturPenjualan::with(['customers','statusFJ', 'sj'])
-                            ->whereHas('SO',function($query) use ($datasales){
-                                $query->whereIn('sales_id',[$datasales]);
-                            })->orderByDesc('id');
+                                ->whereHas('SO',function($query) use ($datasales){
+                                    $query->whereIn('sales_id',[$datasales]);
+                                })
+                                ->whereYear('tanggal', $request->tahun)
+                                ->when($request->bulan !== 'All', fn($query) => $query->whereMonth('tanggal', $request->bulan))
+                                ->orderByDesc('id');
 
             return Datatables::of($fakturpenjualan)
                 ->addIndexColumn()

@@ -75,7 +75,8 @@
                                 <thead class="datatable-head">
                                     <tr>                                                                                
                                         <th>Jenis Biaya</th>                                        
-                                        <th>Nominal</th>                                                                                                                     
+                                        <th>Nominal</th>       
+                                        <th>Pengurangan CN ?</th>                                                                                                              
                                         <th>Keterangan</th>    
                                         <th>Aksi</th>                                    
                                     </tr>
@@ -85,6 +86,12 @@
                                        <tr>
                                             <td>{{$item->jenisbiaya->nama}}</td>
                                             <td>{{number_format($item->nominal , 0, ',', '.')}}</td>
+                                            @if ($item->pengurangan_cn == 1)
+                                                <td><span class="badge badge-info badge-sm">Ya</span></td>
+                                            @else
+                                                <td><span class="badge badge-primary badge-sm">Tidak</span></td>
+                                            @endif
+                                            
                                             <td>{{$item->keterangan}}</td>
                                             <td>
                                                 <div style="text-align:center;">
@@ -170,15 +177,8 @@
               responsive: true,
               processing: true,
               serverSide: true,
-              ajax: "{{ route('biayaoperational.index') }}"
-                    // type:'POST',
-                    // data: function(params) {
-                    //         params._token = "{{ csrf_token() }}";                
-                    //         return params;
-                    //     }
-              ,
-              columns: [
-                //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+              ajax: "{{ route('biayaoperational.index') }}",
+              columns: [               
                   {data: 'jenis_biaya', name: 'jenisbiaya.nama'},
                   {data: 'nominal', name: 'nominal'},
                   {data: 'keterangan', name: 'keterangan'},
@@ -230,10 +230,13 @@
         }
 
     function store() {
-        var jenisbiaya_id = document.getElementById('jenisbiaya_id').value;
+        var biaya = document.getElementById('jenisbiaya_id');
+        var jenisbiaya_id = biaya.options[biaya.selectedIndex].value;
         var fakturpenjualan_id = document.getElementById('fakturpenjualan_id').value;
         var nominal = document.getElementById('nominal').value;
         var keterangan = document.getElementById('keterangan').value;
+        var cn = document.getElementById('pengurangan_cn');
+        var pengurangan_cn = cn.options[cn.selectedIndex].value;
 
         $.ajax({
            type: 'POST',
@@ -248,6 +251,7 @@
                "jenisbiaya_id" : jenisbiaya_id,
                "nominal" : nominal,
                "fakturpenjualan_id" : fakturpenjualan_id,
+               "pengurangan_cn" : pengurangan_cn,
                "_token": "{{ csrf_token() }}"
            },
            success: function(data) {
@@ -264,17 +268,19 @@
     function update(){
      
         let biayaId = document.getElementById('id').value;;
-        let jenisbiaya_id = document.getElementById('jenisbiaya_id').value;
-        let fakturpenjualan_id = document.getElementById('fakturpenjualan_id').value;
-        let nominal = document.getElementById('nominal').value;
-        let keterangan = document.getElementById('keterangan').value;
-
-        // console.log(b);
+        var biaya = document.getElementById('jenisbiaya_id');
+        var jenisbiaya_id = biaya.options[biaya.selectedIndex].value;
+        var fakturpenjualan_id = document.getElementById('fakturpenjualan_id').value;
+        var nominal = document.getElementById('nominal').value;
+        var keterangan = document.getElementById('keterangan').value;
+        var cn = document.getElementById('pengurangan_cn');
+        var pengurangan_cn = cn.options[cn.selectedIndex].value;
+        
 
         $.ajax({
            type: 'POST',
            url: '{{ route('fakturpenjualan.biayalain.ubah') }}',
-           dataType: 'html',
+           dataType: 'json',
            headers: {
                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
            },
@@ -284,17 +290,17 @@
                "nominal" : nominal,
                "fakturpenjualan_id" : fakturpenjualan_id,
                "id" : biayaId,
+               "pengurangan_cn" : pengurangan_cn,
                "_token": "{{ csrf_token() }}"
            },
            success: function(data) {
             
                  $('#editData').modal('hide');   
-
-                 location.reload();
+                //  location.reload();
               
            },
            error: function(data) {
-            console.log('tes error');
+            
                console.log(data);
            }
        });

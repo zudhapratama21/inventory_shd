@@ -16,7 +16,8 @@ class BiayaLain extends Model
         'fakturpenjualan_id',
         'nominal',
         'request',
-        'keterangan'
+        'keterangan',
+        'pengurangan_cn'
     ];
 
     public function fakturpenjualan()

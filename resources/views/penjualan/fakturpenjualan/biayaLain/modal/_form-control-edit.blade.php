@@ -43,6 +43,23 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+
+                        
+                        <div class="form-group">
+                            <label for="">Pengurangan CN ?</label>
+                            <select name="pengurangan_cn" class="form-control" id="pengurangan_cn" selected>
+                                @if ($biayalain->pengurangan_cn == 1)
+                                <option value="1" selected>Ya</option> 
+                                <option value="0">No</option>
+                                @else
+                                <option value="1" >Ya</option> 
+                                <option value="0" selected>No</option>
+                                @endif
+                                
+                                
+                            </select>
+                
+                        </div>
                     
                         <div class="form-group">
                             <label>Keterangan :</label>
@@ -55,15 +72,10 @@
                     </div>
                     
                     </div>
-                    
-                    <div class="card-footer text-right">
-                        <div class="row">
-                            <div class="col-lg-12 ">
-                                <button type="button" onclick="javascript:update()" class="btn btn-success font-weight-bold mr-2"><i class="flaticon2-paperplane"></i>
-                                   Submit</button>
-                                <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" onclick="javascript:update()" class="btn btn-success font-weight-bold mr-2"><i class="flaticon2-paperplane"></i>
+                           Submit</button>
+                        <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
                     </div>
             </form>
       </div>
