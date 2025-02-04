@@ -34,7 +34,7 @@ class LaporanRencanaKunjunganController extends Controller
                         ->where('tanggal', '<=', $end)
                         ->when($request->sales !== 'All', fn($query) => $query->where('user_id', $request->sales))
                         ->when($request->outlet !== 'All', fn($query) => $query->where('outlet_id', $request->outlet))
-                        ->orderBy('id', 'desc')->where('user_id', auth()->user()->id)
+                        ->orderBy('id', 'desc')                        
                         ->get()
                         ->map(fn($item) => [
                             'id' => $item->id,

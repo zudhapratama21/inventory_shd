@@ -29,8 +29,7 @@ class laporanPlanMarketingController extends Controller
   
         $planmarketing = PlanMarketing::with('outlet')->where('tanggal','>=',$start)->where('tanggal','<=',$end)
                           ->when($request->sales !== 'All', fn($query) => $query->where('user_id', $request->sales))
-                          ->when($request->outlet !== 'All', fn($query) => $query->where('outlet_id', $request->outlet))
-                          ->where('user_id',auth()->user()->id)
+                          ->when($request->outlet !== 'All', fn($query) => $query->where('outlet_id', $request->outlet))                          
                           ->get()
                           ->map(fn($item) => [
                               'id' => $item->id,
