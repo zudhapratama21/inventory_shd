@@ -43,7 +43,15 @@ class RencanaKunjunganController extends Controller
     {        
         $planmarketing = PlanMarketing::with('outlet')->where('tanggal',$request->start_date)->where('user_id',auth()->user()->id)->get();
         $outlet = Outlet::get();
-        return view('sales.rencanakunjungan.partial.modal',compact('outlet','request','planmarketing'));
+
+        $terlambat = 0;
+        $start_date = Carbon::parse($request->start_date)->format('Y-m-d');
+        if ($start_date < now()->format('Y-m-d')) {
+            $terlambat = 1;
+        }
+        
+
+        return view('sales.rencanakunjungan.partial.modal',compact('outlet','request','planmarketing','terlambat'));
      
     }
 

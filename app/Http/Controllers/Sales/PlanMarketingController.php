@@ -114,8 +114,13 @@ class PlanMarketingController extends Controller
     {
         // $title = 'Plan Marketing';
         $outlet = Outlet::get();
+        $start_date = Carbon::parse($request->start_date)->format('Y-m-d');
+        $terlambat = 0;
+        if ($start_date <= now()->format('Y-m-d')) {
+            $terlambat = 1;
+        }
         
-        return view('sales.planmarketing.partial.modal', compact('outlet','request'));
+        return view('sales.planmarketing.partial.modal', compact('outlet','request','terlambat'));
     }
 
     public function list (Request $request)

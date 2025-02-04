@@ -9,26 +9,34 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="form-action">
-                        <div class="form-group">
-                            <label for="">Tanggal</label>
-                            <input type="date" id="tanggal" class="form-control" value="{{ $request->start_date }}" readonly>
-                        </div>
+                    @if ($terlambat == 1)            
+                            <div class="text-center">
+                                <span class="badge badge-danger">Hari Sudah terlewat , mohon maaf tidak bisa menambahkan data Plan</span>
+                            </div>
+                    @else
+                        <form id="form-action">
+                            <div class="form-group">
+                                <label for="">Tanggal</label>
+                                <input type="date" id="tanggal" class="form-control"
+                                    value="{{ $request->start_date }}" readonly>
+                            </div>
 
-                        <div class="form-group">
-                            <label for="">Outlet</label> <br>
-                            <select name="" id="kt_select2_4" class="form-control" required>                                                               
-                                @foreach ($outlet as $item)
-                                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
-                                @endforeach
-                            </select>   
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary btn-sm" >Simpan</button>
-                            <button type="button" class="btn btn-light-primary font-weight-bold"
-                                data-dismiss="modal">Close</button>
-                        </div>
-                    <form>
+                            <div class="form-group">
+                                <label for="">Outlet</label> <br>
+                                <select name="" id="kt_select2_4" class="form-control" required>
+                                    @foreach ($outlet as $item)
+                                        <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
+                                <button type="button" class="btn btn-light-primary font-weight-bold"
+                                    data-dismiss="modal">Close</button>
+                            </div>
+                            <form>
+                    @endif
+
                 </div>
             </div>
         </div>
