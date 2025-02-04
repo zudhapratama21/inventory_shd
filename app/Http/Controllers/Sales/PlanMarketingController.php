@@ -131,7 +131,7 @@ class PlanMarketingController extends Controller
                             'id' => $item->id,
                             'start' => $item->tanggal,
                             'title' => $item->outlet->nama,
-                            'className' => 'fc-event-primary fc-event-solid-success'                        
+                            'className' => 'fc-event-primary fc-event-solid-success',                            
                         ]);
 
       return response()->json($planmarketing);

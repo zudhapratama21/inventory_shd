@@ -855,18 +855,15 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
 
 
     Route::prefix('planmarketing')->group(function () {
-    
         Route::get('', [laporanPlanMarketingController::class, 'index'])->name('laporanplanmarketing.index');        
-        Route::post('/datatable', [laporanPlanMarketingController::class, 'datatable'])->name('laporanplanmarketing.datatable');
-        Route::get('/{id}/show', [laporanPlanMarketingController::class, 'show'])->name('laporanplanmarketing.show');
-        Route::post('/print', [laporanPlanMarketingController::class, 'print'])->name('laporanplanmarketing.print');        
-        
+        Route::get('/list', [laporanPlanMarketingController::class, 'list'])->name('laporanplanmarketing.list');
+        Route::get('/{id}/show', [laporanPlanMarketingController::class, 'show'])->name('laporanplanmarketing.show');                
     });
 
     Route::prefix('laporanrencanakunjungan')->group(function () {
     
         Route::get('', [LaporanRencanaKunjunganController::class, 'index'])->name('laporanrencanakunjungan.index');        
-        Route::post('/datatable', [LaporanRencanaKunjunganController::class, 'datatable'])->name('laporanrencanakunjungan.datatable');
+        Route::get('/list', [LaporanRencanaKunjunganController::class, 'list'])->name('laporanrencanakunjungan.list');
         Route::get('/{id}/show', [LaporanRencanaKunjunganController::class, 'show'])->name('laporanrencanakunjungan.show');
         Route::post('/print', [LaporanRencanaKunjunganController::class, 'print'])->name('laporanrencanakunjungan.print');        
         
