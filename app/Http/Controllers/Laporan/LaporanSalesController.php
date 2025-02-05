@@ -67,55 +67,39 @@ class LaporanSalesController extends Controller
         $start = Carbon::parse($request->start)->format('Y-m-d');
         $end = Carbon::parse($request->end)->format('Y-m-d');
 
-        $sales = KunjunganSales::with('user', 'outlet')
+        $sales = KunjunganSales::with(['user', 'outlet'])
             ->whereBetween('tanggal', [$start, $end])
             ->when($request->sales !== 'All', fn($query) => $query->where('user_id', $request->sales))
             ->get();
 
-        $kunjungansales = [];
-
-        foreach ($sales as $item) {
-            $angka = 0;
+        $kunjungansales = $sales->map(function ($item) {
             $planmarketing = PlanMarketing::where([
                 'tanggal' => $item->tanggal,
                 'user_id' => $item->user_id,
                 'outlet_id' => $item->outlet_id,
-            ])->first();
+            ])->exists();
 
             $rencanakunjungan = RencanaKunjungan::where([
                 'tanggal' => $item->tanggal,
                 'user_id' => $item->user_id,
                 'outlet_id' => $item->outlet_id,
-            ])->first();
+            ])->exists();
 
+            $statusCount = $planmarketing + $rencanakunjungan;
+            $classNames = [
+                0 => 'fc-event-primary fc-event-solid-danger',
+                1 => 'fc-event-primary fc-event-solid-info',
+                2 => 'fc-event-primary fc-event-solid-success',
+            ];
 
-            $className = 'fc-event-primary fc-event-solid-danger';
-
-            if ($planmarketing) {
-                $angka += 1;
-            }
-
-            if ($rencanakunjungan) {
-                $className = 'fc-event-primary fc-event-solid-success';
-                $angka += 1;
-            }
-
-            if ($angka == 2) {
-                $className = 'fc-event-primary fc-event-solid-success';
-            } elseif ($angka == 1) {
-                $className = 'fc-event-primary fc-event-solid-info';
-            } else {
-                $className = 'fc-event-primary fc-event-solid-danger';
-            }
-
-            $kunjungansales[] = [
+            return [
                 'id' => $item->id,
                 'start' => $item->tanggal,
-                'title' => $item->outlet ? $item->outlet->nama : $item->customer,
+                'title' => $item->outlet->nama ?? $item->customer,
                 'description' => $item->aktivitas,
-                'className' => $className
+                'className' => $classNames[$statusCount] ?? 'fc-event-primary fc-event-solid-danger',
             ];
-        }
+        });
 
         return response()->json($kunjungansales);
     }
@@ -141,33 +125,33 @@ class LaporanSalesController extends Controller
     }
 
     public function datatablesales(Request $request)
-    {        
+    {
         $sales = DB::table('kunjungan_sales')
-            ->join('outlets', 'kunjungan_sales.outlet_id', '=', 'outlets.id')            
+            ->join('outlets', 'kunjungan_sales.outlet_id', '=', 'outlets.id')
             ->join('users', 'kunjungan_sales.user_id', '=', 'users.id')
-            ->where('kunjungan_sales.deleted_at', '=', null)            
+            ->where('kunjungan_sales.deleted_at', '=', null)
             ->when($request->tahun !== 'All', fn($query) => $query->whereYear('tanggal', $request->tahun))
             ->when($request->bulan !== 'All', fn($query) => $query->whereMonth('tanggal', $request->bulan))
             ->when($request->sales !== 'All', fn($query) => $query->where('user_id', $request->sales))
-            ->where('kunjungan_sales.outlet_id',$request->outlet)
-            ->select('users.name as user','kunjungan_sales.tanggal as tanggal','kunjungan_sales.jam_buat as jam_buat','kunjungan_sales.aktifitas as aktifitas');            
-                
+            ->where('kunjungan_sales.outlet_id', $request->outlet)
+            ->select('users.name as user', 'kunjungan_sales.tanggal as tanggal', 'kunjungan_sales.jam_buat as jam_buat', 'kunjungan_sales.aktifitas as aktifitas');
+
 
         return DataTables::of($sales)
-                    ->addIndexColumn()
-                    ->editColumn('user', function ($row) {
-                        return $row->user;
-                    })
-                    ->editColumn('tanggal', function ($row) {
-                        return Carbon::parse($row->tanggal)->format('d-m-Y');
-                    })
-                    ->editColumn('jam_buat', function ($row) {
-                        return Carbon::parse($row->jam_buat)->format('H:i');
-                    })
-                    ->editColumn('aktifitas', function ($row) {
-                        $aktifitas = $row->aktifitas;
-                        return view('laporan.sales.partial.text', compact('aktifitas'));
-                    })
-                    ->make(true);
+            ->addIndexColumn()
+            ->editColumn('user', function ($row) {
+                return $row->user;
+            })
+            ->editColumn('tanggal', function ($row) {
+                return Carbon::parse($row->tanggal)->format('d-m-Y');
+            })
+            ->editColumn('jam_buat', function ($row) {
+                return Carbon::parse($row->jam_buat)->format('H:i');
+            })
+            ->editColumn('aktifitas', function ($row) {
+                $aktifitas = $row->aktifitas;
+                return view('laporan.sales.partial.text', compact('aktifitas'));
+            })
+            ->make(true);
     }
 }

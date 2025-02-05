@@ -75,7 +75,9 @@
                                         </div>
 
                                         <!--begin: Datatable-->
-                                        <div id="calender"></div>
+                                        <div class="example-preview" id="kt_blockui_content">
+                                            <div id="calender"></div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -98,6 +100,7 @@
     <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6') }}"></script>
     <script src="{{ asset('/assets/plugins/custom/fullcalendar/fullcalendar.bundle.js?v=7.0.6') }} "></script>
     <script src="{{ asset('/assets/js/pages/features/calendar/basic.js?v=7.0.6') }}"></script>
+    <script src="{{ asset('assets/js/pages/features/miscellaneous/blockui.js?v=7.0.6') }} "></script>
 
     <script type="text/javascript">
         let sales = "All";
@@ -144,9 +147,18 @@
                             sales: sales,
                             outlet: outlet
                         },
+                        beforeSend: function() {
+                            KTApp.block('#kt_blockui_content', {
+                                overlayColor: '#000000',
+                                state: 'primary',
+                                message: 'Processing...'
+                            });
+                        },
                         success: function(response) {
-                            successCallback(
-                                response); // Pastikan callback dipanggil dengan response
+                            successCallback(response); // Pastikan callback dipanggil dengan response
+                        },
+                        complete: function() {
+                            KTApp.unblock('#kt_blockui_content');
                         },
                         error: function(xhr, status, error) {
                             console.error('Error fetching events:', error);
@@ -166,19 +178,19 @@
                         data: {
                             "_token": "{{ csrf_token() }}"
                         },
+                        beforeSend: function() {
+                            KTApp.block('#kt_blockui_content', {
+                                overlayColor: '#000000',
+                                state: 'primary',
+                                message: 'Processing...'
+                            });
+                        },
                         success: function(res) {
                             $('#modal-show-detail').html(res);
-                            $('#modalrencana').modal('show');
-                            // let editor1;
-                            // ClassicEditor
-                            //     .create(document.querySelector('#editor'))
-                            //     .then(editor => {
-                            //         editor1 = editor;
-                            //     })
-                            //     .catch(error => {
-                            //         console.error(error);
-                            //     });
-
+                            $('#modalrencana').modal('show');                           
+                        },
+                        complete: function() {
+                            KTApp.unblock('#kt_blockui_content');
                         }
                     });
                 },

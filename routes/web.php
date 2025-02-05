@@ -65,6 +65,7 @@ use App\Http\Controllers\Penjualan\BiayaLainController;
 use App\Http\Controllers\Penjualan\LabaRugiController;
 use App\Http\Controllers\Permissions\AssignPermissionController;
 use App\Http\Controllers\RencanaKunjunganController;
+use App\Http\Controllers\Sales\EvaluasiController;
 use App\Http\Controllers\Sales\OutletController;
 use App\Http\Controllers\Sales\PerformaSalesController;
 use App\Http\Controllers\Sales\PlanMarketingController;
@@ -124,6 +125,7 @@ Route::middleware('has.role')->prefix('master')->group(function () {
         Route::prefix('permissions')->group(function () {
             Route::get('', [PermissionController::class, 'index'])->name('permissions.index');
             Route::post('create', [PermissionController::class, 'store'])->name('permissions.create');
+            Route::post('datatable', [PermissionController::class, 'datatable'])->name('permissions.datatable');        
             Route::get('{permission}/edit', [PermissionController::class, 'edit'])->name('permissions.edit');
             Route::put('{permission}/edit', [PermissionController::class, 'update'])->name('permissions.update');
         });
@@ -1074,6 +1076,12 @@ Route::middleware('has.role')->prefix('sales')->group(function () {
         Route::post('/update', [RencanaKunjunganController::class, 'update'])->name('rencanakunjungan.update');                   
         Route::post('/delete', [RencanaKunjunganController::class, 'delete'])->name('rencanakunjungan.delete');             
         
+    });
+
+    Route::prefix('evaluasi')->group(function () {
+        Route::get('', [EvaluasiController::class, 'index'])->name('evaluasi.index');
+        Route::post('/store', [EvaluasiController::class, 'store'])->name('evaluasi.store');        
+              
     });
     
 });

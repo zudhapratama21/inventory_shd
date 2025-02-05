@@ -16,16 +16,21 @@ class PermissionController extends Controller
         return view('permissions.permission.index', compact('permissions', 'permission'));
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        request()->validate([
-            'name' => 'required'
-        ]);
+        
+        $form[0] = $request->name .'-list';
+        $form[1] = $request->name .'-create';
+        $form[2] = $request->name .'-edit';
+        $form[3] = $request->name .'-delete';        
 
-        Permission::create([
-            'name' => request('name'),
-            'guard_name' => request('guard_name') ?? 'web'
-        ]);
+        foreach ($form  as $key ) {            
+            Permission::create([
+                'name' => $key,
+                'guard_name' =>'web'
+            ]);
+        }
+      
 
         return back()->with('status', 'New Permissions Saved !');
     }
@@ -52,5 +57,11 @@ class PermissionController extends Controller
         ]);
 
         return redirect()->route('permissions.index')->with('status', 'Permission Updated!');
+    }
+
+    public function datatable (Request $request)
+    {
+       $permission = Permission::get();
+       
     }
 }

@@ -30,7 +30,10 @@
                                 <h3>Rencana Aktivitas</h3>
                             </div>
                             <div class="card-body">
-                                <div id="calender"></div>
+
+                                <div class="example-preview" id="kt_blockui_content">
+                                    <div id="calender"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -55,6 +58,7 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
+    <script src="{{ asset('assets/js/pages/features/miscellaneous/blockui.js?v=7.0.6') }} "></script>
 
 
 
@@ -62,8 +66,8 @@
 
 
     <script type="text/javascript">
-        $(function() {            
-            calender();            
+        $(function() {
+            calender();
         });
 
 
@@ -107,6 +111,13 @@
                             start_date: info.dateStr,
                             "_token": "{{ csrf_token() }}"
                         },
+                        beforeSend: function() {
+                            KTApp.block('#kt_blockui_content', {
+                                overlayColor: '#000000',
+                                state: 'primary',
+                                message: 'Processing...'
+                            });
+                        },
                         success: function(res) {
 
 
@@ -128,8 +139,8 @@
                                 let outlet = e.options[e.selectedIndex].value;
                                 let tanggal = document.getElementById("tanggal").value;
                                 const aktivitasValue = editor1.getData();
-                                
-                                
+
+
 
 
                                 $.ajax({
@@ -145,6 +156,13 @@
                                         aktivitas: aktivitasValue,
                                         "_token": "{{ csrf_token() }}"
                                     },
+                                    beforeSend: function() {
+                                        KTApp.block('#kt_blockui_content', {
+                                            overlayColor: '#000000',
+                                            state: 'primary',
+                                            message: 'Processing...'
+                                        });
+                                    },
                                     success: function() {
                                         $('#modalrencana').modal('hide');
                                         iziToast.success({
@@ -153,18 +171,26 @@
                                             position: 'topRight',
                                         });
                                         calendar.refetchEvents();
-                                    }
+                                    },
+                                    complete: function() {
+                                        KTApp.unblock('#kt_blockui_content');
+                                    },
                                 });
 
                             })
 
 
 
-                        }
+                        },
+                        complete: function() {
+                            KTApp.unblock('#kt_blockui_content');
+                        },
                     });
 
                 },
-                eventClick: function({event}) {
+                eventClick: function({
+                    event
+                }) {
                     $.ajax({
                         type: 'GET',
                         url: `{{ url('sales/rencanakunjungan') }}/${event.id}/edit`,
@@ -173,6 +199,13 @@
                         },
                         data: {
                             "_token": "{{ csrf_token() }}"
+                        },
+                        beforeSend: function() {
+                            KTApp.block('#kt_blockui_content', {
+                                overlayColor: '#000000',
+                                state: 'primary',
+                                message: 'Processing...'
+                            });
                         },
                         success: function(res) {
                             $('#modal-setbarang').html(res);
@@ -205,9 +238,16 @@
                                     },
                                     data: {
                                         data_id: data_id,
-                                        outlet_id: outlet,                                        
+                                        outlet_id: outlet,
                                         aktivitas: aktivitasValue,
                                         "_token": "{{ csrf_token() }}"
+                                    },
+                                    beforeSend: function() {
+                                        KTApp.block('#kt_blockui_content', {
+                                            overlayColor: '#000000',
+                                            state: 'primary',
+                                            message: 'Processing...'
+                                        });
                                     },
                                     success: function() {
                                         $('#modalrencanaedit').modal('hide');
@@ -217,7 +257,10 @@
                                             position: 'topRight',
                                         });
                                         calendar.refetchEvents();
-                                    }
+                                    },
+                                    complete: function() {
+                                        KTApp.unblock('#kt_blockui_content');
+                                    },
                                 });
 
                             })
@@ -249,12 +292,15 @@
 
                             });
 
-                        }
+                        },
+                        complete: function() {
+                            KTApp.unblock('#kt_blockui_content');
+                        },
                     });
 
 
 
-                },              
+                },
             });
 
             calendar.render();

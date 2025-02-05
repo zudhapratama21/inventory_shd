@@ -98,8 +98,9 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <div id="calender"></div>                              
+                                <div class="example-preview" id="kt_blockui_content">
+                                    <div id="calender"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -113,7 +114,7 @@
                                     <h3 class="card-label">Analisis Outlet</h3>
                                 </div>
                             </div>
-                            
+
                             <div class="card-body">
 
                                 <div class="row">
@@ -158,21 +159,21 @@
                                             </select>
                                         </div>
                                     </div>
-                                </div>                                
+                                </div>
                                 <table class="table yajra-datatablecustomer collapsed ">
                                     <thead class="datatable-head">
-                                        <tr>                                            
-                                            <th>Outlet</th> 
-                                            <th>Jumlah di Kunjungi</th>                                            
+                                        <tr>
+                                            <th>Outlet</th>
+                                            <th>Jumlah di Kunjungi</th>
                                             <th style="width: 15%">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                     </tbody>
-                                </table>                                
+                                </table>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
 
@@ -193,7 +194,9 @@
     <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
     <script src="{{ asset('/assets/plugins/custom/fullcalendar/fullcalendar.bundle.js?v=7.0.6') }} "></script>
     <script src="{{ asset('/assets/js/pages/features/calendar/basic.js?v=7.0.6') }}"></script>
-    <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>    
+
+    {{-- <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script> --}}
+    <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
 
     <script type="text/javascript">
         let tahun = {{ now()->format('Y') }};
@@ -201,7 +204,7 @@
         let bulan = 'All';
         let outlet_id = null;
         let calendar;
-        
+
         let saleschart = 'All';
 
         $(function() {
@@ -227,15 +230,14 @@
                         return params;
                     }
                 },
-                columns: [                   
-                    {
+                columns: [{
                         data: 'outlet',
                         name: 'outlet'
-                    },   
+                    },
                     {
                         data: 'users',
                         name: 'users'
-                    },                    
+                    },
                     {
                         data: 'action',
                         render: function(data) {
@@ -250,13 +252,13 @@
                         responsivePriority: 3,
                         targets: 1,
 
-                    },                   
+                    },
                 ],
             });
         }
 
-        function datatableSales() {            
-              var table = $('.yajra-datatablesales').DataTable({
+        function datatableSales() {
+            var table = $('.yajra-datatablesales').DataTable({
                 responsive: true,
                 processing: true,
                 serverSide: true,
@@ -273,30 +275,27 @@
                         return params;
                     }
                 },
-                columns: [                   
-                    {
+                columns: [{
                         data: 'tanggal',
                         name: 'tanggal'
-                    },  
+                    },
                     {
                         data: 'jam_buat',
                         name: 'jam_buat'
-                    },                      
+                    },
                     {
                         data: 'user',
                         name: 'user'
-                    },                    
+                    },
                     {
                         data: 'aktifitas',
-                        name: 'aktifitas'                       
+                        name: 'aktifitas'
                     },
                 ],
-                columnDefs: [
-                    {
-                        responsivePriority: 3,
-                        targets: 1,
-                    },
-                ],
+                columnDefs: [{
+                    responsivePriority: 3,
+                    targets: 1,
+                }, ],
             });
         }
 
@@ -336,14 +335,25 @@
                             end: fetchInfo.endStr, // Mengambil tanggal akhir dari FullCalendar
                             sales: saleschart
                         },
+                        beforeSend: function() {
+                            KTApp.block('#kt_blockui_content', {
+                                overlayColor: '#000000',
+                                state: 'primary',
+                                message: 'Processing...'
+                            });
+                        },
                         success: function(response) {
                             successCallback(
-                            response); // Pastikan callback dipanggil dengan response
+                                response); // Pastikan callback dipanggil dengan response
                         },
                         error: function(xhr, status, error) {
                             console.error('Error fetching events:', error);
                             failureCallback(error); // Pastikan callback error dipanggil
+                        },
+                        complete: function() {
+                            KTApp.unblock('#kt_blockui_content');
                         }
+
                     });
                 },
                 eventClick: function({
@@ -358,6 +368,13 @@
                         data: {
                             "_token": "{{ csrf_token() }}"
                         },
+                        beforeSend: function() {
+                            KTApp.block('#kt_blockui_content', {
+                                overlayColor: '#000000',
+                                state: 'primary',
+                                message: 'Processing...'
+                            });
+                        },
                         success: function(res) {
                             $('#modal-show-detail').html(res);
                             $('#modallaporan').modal('show');
@@ -371,6 +388,9 @@
                                     console.error(error);
                                 });
 
+                        },
+                        complete: function() {
+                            KTApp.unblock('#kt_blockui_content');
                         }
                     });
 
@@ -414,7 +434,7 @@
             $('.yajra-datatablecustomer').DataTable().ajax.reload(null, false);
         }
 
-        function showSales(id) {                        
+        function showSales(id) {
             $('#listsales').modal('show');
             outlet_id = id;
             $('.yajra-datatablesales').DataTable().ajax.reload(null, false);

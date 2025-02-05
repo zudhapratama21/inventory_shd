@@ -11,15 +11,17 @@
         <div class="d-flex flex-column-fluid mt-10">
             <!--begin::Container-->
             <div class=" container ">
-               
-                <div class="row">                
+
+                <div class="row">
                     <div class="col-lg-12 mt-10">
                         <div class="card">
                             <div class="card-header">
-                               <h4>Plan Marketing</h4> 
+                                <h4>Plan Marketing</h4>
                             </div>
                             <div class="card-body">
-                                <div id="calender"></div>
+                                <div class="example-preview" id="kt_blockui_content">
+                                    <div id="calender"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -33,15 +35,12 @@
     <div id="modal-confirm-delete"></div>
     <div id="modal-show-detail"></div>
     <div id="modal-remind-detail"></div>
-    
-   
+
+
     <div id="modal-setbarang"></div>
     {{-- @include('sales.planmarketing.partial.modal') --}}
 @endsection
 @push('script')
-    {{-- <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6') }}"></script>
-    <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
-    <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script> --}}
     <script src="{{ asset('/assets/plugins/custom/fullcalendar/fullcalendar.bundle.js?v=7.0.6') }} "></script>
     <script src="{{ asset('/assets/js/pages/features/calendar/basic.js?v=7.0.6') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
@@ -50,6 +49,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css"
         integrity="sha512-O03ntXoVqaGUTAeAmvQ2YSzkCvclZEcPQu1eqloPaHfJ5RuNGiS4l+3duaidD801P50J28EHyonCV06CUlTSag=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="{{ asset('assets/js/pages/features/miscellaneous/blockui.js?v=7.0.6') }} "></script>
 
     <script type="text/javascript">
         let tahun = {{ now()->format('Y') }};
@@ -72,12 +72,7 @@
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 plugins: ['bootstrap', 'interaction', 'dayGrid', 'timeGrid', 'list'],
                 themeSystem: 'bootstrap',
-                isRTL: KTUtil.isRTL(),
-                // header: {
-                //     left: 'prev,next today',
-                //     center: 'title',
-                //     right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                // },
+                isRTL: KTUtil.isRTL(),            
                 height: 800,
                 contentHeight: 780,
                 aspectRatio: 3,
@@ -86,13 +81,7 @@
                 views: {
                     dayGridMonth: {
                         buttonText: 'month'
-                    },
-                    // timeGridWeek: {
-                    //     buttonText: 'week'
-                    // },
-                    // timeGridDay: {
-                    //     buttonText: 'day'
-                    // }
+                    },                    
                 },
                 defaultView: 'dayGridMonth',
                 defaultDate: TODAY,
@@ -110,6 +99,13 @@
                         data: {
                             start_date: info.dateStr,
                             "_token": "{{ csrf_token() }}"
+                        },
+                        beforeSend: function() {
+                            KTApp.block('#kt_blockui_content', {
+                                overlayColor: '#000000',
+                                state: 'primary',
+                                message: 'Processing...'
+                            });
                         },
                         success: function(res) {
                             $('#modal-setbarang').html(res);
@@ -134,6 +130,13 @@
                                         tanggal: tanggal,
                                         "_token": "{{ csrf_token() }}"
                                     },
+                                    beforeSend: function() {
+                                        KTApp.block('#kt_blockui_content', {
+                                            overlayColor: '#000000',
+                                            state: 'primary',
+                                            message: 'Processing...'
+                                        });
+                                    },
                                     success: function() {
                                         $('#modalplan').modal('hide');
                                         iziToast.success({
@@ -142,14 +145,20 @@
                                             position: 'topRight',
                                         });
                                         calendar.refetchEvents();
-                                    }
+                                    },
+                                    complete: function() {
+                                        KTApp.unblock('#kt_blockui_content');
+                                    },
                                 });
 
-                            })                           
+                            })
 
-                            
 
-                        }
+
+                        },
+                        complete: function() {
+                            KTApp.unblock('#kt_blockui_content');
+                        },
                     });
 
                 },
@@ -164,6 +173,13 @@
                         },
                         data: {
                             "_token": "{{ csrf_token() }}"
+                        },
+                        beforeSend: function() {
+                            KTApp.block('#kt_blockui_content', {
+                                overlayColor: '#000000',
+                                state: 'primary',
+                                message: 'Processing...'
+                            });
                         },
                         success: function(res) {
                             $('#modal-setbarang').html(res);
@@ -184,6 +200,13 @@
                                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
                                             .attr('content')
                                     },
+                                    beforeSend: function() {
+                                        KTApp.block('#kt_blockui_content', {
+                                            overlayColor: '#000000',
+                                            state: 'primary',
+                                            message: 'Processing...'
+                                        });
+                                    },
                                     data: {
                                         data_id: data_id,
                                         outlet_id: outlet,
@@ -198,7 +221,10 @@
                                             position: 'topRight',
                                         });
                                         calendar.refetchEvents();
-                                    }
+                                    },
+                                    complete: function() {
+                                        KTApp.unblock('#kt_blockui_content');
+                                    },
                                 });
 
                             })
@@ -214,7 +240,7 @@
                                             .attr('content')
                                     },
                                     data: {
-                                        data_id: data_id,                                       
+                                        data_id: data_id,
                                         "_token": "{{ csrf_token() }}"
                                     },
                                     success: function() {
@@ -227,10 +253,13 @@
                                         calendar.refetchEvents();
                                     }
                                 });
-                                
+
                             });
 
-                        }
+                        },
+                        complete: function() {
+                            KTApp.unblock('#kt_blockui_content');
+                        },
                     });
 
 
