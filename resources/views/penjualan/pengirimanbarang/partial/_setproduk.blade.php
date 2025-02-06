@@ -136,7 +136,7 @@
                                 <tbody>
                                     @foreach ($listProduk as $item)
                                     <tr>
-                                        <td>{{ $item->harganonexpired->supplier->nama}}</td>
+                                        <td>{{ $item->harganonexpired->supplier ? $item->harganonexpired->supplier->nama : '-'}}</td>
                                         <td>{{ $item->harga_beli }}</td>
                                         <td>{{ $item->diskon_persen_beli }}</td>
                                         <td>{{ $item->diskon_rupiah_beli }}</td>
