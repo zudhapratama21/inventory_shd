@@ -76,7 +76,7 @@ class ProductImport implements ToModel
                     // save di tabel adjustmen stok
                     $ajs = AdjustmentStok::create([
                         'product_id' => $product->id,
-                        'qty' => $stok,
+                        'qty' => $row[3],
                         'jenis' => 'nonexpired',
                         'kode' => $kode
                     ]);
