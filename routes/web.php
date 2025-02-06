@@ -1081,6 +1081,11 @@ Route::middleware('has.role')->prefix('sales')->group(function () {
     Route::prefix('evaluasi')->group(function () {
         Route::get('', [EvaluasiController::class, 'index'])->name('evaluasi.index');
         Route::post('/store', [EvaluasiController::class, 'store'])->name('evaluasi.store');        
+        Route::post('/datatable', [EvaluasiController::class, 'datatable'])->name('evaluasi.datatable'); 
+        Route::post('/destroy', [EvaluasiController::class, 'destroy'])->name('evaluasi.destroy');   
+
+        Route::post('/edit', [EvaluasiController::class, 'edit'])->name('evaluasi.edit'); 
+        Route::post('/update', [EvaluasiController::class, 'update'])->name('evaluasi.update');   
               
     });
     

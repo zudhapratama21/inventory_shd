@@ -60,11 +60,6 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
     <script src="{{ asset('assets/js/pages/features/miscellaneous/blockui.js?v=7.0.6') }} "></script>
 
-
-
-
-
-
     <script type="text/javascript">
         $(function() {
             calender();

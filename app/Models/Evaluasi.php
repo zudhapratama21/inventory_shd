@@ -22,4 +22,10 @@ class Evaluasi extends Model
     {
         return $this->belongsTo(Sales::class, 'sales_id', 'id');
     }
+
+   
+    public function pembuat()
+    {
+        return $this->belongsTo(User::class, 'updated_by', 'id');
+    }
 }

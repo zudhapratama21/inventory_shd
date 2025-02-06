@@ -49,7 +49,7 @@
                                                 </g>
                                             </svg>
                                             <!--end::Svg Icon--></span> </span>
-                                    <h3 class="card-label">Data Kunjungan Sales</h3>
+                                    <h3 class="card-label">Data Evaluasi Sales</h3>
                                 </div>
                                 <div class="card-toolbar">
                                     <!--begin::Button-->
@@ -70,10 +70,10 @@
                                     <thead class="datatable-head">
                                         <tr>
                                             <th>Tanggal</th>
-                                            <th>Pembuat</th>
                                             <th>Sales</th>
                                             <th>Evaluasi</th>
                                             <th>Saran</th>
+                                            <th>Pembuat Data</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -100,30 +100,21 @@
     <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
     <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
-    <script src="{{ asset('assets/js/pages/features/miscellaneous/blockui.js?v=7.0.6') }} "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
+        integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css"
+        integrity="sha512-O03ntXoVqaGUTAeAmvQ2YSzkCvclZEcPQu1eqloPaHfJ5RuNGiS4l+3duaidD801P50J28EHyonCV06CUlTSag=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src=" https://cdn.jsdelivr.net/npm/sweetalert2@11.15.10/dist/sweetalert2.all.min.js "></script>
+    <link href=" https://cdn.jsdelivr.net/npm/sweetalert2@11.15.10/dist/sweetalert2.min.css " rel="stylesheet">
+
     <script type="text/javascript">
+        let editor1;
+        let editor2;
         $(function() {
             datatable();
-
-            let editor1;
-            ClassicEditor
-                .create(document.querySelector('#editor'))
-                .then(editor => {
-                    editor1 = editor;
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-
-            let editor2;
-            ClassicEditor
-                .create(document.querySelector('#editor2'))
-                .then(editor => {
-                    editor2 = editor;
-                })
-                .catch(error => {
-                    console.error(error);
-                });
+            ckeditor();
         });
 
         function datatable() {
@@ -132,7 +123,7 @@
                 serverSide: true,
                 scrollX: true,
                 ajax: {
-                    url: "{{ route('kunjungansales.datatable') }}",
+                    url: "{{ route('evaluasi.datatable') }}",
                     type: "POST",
                     data: function(params) {
                         params._token = "{{ csrf_token() }}";
@@ -147,20 +138,20 @@
                         name: 'tanggal'
                     },
                     {
-                        data: 'created_at',
-                        name: 'created_at'
+                        data: 'sales',
+                        name: 'sales.name'
                     },
                     {
-                        data: 'user',
-                        name: 'user.name'
+                        data: 'evaluasi',
+                        name: 'evaluasi'
                     },
                     {
-                        data: 'customer',
-                        name: 'customer'
+                        data: 'saran',
+                        name: 'saran'
                     },
                     {
-                        data: 'aktifitas',
-                        name: 'aktifitas'
+                        data: 'pembuat',
+                        name: 'pembuat.name'
                     },
                     {
                         data: 'action',
@@ -191,11 +182,11 @@
         }
 
         function store() {
-
             let e = document.getElementById("sales_id");
             let sales = e.options[e.selectedIndex].value;
-            let evaluasi = document.getElementById("editor").value;
-            let saran = document.getElementById("editor2").value;
+            let evaluasi = editor1.getData();
+            let saran = editor2.getData();
+
 
             $.ajax({
                 type: 'POST',
@@ -210,26 +201,133 @@
                     evaluasi: evaluasi,
                     "_token": "{{ csrf_token() }}"
                 },
-                beforeSend: function() {
-                    KTApp.block('#kt_blockui_content', {
-                        overlayColor: '#000000',
-                        state: 'primary',
-                        message: 'Processing...'
-                    });
-                },
                 success: function() {
                     $('#tambahevaluasi').modal('hide');
+
                     iziToast.success({
                         title: 'Success',
                         message: 'Data Berhasil Ditambahkan',
                         position: 'topRight',
                     });
-                    calendar.refetchEvents();
-                },
-                complete: function() {
-                    KTApp.unblock('#kt_blockui_content');
-                },
+
+                    // Reset nilai sales dan evaluasi menjadi null setelah berhasil
+                    document.getElementById("sales_id").selectedIndex = 0; // Reset pilihan sales ke default
+                    editor1.setData(''); // Menghapus data dari editor1
+                    editor2.setData(''); // Menghapus data dari editor2
+
+                    $('.yajra-datatable').DataTable().ajax.reload(null, false);
+                }
             });
+        }
+
+        function destroy(id) {
+            Swal.fire({
+                title: "Apakah kamu yakin ?",
+                text: "Kamu tidak akan bisa mengembalikan data ini !",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ route('evaluasi.destroy') }}',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
+                                .attr('content')
+                        },
+                        data: {
+                            id: id,
+                            "_token": "{{ csrf_token() }}"
+                        },
+                        success: function() {
+                            iziToast.success({
+                                title: 'Success',
+                                message: 'Data Berhasil Ditambahkan',
+                                position: 'topRight',
+                            });
+                            $('.yajra-datatable').DataTable().ajax.reload(null, false);
+                        }
+                    });
+                }
+            });
+        }
+
+        function edit(id) {
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('evaluasi.edit') }}',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
+                        .attr('content')
+                },
+                data: {
+                    id: id,
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(res) {
+
+                    $('#modal-confirm-delete').html(res);
+                    $('#editevaluasi').modal('show');
+                    ckeditor();
+
+                }
+            });
+        }
+
+        function update(id) {
+            let e = document.getElementById("sales_id");
+            let sales = e.options[e.selectedIndex].value;
+            let evaluasi = editor1.getData();
+            let saran = editor2.getData();
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('evaluasi.update') }}',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
+                        .attr('content')
+                },
+                data: {
+                    id: id,
+                    sales: sales,
+                    saran: saran,
+                    evaluasi: evaluasi,
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(res) {
+                    $('#editevaluasi').modal('hide');
+                    iziToast.success({
+                        title: 'Success',
+                        message: 'Data Berhasil Diubah',
+                        position: 'topRight',
+                    });
+                    $('.yajra-datatable').DataTable().ajax.reload(null, false);
+
+                }
+            });
+        }
+
+        function ckeditor() {
+            ClassicEditor
+                .create(document.querySelector('#editor'))
+                .then(editor => {
+                    editor1 = editor;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+
+
+            ClassicEditor
+                .create(document.querySelector('#editor2'))
+                .then(editor => {
+                    editor2 = editor;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
         }
     </script>
 @endpush

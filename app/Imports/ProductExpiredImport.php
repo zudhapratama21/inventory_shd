@@ -31,14 +31,15 @@ class ProductExpiredImport implements ToModel
             // cek produk
             
               $product = Product::where('kode',$row[0])->first(); 
-              $supplier = Supplier::where('kode',$row[2])->first(); 
+              $supplier = Supplier::where('kode',$row[1])->first(); 
               if ($product) {
             
                     // stok exp berdasarkan exp nya 
                     // insert masing-masing exp stok dan exp date sesuai dengan product id dan tanggal 
                     // cek jika ada tanggal yang sama maka ditambah
                     
-                    $tanggal = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[4]))->format('Y-m-d');    
+                    // $tanggal = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[5]))->format('Y-m-d');    
+                   $tanggal =  Carbon::createFromFormat('d/m/Y', $row[5])->format('Y-m-d');
                     // $now = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject(now()->subMinutes(1)))->format('H-i-s');                                                      
                    
                     
