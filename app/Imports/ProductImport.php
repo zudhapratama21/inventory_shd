@@ -7,6 +7,7 @@ use App\Models\HargaNonExpired;
 use App\Models\HargaNonExpiredDetail;
 use App\Models\InventoryTransaction;
 use App\Models\Product;
+use App\Models\Supplier;
 use App\Traits\CodeTrait;
 use Carbon\Carbon;
 use Exception;
@@ -30,9 +31,11 @@ class ProductImport implements ToModel
             if ($this->no !== 0) {
                 // cek produk berdasarkan kode 
                 $product = Product::where('kode', $row[0])->first();
+                $supplier = Supplier::where('kode',$row[1])->first(); 
+
                 // cek stok berdasarkan qty
                 // kurangi dari qty inputan - stok 
-                $stok = $product->stok;
+                $stok = $product->stok ;
                 $tanda = 1;
                 if ($stok < 0) {
                     $tanda = -1;
@@ -44,7 +47,6 @@ class ProductImport implements ToModel
                 $kode = 'AJS' . $tahun . $bulan . rand(1000, 9999);
 
                 if ($product->status_exp == 0) {
-
                     if ($this->no == 1) {
                         HargaNonExpired::where('product_id', $product->id)->update([
                             'qty' => 0
@@ -53,10 +55,11 @@ class ProductImport implements ToModel
 
                     $harganonexpired = HargaNonExpired::create([
                         'product_id' => $product->id,
-                        'qty' => $row[2],
-                        'harga_beli' => $row[3],
-                        'diskon_persen' => $row[4],
-                        'diskon_rupiah' => $row[5],
+                        'supplier' => $supplier->id,
+                        'qty' => $row[3],
+                        'harga_beli' => $row[4],
+                        'diskon_persen' => $row[5],
+                        'diskon_rupiah' => $row[6],
                         'tanggal_transaksi' => now()->format('Y-m-d'),
                     ])->id;
 
@@ -64,13 +67,11 @@ class ProductImport implements ToModel
                         'tanggal' => now()->format('Y-m-d'),
                         'harganonexpired_id' => $harganonexpired,
                         'product_id' => $product->id,
-                        'qty' => $row[2],                        
-                        'harga_beli' => $row[3],                        
-                        'diskon_persen_beli' => $row[4],
-                        'diskon_rupiah_beli' => $row[5]
+                        'qty' => $row[3],                        
+                        'harga_beli' => $row[4],                        
+                        'diskon_persen_beli' => $row[5],
+                        'diskon_rupiah_beli' => $row[6]
                     ]);
-
-
 
                     // save di tabel adjustmen stok
                     $ajs = AdjustmentStok::create([
@@ -85,14 +86,14 @@ class ProductImport implements ToModel
                         'tanggal' => Carbon::now()->format('Y-m-d'),
                         'product_id' => $product->id,
                         'qty' => $stok * $tanda,
-                        'stok' => $row[2],
+                        'stok' => $row[3],
                         'hpp' => $product->hpp,
                         'jenis' => 'AJS',
                         'jenis_id' => $kode,
                     ]);
 
                     $product->update([
-                        'stok' => $row[2]
+                        'stok' => $row[3]
                     ]);
                 }
             }
