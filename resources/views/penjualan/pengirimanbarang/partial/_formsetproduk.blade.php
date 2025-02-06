@@ -73,7 +73,7 @@
                                         <label>Supplier :</label>
                                         <div class="input-group date">
                                             <input type="text" class="form-control" name="suplier" readonly
-                                                value="{{ $stokproduk->supplier->nama }}" />                                          
+                                                value="{{ $stokproduk->supplier ? $stokproduk->supplier->nama : '-' }}" />                                          
                                         </div>
                                         @error('suplier')
                                         <div class="invalid-feedback">{{ $message }}</div>
