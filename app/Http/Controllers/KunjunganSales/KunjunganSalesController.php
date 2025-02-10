@@ -73,7 +73,7 @@ class KunjunganSalesController extends Controller
 
     public function store(Request $request)
     {    
-        $img = $request->file('image');
+        $img = $request->file('image');        
         $signed = $request->input('signed');
         $nameFile = null;
         $tanggal = Carbon::parse(now())->format('Y-m-d');
@@ -140,6 +140,7 @@ class KunjunganSalesController extends Controller
     public function update(Request $request,$id)
     {        
         $img = $request->file('image');
+        
         $signed = $request->input('signed');
         $tanggal = Carbon::parse(now())->format('Y-m-d');
         $kunjungan = KunjunganSales::where('id',$id)->first();

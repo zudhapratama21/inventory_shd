@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Laporan;
 use App\Exports\LaporanKunjunganSales;
 use App\Http\Controllers\Controller;
 use App\Models\KunjunganSales;
+use App\Models\Outlet;
 use App\Models\PlanMarketing;
 use App\Models\RencanaKunjungan;
 use App\Models\User;
@@ -22,6 +23,7 @@ class LaporanSalesController extends Controller
     {
         $title = "Laporan Kunjungan Sales";
         $sales = User::whereNotNull('sales_id')->get();
+        $outlet = Outlet::get();
 
         $bulan =  [];
         for ($i = 1; $i <= 12; $i++) {
@@ -32,7 +34,7 @@ class LaporanSalesController extends Controller
             ];
         }
 
-        return view('laporan.sales.index', compact('title', 'sales', 'bulan'));
+        return view('laporan.sales.index', compact('title', 'sales', 'bulan','outlet'));
     }
 
 
@@ -70,6 +72,7 @@ class LaporanSalesController extends Controller
         $sales = KunjunganSales::with(['user', 'outlet'])
             ->whereBetween('tanggal', [$start, $end])
             ->when($request->sales !== 'All', fn($query) => $query->where('user_id', $request->sales))
+            ->when($request->outlet !== 'All', fn($query) => $query->where('outlet_id', $request->outlet))
             ->get();
 
         $kunjungansales = $sales->map(function ($item) {
@@ -86,18 +89,40 @@ class LaporanSalesController extends Controller
             ])->exists();
 
             $statusCount = $planmarketing + $rencanakunjungan;
+
+            // Cek apakah kunjungan ini mengisi PlanMarketing dan RencanaKunjungan
+            $mengisiPlan = PlanMarketing::where([
+                'tanggal' => $item->tanggal,
+                'user_id' => $item->user_id,                
+            ])->exists();
+ 
+            $mengisiRencana = RencanaKunjungan::where([
+                'tanggal' => $item->tanggal,
+                'user_id' => $item->user_id,                
+            ])->exists();
+
+            $mengisiPlanRencana = $mengisiPlan && $mengisiRencana;
+
             $classNames = [
-                0 => 'fc-event-primary fc-event-solid-danger',
-                1 => 'fc-event-primary fc-event-solid-info',
-                2 => 'fc-event-primary fc-event-solid-success',
+                0 => 'fc-event-primary fc-event-solid-danger', // Merah (tidak ada plan & rencana)
+                1 => 'fc-event-primary fc-event-solid-info', // Hijau (salah satu ada)
+                2 => 'fc-event-primary fc-event-solid-success', // Biru (keduanya ada)
             ];
+
+            // Tambahkan kondisi jika mengisi Plan & Rencana hari itu, maka jadi biru
+            $className = $classNames[$statusCount] ?? 'fc-event-primary fc-event-solid-danger';
+            if ($statusCount === 0 && $mengisiPlanRencana == 2) {
+                $className = 'fc-event-danger fc-event-solid-primary'; // Biru
+            }elseif ($statusCount === 0 && $mengisiPlanRencana == 1) {
+                $className = 'fc-event-danger fc-event-solid-info';
+            }
 
             return [
                 'id' => $item->id,
                 'start' => $item->tanggal,
                 'title' => $item->outlet->nama ?? $item->customer,
                 'description' => $item->aktivitas,
-                'className' => $classNames[$statusCount] ?? 'fc-event-primary fc-event-solid-danger',
+                'className' => $className,
             ];
         });
 
@@ -114,14 +139,19 @@ class LaporanSalesController extends Controller
     public function show($id)
     {
         $kunjungansales = KunjunganSales::with('outlet')->where('id', $id)->first();
-        $planmarketing = PlanMarketing::with('outlet')->where('user_id', $kunjungansales->user_id)
-            ->where('tanggal', $kunjungansales->tanggal)
-            ->get();
-        $rencanakunjungan = RencanaKunjungan::with('outlet', 'user')->where('user_id', $kunjungansales->user_id)
+        $planmarketing = PlanMarketing::with('outlet')
+            ->where('user_id', $kunjungansales->user_id)
             ->where('tanggal', $kunjungansales->tanggal)
             ->get();
 
-        return view('laporan.sales.partial.modal', compact('kunjungansales', 'planmarketing', 'rencanakunjungan'));
+        // dd($planmarketing);
+        $rencanakunjungan = RencanaKunjungan::with('outlet', 'user')
+            ->where('user_id', $kunjungansales->user_id)
+            ->where('tanggal', $kunjungansales->tanggal)
+            ->get();
+        $text = strip_tags($kunjungansales->aktifitas);
+
+        return view('laporan.sales.partial.modal', compact('kunjungansales', 'planmarketing', 'rencanakunjungan','text'));
     }
 
     public function datatablesales(Request $request)

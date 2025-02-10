@@ -62,10 +62,11 @@
                                             </svg>
                                             <!--end::Svg Icon--></span> </span>
                                     <h3 class="card-label">Laporan Kunjungan Sales</h3>
+
                                 </div>
                                 <div class="card-toolbar">
                                     <!--begin::Button-->
-                                    <form method="POST" action="{{ route('laporansales.print') }}">
+                                    {{-- <form method="POST" action="{{ route('laporansales.print') }}">
                                         @csrf
 
                                         <input type="hidden" name="sales" value="all" id="formsales">
@@ -77,7 +78,7 @@
                                                 Print Laporan
                                                 </a>
                                             @endcan
-                                    </form>
+                                    </form> --}}
 
                                     <!--end::Button-->
                                 </div>
@@ -92,6 +93,20 @@
                                                 <option value="All">Semua</option>
                                                 @foreach ($sales as $item)
                                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                                @endforeach
+
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="">Outlet</label>
+                                            <select name="" id="kt_select2_2" class="form-control"
+                                                onchange="filteroutlet()">
+                                                <option value="All">Semua</option>
+                                                @foreach ($outlet as $item)
+                                                    <option value="{{ $item->id }}">{{ $item->nama   }}</option>
                                                 @endforeach
 
                                             </select>
@@ -148,9 +163,9 @@
 
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label for="">sales</label>
+                                            <label for="">Sales</label>
                                             <select name="" id="sales" class="form-control"
-                                                onchange="filterSales()">
+                                                onchange="filtersales()">
                                                 <option value="All">Semua</option>
                                                 @foreach ($sales as $item)
                                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -206,6 +221,7 @@
         let calendar;
 
         let saleschart = 'All';
+        let outlet = 'All';
 
         $(function() {
             calender();
@@ -333,7 +349,8 @@
                         data: {
                             start: fetchInfo.startStr, // Mengambil tanggal awal dari FullCalendar
                             end: fetchInfo.endStr, // Mengambil tanggal akhir dari FullCalendar
-                            sales: saleschart
+                            sales: saleschart,
+                            outlet:outlet
                         },
                         beforeSend: function() {
                             KTApp.block('#kt_blockui_content', {
@@ -416,6 +433,12 @@
             calendar.refetchEvents();
         }
 
+        function filteroutlet() {
+            let e = document.getElementById("kt_select2_2");
+            outlet = e.options[e.selectedIndex].value;
+            calendar.refetchEvents();
+        }
+
         function filtersales() {
             let e = document.getElementById("sales");
             sales = e.options[e.selectedIndex].value;
@@ -433,6 +456,8 @@
             bulan = e.options[e.selectedIndex].value;
             $('.yajra-datatablecustomer').DataTable().ajax.reload(null, false);
         }
+
+
 
         function showSales(id) {
             $('#listsales').modal('show');

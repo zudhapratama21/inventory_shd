@@ -91,7 +91,7 @@ class LaporanLabaRugiController extends Controller
                 $totalJual = $detail->qty * $item->hargajual * -1;
                 $subtotalPenjualan = $totalJual - ($totalJual * $item->diskon_persen / 100) - $item->diskon_rp;
                 $pph = $item->pph ? $subtotalPenjualan * $item->pph / 100 : 0;
-                $cn = $subtotalPenjualan * $item->cn_persen / 100;
+                $cn = ($subtotalPenjualan-$pph) * $item->cn_persen / 100;
                 $nett = $subtotalPenjualan - $cn - $pph;
 
                 // Agregasi laba kotor per customer menggunakan array
@@ -172,7 +172,7 @@ class LaporanLabaRugiController extends Controller
                 $totalJual = $detail->qty * $item->hargajual * -1;
                 $subtotalPenjualan = $totalJual - ($totalJual * $item->diskon_persen / 100) - $item->diskon_rp;
                 $pph = $item->pph ? $subtotalPenjualan * $item->pph / 100 : 0;
-                $cn = $subtotalPenjualan * $item->cn_persen / 100;
+                $cn = ($subtotalPenjualan-$pph) * $item->cn_persen / 100;
                 $nett = $subtotalPenjualan - $cn - $pph;
 
                 $labarugi->push([
@@ -233,7 +233,7 @@ class LaporanLabaRugiController extends Controller
                 $totalJual = $detail->qty * $item->hargajual * -1;
                 $subtotalPenjualan = $totalJual - ($totalJual * $item->diskon_persen / 100) - $item->diskon_rp;
                 $pph = $item->pph ? $subtotalPenjualan * $item->pph / 100 : 0;
-                $cn = $subtotalPenjualan * $item->cn_persen / 100;
+                $cn = ($subtotalPenjualan-$pph) * $item->cn_persen / 100;
                 $nett = $subtotalPenjualan - $cn - $pph;
 
                 $labarugi->push([
@@ -303,7 +303,7 @@ class LaporanLabaRugiController extends Controller
                 $totalJual = $detail->qty * $item->hargajual * -1;
                 $subtotalPenjualan = $totalJual - ($totalJual * $item->diskon_persen / 100) - $item->diskon_rp;
                 $pph = $item->pph ? $subtotalPenjualan * $item->pph / 100 : 0;
-                $cn = $subtotalPenjualan * $item->cn_persen / 100;
+                $cn = ($subtotalPenjualan-$pph) * $item->cn_persen / 100;
                 $nett = $subtotalPenjualan - $cn - $pph;
 
                 $labarugi->push([
@@ -406,7 +406,7 @@ class LaporanLabaRugiController extends Controller
                 $totalJual = $detail->qty * $item->hargajual * -1;
                 $subtotalPenjualan = $totalJual - ($totalJual * $item->diskon_persen / 100) - $item->diskon_rp;
                 $pph = $item->pph ? $subtotalPenjualan * $item->pph / 100 : 0;
-                $cn = $subtotalPenjualan * $item->cn_persen / 100;
+                $cn = ($subtotalPenjualan-$pph) * $item->cn_persen / 100;
                 $nett = $subtotalPenjualan - $cn - $pph;
 
                 // Agregasi laba kotor per supplier
@@ -498,7 +498,7 @@ class LaporanLabaRugiController extends Controller
                 $totalJual = $detail->qty * $item->hargajual * -1;
                 $subtotalPenjualan = $totalJual - ($totalJual * $item->diskon_persen / 100) - $item->diskon_rp;
                 $pph = $item->pph ? $subtotalPenjualan * $item->pph / 100 : 0;
-                $cn = $subtotalPenjualan * $item->cn_persen / 100;
+                $cn = ($subtotalPenjualan-$pph) * $item->cn_persen / 100;
                 $nett = $subtotalPenjualan - $cn - $pph;
 
                 // Simpan hasil perhitungan laba kotor per produk
@@ -607,7 +607,7 @@ class LaporanLabaRugiController extends Controller
                 $totalJual = $detail->qty * $item->hargajual * -1;
                 $subtotalPenjualan = $totalJual - ($totalJual * $item->diskon_persen / 100) - $item->diskon_rp;
                 $pph = $item->pph ? $subtotalPenjualan * $item->pph / 100 : 0;
-                $cn = $subtotalPenjualan * $item->cn_persen / 100;
+                $cn = ($subtotalPenjualan-$pph) * $item->cn_persen / 100;
                 $nett = $subtotalPenjualan - $cn - $pph;
 
                 return [
@@ -712,7 +712,7 @@ class LaporanLabaRugiController extends Controller
                 $totalJual = $detail->qty * $item->hargajual * -1;
                 $subtotalPenjualan  = $totalJual - ($totalJual * $item->diskon_persen / 100) - $item->diskon_rp;
                 $pph = $item->pph ? $subtotalPenjualan * $item->pph / 100 : 0;
-                $cn = $subtotalPenjualan * $item->cn_persen / 100;
+                $cn = ($subtotalPenjualan-$pph) * $item->cn_persen / 100;
                 $nett = $subtotalPenjualan - $cn - $pph;
 
                 $labarugi[] = [
@@ -805,7 +805,7 @@ class LaporanLabaRugiController extends Controller
                 $totalJual = $detail->qty * $item->hargajual * -1;
                 $subtotalPenjualan = $totalJual - ($totalJual * $item->diskon_persen / 100) - $item->diskon_rp;
                 $pph = $item->pph ? $subtotalPenjualan * $item->pph / 100 : 0;
-                $cn = $subtotalPenjualan * $item->cn_persen / 100;
+                $cn = ($subtotalPenjualan-$pph) * $item->cn_persen / 100;
                 $nett = $subtotalPenjualan - $cn - $pph;
 
                 // Menyimpan data untuk laba kotor
@@ -909,7 +909,7 @@ class LaporanLabaRugiController extends Controller
                 $totalJual = $detail->qty * $item->hargajual * -1;
                 $subtotalPenjualan = $totalJual - ($totalJual * $item->diskon_persen / 100) - $item->diskon_rp;
                 $pph = $item->pph ? $subtotalPenjualan * $item->pph / 100 : 0;
-                $cn = $subtotalPenjualan * $item->cn_persen / 100;
+                $cn = ($subtotalPenjualan-$pph) * $item->cn_persen / 100;
                 $nett = $subtotalPenjualan - $cn - $pph;
 
                 // Menyimpan data laba kotor

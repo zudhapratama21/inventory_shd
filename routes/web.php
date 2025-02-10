@@ -12,6 +12,7 @@ use App\Http\Controllers\HRD\CutiController;
 use App\Http\Controllers\HRD\KaryawanController;
 use App\Http\Controllers\HRD\LemburController;
 use App\Http\Controllers\HRD\PembuatController;
+use App\Http\Controllers\HRD\PengumumanController;
 use App\Http\Controllers\HRD\SettingCutiController;
 use App\Http\Controllers\HRD\SuratMenyuratController;
 use App\Http\Controllers\HRD\TipeSuratController;
@@ -72,7 +73,7 @@ use App\Http\Controllers\Sales\PlanMarketingController;
 use App\Http\Controllers\Sales\TargetSalesController;
 use App\Http\Controllers\Teknisi\KunjunganTeknisiController;
 use App\Http\Controllers\Teknisi\MaintenanceController;
-
+use App\Models\HRD\Pengumuman;
 
 Route::middleware('auth', 'verified')->group(function () {
     // Route::get('/', function () {
@@ -956,6 +957,14 @@ Route::middleware('has.role')->prefix('canvassing')->group(function () {
 
         
     });
+});
+
+Route::prefix('pengumuman')->group(function () {
+    Route::get('', [PengumumanController::class, 'index'])->name('pengumuman.index'); 
+    Route::post('store', [PengumumanController::class, 'store'])->name('pengumuman.store');        
+    Route::post('datatable', [PengumumanController::class, 'datatable'])->name('pengumuman.datatable');        
+
+    Route::post('destroy', [PengumumanController::class, 'destroy'])->name('pengumuman.destroy');        
 });
 
 Route::middleware('has.role')->prefix('adjustment')->group(function () {

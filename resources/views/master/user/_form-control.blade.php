@@ -12,9 +12,7 @@
     <div class="separator separator-dashed my-5"></div>
     <div class="form-group">
         <label>Email *:</label>
-        <input type="text" @if($submit=="Update" ) disabled="disabled" @endif name="email"
-            value="{{ old('email') ?? $user->email }}" class="form-control @error('email') is-invalid @enderror"
-            placeholder="Masukkan email user" />
+        <input type="text" name="email" value="{{ old('email') ?? $user->email }}" class="form-control @error('email') is-invalid @enderror" placeholder="Masukkan email user" />
         @error('email')
         <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -59,6 +57,32 @@
             <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
+
+        <div class="form-group">
+            <label for="">Sales</label>
+            <select name="sales" id="" class="form-control">
+                <option value="All">Bukan Sales</option>
+                @foreach ($sales as $item)
+                    <option value="{{$item->id}}">{{$item->nama}}</option>
+                @endforeach
+            </select>
+        </div>
+
+    <div class="form-group">
+        <label for="">Phone</label>
+        <input type="text" class="form-control" name="phone" value="{{ old('phone') ?? $user->phone}}">
+    </div>
+
+    <div class="form-group">
+        <label for="">Divisi</label>
+        <select name="divisi" id="" class="form-control">            
+            @foreach ($divisi as $item)
+                <option value="{{$item->id}}">{{$item->nama}}</option>
+            @endforeach
+        </select>
+    </div>
+
+
 </div>
 
 </div>

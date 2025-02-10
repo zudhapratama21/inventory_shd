@@ -34,7 +34,7 @@ class EvaluasiController extends Controller
 
     public function datatable(Request $request)
     {
-        $evaluasi = Evaluasi::with('sales')->orderBy('id','desc')->get();
+        $evaluasi = Evaluasi::with('sales','pembuat')->orderBy('id','desc');
         return DataTables::of($evaluasi)
             ->addIndexColumn()
             ->editColumn('tanggal', function (Evaluasi $ot) {

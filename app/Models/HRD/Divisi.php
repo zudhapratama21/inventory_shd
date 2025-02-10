@@ -19,4 +19,10 @@ class Divisi extends Model
         return $this->hasMany(Posisi::class, 'posisi_id');
     }
 
+   
+    public function bisalihat()
+    {
+        return $this->hasMany(BisaLihat::class,'divisi_id');
+    }
+
 }

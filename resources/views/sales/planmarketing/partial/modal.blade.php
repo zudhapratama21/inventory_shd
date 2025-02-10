@@ -23,8 +23,9 @@
 
                             <div class="form-group">
                                 <label for="">Outlet</label> <br>
-                                <select name="" id="kt_select2_4" class="form-control" required>
-                                    @foreach ($outlet as $item)
+                                <select name="" id="kt_select2_4" class="form-control" multiple required>
+                                    <option value="{{ $outlet[0]->id }}" selected>{{ $outlet[0]->nama }}</option>
+                                    @foreach ($outlet as $item)                                       
                                         <option value="{{ $item->id }}">{{ $item->nama }}</option>
                                     @endforeach
                                 </select>

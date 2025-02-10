@@ -115,65 +115,101 @@ class PlanMarketingController extends Controller
         // $title = 'Plan Marketing';
         $outlet = Outlet::get();
         $start_date = Carbon::parse($request->start_date)->format('Y-m-d');
+        $now = Carbon::parse(now())->format('Y-m-d');
+        $bulan = Carbon::parse($request->start_date)->format('m');
+        $tahun = Carbon::parse($request->start_date)->format('Y');
         $terlambat = 0;
-        if ($start_date <= now()->format('Y-m-d')) {
-            $terlambat = 1;
+        $tanggal2 = $tahun . '-' . $bulan . '-' . '02';
+        $tanggalakhir = $tahun . '-' . $bulan . '-' . '31';
+
+        if ($now <= $tanggal2) {
+            $terlambat = 0;
+        } else {
+            if ($start_date <= $tanggal2) {
+                $terlambat = 1;
+            } elseif ($start_date >= $tanggal2 && $start_date <= $tanggalakhir) {
+                $terlambat = 1;
+            }
         }
-        
-        return view('sales.planmarketing.partial.modal', compact('outlet','request','terlambat'));
+
+
+        return view('sales.planmarketing.partial.modal', compact('outlet', 'request', 'terlambat'));
     }
 
-    public function list (Request $request)
+    public function list(Request $request)
     {
-      $start = Carbon::parse($request->start)->format('Y-m-d');
-      $end = Carbon::parse($request->end)->format('Y-m-d');
-      
+        $start = Carbon::parse($request->start)->format('Y-m-d');
+        $end = Carbon::parse($request->end)->format('Y-m-d');
 
-      $planmarketing = PlanMarketing::with('outlet')->where('tanggal','>=',$start)->where('tanggal','<=',$end)
-                        ->where('user_id',auth()->user()->id)
-                        ->get()
-                        ->map(fn($item) => [
-                            'id' => $item->id,
-                            'start' => $item->tanggal,
-                            'title' => $item->outlet->nama,
-                            'className' => 'fc-event-primary fc-event-solid-success',                            
-                        ]);
+        $planmarketing = PlanMarketing::with('outlet')->where('tanggal', '>=', $start)->where('tanggal', '<=', $end)
+            ->where('user_id', auth()->user()->id)
+            ->get()
+            ->map(fn($item) => [
+                'id' => $item->id,
+                'start' => $item->tanggal,
+                'title' => $item->outlet ? $item->outlet->nama : '-',
+                'className' => 'fc-event-primary fc-event-solid-success',
+            ]);
 
-      return response()->json($planmarketing);
+        return response()->json($planmarketing);
     }
 
 
     public function store(Request $request)
-    {                
-        $planmarketing = PlanMarketing::create([
-            'tanggal' => $request->tanggal,        
-            'outlet_id' => $request->outlet_id,
-            'user_id' => auth()->user()->id,            
-        ]);
+    {
+
+        $outlet = json_decode($request->outlet_id);
+        foreach ($outlet as $key) {
+            $planmarketing = PlanMarketing::create([
+                'tanggal' => $request->tanggal,
+                'outlet_id' => $key,
+                'user_id' => auth()->user()->id,
+            ]);
+        }
+
 
         return response()->json('Data Berhasil Ditambahkan');
     }
 
 
     public function edit($id)
-    {      
+    {
 
-        $planmarketing = PlanMarketing::with('outlet')->where('id',$id)->first();  
-        $outlet = Outlet::get();      
-        return view('sales.planmarketing.partial.modaledit', compact('planmarketing','outlet'));
+        $planmarketing = PlanMarketing::with('outlet')->where('id', $id)->first();
+        $outlet = Outlet::get();
+
+        $start_date = Carbon::parse($planmarketing->tanggal)->format('Y-m-d');
+        $bulan = Carbon::parse($planmarketing->tanggal)->format('m');
+        $tahun = Carbon::parse($planmarketing->tanggal)->format('Y');
+        $terlambat = 0;
+        $tanggal2 = $tahun . '-' . $bulan . '-' . '02';
+        $tanggalakhir = $tahun . '-' . $bulan . '-' . '31';
+
+        $now = Carbon::parse(now())->format('Y-m-d');
+
+        if ($now <= $tanggal2) {
+            $terlambat = 0;
+        } else {
+            if ($start_date <= $tanggal2) {
+                $terlambat = 1;
+            } elseif ($start_date >= $tanggal2 && $start_date <= $tanggalakhir) {
+                $terlambat = 1;
+            }
+        }
+
+        return view('sales.planmarketing.partial.modaledit', compact('planmarketing', 'outlet', 'terlambat'));
     }
 
     public function update(Request $request)
     {
-      
-        
-        $update = PlanMarketing::where('id',$request->data_id)->update([
-                'tanggal' => $request->tanggal,
-                'outlet_id' => $request->outlet_id
+
+
+        $update = PlanMarketing::where('id', $request->data_id)->update([
+            'tanggal' => $request->tanggal,
+            'outlet_id' => $request->outlet_id
         ]);
 
         return response()->json('Data Berhasil di Update');
-        
     }
 
 

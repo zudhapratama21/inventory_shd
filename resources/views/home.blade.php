@@ -51,6 +51,64 @@
             <!--begin::Container-->
             <div class=" container ">
                 <!--begin::Dashboard-->
+                <div class="col-lg-12">
+                    
+                        <div class="card card-custom gutter-b">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <h3 class="card-label">
+                                        Laman Pengumuman
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <!--begin::Accordion-->
+                                <div class="accordion  accordion-toggle-arrow" id="accordionExample4">
+                                    <div class="card">
+                                        <div class="card-header" id="headingOne4">
+                                            <div class="card-title" data-toggle="collapse" data-target="#collapseOne4">
+                                                <i class="flaticon2-layers-1"></i> Pengumuman Terbaru
+                                            </div>
+                                        </div>
+                                        <div id="collapseOne4" class="collapse show" data-parent="#accordionExample4">
+                                            <div class="card-body">
+                                                <h3>{{$pengumuman->subject}}</h3>  
+                                                <p>Dibuat Oleh : {{$pengumuman->pembuat->name}} || dibuat pada : {{\Carbon\Carbon::parse($pengumuman->updated_at)->format('d F Y')}} </p>
+                                                <hr>
+                                                <p>
+                                                    {!! $pengumuman->description !!}
+                                                </p>  
+                                                <a href="{{ asset('storage/pengumuman/' . $pengumuman->file) }}" class="btn btn-primary btn-sm" download><i class="fas fa-download"></i>Download File</a>                                            
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-header" id="headingTwo4">
+                                            <div class="card-title collapsed" data-toggle="collapse"
+                                                data-target="#collapseTwo4">
+                                                <i class="flaticon2-copy"></i> Account Settings
+                                            </div>
+                                        </div>
+                                        <div id="collapseTwo4" class="collapse" data-parent="#accordionExample4">
+                                            <div class="card-body">
+                                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry
+                                                richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard
+                                                dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon
+                                                tempor, sunt aliqua put a bird on it squid single-origin coffee nulla
+                                                assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore
+                                                wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher
+                                                vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic
+                                                synth nesciunt you probably haven't heard of them accusamus labore
+                                                sustainable VHS.
+                                            </div>
+                                        </div>
+                                    </div>                                   
+                                </div>
+                            </div>
+                        </div>
+                    
+                </div>
+
                 <div class="row">
                     <div class="col-lg-12">
                         <!--begin::Card-->
@@ -748,11 +806,49 @@
             data: {
                 labels: null,
                 datasets: [{
-                    label: 'Penjualan', data: null, pointStyle: 'circle', pointRadius: 10, pointHoverRadius: 15,
+                    label: 'Penjualan',
+                    data: null,
+                    pointStyle: 'circle',
+                    pointRadius: 10,
+                    pointHoverRadius: 15,
                 }]
             },
             options: {
-                responsive: true, plugins: { title: { display: true, text: (ctx) => 'Data Dalam Persen Rupiah ', }, legend: { labels: { font: { size: 11 } } } }, scales: { y: { stacked: true, ticks: { font: { size: 12, } } }, x: { ticks: { font: { size: 12, } } } } }, interaction: { intersect: false, }
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: (ctx) => 'Data Dalam Persen Rupiah ',
+                    },
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 11
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        stacked: true,
+                        ticks: {
+                            font: {
+                                size: 12,
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 12,
+                            }
+                        }
+                    }
+                }
+            },
+            interaction: {
+                intersect: false,
+            }
         }
 
         // ==================================================================== CHART UNTUK GRAFIK BAR PENJUALAN =======================================
@@ -832,7 +928,7 @@
         }
 
 
-        function hitungtotalgrafik(data) {            
+        function hitungtotalgrafik(data) {
             $('#grandtotal').val(data);
         }
 
@@ -872,7 +968,7 @@
             chartGrafikUpdate();
         }
 
-        
+
         //========================================================= end of Chart Penjualan Bar =====================================================
 
         //=========================================================CHART UNTUK DOUGNOT  =====================================================
@@ -1211,7 +1307,8 @@
                     url: "{{ route('datatable.listcustomer') }}",
                     type: "POST",
                     data: function(params) {
-                        params.bulan = bulanProduk,
+                            params.bulan = bulanProduk,
+                            params.year = tahunProduk,
                             params.tipe = tipe,
                             params.kategori = kategoriProduk,
                             params.sales = salesProduk,
@@ -1494,7 +1591,7 @@
                     url: "{{ route('datatable.productbyprinciple') }}",
                     type: "POST",
                     data: function(params) {
-                        params.year = topprincipleyear,
+                            params.year = topprincipleyear,
                             params.bulan = topprinciplebulan,
                             params.kategori = topprinciplekategori,
                             params.supplier = supplier_id,

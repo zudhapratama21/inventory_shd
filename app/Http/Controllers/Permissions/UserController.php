@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use App\Actions\Fortify\PasswordValidationRules;
+use App\Models\HRD\Divisi;
+use App\Models\Sales;
 
 class UserController extends Controller
 
@@ -56,7 +58,12 @@ class UserController extends Controller
         $user = new User;
         $roles = \Spatie\Permission\Models\Role::all();
         $role = "";
-        return view('master.user.create', compact('title', 'user', 'roles', 'role'));
+
+        $sales = Sales::get();
+        $divisi = Divisi::get();
+
+        $sales = Sales::get();
+        return view('master.user.create', compact('title', 'user', 'roles', 'role','sales','divisi'));
     }
 
     public function store(Request $request)
@@ -65,7 +72,6 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
-
         ]);
 
         $user = User::create([
@@ -85,24 +91,28 @@ class UserController extends Controller
         $title = "Users";
         $users = new User;
         $roles = \Spatie\Permission\Models\Role::all();
+        $sales = Sales::get();
+        $divisi = Divisi::get();
         $role = $user->getRoleNames()->toArray();
         if ($role) {
             $role = $role[0];
         } else {
             $role = "";
-        }
-        //dd($role);
-        return view('master.user.edit', compact('title', 'user', 'users', 'roles', 'role'));
+        }        
+        return view('master.user.edit', compact('title', 'user', 'users', 'roles', 'role','sales','divisi'));
     }
 
     public function update(Request $request, User $user)
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-
+        $sales = $request->sales ? $request->sales : null;        
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'sales_id' => $sales,
+            'phone' => $request->phone,
+            'divisi_id' => $request->divisi
         ]);
 
-        $user->update($request->all());
         if ($user->roles->first() <> null) {
             $user->removeRole($user->roles->first());
         }

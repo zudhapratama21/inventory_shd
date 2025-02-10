@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Blameable;
+use App\Models\HRD\Divisi;
 use App\Models\HRD\Pembuat;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
@@ -26,7 +27,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'sales_id',
         'phone',
-        'email_verified_at'
+        'email_verified_at',
+        'sales_id',
+        'divisi_id'
     ];
 
     /**
@@ -81,6 +84,12 @@ class User extends Authenticatable implements MustVerifyEmail
     public function pembuat()
     {
         return $this->hasOne(Pembuat::class, 'user_id');
+    }
+
+ 
+    public function divisi()
+    {
+        return $this->belongsTo(Divisi::class, 'divisi_id', 'id');
     }
    
 }

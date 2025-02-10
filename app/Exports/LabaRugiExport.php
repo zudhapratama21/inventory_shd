@@ -79,7 +79,7 @@ class LabaRugiExport implements FromView
                         $pph = 0;
                     }
 
-                    $cn = $subtotalPenjualan * $item->cn_persen / 100;
+                    $cn = ($subtotalPenjualan-$pph) * $item->cn_persen / 100;
                     $nett = $subtotalPenjualan - $cn - $pph;
 
                     $labarugi[] = array(
@@ -126,7 +126,7 @@ class LabaRugiExport implements FromView
                         $pph = 0;
                     }
 
-                    $cnExpired = $subtotalPenjualanExpired * $item->cn_persen / 100;
+                    $cnExpired = ($subtotalPenjualanExpired-$pph) * $item->cn_persen / 100;
                     $nettExpired = $subtotalPenjualanExpired - $cnExpired - $pph;
                     $labarugi[] = array(
                         'tanggal' => Carbon::parse($item->fakturpenjualan->tanggal)->format('d/m/Y'),

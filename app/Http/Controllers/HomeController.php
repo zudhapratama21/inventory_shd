@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\TopCustomerExport;
 use App\Exports\TopProductExport;
 use App\Models\Customer;
+use App\Models\HRD\Pengumuman;
 use App\Models\Kategoripesanan;
 use App\Models\Merk;
 use App\Models\Product;
@@ -36,6 +37,8 @@ class HomeController extends Controller
             ];
         }
 
+        $pengumuman = Pengumuman::with('topic','pembuat')->latest()->first();
+
         return view('home', [
             'kategori' => $kategori,
             'bulan' => $months,
@@ -44,7 +47,13 @@ class HomeController extends Controller
             'supplier' => $supplier,
             'customer' => $customer,
             'merk' => $merk,
+            'pengumuman' => $pengumuman
         ]);
+    }
+
+    public function datatablePengumuman (Request $request)
+    {
+     
     }
 
 

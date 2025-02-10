@@ -114,8 +114,11 @@
                             $('#form-action').on('submit', function(event) {
                                 event.preventDefault();
 
-                                let e = document.getElementById("kt_select2_4");
-                                let outlet = e.options[e.selectedIndex].value;
+                                let outletselect = document.getElementById("kt_select2_4");
+                                let outlet = Array.from(outletselect.selectedOptions).map(option => option.value);  
+                                
+                                console.log(outlet);
+                                
                                 let tanggal = document.getElementById("tanggal").value;
 
                                 $.ajax({
@@ -126,7 +129,7 @@
                                             .attr('content')
                                     },
                                     data: {
-                                        outlet_id: outlet,
+                                        outlet_id: JSON.stringify(outlet),
                                         tanggal: tanggal,
                                         "_token": "{{ csrf_token() }}"
                                     },

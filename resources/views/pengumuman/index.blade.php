@@ -49,15 +49,15 @@
                                                 </g>
                                             </svg>
                                             <!--end::Svg Icon--></span> </span>
-                                    <h3 class="card-label">Data Evaluasi Sales</h3>
+                                    <h3 class="card-label">Data Pengumuman</h3>
                                 </div>
                                 <div class="card-toolbar">
                                     <!--begin::Button-->
-                                    @can('evaluasi-create')
+                                    @can('pengumuman-create')
                                         <button type="button" class="btn btn-primary" data-toggle="modal"
-                                            data-target="#tambahevaluasi">
+                                            data-target="#tambahpengumuman">
                                             <i class="flaticon2-add"></i>
-                                            Evaluasi
+                                            Pengumuman
                                         </button>
                                     @endcan
 
@@ -70,10 +70,10 @@
                                     <thead class="datatable-head">
                                         <tr>
                                             <th>Tanggal</th>
-                                            <th>Sales</th>
-                                            <th>Evaluasi</th>
-                                            <th>Saran</th>
-                                            <th>Pembuat Data</th>
+                                            <th>Pembuat</th>
+                                            <th>Topic</th>
+                                            <th>Subject</th>
+                                            <th>Description</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -93,12 +93,18 @@
     </div>
     <!--end::Content-->
     <div id="modal-confirm-delete"></div>
-    @include('sales.evaluasi.partial.modal')
+    @include('pengumuman.partial.modal')
 @endsection
 @push('script')
     <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6"') }}"></script>
     <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
     <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
+    <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6"') }}"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
     <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
         integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA=="
@@ -112,9 +118,12 @@
     <script type="text/javascript">
         let editor1;
         let editor2;
+        let file = null;
         $(function() {
             datatable();
             ckeditor();
+
+            $('.js-example-basic-multiple').select2();
         });
 
         function datatable() {
@@ -123,7 +132,7 @@
                 serverSide: true,
                 scrollX: true,
                 ajax: {
-                    url: "{{ route('evaluasi.datatable') }}",
+                    url: "{{ route('pengumuman.datatable') }}",
                     type: "POST",
                     data: function(params) {
                         params._token = "{{ csrf_token() }}";
@@ -134,24 +143,24 @@
                 columns: [
                     //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                     {
-                        data: 'tanggal',
-                        name: 'tanggal'
-                    },
-                    {
-                        data: 'sales',
-                        name: 'sales.nama'
-                    },
-                    {
-                        data: 'evaluasi',
-                        name: 'evaluasi'
-                    },
-                    {
-                        data: 'saran',
-                        name: 'saran'
+                        data: 'created_at',
+                        name: 'created_at'
                     },
                     {
                         data: 'pembuat',
                         name: 'pembuat.name'
+                    },
+                    {
+                        data: 'topic',
+                        name: 'topic.nama'
+                    },
+                    {
+                        data: 'subject',
+                        name: 'subject'
+                    },
+                    {
+                        data: 'description',
+                        name: 'description'
                     },
                     {
                         data: 'action',
@@ -181,28 +190,45 @@
             return txt.value;
         }
 
-        function store() {
-            let e = document.getElementById("sales_id");
-            let sales = e.options[e.selectedIndex].value;
-            let evaluasi = editor1.getData();
-            let saran = editor2.getData();
+        document.getElementById("file").addEventListener("change", function(event) {
+            file = event.target.files[0];
+        });
 
+        function store() {
+            let k = document.getElementById("topic_id");
+            let topic = k.options[k.selectedIndex].value;
+            let subject = document.getElementById("subject").value;
+            let informasi = editor2.getData();
+
+            let tujuanSelect = document.getElementById("tujuan_id");
+            let tujuan = Array.from(tujuanSelect.selectedOptions).map(option => option.value);
+
+            let formData = new FormData();
+            formData.append("tujuan", JSON.stringify(tujuan)); // Konversi array ke string
+            formData.append("topic", topic);
+            formData.append("subject", subject);
+            formData.append("informasi", informasi);
+
+            let fileInput = document.getElementById("file");
+
+            if (file) { // Pastikan file ada sebelum ditambahkan
+                formData.append("file", file);
+            }
+
+            formData.append("_token", $('meta[name="csrf-token"]').attr('content'));
 
             $.ajax({
                 type: 'POST',
-                url: '{{ route('evaluasi.store') }}',
+                url: '{{ route('pengumuman.store') }}',
+                data: formData,
+                processData: false, // Jangan ubah data menjadi string
+                contentType: false, // Jangan ubah tipe konten otomatis
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
                         .attr('content')
                 },
-                data: {
-                    sales: sales,
-                    saran: saran,
-                    evaluasi: evaluasi,
-                    "_token": "{{ csrf_token() }}"
-                },
                 success: function() {
-                    $('#tambahevaluasi').modal('hide');
+                    $('#tambahpengumuman').modal('hide');
 
                     iziToast.success({
                         title: 'Success',
@@ -210,11 +236,31 @@
                         position: 'topRight',
                     });
 
-                    // Reset nilai sales dan evaluasi menjadi null setelah berhasil
-                    document.getElementById("sales_id").selectedIndex = 0; // Reset pilihan sales ke default
-                    editor1.setData(''); // Menghapus data dari editor1
-                    editor2.setData(''); // Menghapus data dari editor2
 
+                    document.getElementById("topic_id").selectedIndex = 0;
+                    document.getElementById("subject").value = "";
+                    editor2.setData("");
+                    document.getElementById("tujuan_id").value = "";
+                    fileInput.value = "";
+
+                    $('.yajra-datatable').DataTable().ajax.reload(null, false);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Terjadi error:", error); // Log error di console
+
+                    iziToast.warning({
+                        title: 'Warning',
+                        message: 'Terjadi kesalahan, tetapi aplikasi tetap berjalan.',
+                        position: 'topRight',
+                    });
+
+                    // Tetap lanjutkan proses meskipun error
+                    $('#tambahpengumuman').modal('hide');
+                    document.getElementById("topic_id").selectedIndex = 0;
+                    document.getElementById("subject").value = "";
+                    editor2.setData("");
+                    document.getElementById("tujuan_id").value = "";
+                    fileInput.value = "";
                     $('.yajra-datatable').DataTable().ajax.reload(null, false);
                 }
             });
@@ -233,7 +279,7 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         type: 'POST',
-                        url: '{{ route('evaluasi.destroy') }}',
+                        url: '{{ route('pengumuman.destroy') }}',
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
                                 .attr('content')
@@ -310,16 +356,6 @@
         }
 
         function ckeditor() {
-            ClassicEditor
-                .create(document.querySelector('#editor'))
-                .then(editor => {
-                    editor1 = editor;
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-
-
             ClassicEditor
                 .create(document.querySelector('#editor2'))
                 .then(editor => {
