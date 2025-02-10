@@ -49,7 +49,7 @@ class LabaRugiController extends Controller
                     } else {
                         $pph = 0;
                     }
-                    $cn = $subtotalPenjualan * $item->cn_persen / 100;
+                    $cn = ($subtotalPenjualan-$pph) * $item->cn_persen / 100;
                     $nett = $subtotalPenjualan - $cn - $pph;
                     $labakotorNonExpired = $nett - $hpp;
                     $labakotor += $labakotorNonExpired;
@@ -92,7 +92,7 @@ class LabaRugiController extends Controller
                     } else {
                         $pph = 0;
                     }
-                    $cnExpired = $subtotalPenjualanExpired * $item->cn_persen / 100;
+                    $cnExpired = ($subtotalPenjualanExpired-$pph) * $item->cn_persen / 100;
                     $nettExpired = $subtotalPenjualanExpired - $cnExpired - $pph;
 
                     $labakotorExpired =  $nettExpired - $hpp_expired;
