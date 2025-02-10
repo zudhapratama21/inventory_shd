@@ -51,7 +51,7 @@
             <!--begin::Container-->
             <div class=" container ">
                 <!--begin::Dashboard-->
-                <div class="col-lg-12">
+                {{-- <div class="col-lg-12">
                     
                         <div class="card card-custom gutter-b">
                             <div class="card-header">
@@ -107,7 +107,7 @@
                             </div>
                         </div>
                     
-                </div>
+                </div> --}}
 
                 <div class="row">
                     <div class="col-lg-12">
