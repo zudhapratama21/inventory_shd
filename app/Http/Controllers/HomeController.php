@@ -37,7 +37,7 @@ class HomeController extends Controller
             ];
         }
 
-        $pengumuman = Pengumuman::with('topic','pembuat')->latest()->first();
+        // $pengumuman = Pengumuman::with('topic', 'pembuat')->latest()->first();
 
         return view('home', [
             'kategori' => $kategori,
@@ -47,14 +47,11 @@ class HomeController extends Controller
             'supplier' => $supplier,
             'customer' => $customer,
             'merk' => $merk,
-            'pengumuman' => $pengumuman
+            // 'pengumuman' => $pengumuman
         ]);
     }
 
-    public function datatablePengumuman (Request $request)
-    {
-     
-    }
+    public function datatablePengumuman(Request $request) {}
 
 
     public function chartyear(Request $request)
@@ -74,7 +71,7 @@ class HomeController extends Controller
         } else {
             $res = $results;
         }
-        
+
 
         if ($request->kategori !== 'All') {
             $kategori = $res->where('pp.kategoripesanan_id', $request->kategori);
@@ -384,14 +381,14 @@ class HomeController extends Controller
     public function listCustomer(Request $request)
     {
         $results = DB::table('faktur_penjualans as fp')
-                    ->join('faktur_penjualan_details as fdp', 'fdp.faktur_penjualan_id', '=', 'fp.id')
-                    ->join('pesanan_penjualans as pp', 'fp.pesanan_penjualan_id', '=', 'pp.id')
-                    ->join('customers as c', 'fp.customer_id', '=', 'c.id')
-                    ->join('products as p', 'fdp.product_id', '=', 'p.id')
-                    ->join('merks as m', 'm.id', '=', 'p.merk_id')
-                    ->join('suppliers as s', 's.id', '=', 'm.supplier_id')
-                    ->where('fp.deleted_at', '=', null)
-                    ->where('fdp.product_id', $request->product_id);
+            ->join('faktur_penjualan_details as fdp', 'fdp.faktur_penjualan_id', '=', 'fp.id')
+            ->join('pesanan_penjualans as pp', 'fp.pesanan_penjualan_id', '=', 'pp.id')
+            ->join('customers as c', 'fp.customer_id', '=', 'c.id')
+            ->join('products as p', 'fdp.product_id', '=', 'p.id')
+            ->join('merks as m', 'm.id', '=', 'p.merk_id')
+            ->join('suppliers as s', 's.id', '=', 'm.supplier_id')
+            ->where('fp.deleted_at', '=', null)
+            ->where('fdp.product_id', $request->product_id);
 
         if ($request->year) {
             $res = $results->whereYear('fp.tanggal', $request->year);
@@ -575,13 +572,13 @@ class HomeController extends Controller
     public function listProduct(Request $request)
     {
         $results = DB::table('faktur_penjualans as fp')
-                    ->join('faktur_penjualan_details as fdp', 'fdp.faktur_penjualan_id', '=', 'fp.id')
-                    ->join('pesanan_penjualans as pp', 'fp.pesanan_penjualan_id', '=', 'pp.id')
-                    ->join('products as p', 'fdp.product_id', '=', 'p.id')
-                    ->join('merks as m', 'm.id', '=', 'p.merk_id')
-                    ->join('suppliers as s', 's.id', '=', 'm.supplier_id')
-                    ->where('fp.deleted_at', '=', null)
-                    ->orderBy('fp.tanggal');
+            ->join('faktur_penjualan_details as fdp', 'fdp.faktur_penjualan_id', '=', 'fp.id')
+            ->join('pesanan_penjualans as pp', 'fp.pesanan_penjualan_id', '=', 'pp.id')
+            ->join('products as p', 'fdp.product_id', '=', 'p.id')
+            ->join('merks as m', 'm.id', '=', 'p.merk_id')
+            ->join('suppliers as s', 's.id', '=', 'm.supplier_id')
+            ->where('fp.deleted_at', '=', null)
+            ->orderBy('fp.tanggal');
 
         if ($request->year) {
             $res = $results->whereYear('fp.tanggal', $request->year);
@@ -688,12 +685,12 @@ class HomeController extends Controller
     public function DatatableTopPrinciple(Request $request)
     {
         $results = DB::table('faktur_penjualans as fp')
-                    ->join('faktur_penjualan_details as fdp', 'fdp.faktur_penjualan_id', '=', 'fp.id')
-                    ->join('pesanan_penjualans as pp', 'fp.pesanan_penjualan_id', '=', 'pp.id')
-                    ->join('products as p', 'fdp.product_id', '=', 'p.id')
-                    ->join('merks as m', 'm.id', '=', 'p.merk_id')
-                    ->join('suppliers as s', 's.id', '=', 'm.supplier_id')
-                    ->where('fp.deleted_at', '=', null);
+            ->join('faktur_penjualan_details as fdp', 'fdp.faktur_penjualan_id', '=', 'fp.id')
+            ->join('pesanan_penjualans as pp', 'fp.pesanan_penjualan_id', '=', 'pp.id')
+            ->join('products as p', 'fdp.product_id', '=', 'p.id')
+            ->join('merks as m', 'm.id', '=', 'p.merk_id')
+            ->join('suppliers as s', 's.id', '=', 'm.supplier_id')
+            ->where('fp.deleted_at', '=', null);
 
         if ($request->year) {
             $res = $results->whereYear('fp.tanggal', $request->year);
