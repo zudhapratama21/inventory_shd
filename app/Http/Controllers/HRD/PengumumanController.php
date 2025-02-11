@@ -96,4 +96,13 @@ class PengumumanController extends Controller
 
        return response()->json('Data Berhaisil');
     }
+
+    public function edit (Request $request)
+    {
+        $pengumuman = Pengumuman::where('id',$request->id)->with('bisalihat')->first();
+        $divisi = Divisi::get();
+        $topic = Topic::get();
+
+        return view('pengumuman.partial.modaledit',compact('pengumuman','divisi','topic'));
+    }
 }

@@ -30,6 +30,7 @@
             <th>Nama Produk</th> 
             <th>Kode Produk</th>  
             <th>Merk</th> 
+            <th>Supplier</th>
             <th>Qty</th>
             <th>Satuan</th>
             <th>Diskon Persen Produk</th>
@@ -83,6 +84,7 @@
                 <td>{{$item->nama_produk}}</td>
                 <td>{{$item->kode_produk}}</td>
                 <td>{{$item->nama_merk}}</td>
+                <td>{{$item->nama_supplier}}</td>
                 <td>{{$item->qty_det}}</td>
                 <td>{{$item->satuan_det}}</td>
                 <td>{{$item->dikson_persen_det}}</td>

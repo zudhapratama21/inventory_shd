@@ -304,7 +304,7 @@
         function edit(id) {
             $.ajax({
                 type: 'POST',
-                url: '{{ route('evaluasi.edit') }}',
+                url: '{{ route('pengumuman.edit') }}',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
                         .attr('content')

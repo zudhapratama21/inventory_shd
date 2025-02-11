@@ -962,7 +962,10 @@ Route::middleware('has.role')->prefix('canvassing')->group(function () {
 Route::prefix('pengumuman')->group(function () {
     Route::get('', [PengumumanController::class, 'index'])->name('pengumuman.index'); 
     Route::post('store', [PengumumanController::class, 'store'])->name('pengumuman.store');        
-    Route::post('datatable', [PengumumanController::class, 'datatable'])->name('pengumuman.datatable');        
+    Route::post('datatable', [PengumumanController::class, 'datatable'])->name('pengumuman.datatable');    
+
+    Route::post('edit', [PengumumanController::class, 'edit'])->name('pengumuman.edit');    
+    Route::post('update', [PengumumanController::class, 'update'])->name('pengumuman.update');    
 
     Route::post('destroy', [PengumumanController::class, 'destroy'])->name('pengumuman.destroy');        
 });
