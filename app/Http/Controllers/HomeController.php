@@ -37,7 +37,7 @@ class HomeController extends Controller
             ];
         }
 
-        $pengumuman = Pengumuman::with('topic', 'pembuat')->latest()->first();
+        // $pengumuman = Pengumuman::with('topic', 'pembuat')->latest()->first();
 
         return view('home', [
             'kategori' => $kategori,
@@ -47,7 +47,7 @@ class HomeController extends Controller
             'supplier' => $supplier,
             'customer' => $customer,
             'merk' => $merk,
-            'pengumuman' => $pengumuman
+            // 'pengumuman' => $pengumuman
         ]);
     }
 
