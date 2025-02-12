@@ -967,7 +967,11 @@ Route::prefix('pengumuman')->group(function () {
     Route::post('edit', [PengumumanController::class, 'edit'])->name('pengumuman.edit');    
     Route::post('update', [PengumumanController::class, 'update'])->name('pengumuman.update');    
 
-    Route::post('destroy', [PengumumanController::class, 'destroy'])->name('pengumuman.destroy');        
+    Route::post('show', [PengumumanController::class, 'show'])->name('pengumuman.show');    
+
+    Route::post('destroy', [PengumumanController::class, 'destroy'])->name('pengumuman.destroy');   
+
+    Route::post('homedatatable', [HomeController::class, 'datatablepengumuman'])->name('pengumuman.homedatatable');   
 });
 
 Route::middleware('has.role')->prefix('adjustment')->group(function () {

@@ -27,8 +27,8 @@ class HomeController extends Controller
         $supplier = Supplier::get();
         $merk = Merk::get();
         $sales = Sales::get();
-
         $months =  [];
+
         for ($i = 1; $i <= 12; $i++) {
             $databulan = '1-' . $i . '-2023';
             $months[] = [
@@ -37,8 +37,7 @@ class HomeController extends Controller
             ];
         }
 
-        // $pengumuman = Pengumuman::with('topic', 'pembuat')->latest()->first();
-
+        $pengumuman = Pengumuman::with('topic', 'pembuat')->latest()->first();
         return view('home', [
             'kategori' => $kategori,
             'bulan' => $months,
@@ -47,11 +46,31 @@ class HomeController extends Controller
             'supplier' => $supplier,
             'customer' => $customer,
             'merk' => $merk,
-            // 'pengumuman' => $pengumuman
+            'pengumuman' => $pengumuman
         ]);
     }
 
-    public function datatablePengumuman(Request $request) {}
+    public function datatablePengumuman(Request $request)
+    {
+        $pengumuman = Pengumuman::with('topic')->orderBy('id', 'desc');
+        return DataTables::of($pengumuman)
+            ->addIndexColumn()
+            ->editColumn('tanggal', function ($data) {
+                return Carbon::parse($data->created_at)->format('d/m/Y');
+            })
+            ->editColumn('topic', function ($data) {
+                return $data->topic->nama;
+            })
+            ->editColumn('file', function ($data) {
+                $file = $data->file;
+                return view('pengumuman.partial.button',compact('file'));
+            })
+            ->addColumn('action', function ($row) {
+                $pengumuman_id =  $row->id;
+                return view('pengumuman.partial.actionhome', compact('pengumuman_id'));
+            })
+            ->make(true);
+    }
 
 
     public function chartyear(Request $request)
@@ -71,7 +90,6 @@ class HomeController extends Controller
         } else {
             $res = $results;
         }
-
 
         if ($request->kategori !== 'All') {
             $kategori = $res->where('pp.kategoripesanan_id', $request->kategori);
@@ -115,10 +133,9 @@ class HomeController extends Controller
             );
 
         $hasil = $tipe->get();
-
-
         $laba = array();
         $data = [];
+
         $grandtotal = 0;
 
         foreach ($hasil as $key => $value) {
@@ -128,8 +145,6 @@ class HomeController extends Controller
 
             $grandtotal += ($value->grandtotal_penjualan - $value->total_cn);
         }
-
-
 
         for ($i = 0; $i <= 12; $i++) {
             if ($i == 0) {
@@ -173,8 +188,6 @@ class HomeController extends Controller
         } else {
             $res = $results;
         }
-
-
 
         $hasil = $res->select(
             'kp.nama as kategori',

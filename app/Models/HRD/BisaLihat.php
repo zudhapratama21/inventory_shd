@@ -20,7 +20,7 @@ class BisaLihat extends Model
     }
 
    
-    public function user()
+    public function divisi()
     {
         return $this->belongsTo(Divisi::class, 'divisi_id', 'id');
     }

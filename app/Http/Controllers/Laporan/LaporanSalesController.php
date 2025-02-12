@@ -138,7 +138,7 @@ class LaporanSalesController extends Controller
 
     public function show($id)
     {
-        $kunjungansales = KunjunganSales::with('outlet')->where('id', $id)->first();
+        $kunjungansales = KunjunganSales::with('outlet','user')->where('id', $id)->first();
         $planmarketing = PlanMarketing::with('outlet')
             ->where('user_id', $kunjungansales->user_id)
             ->where('tanggal', $kunjungansales->tanggal)

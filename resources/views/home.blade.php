@@ -51,63 +51,71 @@
             <!--begin::Container-->
             <div class=" container ">
                 <!--begin::Dashboard-->
-                {{-- <div class="col-lg-12">
-                    
-                        <div class="card card-custom gutter-b">
-                            <div class="card-header">
-                                <div class="card-title">
-                                    <h3 class="card-label">
-                                        Laman Pengumuman
-                                    </h3>
-                                </div>
+                <div class="col-lg-12">
+
+                    <div class="card card-custom gutter-b">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <h3 class="card-label">
+                                    Laman Pengumuman
+                                </h3>
                             </div>
-                            <div class="card-body">
-                                <!--begin::Accordion-->
-                                <div class="accordion  accordion-toggle-arrow" id="accordionExample4">
-                                    <div class="card">
-                                        <div class="card-header" id="headingOne4">
-                                            <div class="card-title" data-toggle="collapse" data-target="#collapseOne4">
-                                                <i class="flaticon2-layers-1"></i> Pengumuman Terbaru
-                                            </div>
-                                        </div>
-                                        <div id="collapseOne4" class="collapse show" data-parent="#accordionExample4">
-                                            <div class="card-body">
-                                                <h3>{{$pengumuman->subject}}</h3>  
-                                                <p>Dibuat Oleh : {{$pengumuman->pembuat->name}} || dibuat pada : {{\Carbon\Carbon::parse($pengumuman->updated_at)->format('d F Y')}} </p>
-                                                <hr>
-                                                <p>
-                                                    {!! $pengumuman->description !!}
-                                                </p>  
-                                                <a href="{{ asset('storage/pengumuman/' . $pengumuman->file) }}" class="btn btn-primary btn-sm" download><i class="fas fa-download"></i>Download File</a>                                            
-                                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!--begin::Accordion-->
+                            <div class="accordion  accordion-toggle-arrow" id="accordionExample4">
+                                <div class="card">
+                                    <div class="card-header" id="headingOne4">
+                                        <div class="card-title" data-toggle="collapse" data-target="#collapseOne4">
+                                            <i class="flaticon2-layers-1"></i> Pengumuman Terbaru
                                         </div>
                                     </div>
-                                    <div class="card">
-                                        <div class="card-header" id="headingTwo4">
-                                            <div class="card-title collapsed" data-toggle="collapse"
-                                                data-target="#collapseTwo4">
-                                                <i class="flaticon2-copy"></i> Account Settings
-                                            </div>
+                                    <div id="collapseOne4" class="collapse show" data-parent="#accordionExample4">
+                                        <div class="card-body">
+                                            <h3>{{ $pengumuman->subject }}</h3>
+                                            <p>Dibuat Oleh : {{ $pengumuman->pembuat->name }} || dibuat pada :
+                                                {{ \Carbon\Carbon::parse($pengumuman->updated_at)->format('d F Y') }} </p>
+                                            <hr>
+                                            <p>
+                                                {!! $pengumuman->description !!}
+                                            </p>
+                                            <a href="{{ asset('storage/pengumuman/' . $pengumuman->file) }}"
+                                                class="btn btn-primary btn-sm" download><i
+                                                    class="fas fa-download"></i>Download File</a>
                                         </div>
-                                        <div id="collapseTwo4" class="collapse" data-parent="#accordionExample4">
-                                            <div class="card-body">
-                                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry
-                                                richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard
-                                                dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon
-                                                tempor, sunt aliqua put a bird on it squid single-origin coffee nulla
-                                                assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore
-                                                wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher
-                                                vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic
-                                                synth nesciunt you probably haven't heard of them accusamus labore
-                                                sustainable VHS.
-                                            </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header" id="headingTwo4">
+                                        <div class="card-title collapsed" data-toggle="collapse"
+                                            data-target="#collapseTwo4">
+                                            <i class="flaticon2-copy"></i> Pengumuman yang lain
                                         </div>
-                                    </div>                                   
+                                    </div>
+                                    <div id="collapseTwo4" class="collapse" data-parent="#accordionExample4">
+                                        <div class="card-body">
+                                            <table
+                                                class="table table-separate table-head-custom table-checkable table  yajra-datatable-pengumuman collapsed ">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Tanggal</th>
+                                                        <th>Topic</th>
+                                                        <th>Subject</th>
+                                                        <th>Download File</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    
-                </div> --}}
+                    </div>
+
+                </div>
 
                 <div class="row">
                     <div class="col-lg-12">
@@ -720,6 +728,7 @@
     </div>
 
     {{-- modal Customer --}}
+    <div id="modal-data"></div>
     @include('partial.modal.produk')
     @include('partial.modal.customer')
     @include('partial.modal.principle')
@@ -795,6 +804,7 @@
             datatablelistproduct();
             datatabletopPrinciple();
             datatableProductByPrinciple();
+            datatablepengumuman();
         })
 
         // ============================================================================================================================
@@ -802,53 +812,7 @@
 
         // ==================================================================== CHART UNTUK GRAFIK BAR PENJUALAN =======================================
         let options = {
-            type: 'bar',
-            data: {
-                labels: null,
-                datasets: [{
-                    label: 'Penjualan',
-                    data: null,
-                    pointStyle: 'circle',
-                    pointRadius: 10,
-                    pointHoverRadius: 15,
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: (ctx) => 'Data Dalam Persen Rupiah ',
-                    },
-                    legend: {
-                        labels: {
-                            font: {
-                                size: 11
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        stacked: true,
-                        ticks: {
-                            font: {
-                                size: 12,
-                            }
-                        }
-                    },
-                    x: {
-                        ticks: {
-                            font: {
-                                size: 12,
-                            }
-                        }
-                    }
-                }
-            },
-            interaction: {
-                intersect: false,
-            }
+            type: 'bar', data: { labels: null, datasets: [{ label: 'Penjualan', data: null, pointStyle: 'circle', pointRadius: 10, pointHoverRadius: 15, }] }, options: { responsive: true, plugins: { title: { display: true, text: (ctx) => 'Data Dalam Persen Rupiah ', }, legend: { labels: { font: { size: 11 } } } }, scales: { y: { stacked: true, ticks: { font: { size: 12, } } }, x: { ticks: { font: { size: 12, } } } } }, interaction: { intersect: false, }
         }
 
         // ==================================================================== CHART UNTUK GRAFIK BAR PENJUALAN =======================================
@@ -1063,53 +1027,7 @@
 
         //========================================================= CHART UNTUK FORECAST PRODUK  ===================================================== 
         let produkchart = {
-            type: 'line',
-            data: {
-                labels: null,
-                datasets: [{
-                    label: 'Penjualan per Produk',
-                    data: null,
-                    pointStyle: 'circle',
-                    pointRadius: 10,
-                    pointHoverRadius: 15,
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: (ctx) => 'Data Dalam Persen Rupiah ',
-                    },
-                    legend: {
-                        labels: {
-                            font: {
-                                size: 11
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        stacked: true,
-                        ticks: {
-                            font: {
-                                size: 12,
-                            }
-                        }
-                    },
-                    x: {
-                        ticks: {
-                            font: {
-                                size: 12,
-                            }
-                        }
-                    }
-                }
-            },
-            interaction: {
-                intersect: false,
-            }
+            type: 'line', data: { labels: null, datasets: [{ label: 'Penjualan per Produk', data: null, pointStyle: 'circle', pointRadius: 10, pointHoverRadius: 15, }] }, options: { responsive: true, plugins: { title: { display: true, text: (ctx) => 'Data Dalam Persen Rupiah ', }, legend: { labels: { font: { size: 11 } } } }, scales: { y: { stacked: true, ticks: { font: { size: 12, } } }, x: { ticks: { font: { size: 12, } } } } }, interaction: { intersect: false, }
         }
 
         function chartProduk() {
@@ -1307,7 +1225,7 @@
                     url: "{{ route('datatable.listcustomer') }}",
                     type: "POST",
                     data: function(params) {
-                            params.bulan = bulanProduk,
+                        params.bulan = bulanProduk,
                             params.year = tahunProduk,
                             params.tipe = tipe,
                             params.kategori = kategoriProduk,
@@ -1558,8 +1476,7 @@
             $('.yajra-datatabletopprinciple').DataTable().ajax.reload(null, false);
         }
 
-        function filterbulantopprinciple() {
-            console.log('masuk');
+        function filterbulantopprinciple() {            
             let e = document.getElementById("topprinciplebulan");
             topprinciplebulan = e.options[e.selectedIndex].value;
             $('#bulan_principle').val(topprinciplebulan);
@@ -1591,7 +1508,7 @@
                     url: "{{ route('datatable.productbyprinciple') }}",
                     type: "POST",
                     data: function(params) {
-                            params.year = topprincipleyear,
+                        params.year = topprincipleyear,
                             params.bulan = topprinciplebulan,
                             params.kategori = topprinciplekategori,
                             params.supplier = supplier_id,
@@ -1635,6 +1552,87 @@
             $('#productbyprinciple').modal('show');
             supplier_id = id;
             $('.yajra-datatableproductbyprinciple').DataTable().ajax.reload(null, false);
+        }
+
+        function datatablepengumuman() {
+            var table = $('.yajra-datatable-pengumuman').DataTable({
+                responsive: true,
+                processing: true,
+                serverSide: true,
+                order: [],
+                ajax: {
+                    url: "{{ route('pengumuman.homedatatable') }}",
+                    // headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
+                    type: "POST",
+                    data: function(params) {
+                        // params.year = tahunProduk,
+                        //     params.bulan = bulanProduk,
+                        //     params.tipe = tipe,
+                        //     params.kategori = kategoriProduk,
+                        //     params.sales = salesProduk,
+                        //     params.merk = merkProduk,
+                            params._token = "{{ csrf_token() }}";
+                        return params;
+                    }
+                },
+                columns: [
+                    //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    {
+                        data: 'tanggal',
+                        name: 'tanggal'
+                    },
+                    {
+                        data: 'topic',
+                        name: 'topic'
+                    },
+                    {
+                        data: 'subject',
+                        name: 'subject'
+                    },
+                    {
+                        data: 'file',
+                        name: 'file'
+                    },
+                    {
+                        data: 'action',
+                        render: function(data) {
+                            return htmlDecode(data);
+                        },
+                        className: "nowrap",
+                    },
+                ],
+                columnDefs: [{
+                        responsivePriority: 1,
+                        targets: 0
+                    },
+                    {
+                        responsivePriority: 2,
+                        targets: -1
+                    },
+                ],
+            });
+        }
+
+        function showpengumuman(id) {
+             $.ajax({
+                type: 'POST',
+                url: '{{ route('pengumuman.show') }}',
+                dataType: 'html',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'id': id,                    
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    $('#modal-data').html(data);
+                    $('#pengumumanshow').modal('show');
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            });
         }
     </script>
 @endpush

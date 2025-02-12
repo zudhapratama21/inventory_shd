@@ -20,8 +20,7 @@ class PengumumanController extends Controller
     {
         $divisi = Divisi::get();
         $topic = Topic::get();
-        $title = 'Pengumuman';
-        //    dd($divisi);
+        $title = 'Pengumuman';        
         return view('pengumuman.index', compact('divisi', 'topic', 'title'));
     }
 
@@ -37,7 +36,7 @@ class PengumumanController extends Controller
                 $nameFile = Storage::putFileAs('pengumuman', $file, $name);
                 $nameFile = $name;
             }
-    
+
             $array = json_decode($request->tujuan);
             $pengumuman = Pengumuman::create([
                 'topic_id' => $request->topic,
@@ -45,24 +44,23 @@ class PengumumanController extends Controller
                 'description' => $request->informasi,
                 'file' => $nameFile
             ])->id;
-    
+            
             foreach ($array as $key) {
                 BisaLihat::create([
                     'pengumuman_id' => $pengumuman,
                     'divisi_id'  => $key
                 ]);
             }
-    
+
             return response()->json('Data Berhasil Ditambahkan');
         } catch (\Exception $e) {
             return response()->json(['message' => 'File tidak bisa diupload, tetapi data tetap disimpan', 'error' => $e->getMessage()], 200);
         }
-       
     }
 
     public function datatable(Request $request)
     {
-        $pengumuman = Pengumuman::with('topic', 'bisalihat','pembuat')->orderBy('id', 'desc');
+        $pengumuman = Pengumuman::with('topic', 'bisalihat', 'pembuat')->orderBy('id', 'desc');
         return DataTables::of($pengumuman)
             ->addIndexColumn()
             ->editColumn('created_at', function (Pengumuman $ot) {
@@ -80,29 +78,87 @@ class PengumumanController extends Controller
             ->editColumn('description', function (Pengumuman $ot) {
                 $text = $ot->description;
                 return view('sales.evaluasi.partial.text', compact('text'));
-            })           
+            })
             ->addColumn('action', function ($row) {
                 $id = $row->id;
-                return view('sales.evaluasi.partial.action', compact('id'));
+                return view('pengumuman.partial.action', compact('id'));
             })
             ->make(true);
     }
 
-    public function destroy (Request $request)
+    public function destroy(Request $request)
     {
-       $pengumuman = Pengumuman::where('id',$request->id)->with('bisalihat')->first();
-       $pengumuman->bisalihat()->delete();
-       $pengumuman->delete();
 
-       return response()->json('Data Berhaisil');
+        $pengumuman = Pengumuman::where('id', $request->id)->with('bisalihat')->first();
+        $pengumuman->bisalihat()->delete();
+        $pengumuman->delete();
+
+        return response()->json('Data Berhaisil');
     }
 
-    public function edit (Request $request)
+    public function edit(Request $request)
     {
-        $pengumuman = Pengumuman::where('id',$request->id)->with('bisalihat')->first();
+        $pengumuman = Pengumuman::where('id', $request->id)->with('bisalihat.divisi')->first();
+        if ($pengumuman->file) {
+            Storage::disk('public')->delete($pengumuman->file);
+        }
         $divisi = Divisi::get();
         $topic = Topic::get();
 
-        return view('pengumuman.partial.modaledit',compact('pengumuman','divisi','topic'));
+        return view('pengumuman.partial.modaledit', compact('pengumuman', 'divisi', 'topic'));
+    }
+
+    public function update(Request $request)
+    {        
+        
+        
+            $pengumuman = Pengumuman::where('id', $request->pengumuman_id)->first();
+            $file = $request->file('file');
+            $nameFile = $pengumuman->file;
+            $array = json_decode($request->tujuan);
+            
+            $pengumuman->update([
+                'topic_id' => $request->topic,
+                'subject' => $request->subject,
+                'description' => $request->informasi,
+                'file' => $nameFile
+            ]);
+
+            BisaLihat::where('pengumuman_id',$request->pengumuman_id)->delete();
+            foreach ($array as $key) {
+                BisaLihat::create([
+                    'pengumuman_id' => $pengumuman->id,
+                    'divisi_id'  => $key
+                ]);
+            }
+            
+            if ($file) {            
+                if ($pengumuman->file) {
+                    Storage::disk('public')->delete($pengumuman->file);
+                }
+                $dataFoto = $file->getClientOriginalName();
+                $waktu = time();
+                $name = $waktu . $dataFoto;
+                $nameFile = Storage::putFileAs('pengumuman', $file, $name);
+                $nameFile = $name;
+            }
+
+            $pengumuman->update([
+                'topic_id' => $request->topic,
+                'subject' => $request->subject,
+                'description' => $request->informasi,
+                'file' => $nameFile
+            ]);
+
+           
+
+            return response()->json('Data Berhasil Ditambahkan');
+    }
+
+
+    public function show (Request $request)
+    {
+        $pengumuman = Pengumuman::where('id',$request->id)->with('topic','pembuat')->first();
+        return view('pengumuman.partial.modalshow',compact('pengumuman'));
     }
 }

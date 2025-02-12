@@ -13,10 +13,9 @@
                 <form action="" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="">Tujuan Informasi</label> <br>
-                        <select name="tujuan_id" class="form-control js-example-basic-multiple" id="tujuan_id" multiple="multiple" required>
-                            <option value="All" selected>Semua</option>
+                        <select name="tujuan_id" class="form-control js-example-basic-multiple" id="tujuan_id" multiple="multiple" required>                            
                             @foreach ($divisi as $item)
-                                <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                                <option value="{{ $item->id }}" selected>{{ $item->nama }}</option>
                             @endforeach
                         </select>
                     </div>

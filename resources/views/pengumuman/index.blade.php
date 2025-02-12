@@ -101,8 +101,8 @@
     <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
     <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6"') }}"></script>
 
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    {{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
 
 
     <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
@@ -119,11 +119,12 @@
         let editor1;
         let editor2;
         let file = null;
+        let file_update = null;
         $(function() {
             datatable();
             ckeditor();
 
-            $('.js-example-basic-multiple').select2();
+
         });
 
         function datatable() {
@@ -316,41 +317,87 @@
                 success: function(res) {
 
                     $('#modal-confirm-delete').html(res);
-                    $('#editevaluasi').modal('show');
-                    ckeditor();
-
+                    $('#editpengumuman').modal('show');
+                    ckeditor();                    
                 }
             });
         }
 
+        function updateimage() {
+            file_update = event.target.files[0];
+        }
+
+
+
         function update(id) {
-            let e = document.getElementById("sales_id");
-            let sales = e.options[e.selectedIndex].value;
-            let evaluasi = editor1.getData();
-            let saran = editor2.getData();
+            let k = document.getElementById("topic_id");
+            let topic = k.options[k.selectedIndex].value;
+            let subject = document.getElementById("subject").value;
+            let informasi = editor2.getData();
+
+            let tujuanSelect = document.getElementById("kt_select2_3");
+            let tujuan = Array.from(tujuanSelect.selectedOptions).map(option => option.value);
+
+            let formData = new FormData();
+            formData.append("tujuan", JSON.stringify(tujuan)); // Konversi array ke string
+            formData.append("topic", topic);
+            formData.append("subject", subject);
+            formData.append("informasi", informasi);
+            formData.append("pengumuman_id", id);
+
+            let fileInput = document.getElementById("file");
+
+            if (file_update) { // Pastikan file ada sebelum ditambahkan
+                formData.append("file", file_update);
+            }
+
+            formData.append("_token", $('meta[name="csrf-token"]').attr('content'));
+
             $.ajax({
                 type: 'POST',
-                url: '{{ route('evaluasi.update') }}',
+                url: '{{ route('pengumuman.update') }}',
+                data: formData,
+                processData: false, // Jangan ubah data menjadi string
+                contentType: false, // Jangan ubah tipe konten otomatis
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
                         .attr('content')
                 },
-                data: {
-                    id: id,
-                    sales: sales,
-                    saran: saran,
-                    evaluasi: evaluasi,
-                    "_token": "{{ csrf_token() }}"
-                },
-                success: function(res) {
-                    $('#editevaluasi').modal('hide');
+                success: function() {
+                    $('#editpengumuman').modal('hide');
+
                     iziToast.success({
                         title: 'Success',
-                        message: 'Data Berhasil Diubah',
+                        message: 'Data Berhasil Ditambahkan',
                         position: 'topRight',
                     });
-                    $('.yajra-datatable').DataTable().ajax.reload(null, false);
 
+
+                    document.getElementById("topic_id").selectedIndex = 0;
+                    document.getElementById("subject").value = "";
+                    editor2.setData("");
+                    document.getElementById("tujuan_id").value = "";
+                    fileInput.value = "";
+
+                    $('.yajra-datatable').DataTable().ajax.reload(null, false);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Terjadi error:", error); // Log error di console
+
+                    iziToast.warning({
+                        title: 'Warning',
+                        message: 'Terjadi kesalahan, tetapi aplikasi tetap berjalan.',
+                        position: 'topRight',
+                    });
+
+                    // Tetap lanjutkan proses meskipun error
+                    $('#editpengumuman').modal('hide');
+                    document.getElementById("topic_id").selectedIndex = 0;
+                    document.getElementById("subject").value = "";
+                    editor2.setData("");
+                    document.getElementById("tujuan_id").value = "";
+                    fileInput.value = "";
+                    $('.yajra-datatable').DataTable().ajax.reload(null, false);
                 }
             });
         }
@@ -364,6 +411,8 @@
                 .catch(error => {
                     console.error(error);
                 });
+
+            $('.js-example-basic-multiple').select2();
         }
     </script>
 @endpush
