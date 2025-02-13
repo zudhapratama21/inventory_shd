@@ -101,7 +101,7 @@ class LaporanSalesController extends Controller
                 'user_id' => $item->user_id,                
             ])->exists();
 
-            $mengisiPlanRencana = $mengisiPlan && $mengisiRencana;
+            $mengisiPlanRencana = $mengisiPlan + $mengisiRencana;
 
             $classNames = [
                 0 => 'fc-event-primary fc-event-solid-danger', // Merah (tidak ada plan & rencana)
@@ -111,9 +111,9 @@ class LaporanSalesController extends Controller
 
             // Tambahkan kondisi jika mengisi Plan & Rencana hari itu, maka jadi biru
             $className = $classNames[$statusCount] ?? 'fc-event-primary fc-event-solid-danger';
-            if ($statusCount === 0 && $mengisiPlanRencana == 2) {
+            if ($statusCount == 0 && $mengisiPlanRencana == 2) {
                 $className = 'fc-event-danger fc-event-solid-primary'; // Biru
-            }elseif ($statusCount === 0 && $mengisiPlanRencana == 1) {
+            }elseif ($statusCount == 0 && $mengisiPlanRencana == 1) {
                 $className = 'fc-event-danger fc-event-solid-info';
             }
 

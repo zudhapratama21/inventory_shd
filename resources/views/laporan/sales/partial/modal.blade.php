@@ -59,7 +59,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Kunjungan Sales
-                                <a href="whatsapp://send?text=Assalamualaikum wr wb %0ABagaimana untuk hasil aktifitas {{$text}} pada {{ \Carbon\Carbon::parse($kunjungansales->tanggal)->format('d/F/Y') }} di {{ $kunjungansales->outlet ? $kunjungansales->outlet->nama : $kunjungansales->customer }} ?&app_absent=0&phone={{$kunjungan->user->phone}}"
+                                <a href="whatsapp://send?text=Assalamualaikum wr wb %0ABagaimana untuk hasil aktifitas {{$text}} pada {{ \Carbon\Carbon::parse($kunjungansales->tanggal)->format('d/F/Y') }} di {{ $kunjungansales->outlet ? $kunjungansales->outlet->nama : $kunjungansales->customer }} ?&app_absent=0&phone={{$kunjungansales->user->phone}}"
                                     target="_blank" class="btn btn-light btn-hover-success btn-sm mr-3">
                                     <span class="badge badge-success badge-lg">Click to Wa !!</span>
                                                                     
