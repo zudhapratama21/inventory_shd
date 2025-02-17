@@ -131,6 +131,7 @@ class PlanMarketingController extends Controller
                 $terlambat = 1;
             }
         }
+        $terlambat=0;
 
 
         return view('sales.planmarketing.partial.modal', compact('outlet', 'request', 'terlambat'));
@@ -158,7 +159,7 @@ class PlanMarketingController extends Controller
     public function store(Request $request)
     {
 
-        $outlet = json_decode($request->outlet_id);
+        $outlet = json_decode($request->outlet_id); 
         foreach ($outlet as $key) {
             $planmarketing = PlanMarketing::create([
                 'tanggal' => $request->tanggal,
@@ -167,14 +168,12 @@ class PlanMarketingController extends Controller
             ]);
         }
 
-
         return response()->json('Data Berhasil Ditambahkan');
     }
 
 
     public function edit($id)
     {
-
         $planmarketing = PlanMarketing::with('outlet')->where('id', $id)->first();
         $outlet = Outlet::get();
 
@@ -196,14 +195,13 @@ class PlanMarketingController extends Controller
                 $terlambat = 1;
             }
         }
+        $terlambat=0;
 
         return view('sales.planmarketing.partial.modaledit', compact('planmarketing', 'outlet', 'terlambat'));
     }
 
     public function update(Request $request)
     {
-
-
         $update = PlanMarketing::where('id', $request->data_id)->update([
             'tanggal' => $request->tanggal,
             'outlet_id' => $request->outlet_id

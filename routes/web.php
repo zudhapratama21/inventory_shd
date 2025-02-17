@@ -73,7 +73,10 @@ use App\Http\Controllers\Sales\PlanMarketingController;
 use App\Http\Controllers\Sales\TargetSalesController;
 use App\Http\Controllers\Teknisi\KunjunganTeknisiController;
 use App\Http\Controllers\Teknisi\MaintenanceController;
+use App\Http\Controllers\Teknisi\PlanTeknisiController;
+use App\Http\Controllers\Teknisi\RencanaAktivitasTeknisiController;
 use App\Models\HRD\Pengumuman;
+use App\Models\Teknisi\PlanTeknisi;
 
 Route::middleware('auth', 'verified')->group(function () {
     // Route::get('/', function () {
@@ -1170,6 +1173,30 @@ Route::middleware('has.role')->prefix('teknisi')->group(function () {
         Route::post('/destroy', [KunjunganTeknisiController::class, 'destroy'])->name('kunjunganteknisi.destroy');
     
     });
+
+    Route::prefix('planteknisi')->group(function () {        
+        Route::get('', [PlanTeknisiController::class, 'index'])->name('planteknisi.index');                                  
+        Route::post('/create', [PlanTeknisiController::class, 'create'])->name('planteknisi.create');  
+        Route::post('/store', [PlanTeknisiController::class, 'store'])->name('planteknisi.store');  
+        
+        Route::get('/list', [PlanTeknisiController::class, 'list'])->name('planteknisi.list');  
+        Route::get('{id}/edit', [PlanTeknisiController::class, 'edit'])->name('planteknisi.edit'); 
+        Route::post('update', [PlanTeknisiController::class, 'update'])->name('planteknisi.update');  
+        Route::post('delete', [PlanTeknisiController::class, 'delete'])->name('planteknisi.delete');                   
+    });
+
+    Route::prefix('rencanaaktivitas')->group(function () {        
+        Route::get('', [RencanaAktivitasTeknisiController::class, 'index'])->name('rencanaaktivitasteknisi.index');                                  
+        Route::post('/create', [RencanaAktivitasTeknisiController::class, 'create'])->name('rencanaaktivitasteknisi.create');  
+        Route::post('/store', [RencanaAktivitasTeknisiController::class, 'store'])->name('rencanaaktivitasteknisi.store');  
+        
+        Route::get('/list', [RencanaAktivitasTeknisiController::class, 'list'])->name('rencanaaktivitasteknisi.list');  
+        Route::get('{id}/edit', [RencanaAktivitasTeknisiController::class, 'edit'])->name('rencanaaktivitasteknisi.edit'); 
+        Route::post('update', [RencanaAktivitasTeknisiController::class, 'update'])->name('rencanaaktivitasteknisi.update');  
+        Route::post('delete', [RencanaAktivitasTeknisiController::class, 'delete'])->name('rencanaaktivitasteknisi.delete');                   
+    });
+
+
 });
 
 Route::middleware('has.role')->prefix('hrd')->group(function () {

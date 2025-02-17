@@ -5,7 +5,7 @@
         <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
             <div class="card mr-10">
                 <div class="card-header">
-                    <h5>Plan Marketing</h5>
+                    <h5>Plan Teknisi</h5>
                 </div>
                 <div class="card-body" style="margin-left:-20px">
                     <table class="table">
@@ -16,7 +16,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($planmarketing as $item)
+                            @foreach ($planteknisi as $item)
                                 <tr>
                                     <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('Y-m-d') }}</td>
                                     <td>{{ ucfirst($item->outlet->nama) }}</td>
@@ -42,16 +42,16 @@
                         <div class="form-group">
                             <label for="">Tanggal</label>
                             <input type="date" id="tanggal" class="form-control"
-                                value="{{ $rencanakunjungan->tanggal }}" readonly>
+                                value="{{ $rencanaaktivitasteknisi->tanggal }}" readonly>
                         </div>
 
-                        <input type="hidden" id="data_id" value="{{ $rencanakunjungan->id }}" readonly> 
+                        <input type="hidden" id="data_id" value="{{ $rencanaaktivitasteknisi->id }}" readonly> 
 
                         <div class="form-group">
                             <label for="">Outlet</label> <br>
                             <select name="" id="kt_select2_4" class="form-control" required readonly>
                                 @foreach ($outlet as $item)
-                                    @if ($rencanakunjungan->outlet_id == $item->id)
+                                    @if ($rencanaaktivitasteknisi->outlet_id == $item->id)
                                         <option value="{{ $item->id }}" selected>{{ $item->nama }}</option>
                                     @else
                                         <option value="{{ $item->id }}">{{ $item->nama }}</option>
@@ -63,23 +63,23 @@
                         <div class="form-group">
                             <label for="">Aktivitas</label>
                             <textarea name="aktivitas" class="form-control" id="editor" cols="30" rows="5" readonly>
-                            {{ $rencanakunjungan->aktivitas }}
+                            {{ $rencanaaktivitasteknisi->aktivitas }}
                         </textarea>
                         @else
                             <form id="form-action">
                                 <div class="form-group">
                                     <label for="">Tanggal</label>
                                     <input type="date" id="tanggal" class="form-control"
-                                        value="{{ $rencanakunjungan->tanggal }}" readonly>
+                                        value="{{ $rencanaaktivitasteknisi->tanggal }}" readonly>
                                 </div>
 
-                                <input type="hidden" id="data_id" value="{{ $rencanakunjungan->id }}">
+                                <input type="hidden" id="data_id" value="{{ $rencanaaktivitasteknisi->id }}">
 
                                 <div class="form-group">
                                     <label for="">Outlet</label> <br>
                                     <select name="" id="kt_select2_4" class="form-control" required>
                                         @foreach ($outlet as $item)
-                                            @if ($rencanakunjungan->outlet_id == $item->id)
+                                            @if ($rencanaaktivitasteknisi->outlet_id == $item->id)
                                                 <option value="{{ $item->id }}" selected>{{ $item->nama }}
                                                 </option>
                                             @else
@@ -92,7 +92,7 @@
                                 <div class="form-group">
                                     <label for="">Aktivitas</label>
                                     <textarea name="aktivitas" class="form-control" id="editor" cols="30" rows="5">
-                                {{ $rencanakunjungan->aktivitas }}
+                                {{ $rencanaaktivitasteknisi->aktivitas }}
                             </textarea>
                                 </div>
                                 <div class="modal-footer">

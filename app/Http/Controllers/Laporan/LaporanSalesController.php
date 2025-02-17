@@ -108,6 +108,12 @@ class LaporanSalesController extends Controller
                 1 => 'fc-event-primary fc-event-solid-info', // Hijau (salah satu ada)
                 2 => 'fc-event-primary fc-event-solid-success', // Biru (keduanya ada)
             ];
+            $januari = '2025-01-31'; // Pastikan format tanggal benar (YYYY-MM-DD)
+
+            // Cek apakah hari ini setelah 31 Januari 2025
+            if (Carbon::now()->greaterThan(Carbon::parse($januari))) {
+                $className = 'fc-event-primary fc-event-solid-succes';
+            }
 
             // Tambahkan kondisi jika mengisi Plan & Rencana hari itu, maka jadi biru
             $className = $classNames[$statusCount] ?? 'fc-event-primary fc-event-solid-danger';
@@ -115,6 +121,10 @@ class LaporanSalesController extends Controller
                 $className = 'fc-event-danger fc-event-solid-primary'; // Biru
             }elseif ($statusCount == 0 && $mengisiPlanRencana == 1) {
                 $className = 'fc-event-danger fc-event-solid-info';
+            }
+
+            if (now()->format('Y-m-d') < Carbon::parse('2025-31-01')->format('Y-m-d')) {
+                $className = 'fc-event-primary fc-event-solid-succes';
             }
 
             return [

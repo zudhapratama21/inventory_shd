@@ -49,6 +49,8 @@ class RencanaKunjunganController extends Controller
         if ($start_date < now()->format('Y-m-d')) {
             $terlambat = 1;
         }
+
+        $terlambat=0;
         
 
         return view('sales.rencanakunjungan.partial.modal',compact('outlet','request','planmarketing','terlambat'));
@@ -73,7 +75,16 @@ class RencanaKunjunganController extends Controller
         $rencanakunjungan = RencanaKunjungan::where('id',$id)->first();
         $planmarketing = PlanMarketing::where('tanggal',$rencanakunjungan->tanggal)->where('user_id',auth()->user()->id)->get();
         $outlet = Outlet::get();
-        return view('sales.rencanakunjungan.partial.modaledit',compact('planmarketing','outlet','rencanakunjungan'));        
+
+        $terlambat = 0;
+        $start_date = Carbon::parse($rencanakunjungan->tanggal)->format('Y-m-d');
+        if ($start_date < now()->format('Y-m-d')) {
+            $terlambat = 1;
+        }
+
+        $terlambat=0;
+
+        return view('sales.rencanakunjungan.partial.modaledit',compact('planmarketing','outlet','rencanakunjungan','terlambat'));        
     }
 
     public function update (Request $request)
