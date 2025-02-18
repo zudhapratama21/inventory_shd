@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Teknisi;
 use App\Http\Controllers\Controller;
 use App\Models\KunjunganSales;
 use App\Models\KunjunganTeknisi;
+use App\Models\Outlet;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -35,10 +36,13 @@ class KunjunganTeknisiController extends Controller
                 ->editColumn('tanggal', function (KunjunganTeknisi $kj) {
                     return $kj->tanggal ? with(new Carbon($kj->tanggal))->format('d F Y') : '';
                 })
-                ->editColumn('teknisi_name', function (KunjunganTeknisi $kj) {
+                ->editColumn('user', function (KunjunganTeknisi $kj) {
                     return $kj->user->name;
                 })
-                ->editColumn('time',function (KunjunganTeknisi $kj){
+                ->editColumn('customer', function (KunjunganTeknisi $kj) {
+                    return $kj->outlet ? $kj->outlet->nama : $kj->customer;
+                })
+                ->editColumn('jam_buat',function (KunjunganTeknisi $kj){
                     return $kj->jam_buat ? with(new Carbon($kj->jam_buat))->format('H:i') : with(new Carbon($kj->created_at))->format('H:i');
                 })
                 ->addColumn('action', function ($row) {    
@@ -56,7 +60,8 @@ class KunjunganTeknisiController extends Controller
     public function create()
     {
         $title = 'Kunjungan Teknisi';        
-        return view('teknisi.kunjunganteknisi.create',compact('title'));        
+        $outlet = Outlet::get();        
+        return view('teknisi.kunjunganteknisi.create',compact('title','outlet'));        
     }
 
     public function store(Request $request)
@@ -98,7 +103,7 @@ class KunjunganTeknisiController extends Controller
         
         KunjunganTeknisi::create([
             'tanggal' => $tanggal,
-            'customer' => $request->customer,
+            'outlet_id' => $request->outlet_id,
             'aktifitas' => $request->aktifitas,
             'ttd' => $request->ttd,
             'image' => $nameFile,
@@ -113,8 +118,9 @@ class KunjunganTeknisiController extends Controller
     public function edit($id)
     {
         $title = 'Kunjungan Teknisi';
-        $kunjungan = KunjunganTeknisi::where('id',$id)->first();        
-        return view('teknisi.kunjunganteknisi.edit',compact('title','kunjungan'));
+        $kunjungan = KunjunganTeknisi::where('id',$id)->first(); 
+        $outlet = Outlet::get();      
+        return view('teknisi.kunjunganteknisi.edit',compact('title','kunjungan','outlet'));
     }
 
     public function update(Request $request , $id)
@@ -162,14 +168,23 @@ class KunjunganTeknisiController extends Controller
 
             $ttd = $name; 
         }
-
-        $kunjungan->update([            
-            'customer' => $request->customer,
-            'aktifitas' => $request->aktifitas,
-            'ttd' => $ttd,
-            'image' => $nameFile,
-            'user_id' => auth()->user()->id
-        ]);
+        if ($request->outlet_id == 0) {
+            $kunjungan->update([                            
+                'aktifitas' => $request->aktifitas,
+                'ttd' => $ttd,
+                'image' => $nameFile,
+                'user_id' => auth()->user()->id
+            ]);
+        }else{
+            $kunjungan->update([            
+                'outlet_id' => $request->outlet_id,
+                'aktifitas' => $request->aktifitas,
+                'ttd' => $ttd,
+                'image' => $nameFile,
+                'user_id' => auth()->user()->id
+            ]);
+        }
+        
 
 
         return redirect()->route('kunjunganteknisi.index');

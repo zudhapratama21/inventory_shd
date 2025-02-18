@@ -1,8 +1,12 @@
 <div class="card-body">    
     <div class="form-group">
-        <label>Customer :</label>
-        <input type="text" name="customer" value="{{ old('customer') }}"
-            class="form-control" placeholder="Masukkan customer" required/>
+        <label>Outlet :</label>
+        <select name="outlet_id" class="form-control" id="kt_select2_2" required>
+                <option value="" selected>==== Pilih Outlet ========</option>
+                @foreach ($outlet as $item)
+                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                @endforeach
+        </select>
         @error('customer')
         <div class="invalid-feedback">{{ $message }}</div>
         @enderror

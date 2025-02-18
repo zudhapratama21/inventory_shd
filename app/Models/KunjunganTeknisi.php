@@ -18,12 +18,19 @@ class KunjunganTeknisi extends Model
         'image',
         'user_id',
         'jam_buat',
-        'hari_buat'
+        'hari_buat',
+        'outlet_id'
     ];
 
   
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+   
+    public function outlet()
+    {
+        return $this->belongsTo(Outlet::class, 'outlet_id', 'id');
     }
 }
