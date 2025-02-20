@@ -230,7 +230,7 @@ class FakturPenjualanController extends Controller
 
     public function store(Request $request, PengirimanBarang $pengirimanbarang)
     {
-        // dd($request->all());
+      
 
         $request->validate([
             'tanggal' => ['required'],            

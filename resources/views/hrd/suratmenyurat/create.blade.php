@@ -72,18 +72,23 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="">Request ? </label>
-                                        <input type="text" class="form-control" name="requests">
-                                    </div>                                
+                                        <label for="">Request ? </label>                                        
+                                        <select name="requests" id="kt_select2_4" class="form-control">
+                                            @foreach ($user as $item)
+                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            @endforeach                                            
+                                        </select>
+
+                                    </div>
                                     <div class="form-group">
                                         <label for="">Tipe Surat</label>
-                                        <select name="tipesurat_id" class="form-control" id="">
+                                        <select name="tipesurat_id" class="form-control" id="kt_select2_3">
                                             @foreach ($tipesurat as $item)
                                                 <option value="{{ $item->id }}">{{ $item->nama }}</option>
                                             @endforeach
                                         </select>
-                                    </div>                                         
-                                    
+                                    </div>
+
                                     <div class="form-group">
                                         <label for="">Kepada ?</label>
                                         <input type="text" name="kepada" class="form-control" required>
@@ -92,7 +97,7 @@
                                     <div class="form-group">
                                         <label for="">Tentang ?</label>
                                         <input type="text" name="isi" class="form-control" required>
-                                    </div>                                  
+                                    </div>
 
                                     <div class="form-group">
                                         <label for="">Status</label>
@@ -107,23 +112,29 @@
 
                                     <div class="form-group">
                                         <label for="">File</label>
-                                        <input type="file" name="file" class="form-control" >
+                                        <input type="file" name="file" class="form-control">
                                     </div>
 
                                     <div class="form-group">
                                         <label for="">Publish ? </label>
                                         <select name="publish" id="" class="form-control" required>
-                                            <option value="ya" selected>Iya</option>                                            
-                                            <option value="tidak" >Tidak</option>                                            
+                                            <option value="ya" selected>Iya</option>
+                                            <option value="tidak">Tidak</option>
                                         </select>
                                     </div>
 
+                                    <div class="form-group">
+                                        <label for="">keterangan ?</label>
+                                        <input type="text" name="keterangan" class="form-control" required>
+                                    </div>
+
                                     <div class="col-md-4">
-                                        <button type="submit" class="btn btn-primary"> <i class="flaticon2-reload"></i> Dapatkan Kode</button>
+                                        <button type="submit" class="btn btn-primary"> <i class="flaticon2-reload"></i>
+                                            Dapatkan Kode</button>
                                     </div>
 
                                 </form>
-                            </div>                            
+                            </div>
 
                         </div>
                     </div>

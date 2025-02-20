@@ -29,6 +29,8 @@ class HomeController extends Controller
         $sales = Sales::get();
         $months =  [];
 
+        $permission = auth()->user()->getAllPermissions();
+
         for ($i = 1; $i <= 12; $i++) {
             $databulan = '1-' . $i . '-2023';
             $months[] = [
@@ -46,7 +48,8 @@ class HomeController extends Controller
             'supplier' => $supplier,
             'customer' => $customer,
             'merk' => $merk,
-            'pengumuman' => $pengumuman
+            'pengumuman' => $pengumuman,
+            'permission' => $permission
         ]);
     }
 

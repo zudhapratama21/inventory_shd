@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\HRD\Pembuat;
 use App\Models\HRD\SuratMenyurat;
 use App\Models\HRD\TipeSurat;
+use App\Models\Sales;
+use App\Models\User;
 use App\Traits\CodeTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -26,31 +28,25 @@ class SuratMenyuratController extends Controller
     {
         $title = 'Surat Menyurat';
         $pembuat = Pembuat::get();
-        $tipesurat = TipeSurat::get();        
+        $tipesurat = TipeSurat::get(); 
+        $user = User::get();       
 
-        return view('hrd.suratmenyurat.create',compact('title','pembuat','tipesurat'));
+        return view('hrd.suratmenyurat.create',compact('title','pembuat','tipesurat','user'));
 
     } 
 
     public function datatable (Request $request)
     {
-        $surat = SuratMenyurat::with(['pembuat.user','tipesurat'])->orderBy('id','desc');
+        $surat = SuratMenyurat::with(['pembuat','tipesurat','request'])->orderBy('id','desc');        
 
         return DataTables::of($surat)
                 ->addIndexColumn()
                 ->editColumn('tanggal', function (SuratMenyurat $kj) {
                     return $kj->tanggal ? with(new Carbon($kj->tanggal))->format('d F Y') : '';
-                })               
-                ->editColumn('pembuat', function (SuratMenyurat $kj) {
-                    return $kj->pembuat->user->name;
-                    // return view('hrd.suratmenyurat.text',compact('name'));
-                })
+                })                              
                 ->editColumn('tipesurat', function (SuratMenyurat $kj) {
                     return $kj->tipesurat->nama;
-                })
-                ->editColumn('request', function (SuratMenyurat $kj) {
-                    return $kj->request;
-                })
+                })               
                 ->addColumn('action', function ($row) {    
                     $id = $row->id;   
                     $pembuat = $row->pembuat_id;
@@ -83,14 +79,15 @@ class SuratMenyuratController extends Controller
     $suratmenyurat = SuratMenyurat::create([
             'tanggal' => Carbon::parse($request->tanggal)->format('Y-m-d'),
             'kode' => $kode,
-            'pembuat_id' => $pembuat_id->id,
+            'pembuat_id' => auth()->user()->id,
             'tipesurat_id' => $request->tipesurat_id,
             'kepada' => $request->kepada,
             'isi' => $request->isi,
             'status' => $request->status,
             'file' => $nama,
             'request' => $request->requests,
-            'publish' => $request->publish
+            'publish' => $request->publish,
+            'keterangan' => $request->keterangan
       ]);
 
       return redirect()->route('suratmenyurat.index')->with('status','Data Berhasil Ditambahkan');
@@ -174,14 +171,16 @@ class SuratMenyuratController extends Controller
       $surat = SuratMenyurat::with(['pembuat','tipesurat'])->where('id',$id)->first();
       $pembuat = Pembuat::where('id','!==',$surat->pembuat_id)->get();
       $tipesurat = TipeSurat::where('id','<>'.$surat->tipesurat_id)->get();      
+      $user = User::get();
+      
 
-      return view('hrd.suratmenyurat.edit',compact('surat','pembuat','tipesurat','title'));
+      return view('hrd.suratmenyurat.edit',compact('surat','pembuat','tipesurat','title','user'));
    }
 
    public function update (Request $request , $id)
    {
 
-         $suratmenyurat =SuratMenyurat::where('id',$id)->first();
+        $suratmenyurat =SuratMenyurat::where('id',$id)->first();
         $img = $request->file('file');
         $nama = $suratmenyurat->file;
         if ($img) { 
@@ -202,7 +201,8 @@ class SuratMenyuratController extends Controller
          'status' => $request->status,
          'file' => $nama,
          'request' => $request->requests,
-         'publish' => $request->publish
+         'publish' => $request->publish,
+         'keterangan' => $request->keterangan
       ]);
 
       return redirect()->route('suratmenyurat.index')->with('status','Data Berhasil Diubah');

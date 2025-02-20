@@ -117,6 +117,7 @@
 
                 </div>
 
+                @can('grafikpenjualan-list')
                 <div class="row">
                     <div class="col-lg-12">
                         <!--begin::Card-->
@@ -240,9 +241,11 @@
                         <!--end::Card-->
                     </div>
                 </div>
+                @endcan
+                
 
 
-                <!--begin::Row-->
+                @can('grafikkategori-list')
                 <div class="row">
                     <div class="col-md-6">
                         <!--begin::Tiles Widget 1-->
@@ -282,6 +285,10 @@
                         <!--end::Tiles Widget 1-->
                     </div>
                 </div>
+                @endcan
+                <!--begin::Row-->
+               
+                @can('grafikproduk-list')
                 <div class="row">
                     <div class="col-xl-12">
                         <!--begin::Tiles Widget 1-->
@@ -337,9 +344,11 @@
                         <!--end::Tiles Widget 1-->
                     </div>
                 </div>
+                @endcan
+              
                 <!--end::Row-->
-
-                {{--  BEST PRODUK --}}
+                @can('tabletopproduk-list')
+                      {{--  BEST PRODUK --}}
                 <div class="row">
                     <div class="col-xl-12">
                         <!--begin::Tiles Widget 1-->
@@ -481,9 +490,10 @@
                     </div>
                 </div>
                 {{-- END OF BEST PRODUK --}}
+                @endcan
 
-
-                {{-- TOP CUSTOMER --}}
+                @can('tabletopcustomer')
+                     {{-- TOP CUSTOMER --}}
                 <div class="row">
                     <div class="col-xl-12">
                         <!--begin::Tiles Widget 1-->
@@ -599,10 +609,10 @@
                         <!--end::Tiles Widget 1-->
                     </div>
                 </div>
-
                 {{-- END TOP CUSTOMER --}}
-
-                {{-- TOP PRINCIPLE --}}
+                @endcan                       
+                @can('tabletopprinciple')
+                     {{-- TOP PRINCIPLE --}}
                 <div class="row">
                     <div class="col-xl-12">
                         <!--begin::Tiles Widget 1-->
@@ -718,9 +728,8 @@
                         <!--end::Tiles Widget 1-->
                     </div>
                 </div>
-
                 {{-- END OF TOP PRINCIPLE --}}
-
+                @endcan    
             </div>
             <!--end::Container-->
         </div>
@@ -728,6 +737,10 @@
     </div>
 
     {{-- modal Customer --}}
+
+    @php
+        $userPermissions = $permission; // Mengambil daftar permission user        
+    @endphp
     <div id="modal-data"></div>
     @include('partial.modal.produk')
     @include('partial.modal.customer')
@@ -747,9 +760,7 @@
         const produk_chart = document.getElementById('produkChart');
         const best_produk = document.getElementById('chartbestproduk');
 
-
-
-
+        let userPermissions = @json($userPermissions);
         // =================================== VARIABLE UNTUK GRAFIK PENJUALAN =====================================
         let principlegrafik = 'All';
         let customergrafik = 'All';
@@ -766,7 +777,6 @@
         let bulanProduk = 'All';
 
         // ================================================== END ===================================================
-
         let year = {{ now()->format('Y') }};
         let kategori = 'All';
         let dataRange = null;
@@ -792,23 +802,50 @@
         let topprinciplekategori = 'All';
         let sales_principle = 'All';
 
-
         // =========================================================================================================================
-        $(document).ready(function() {
-            chartyear();
-            chart_kategori();
-            chartProduk();
-            datatable();
-            datatableCustomer();
-            datatabletopcustomer();
-            datatablelistproduct();
-            datatabletopPrinciple();
-            datatableProductByPrinciple();
+        $(document).ready(function() {  
+            // if (hasPermission('grafikpenjualan-list')) {
+            //     chartyear();
+            // }
+           
+            
+            // if (hasPermission('grafikkategori-list')) {
+            //     chart_kategori();
+            // }
+            // if (hasPermission('grafikproduk-list')) {
+            //     chartProduk();
+            // }
+            // if (hasPermission('tabletopproduk-list')) {
+            //     datatable();
+            //     datatableCustomer();
+            // }
+            // if (hasPermission('tabletopcustomer-list')) {
+            //     datatabletopcustomer();
+            //     datatablelistproduct();
+            // }           
+            // if (hasPermission('tabletopprinciple-list')) {
+            //     datatabletopPrinciple();
+            //     datatableProductByPrinciple();
+            // }                       
+
+            const permissionActions = {
+                'grafikpenjualan-list': [chartyear],
+                'grafikkategori-list': [chart_kategori],
+                'grafikproduk-list': [chartProduk],
+                'tabletopproduk-list': [datatable, datatableCustomer],
+                'tabletopcustomer-list': [datatabletopcustomer, datatablelistproduct],
+                'tabletopprinciple-list': [datatabletopPrinciple, datatableProductByPrinciple],
+                };
+
+                Object.entries(permissionActions).forEach(([permission, actions]) => {
+                    if (hasPermission(permission)) {
+                        actions.forEach(action => action());
+                    }
+                });
+
             datatablepengumuman();
         })
-
         // ============================================================================================================================
-
 
         // ==================================================================== CHART UNTUK GRAFIK BAR PENJUALAN =======================================
         let options = {
@@ -816,6 +853,11 @@
         }
 
         // ==================================================================== CHART UNTUK GRAFIK BAR PENJUALAN =======================================
+
+        function hasPermission(permission) {
+            let dataPermission = userPermissions.map(p => p.name);
+            return dataPermission.includes(permission);
+        }
 
         function chartyear() {
             $.ajax({

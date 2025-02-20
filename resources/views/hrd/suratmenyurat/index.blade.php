@@ -64,7 +64,7 @@
                                             <a class="dropdown-item " href="{{ route('tipesurat.index') }}">Tipe Surat</a>
                                         </div>
                                     </div>
-                                                            
+
                                     <!--begin::Button-->
                                     @can('suratmenyurat-create')
                                         <a href="{{ route('suratmenyurat.create') }}"
@@ -86,9 +86,10 @@
                                             <th>Tanggal</th>
                                             <th>Nomor Surat</th>
                                             <th>Pembuat</th>
-                                            <th>Tipe Surat</th>   
-                                            <th>Kepada</th>   
-                                            <th>Request</th>                                                                                     
+                                            <th>Tipe Surat</th>
+                                            <th>Kepada</th>
+                                            <th>Request</th>
+                                            <th>Keterangan</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -142,8 +143,8 @@
                         name: 'kode'
                     },
                     {
-                        data: 'pembuat',
-                        name: 'pembuat.user.name'
+                        data: 'pembuat.name',
+                        name: 'pembuat.name'
                     },
                     {
                         data: 'tipesurat',
@@ -152,11 +153,15 @@
                     {
                         data: 'kepada',
                         name: 'kepada'
-                    },   
+                    },
                     {
-                        data: 'request',
-                        name: 'request'
-                    },                 
+                        data: 'request.name',
+                        name: 'request.name'
+                    },
+                    {
+                        data: 'keterangan',
+                        name: 'keterangan'
+                    },
                     {
                         data: 'action',
                         render: function(data) {

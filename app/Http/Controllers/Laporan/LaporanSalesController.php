@@ -34,7 +34,7 @@ class LaporanSalesController extends Controller
             ];
         }
 
-        return view('laporan.sales.index', compact('title', 'sales', 'bulan','outlet'));
+        return view('laporan.sales.index', compact('title', 'sales', 'bulan', 'outlet'));
     }
 
 
@@ -93,12 +93,12 @@ class LaporanSalesController extends Controller
             // Cek apakah kunjungan ini mengisi PlanMarketing dan RencanaKunjungan
             $mengisiPlan = PlanMarketing::where([
                 'tanggal' => $item->tanggal,
-                'user_id' => $item->user_id,                
+                'user_id' => $item->user_id,
             ])->exists();
- 
+
             $mengisiRencana = RencanaKunjungan::where([
                 'tanggal' => $item->tanggal,
-                'user_id' => $item->user_id,                
+                'user_id' => $item->user_id,
             ])->exists();
 
             $mengisiPlanRencana = $mengisiPlan + $mengisiRencana;
@@ -110,21 +110,19 @@ class LaporanSalesController extends Controller
             ];
             $januari = '2025-01-31'; // Pastikan format tanggal benar (YYYY-MM-DD)
 
-            // Cek apakah hari ini setelah 31 Januari 2025
-            if (Carbon::now()->greaterThan(Carbon::parse($januari))) {
-                $className = 'fc-event-primary fc-event-solid-succes';
-            }
+
 
             // Tambahkan kondisi jika mengisi Plan & Rencana hari itu, maka jadi biru
             $className = $classNames[$statusCount] ?? 'fc-event-primary fc-event-solid-danger';
             if ($statusCount == 0 && $mengisiPlanRencana == 2) {
                 $className = 'fc-event-danger fc-event-solid-primary'; // Biru
-            }elseif ($statusCount == 0 && $mengisiPlanRencana == 1) {
+            } elseif ($statusCount == 0 && $mengisiPlanRencana == 1) {
                 $className = 'fc-event-danger fc-event-solid-info';
             }
 
-            if (now()->format('Y-m-d') < Carbon::parse('2025-31-01')->format('Y-m-d')) {
-                $className = 'fc-event-primary fc-event-solid-succes';
+            // Cek apakah hari ini setelah 31 Januari 2025
+            if (Carbon::parse($item->tanggal)->lessThan(Carbon::create(2025, 1, 31))) {
+                $className = 'fc-event-danger fc-event-solid-success';
             }
 
             return [
@@ -148,7 +146,7 @@ class LaporanSalesController extends Controller
 
     public function show($id)
     {
-        $kunjungansales = KunjunganSales::with('outlet','user')->where('id', $id)->first();
+        $kunjungansales = KunjunganSales::with('outlet', 'user')->where('id', $id)->first();
         $planmarketing = PlanMarketing::with('outlet')
             ->where('user_id', $kunjungansales->user_id)
             ->where('tanggal', $kunjungansales->tanggal)
@@ -161,7 +159,7 @@ class LaporanSalesController extends Controller
             ->get();
         $text = strip_tags($kunjungansales->aktifitas);
 
-        return view('laporan.sales.partial.modal', compact('kunjungansales', 'planmarketing', 'rencanakunjungan','text'));
+        return view('laporan.sales.partial.modal', compact('kunjungansales', 'planmarketing', 'rencanakunjungan', 'text'));
     }
 
     public function datatablesales(Request $request)

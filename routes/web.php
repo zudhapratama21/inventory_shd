@@ -75,8 +75,6 @@ use App\Http\Controllers\Teknisi\KunjunganTeknisiController;
 use App\Http\Controllers\Teknisi\MaintenanceController;
 use App\Http\Controllers\Teknisi\PlanTeknisiController;
 use App\Http\Controllers\Teknisi\RencanaAktivitasTeknisiController;
-use App\Models\HRD\Pengumuman;
-use App\Models\Teknisi\PlanTeknisi;
 
 Route::middleware('auth', 'verified')->group(function () {
     // Route::get('/', function () {

@@ -78,10 +78,23 @@
                                         <label for="">Tanggal</label>
                                         <input type="date" name="tanggal" value="{{ $surat->tanggal }}"
                                             class="form-control" readonly>
-                                    </div>                                                                     
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Request ? </label>
+                                        <select name="requests" class="form-control" id="">
+                                            @foreach ($user as $item)
+                                                @if ($item->id == $surat->request)
+                                                    <option value="{{ $item->id }}" selected>{{ $item->name }}</option>
+                                                @else
+                                                    <option value="{{ $item->id }}">{{ $item->name }}</option>                                                    
+                                                @endif
+                                                
+                                            @endforeach
+                                        </select>
+                                    </div>
                                     <div class="form-group">
                                         <label for="">Tipe Surat</label>
-                                        <input type="text" name="tipesurat" value="{{ $surat->tipesurat->nama }}"
+                                        <input type="text" name="tipesurat"  value="{{ $surat->tipesurat->nama }}"
                                             class="form-control" readonly>
                                     </div>
 
@@ -110,11 +123,6 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="">Request ? </label>
-                                        <input type="text" class="form-control"  name="requests" value="{{$surat->request}}">
-                                    </div>   
-
-                                    <div class="form-group">                                                                                
                                         <label for="">File</label>
                                         <br>
                                         <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
@@ -122,9 +130,10 @@
                                             Cek File
                                         </button>
 
-                                        <a href="{{ asset('/storage/suratmenyurat/' . $surat->file) }}" class="btn btn-primary btn-sm" target="_blank">
+                                        <a href="{{ asset('/storage/suratmenyurat/' . $surat->file) }}"
+                                            class="btn btn-primary btn-sm" target="_blank">
                                             <i class="flaticon-download"></i>
-                                        </a>                                        
+                                        </a>
 
                                         <br>
                                         <input type="file" name="file" class="form-control mt-2">
@@ -133,19 +142,25 @@
                                     <div class="form-group">
                                         <label for="">Publish ? </label>
                                         <select name="publish" id="" class="form-control" required>
-                                            <option value="{{$surat->publish}}" selected>{{$surat->publish}}</option>                                            
-                                            <option value="ya" >Iya</option>                                            
-                                            <option value="tidak" >Tidak</option>                                            
+                                            <option value="{{ $surat->publish }}" selected>{{ $surat->publish }}</option>
+                                            <option value="ya">Iya</option>
+                                            <option value="tidak">Tidak</option>
                                         </select>
                                     </div>
-                                    
+
+                                    <div class="form-group">
+                                        <label for="">keterangan ?</label>
+                                        <input type="text" name="keterangan" value="{{ $surat->keterangan }}"
+                                            class="form-control" required>
+                                    </div>
+
                                     <div class="col-md-4">
                                         <button type="submit" class="btn btn-primary"> <i class="flaticon2-reload"></i>
                                             Dapatkan Kode</button>
                                     </div>
-                                    
 
-                                   
+
+
 
                                 </form>
                             </div>
@@ -175,10 +190,11 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <iframe src="{{ asset('/storage/suratmenyurat/' . $surat->file) }}" title="W3Schools Free Online Web Tutorials" width="100%" height="500px"></iframe>
+                    <iframe src="{{ asset('/storage/suratmenyurat/' . $surat->file) }}"
+                        title="W3Schools Free Online Web Tutorials" width="100%" height="500px"></iframe>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>                    
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
