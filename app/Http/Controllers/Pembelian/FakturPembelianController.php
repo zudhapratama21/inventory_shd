@@ -236,7 +236,7 @@ class FakturPembelianController extends Controller
             $tanggalPenerimaan = $penerimaanbarang->tanggal;
             $pembelian = PesananPembelian::where('id',$id_po)->first();
     
-            $tanggal_top = date("Y-m-d", strtotime("+".$pembelian->top." days" . $tanggalPenerimaan));    
+           $tanggal_top = date("Y-m-d", strtotime("+".$pembelian->top." days" . $tanggalPenerimaan));    
     
             //start cek status exp date PB :
             $PBdetails = PenerimaanBarangDetail::where('penerimaan_barang_id', '=', $id_pb)->get();
@@ -331,7 +331,9 @@ class FakturPembelianController extends Controller
             $hutang->tanggal_top = $tanggal_top;
             $hutang->save();
             #################### end update Hutang ##################
+            $this->statusPesanan($id_po);
             DB::commit();
+
     
             return redirect()->route('fakturpembelian.index')->with('status', 'Faktur Pembelian berhasil dibuat !');
             
@@ -378,6 +380,7 @@ class FakturPembelianController extends Controller
         $PB = PenerimaanBarang::find($id_pb);
         $PB->status_pb_id = 1;
         $PB->save();
+        $this->statusPesanan($fakturpembelian->pesanan_pembelian_id);
 
         return redirect()->route('fakturpembelian.index')->with('status', 'Data Faktur Pembelian Berhasil Dihapus !');
     }
@@ -467,6 +470,23 @@ class FakturPembelianController extends Controller
             return $totalgrandtotal;
         } else {
             return number_format($totalgrandtotal, 2, ',', '.');
+        }
+    }
+
+    public function statusPesanan ($id)
+    {
+        $pesananPembelian = PesananPembelian::find($id);
+
+        if ($pesananPembelian->status_po_id == 4) {
+            $fakturPembelian = FakturPembelian::where('pesanan_pembelian_id', $id)->first();
+
+            if ($fakturPembelian) {
+               $pesananPembelian->status_po_id = 5;
+            } else {
+               $pesananPembelian->status_po_id = 4;
+            }
+            
+            $pesananPembelian->save();
         }
     }
 

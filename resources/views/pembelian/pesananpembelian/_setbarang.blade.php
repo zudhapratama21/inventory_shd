@@ -206,7 +206,7 @@
                                             class="form-control form-control-solid" name="nama" id="nama"
                                             value="{{ $product_name }}" />
                                         <input type="hidden" id="product_id" name="product_id"
-                                            value="{{ $item->product_id }}">
+                                            value="{{ $item->product_id }}" >
                                         <input type="hidden" id="id" name="id"
                                             value="{{ $item->id }}">
                                     </div>
@@ -215,7 +215,7 @@
                                     <label class="col-lg-2 col-form-label">Qty</label>
                                     <div class="col-lg-2">
                                         <input type="number" class="form-control" id="qty" name="qty"
-                                            value="{{ $item->qty }}" />
+                                            value="{{ $item->qty }}" {{ $status ? ($status > 2 ? 'disabled' : '') : '' }}/>
                                     </div>
                                 </div>
                                 <div class="form-group row">

@@ -38,5 +38,11 @@ class HargaNonExpired extends Model
     {
         return $this->belongsTo(PenerimaanBarang::class, 'penerimaanbarang_id', 'id');
     }
+
+   
+    public function harganonexpireddetail()
+    {
+        return $this->hasMany(HargaNonExpiredDetail::class, 'harganonexpired_id');
+    }
     
 }

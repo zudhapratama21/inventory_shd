@@ -3,17 +3,7 @@
     <!--begin::Container-->
     <div class=" container  d-flex align-items-stretch justify-content-between">
         <!--begin::Left-->
-        <div class="d-flex align-items-stretch mr-3">
-            <!--begin::Header Logo-->
-            <div class="header-logo">
-                <a href="/">
-                    <img alt="Logo" src="{{ asset('logo_bsb_2.png') }}"
-                        class="logo-default max-h-40px" />
-                    <img alt="Logo" src="{{ asset('logo_bsb_2.png') }}"
-                        class="logo-sticky max-h-40px" />
-                </a>
-            </div>
-            <!--end::Header Logo-->
+        <div class="d-flex align-items-stretch mr-3">            
 
             <!--begin::Header Menu Wrapper-->
             <div class="header-menu-wrapper header-menu-wrapper-left" id="kt_header_menu_wrapper">

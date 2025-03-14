@@ -42,7 +42,7 @@ class PengirimanBarang extends Model
 
     public function FakturSO()
     {
-        return $this->hasMany(FakturPenjualan::class, 'pesanan_penjualan_id', 'id');
+        return $this->hasMany(FakturPenjualan::class, 'pengiriman_barang_id');
     }
 
     public function PengirimanBarangDetails()

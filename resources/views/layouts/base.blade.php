@@ -28,6 +28,7 @@
     <!--end::Global Theme Styles-->
 
     <link href="{{ asset('assets/plugins/custom/fullcalendar/fullcalendar.bundle.css?v=7.0.6') }}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.min.css">
 
     <!--begin::Layout Themes(used by all pages)-->
     <!--end::Layout Themes-->

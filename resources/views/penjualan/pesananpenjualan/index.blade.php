@@ -87,6 +87,7 @@
                                         <th>Tanggal</th>
                                         <th>Customer</th>
                                         <th>Status</th>
+                                        <th>Ket Internal</th>
                                         <th style="width: 15%">Action</th>
                                     </tr>
                                 </thead>
@@ -109,7 +110,6 @@
 <div id="modal-show-detail"></div>
 @endsection
 @push('script')
-<script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6') }}"></script>
 <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
 <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
 
@@ -131,6 +131,7 @@
                   {data: 'tanggal', name: 'tanggal'},
                   {data: 'customer', name: 'customers.nama'},
                   {data: 'status', name: 'statusSO.nama'},
+                  {data: 'keterangan_internal', name: 'keterangan_internal'},
                   {
                       data: 'action', 
                       render: function(data){

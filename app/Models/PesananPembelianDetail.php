@@ -44,4 +44,10 @@ class PesananPembelianDetail extends Model
     {
         return $this->belongsTo(PesananPembelian::class, 'pesanan_pembelian_id', 'id');
     }
+
+   
+    public function temppb()
+    {
+        return $this->hasOne(TempPb::class, 'pesanan_pembelian_detail_id');
+    }
 }

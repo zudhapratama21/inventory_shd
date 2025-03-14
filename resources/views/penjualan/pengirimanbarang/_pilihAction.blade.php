@@ -4,9 +4,6 @@
         <a href="{{ $pilihUrl }}" class="btn btn-success btn-sm">
             <i class="flaticon2-check-mark"></i> Pilih
         </a>
-
         @endcan
-
-
     </div>
 </div>

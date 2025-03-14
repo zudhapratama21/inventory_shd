@@ -17,7 +17,8 @@ class CanvassingPengembalian extends Model
         'canvassing_pesanan_id',
         'tanggal',
         'customer_id',
-        'keterangan'
+        'keterangan',
+        'status'
     ];
 
    

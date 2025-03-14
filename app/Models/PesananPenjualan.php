@@ -40,7 +40,8 @@ class PesananPenjualan extends Model
         'ppn',
         'grandtotal',
         'sales_id',
-        'tanggal_pesanan_customer'
+        'tanggal_pesanan_customer',
+        'keterangan_internal'
     ];
     protected $dates = ['tanggal'];
 
@@ -87,5 +88,11 @@ class PesananPenjualan extends Model
     public function sales()
     {
         return $this->belongsTo(Sales::class, 'sales_id', 'id');
+    }
+
+   
+    public function pesananpenjualandetail()
+    {
+        return $this->hasMany(PesananPenjualanDetail::class, 'pesanan_penjualan_id');
     }
 }

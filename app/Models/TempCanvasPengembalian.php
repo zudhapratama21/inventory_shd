@@ -11,7 +11,8 @@ class TempCanvasPengembalian extends Model
 
     protected $table = 'temp_canvas_pengembalians';
     protected $fillable = [
-        'canvassing_pesanan_id',
+        'canvassing_pesanan_id',  
+        'canvassing_pesanan_detail_id',      
         'product_id',
         'tanggal',
         'qty',

@@ -18,9 +18,9 @@ class CanvassingPesanan extends Model
         'tanggal',
         'customer_id',   
         'qty',
+        'status'
     ];
 
-    
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
@@ -34,6 +34,12 @@ class CanvassingPesanan extends Model
     public function updater()
     {
         return $this->belongsTo(User::class, 'updated_by', 'id');
+    }
+
+    
+    public function canvassingdetail()
+    {
+        return $this->hasMany(CanvassingPesananDetail::class, 'canvassing_pesanan_id');
     }
 
     

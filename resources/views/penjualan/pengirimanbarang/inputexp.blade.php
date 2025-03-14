@@ -104,17 +104,10 @@
                                                 <div class="d-flex flex-nowrap">
 
                                                     @can('pengirimanbarang-create')
-                                                        @if ($item->products->status_exp == 1)
-                                                            <a href="{{ route('pengirimanbarang.setexp', $item) }}"
-                                                                class="btn btn-success btn-sm">
-                                                                <i class="flaticon2-check-mark"></i> Pilih
-                                                            </a>
-                                                        @else
-                                                            <a href="{{ route('pengirimanbarang.setproduk', $item) }}"
-                                                                class="btn btn-success btn-sm">
-                                                                <i class="flaticon2-check-mark"></i> Pilih
-                                                            </a>
-                                                        @endif                                                    
+                                                        <a href="{{ route('pengirimanbarang.setdaftarkirim', ['id'=>$item->id]) }}"
+                                                            class="btn btn-success btn-sm">
+                                                            <i class="flaticon2-check-mark"></i> Pilih
+                                                        </a>                                              
                                                     @endcan
                                                 </div>
                                             </div>

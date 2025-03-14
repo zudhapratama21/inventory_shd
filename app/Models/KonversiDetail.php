@@ -21,7 +21,10 @@ class KonversiDetail extends Model
         'satuan',
         'exp_date',
         'lot',
-        'user_id'
+        'user_id',
+        'harga_beli',
+        'diskon_persen',
+        'diskon_rupiah'
     ];
 
 

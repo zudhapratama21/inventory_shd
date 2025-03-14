@@ -32,7 +32,8 @@ class PesananPembelian extends Model
         'ongkir',
         'ppn',
         'grandtotal',
-        'no_so_customer'
+        'no_so_customer',
+        'keterangan_internal'
     ];
     protected $dates = ['tanggal'];
 
@@ -75,7 +76,6 @@ class PesananPembelian extends Model
     {
         return $this->belongsTo(User::class, 'updated_by', 'id');
     }
-
    
     public function pesananpembeliandetail()
     {

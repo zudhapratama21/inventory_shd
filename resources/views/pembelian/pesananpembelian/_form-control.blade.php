@@ -131,13 +131,20 @@
 
     <div class="separator separator-dashed my-5"></div>
     <div class="form-group row">
-        <div class="col-lg-6">
+        <div class="col-lg-3">
             <label class="">Keterangan:</label>
             <div class="kt-input-icon kt-input-icon--right">
                 <textarea class="form-control" name="keterangan" id="keterangan"></textarea>
             </div>
-
         </div>
+
+        <div class="col-lg-3">
+            <label class="">Keterangan Internal: <span class="text-danger" style="font-size: 67%">*(keterangan tidak muncul saat di print)</span> </label>
+            <div class="kt-input-icon kt-input-icon--right">
+                <textarea class="form-control" name="keterangan_internal" id="keterangan"></textarea>
+            </div>
+        </div>
+
         <div class="col-lg-6">
             <div id="div_summary">
                 <div class="row">

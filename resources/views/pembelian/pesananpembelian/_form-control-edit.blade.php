@@ -4,6 +4,7 @@
     <div class="form-group row">
         <label class="col-lg-1 col-form-label text-right">Supplier:</label>
         <div class="col-lg-4">
+            @if ($pesananpembelian->status_po_id == 1 || $pesananpembelian->status_po_id == 2)
             <select class="form-control select2" id="supplier_id" name="supplier_id">
                 <option value="">Pilih Supplier</option>
                 @foreach ($suppliers as $cg)
@@ -14,6 +15,12 @@
                     @endif
                 @endforeach
             </select>
+            @else
+            <select name="supplier_id" id="" class="form-control" disabled>
+                <option value="{{ $pesananpembelian->supplier_id }}">{{ $pesananpembelian->suppliers->nama }}</option>
+            </select>
+            @endif
+          
             @error('supplier_id')
             <div class="invalid-feedback">{{ $message }}</div>
             @enderror
@@ -99,9 +106,12 @@
         </div>
     </div>
 
+    @if ($pesananpembelian->status_po_id == 1 || $pesananpembelian->status_po_id == 2)
     <div class="text-right mb-3">
         <a href="javascript:caribarang()" class="btn btn-sm btn-primary"><i class="flaticon2-add"></i>Tambah Barang</a>
     </div>
+    @endif
+
     <div class="form-group row">
         <div class="col-lg-12">
             <div id="tabel_detil" class="table-responsive">
@@ -130,10 +140,17 @@
 
     <div class="separator separator-dashed my-5"></div>
     <div class="form-group row">
-        <div class="col-lg-6">
+        <div class="col-lg-3">
             <label class="">Keterangan:</label>
             <div class="kt-input-icon kt-input-icon--right">
                 <textarea class="form-control" name="keterangan" id="keterangan">{{$pesananpembelian->keterangan}}</textarea>
+            </div>
+
+        </div>
+        <div class="col-lg-3">
+            <label class="">Keterangan Internal: <span class="text-danger" style="font-size: 67%">*(keterangan tidak muncul saat di print)</span> </label>
+            <div class="kt-input-icon kt-input-icon--right">
+                <textarea class="form-control" name="keterangan_internal" id="keterangan">{{$pesananpembelian->keterangan_internal}}</textarea>
             </div>
 
         </div>

@@ -19,7 +19,8 @@ class CanvassingPesananDetail extends Model
         'tanggal',
         'qty',
         'qty_sisa',
-        'keterangan'
+        'keterangan',
+        'status_data'
     ];
 
     
@@ -42,6 +43,18 @@ class CanvassingPesananDetail extends Model
     public function updater()
     {
         return $this->belongsTo(User::class, 'updated_by', 'id');
+    }
+
+    public function tempcanvaskembali()
+    {
+        return $this->hasOne(TempCanvasPengembalian::class, 'canvassing_pesanan_id');
+    }
+
+   
+    
+    public function canvassingpengembaliandet()
+    {
+        return $this->hasMany(CanvassingPesananDetail::class, 'canvassing_pesanan_detail_id');
     }
     
     

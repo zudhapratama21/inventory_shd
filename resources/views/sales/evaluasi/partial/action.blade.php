@@ -13,7 +13,6 @@
                     <i class="flaticon2-trash text-danger"></i>
                 </a>
             @endcan
-
         </div>
     </div>
 </div>

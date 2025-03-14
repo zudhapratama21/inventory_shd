@@ -31,35 +31,50 @@
             <input type="text" name="no_so" id="no_so" readonly="readonly" class="form-control"
                 value="{{ $pesananpenjualan->kode }}" />
         </div>
-
-    </div>
-
-    <div class="text-right mb-3">
-        <a href="javascript:caribarang()" class="btn btn-sm btn-primary"><i class="flaticon2-add"></i>Tambah Barang</a>
-    </div>
+    </div>   
+    <h5><span class="badge badge-info">Daftar Produk</span></h5>
     <div class="form-group row">
         <div class="col-lg-12">
-            <div id="tabel_detil" class="table-responsive">
-                <table class="table">
+            <div class="table-responsive">
+                <table class="table yajra-datatable-pesanan collapsed">
                     <thead class="thead-light">
                         <tr>
                             <th>Kode barang</th>
                             <th>Nama Barang</th>
-                            <th style="width: 5%">Satuan</th>
-                            <th style="width: 5%">Qty Pesanan</th>
-                            <th style="width: 5%">Qty Sisa</th>
-                            <th style="width: 5%">Qty Kirim</th>
-                            <th>Keterangan</th>
-                            <th>-</th>
+                            <th>Satuan</th>
+                            <th>Stok</th>
+                            <th>Qty Pesanan</th>
+                            <th>Qty Sisa</th>  
+                            <th>Status</th>                                               
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-
                     </tbody>
                 </table>
             </div>
         </div>
+    </div>
+    <h5><span class="badge badge-info">Daftar Produk Terpilih</span></h5>
 
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="table-responsive">
+                <table class="table yajra-datatable-daftar collapsed">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Kode barang</th>
+                            <th>Nama Barang</th>
+                            <th>Satuan</th>
+                            <th>Qty Kirim</th>                           
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <div class="separator separator-dashed my-5"></div>
@@ -72,8 +87,7 @@
 
         </div>
         <div class="col-lg-6">
-
-
+            
         </div>
 
     </div>

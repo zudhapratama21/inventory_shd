@@ -5,8 +5,7 @@
                 <span class="badge badge-danger">Belum Input Expired</span>    
             @else
                 <span class="badge badge-primary">Belum Difaktur</span>
-            @endif
-            
+            @endif            
        @elseif($status_pengiriman == 2 )
            <span class="badge badge-success">Sudah Terfaktur</span>
        @endif

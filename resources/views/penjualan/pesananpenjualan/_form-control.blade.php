@@ -64,7 +64,7 @@
     <div class="form-group row">
         <label class="col-lg-1 col-form-label text-right">Kategori:</label>
         <div class="col-lg-4">
-            <select class="form-control select2" id="kategori" name="kategoripesanan_id" required>
+            <select class="form-control select2" id="kategori" name="kategoripesanan_id" onchange="" required>
                 <option value="">Pilih Kategori</option>
                 @foreach ($kategoris as $cg)
                 @if ($pesananpenjualan->komoditas_id == $cg->id)
@@ -190,14 +190,21 @@
 
     <div class="separator separator-dashed my-5"></div>
     <div class="form-group row">
-        <div class="col-lg-6">
+        <div class="col-lg-4">
             <label class="">Keterangan:</label>
             <div class="kt-input-icon kt-input-icon--right">
                 <textarea class="form-control" name="keterangan" id="keterangan"></textarea>
             </div>
 
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-4">
+            <label class="">Keterangan Internal <span class="text-danger"  style="font-size: 70%"">(Keterangan ini tidak muncul diprint)</span>:</label> <br>            
+            <div class="kt-input-icon kt-input-icon--right">
+                <textarea class="form-control" name="keterangan_internal" id="keterangan"></textarea>
+            </div>
+
+        </div>
+        <div class="col-lg-4">
             <div id="div_summary">
                 <div class="row">
                     <label class="col-lg-7 col-form-label text-right">Subtotal :</label>
@@ -248,7 +255,21 @@
                                 readonly="readonly">
                         </div>
                     </div>
-                </div>              
+                </div>  
+                
+                {{-- <div class="row">
+                    <label class="col-lg-7 col-form-label text-right">PPH (1.5%) :</label>
+                    <div class="col-lg-5 mb-2">
+                        <div class="input-group">
+                            <a href="javascript:hitungpph();" class="btn  btn-icon btn-primary mr-1">
+                                <i class="flaticon-edit"></i>
+                            </a>
+                            <input type="text" class="form-control text-right" id="pph" name="pph" value="0"
+                                readonly="readonly">
+                        </div>
+                    </div>
+                </div>  --}}
+
                 <div class="row">
                     <label class="col-lg-7 col-form-label text-right">Grand Total :</label>
                     <div class="col-lg-5">

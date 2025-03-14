@@ -19,7 +19,10 @@ class TempKonversiDet extends Model
         'exp_date',
         'user_id',
         'lot',
-        'keterangan'
+        'keterangan',
+        'harga_beli',
+        'diskon_persen',
+        'diskon_rupiah'
     ];
 
 

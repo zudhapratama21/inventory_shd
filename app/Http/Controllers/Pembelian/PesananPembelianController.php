@@ -19,6 +19,7 @@ use App\Http\Controllers\Controller;
 use App\Models\FakturPembelianDetail;
 use App\Models\FakturPenjualanDetail;
 use App\Models\HargaNonExpired;
+use App\Models\HargaNonExpiredDetail;
 use App\Models\PenerimaanBarangDetail;
 use App\Models\PesananPembelianDetail;
 use App\Models\StokExp;
@@ -52,7 +53,7 @@ class PesananPembelianController extends Controller
                     return $po->suppliers->nama;
                 })
                 ->addColumn('status', function (PesananPembelian $po) {
-                    return $po->statusPO->nama;
+                    return $po->status_po_id;
                 })
                 ->editColumn('tanggal', function (PesananPembelian $po) {
                     return $po->tanggal ? with(new Carbon($po->tanggal))->format('d-m-Y') : '';
@@ -275,8 +276,9 @@ class PesananPembelianController extends Controller
         $product = new Product;
         $productx = Product::where('id', '=', $id_product)->get()->first();
         $product_name = $productx->nama;
+        $status = null;
         $mode = "edit";
-        return view('pembelian.pesananpembelian._setbarang', compact('product_name', 'mode', 'item', 'product'));
+        return view('pembelian.pesananpembelian._setbarang', compact('product_name', 'mode', 'item', 'product','status'));
     }
 
     public function updatebarang(Request $request)
@@ -713,9 +715,10 @@ class PesananPembelianController extends Controller
     {
       
         $id = $request->pembelian_id;
-        $pesananpembelian = PesananPembelianDetail::with(['products'])
-            ->where('pesanan_pembelian_id', $id)
-            ->get();
+        $pesananpembelian = PesananPembelianDetail::with(['products','pesananpembelian'])
+                        ->where('pesanan_pembelian_id', $id)
+                        ->get();
+                        
         return view('pembelian.pesananpembelian._temptabelpodetail', compact('pesananpembelian'));
     }
 
@@ -749,14 +752,15 @@ class PesananPembelianController extends Controller
 
     public function editBarangDetail(Request $request)
     {
-        $item = PesananPembelianDetail::where('id', '=', $request->id)->first();        
-        $id_product = $item->product_id;
+        $item = PesananPembelianDetail::with('pesananpembelian')->where('id', '=', $request->id)->first();        
+        $id_product = $item->product_id;    
 
         $product = new Product;
         $productx = Product::where('id', '=', $id_product)->first();
         $product_name = $productx->nama;
+        $status = $item->pesananpembelian->status_po_id;        
         $mode = "edit";
-        return view('pembelian.pesananpembelian._setbarang', compact('product_name', 'mode', 'item', 'product'));
+        return view('pembelian.pesananpembelian._setbarang', compact('product_name', 'mode', 'item', 'product','status'));
     }
 
     public function updateBarangDetail(Request $request)
@@ -794,7 +798,6 @@ class PesananPembelianController extends Controller
         $PP->total_diskon = $total_diskon;
         $PP->total = $total;
         $PP->ppn = $request->ppn;
-
         $PP->update();
 
         // kalkulasi header
@@ -803,40 +806,6 @@ class PesananPembelianController extends Controller
         $totalDiskon = PesananPembelianDetail::where('pesanan_pembelian_id',$PP->pesanan_pembelian_id)->sum('total_diskon');
         // hitung semua data baru di detail dan kalkulasi total dan ongkir
         $pesanan = PesananPembelian::where('id',$PP->pesanan_pembelian_id)->first();
-
-        // cek dulu penerimaan barang detail ada atau tidak (jamak)
-        $penerimaanbarangdetail = PenerimaanBarangDetail::with('PenerimaanBarangs','products')->where('pesanan_pembelian_detail_id',$request->id)->get();
-        // cek dulu product merupakan exp or not
-        if ($penerimaanbarangdetail) {
-            foreach ($penerimaanbarangdetail as $item) {
-                // cek expired product
-                if ($penerimaanbarangdetail->products->status_exp == 1) {                   
-                    // cek dlu di stok exp detail
-                    // cari penerimaan barang detail lalu ubah data harga beli 
-                    $stokexp = StokExpDetail::where('id_pb_detail',$penerimaanbarangdetail->id)->get();
-                    foreach ($stokexp as $item) {
-                        StokExp::where('id',$stokexp->stok_exp_id)->update([
-                            'harga_beli' => $harga,
-                            'diskon_persen' => $diskonpersen,
-                            'diskon_rupiah' => $request->diskon_rp,
-                        ]);
-                    }
-
-                }else{
-                    HargaNonExpired::where('supplier_id',$item->PenerimaanBarangs->supplier_id)
-                    ->where('product_id',$item->product_id)
-                    ->where('penerimaanbarang_id',$item->penerimaan_barang_id)
-                    ->update([
-                        'harga_beli' => $harga,
-                        'diskon_persen' => $diskonpersen,
-                        'diskoon_rupiah' => $request->diskon_rp
-                    ]);
-                }
-            }
-        }
-      
-        // jika ada maka cari supplier , product_id , dan penerimaan_id
-
 
         // hitung total di header 
         $pesanan->ongkir = $ongkirdetail;

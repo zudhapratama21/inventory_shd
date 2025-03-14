@@ -63,20 +63,7 @@
                                         </svg>
                                         <!--end::Svg Icon--></span> </span>
                                 <h3 class="card-label">Data Canvassing</h3>
-                            </div>
-                            <div class="card-toolbar">
-                                <!--begin::Button-->
-
-                                {{-- @can('canvassing-create')
-                                <a href="{{ route('canvassing.create') }}"
-                                    class="btn btn-primary font-weight-bolder ">
-                                    <i class="flaticon2-add"></i>
-                                    Canvassing
-                                </a>
-                                @endcan --}}
-
-                                <!--end::Button-->
-                            </div>
+                            </div>                            
                         </div>
                         <div class="card-body">
                             <!--begin: Datatable-->
@@ -163,43 +150,26 @@
         return txt.value;
     }
 
-    function show_confirm(data_id){
-        $.ajax({
-            type: 'POST',
-            url: '{{ route('canvassing.delete') }}',
-            dataType: 'html',
-            headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
-            data: {id:data_id, "_token": "{{ csrf_token() }}"},
-            
-            success: function (data){
-                console.log(data);
-                $('#modal-confirm-delete').html(data);
-                $('#exampleModal').modal('show');
-            },
-            error: function(data){
-                console.log(data);
-            }
-        });
-    }
+    // }
 
-    function show_posting(data_id){
-        $.ajax({
-            type: 'POST',
-            url: '{{ route('pesananpenjualan.posting') }}',
-            dataType: 'html',
-            headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
-            data: {id:data_id, "_token": "{{ csrf_token() }}"},
+    // function show_posting(data_id){
+    //     $.ajax({
+    //         type: 'POST',
+    //         url: '{{ route('pesananpenjualan.posting') }}',
+    //         dataType: 'html',
+    //         headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
+    //         data: {id:data_id, "_token": "{{ csrf_token() }}"},
             
-            success: function (data){
-                console.log(data);
-                $('#modal-confirm-delete').html(data);
-                $('#exampleModal').modal('show');
-            },
-            error: function(data){
-                console.log(data);
-            }
-        });
-    }
+    //         success: function (data){
+    //             console.log(data);
+    //             $('#modal-confirm-delete').html(data);
+    //             $('#exampleModal').modal('show');
+    //         },
+    //         error: function(data){
+    //             console.log(data);
+    //         }
+    //     });
+    // }
 
     
 </script>

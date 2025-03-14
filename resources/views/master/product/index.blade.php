@@ -116,6 +116,7 @@
                                         <th>Stok</th>
                                         <th>Kategori</th>
                                         <th>Sub Kategori</th>
+                                        <th>Status Exp</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -269,6 +270,7 @@
                   {data: 'stok', name: 'stok'},
                   {data: 'kategori', name: 'categories.nama'},
                   {data: 'subkategori', name: 'subcategories.nama'},
+                  {data: 'status_exp', name: 'status_exp'},
 
                   {
                       data: 'action', 

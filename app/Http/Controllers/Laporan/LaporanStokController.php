@@ -16,9 +16,12 @@ use App\Models\StokExpDetail;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\HargaNonExpired;
 use App\Models\InventoryTransaction;
 use App\Models\PengirimanBarang;
 use App\Models\Productcategory;
+use App\Models\Supplier;
+use Exception;
 use Maatwebsite\Excel\Facades\Excel;
 
 class LaporanStokController extends Controller
@@ -65,30 +68,186 @@ class LaporanStokController extends Controller
         }
 
 
-        return view('laporan.stok.stokproduk', compact('title','kategory'));
+        return view('laporan.stok.stokproduk', compact('title', 'kategory'));
     }
 
     public function detailstok(Product $product)
     {
         $title = "Laporan Stok";
-        $stokExp = StokExp::where('product_id', '=', $product->id)
-            ->where('qty', '<>', '0')->get();
-        return view('laporan.stok.detailstok', compact('title', 'product', 'stokExp'));
+        $supplier = Supplier::get();
+        return view('laporan.stok.detailstok', compact('title', 'product', 'supplier'));
     }
 
-    public function detailexp(StokExp $stokexp, Product $product)
+    public function detailexp($id, $status)
     {
         $title = "Laporan Stok";
-        //$stokExpDetail = StokExpDetail::with('pengiriman')->where('stok_exp_id', '=', $stokexp->id)->get();
 
-        $stokExpDetail = DB::table('stok_exp_details')
-            ->select(DB::raw('id, tanggal, stok_exp_id, product_id, qty, id_pb,(select kode from penerimaan_barangs where id = id_pb) as kode_pb, id_pb_detail, id_sj,(select kode from pengiriman_barangs where id = id_sj) as kode_sj, id_sj_detail'))
-            ->where('stok_exp_id', '=', $stokexp->id)
-            ->whereNull('deleted_at')
-            ->get();
-        //dd($stokExpDetail);
+        if ($status == 1) {
+            $stokexp = StokExpDetail::with('products')->where('id', '=', $id)->first();
+            $product = $stokexp->products;
+
+            $stokExpDetail = DB::table('stok_exp_details')
+                ->select(DB::raw('id, tanggal, stok_exp_id, product_id, qty, id_pb,(select kode from penerimaan_barangs where id = id_pb) as kode_pb, id_pb_detail, id_sj,(select kode from pengiriman_barangs where id = id_sj) as kode_sj, id_sj_detail'))
+                ->where('stok_exp_id', '=', $stokexp->id)
+                ->whereNull('deleted_at')
+                ->orderBy('tanggal', 'desc')
+                ->get();
+        } else {
+            $stokexp = HargaNonExpired::with('product')->where('id', '=', $id)->first();
+            $product = $stokexp->product;
+
+            $stokExpDetail = DB::table('harga_non_expired_detail')
+                ->select(DB::raw('id, tanggal, harganonexpired_id, product_id, qty, id_pb,(select kode from penerimaan_barangs where id = id_pb) as kode_pb, id_pb_detail, id_sj,(select kode from pengiriman_barangs where id = id_sj) as kode_sj, id_sj_detail'))
+                ->where('harganonexpired_id', '=', $stokexp->id)
+                ->whereNull('deleted_at')
+                ->orderBy('tanggal', 'desc')
+                ->get();
+        }
+
 
         return view('laporan.stok.detailexp', compact('title',  'product', 'stokExpDetail'));
+    }
+
+    public function listexp(Request $request)
+    {
+        if ($request->status == 1) {
+            $stok = StokExp::with('supplier')->where('product_id', '=', $request->id)
+                ->where('qty', '<>', '0')->get();
+        } else {
+            $stok = HargaNonExpired::with('supplier')->where('product_id', '=', $request->id)
+                ->where('qty', '<>', '0')->get();
+        }
+
+        return Datatables::of($stok)
+            ->addIndexColumn()
+            ->editColumn('tanggal', function ($pb) {
+                return $pb->tanggal ? with(new Carbon($pb->tanggal))->format('d-m-Y') : 'Non Expired';
+            })
+            ->editColumn('supplier', function ($pb) {
+                return $pb->supplier ? $pb->supplier->nama : '-';
+            })
+            ->editColumn('lot', function ($pb) {
+                return $pb->lot ? $pb->lot : 'Non Expired';
+            })
+            ->editColumn('harga_beli', function ($pb) {
+                return number_format($pb->harga_beli, 0, ',', '.');
+            })
+            ->editColumn('updated_at', function ($pb) {
+                return $pb->updated_at ? with(new Carbon($pb->updated_at))->format('d-m-Y') : 'Non Expired';
+            })
+
+            ->addColumn('action', function ($pb) {
+                return $pb->id;
+            })
+            ->make(true);
+    }
+
+    public function formexp(Request $request)
+    {
+        if ($request->status == 1) {
+            $stok = StokExp::with('products')->where('id', '=', $request->id)->first();
+        } else {
+            $stok = HargaNonExpired::with('product')->where('id', '=', $request->id)->first();
+        }
+        return view('laporan.stok.modal.formexp', compact('stok'));
+    }
+
+    public function simpanexp(Request $request)
+    {
+        try {
+            if ($request->status == 1) {
+                $stok = StokExp::where('id', '=', $request->stok_id)->update([
+                    'lot' => $request->lot,
+                    'qty' => $request->qty,
+                    'harga_beli' => $request->harga_beli,
+                    'diskon_persen' => $request->diskon_persen,
+                    'diskon_rupiah' => $request->diskon_rupiah,
+                    'tanggal' => Carbon::parse($request->tanggal)->format('Y-m-d'),
+                ]);
+            } else {
+                $stok = HargaNonExpired::where('id', '=', $request->stok_id)->update([
+                    'qty' => $request->qty,
+                    'harga_beli' => $request->harga_beli,
+                    'diskon_persen' => $request->diskon_persen,
+                    'diskon_rupiah' => $request->diskon_rupiah,
+                ]);
+            }
+            DB::commit();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data Berhasil Disimpan'
+            ]);
+        } catch (Exception $th) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan: ' . $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function createexp(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            if ($request->status == 1) {
+                $stok = StokExp::create([
+                    'product_id' => $request->id,
+                    'supplier_id' => $request->supplier,
+                    'qty' => $request->qty,
+                    'lot' => $request->lot,
+                    'harga_beli' => $request->harga_beli,
+                    'diskon_persen' => $request->diskon_persen,
+                    'diskon_rupiah' => $request->diskon_rupiah,
+                    'tanggal' => Carbon::parse($request->tanggal)->format('Y-m-d'),
+                ]);
+            } else {
+                $stok = HargaNonExpired::create([
+                    'product_id' => $request->id,
+                    'qty' => $request->qty,
+                    'harga_beli' => $request->harga_beli,
+                    'diskon_persen' => $request->diskon_persen,
+                    'diskon_rupiah' => $request->diskon_rupiah,
+                    'tanggal_transaksi' => Carbon::parse($request->tanggal)->format('Y-m-d'),
+                    'supplier_id' => $request->supplier,
+                ]);
+            }
+            DB::commit();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data Berhasil Disimpan'
+            ]);
+        } catch (Exception $th) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan: ' . $th->getMessage()
+            ], 500);
+        }
+       
+    }
+
+    public function hapusexp (Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            if ($request->status == 1) {
+                $stok = StokExp::where('id', '=', $request->id)->delete();
+            } else {
+                $stok = HargaNonExpired::where('id', '=', $request->id)->delete();
+            }
+            DB::commit();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data Berhasil Dihapus'
+            ]);
+        } catch (Exception $th) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan: ' . $th->getMessage()
+            ], 500);
+        }
     }
 
     public function kartustok()
@@ -122,9 +281,9 @@ class LaporanStokController extends Controller
     public function kartustokdetail(Product $product)
     {
         $title = "Laporan Kartu Stok";
-        
+
         $kartustok = InventoryTransaction::where('product_id', '=', $product->id)
-                    ->orderByDesc('id');
+            ->orderByDesc('id');
 
         if (request()->ajax()) {
             return Datatables::of($kartustok)
@@ -135,27 +294,26 @@ class LaporanStokController extends Controller
                 ->addColumn('action', function ($row) {
                     $status = 1;
                     if ($row->jenis == 'PB') {
-                        $selectUrl = route('penerimaanbarang.showData', ['penerimaanbarang' => $row->jenis_id]);    
-                    }elseif ($row->jenis == 'SJ') {
-                        $selectUrl = route('pengirimanbarang.showData', ['pengirimanbarang' => $row->jenis_id]);    
-                    }elseif ($row->jenis == 'KV') {
-                        $selectUrl = route('konversisatuan.show', ['konversisatuan' => $row->jenis_id]); 
-                    }elseif ($row->jenis == 'CV') {
-                        $selectUrl = route('canvassing.show', ['canvassing' => $row->jenis_id]); 
-                    }elseif ($row->jenis == 'CVB') {
-                        $selectUrl = route('canvassingpengembalian.show', ['canvassingpengembalian' => $row->jenis_id]); 
-                    }
-                    else{
-                        $selectUrl = '';    
+                        $selectUrl = route('penerimaanbarang.showData', ['penerimaanbarang' => $row->jenis_id]);
+                    } elseif ($row->jenis == 'SJ') {
+                        $selectUrl = route('pengirimanbarang.showData', ['pengirimanbarang' => $row->jenis_id]);
+                    } elseif ($row->jenis == 'KV') {
+                        $selectUrl = route('konversisatuan.show', ['konversisatuan' => $row->jenis_id]);
+                    } elseif ($row->jenis == 'CV') {
+                        $selectUrl = route('canvassing.show', ['canvassing' => $row->jenis_id]);
+                    } elseif ($row->jenis == 'CVB') {
+                        $selectUrl = route('canvassingpengembalian.show', ['canvassingpengembalian' => $row->jenis_id]);
+                    } else {
+                        $selectUrl = '';
                         $status = 0;
                     }
-                    
+
                     $id = $row->id;
-                    return view('laporan.stok._actionkartustokdetail', compact('selectUrl', 'id','status'));
+                    return view('laporan.stok._actionkartustokdetail', compact('selectUrl', 'id', 'status'));
                 })
                 ->make(true);
         }
-        
+
         return view('laporan.stok.kartustokdetail', compact('title', 'product'));
     }
 
@@ -174,29 +332,28 @@ class LaporanStokController extends Controller
             'tgl2' => ['required'],
         ]);
         $datas = $request->all();
-        
+
         $tgl1 = $request->tgl1;
         if ($tgl1 <> null) {
             $tgl1 = Carbon::createFromFormat('d-m-Y', $tgl1)->format('Y-m-d');
         }
-        $tgl2 = $request->tgl2;        
+        $tgl2 = $request->tgl2;
         if ($tgl2 <> null) {
             $tgl2 = Carbon::createFromFormat('d-m-Y', $tgl2)->format('Y-m-d');
         }
 
         $stok = StokExp::with('products')->has('products')
-                      ->whereBetween('tanggal', [$tgl1, $tgl2])
-                      ->orderBy('tanggal', 'ASC')->get();
-      
-        return view('laporan.stok.expstokresult', compact('stok', 'title','datas'));
+            ->whereBetween('tanggal', [$tgl1, $tgl2])
+            ->orderBy('tanggal', 'ASC')->get();
+
+        return view('laporan.stok.expstokresult', compact('stok', 'title', 'datas'));
     }
 
     public function exportStok(Request $request)
-    {        
+    {
         $now = Carbon::parse(now())->format('Y-m-d');
 
-        return Excel::download(new LaporanStockExport($request->all()), 'laporanstock-'.$now.'.xlsx');
-
+        return Excel::download(new LaporanStockExport($request->all()), 'laporanstock-' . $now . '.xlsx');
     }
 
 
@@ -204,21 +361,23 @@ class LaporanStokController extends Controller
     {
         $id = $request->product_id;
         $now = Carbon::parse(now())->format('Y-m-d');
-        return Excel::download(new LaporanKartuStok($id), 'laporankartustock-'.$now.'.xlsx');
+        return Excel::download(new LaporanKartuStok($id), 'laporankartustock-' . $now . '.xlsx');
     }
 
     public function printExpStok(Request $request)
     {
         $now = Carbon::parse(now())->format('Y-m-d');
 
-        return Excel::download(new LaporanStokExp($request->all()), 'laporanstockexpired-'.$now.'.xlsx');
+        return Excel::download(new LaporanStokExp($request->all()), 'laporanstockexpired-' . $now . '.xlsx');
     }
 
-    public function getdataexp(){
-        return Excel::download(new SyncronisasiDataExpired(), 'laporanstockexpired.xlsx'); 
+    public function getdataexp()
+    {
+        return Excel::download(new SyncronisasiDataExpired(), 'laporanstockexpired.xlsx');
     }
 
-    public function getdatanonexp(){
-        return Excel::download(new SyncronisasiDataNonExpired(), 'laporanstocknonexpired.xlsx'); 
+    public function getdatanonexp()
+    {
+        return Excel::download(new SyncronisasiDataNonExpired(), 'laporanstocknonexpired.xlsx');
     }
 }

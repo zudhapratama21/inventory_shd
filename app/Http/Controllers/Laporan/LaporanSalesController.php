@@ -121,7 +121,7 @@ class LaporanSalesController extends Controller
             }
 
             // Cek apakah hari ini setelah 31 Januari 2025
-            if (Carbon::parse($item->tanggal)->lessThan(Carbon::create(2025, 1, 31))) {
+            if (Carbon::parse($item->tanggal)->lessThan(Carbon::create(2025, 2, 1))) {
                 $className = 'fc-event-danger fc-event-solid-success';
             }
 

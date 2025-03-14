@@ -61,6 +61,9 @@ class ProductController extends Controller
                 ->addColumn('subkategori', function (Product $z) {
                     return $z->subcategories->nama;
                 })
+                ->editColumn('status_exp', function (Product $z) {
+                    return $z->status_exp == 1 ? 'Expired' : 'Non Expired';
+                })
 
                 ->addColumn('action', function ($row) {
                     $editUrl = route('product.edit', ['product' => $row->id]);

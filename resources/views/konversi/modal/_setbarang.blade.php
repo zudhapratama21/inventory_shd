@@ -1,6 +1,6 @@
 <!-- Modal-->
 @if($mode == "new")
-<div class="modal fade" id="setBarangModal" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop"
+<div class="modal fade" id="setBarangModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
         <div class="modal-content">
@@ -36,7 +36,28 @@
                             <div class="col-lg-10">
                                 <input type="number" class="form-control" id="stok_konversi" name="stok_konversi" />
                             </div>
-                        </div>                     
+                        </div>  
+                        
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label">Harga Beli</label>
+                            <div class="col-lg-10">
+                                <input type="number" class="form-control" id="harga_beli" name="harga_beli" />
+                            </div>
+                        </div>  
+
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label">Diskon(%)</label>
+                            <div class="col-lg-4">
+                                <input type="number" class="form-control" id="diskon_persen"  name="diskon_persen" />                                
+                            </div> 
+                            
+                            <label class="col-lg-2 col-form-label">Disc(Rp)</label>
+                            <div class="col-lg-4">
+                                <input type="number" class="form-control" id="diskon_rupiah" name="diskon_rupiah" />                                
+                            </div>                                               
+                        </div>  
+
+                     
                         <div class="form-group row">
                             <label class="col-lg-2 col-form-label">Keterangan</label>
                             <div class="col-lg-10">
@@ -93,6 +114,25 @@
                                 <input type="number" class="form-control" id="stok_konversi" name="stok_konversi" value="{{ $item->qty }}"/>
                             </div>
                         </div> 
+
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label">Harga Beli</label>
+                            <div class="col-lg-10">
+                                <input type="number" class="form-control" id="harga_beli" value="{{$item->harga_beli}}" name="harga_beli" />
+                            </div>
+                        </div>  
+
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label">Diskon(%)</label>
+                            <div class="col-lg-4">
+                                <input type="number" class="form-control" id="diskon_persen" value="{{$item->diskon_persen}}"  name="diskon_persen" />                                
+                            </div> 
+                            
+                            <label class="col-lg-2 col-form-label">Disc(Rp)</label>
+                            <div class="col-lg-4">
+                                <input type="number" class="form-control" id="diskon_rupiah" value="{{$item->diskon_rupiah}}" name="diskon_rupiah" />                                
+                            </div>                                               
+                        </div>  
                        
                         <div class="form-group row">
                             <label class="col-lg-2 col-form-label">Keterangan</label>
@@ -109,7 +149,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
-                <button type="button" onclick="javascript:updateItem();" class="btn btn-success mr-2">Update</button>
+                <button type="button" onclick="javascript:updateItem({{$item->id}});" class="btn btn-success mr-2">Update</button>
 
             </div>
         </div>

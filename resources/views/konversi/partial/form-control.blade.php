@@ -1,5 +1,3 @@
-
-
 <div class="card-body">
     <div class="form-group row">
         <label class="col-lg-1 col-form-label text-right">Stok Konversi:</label>
@@ -7,32 +5,35 @@
             <input type="text" name="qty_konversi" id="qty_konversi" readonly="readonly" class="form-control"
                 value="{{ $temp->qty }}" />
 
-            <input type="hidden" name="konversi_id" value="{{$temp->id}}">
-            <input type="hidden" name="status" value="{{$status}}">
+            <input type="hidden" name="konversi_id" value="{{ $temp->id }}">
+            <input type="hidden" name="status" value="{{ $status }}">
         </div>
 
-        @if ($status == 'exp')
-            @if($temp->tanggal <> null)
-
+        @if ($status == 1)
+            @if ($temp->tanggal != null)
                 <label class="col-lg-2 col-form-label text-right">Expired Date:</label>
-                    <div class="col-lg-4">
-                        <div class="input-group date">                               
-                            <input type="text" class="form-control" name="tanggal" readonly
-                            value="{{ Carbon\Carbon::parse($temp->exp_date)->format('d-m-Y') }}" id="tgl1" />                    
+                <div class="col-lg-4">
+                    <div class="input-group date">
+                        <input type="text" class="form-control" name="tanggal" readonly
+                            value="{{ Carbon\Carbon::parse($temp->exp_date)->format('d-m-Y') }}" id="tgl1" />
 
-                            <div class="input-group-append">
-                                <span class="input-group-text">
-                                    <i class="la la-calendar"></i>
-                                </span>
-                            </div>
-                            
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="la la-calendar"></i>
+                            </span>
+                        </div>
+
                     </div>
                 </div>
-            
             @endif
-        @endif      
-
-      
+        @endif
+    </div>
+    <div class="row">                 
+            <label class="col-lg-1 col-form-label text-right">Nama Product:</label>
+            <div class="col-lg-4">
+                <input type="text"  readonly="readonly" class="form-control"
+                    value="{{ $product }}" />                
+            </div>        
     </div>
     <div class="text-right mb-3">
         <a href="javascript:caribarang()" class="btn btn-sm btn-primary"><i class="flaticon2-add"></i>Tambah Barang</a>
@@ -46,7 +47,10 @@
                             <th>Kode Barang</th>
                             <th>Nama Barang</th>
                             <th>Satuan</th>
-                            <th>Qty</th>                            
+                            <th>Qty</th>
+                            <th>Harga Beli</th>
+                            <th>Diskon(%)</th>
+                            <th>Diskon (Rp.)</th>
                             <th>-</th>
                         </tr>
                     </thead>
@@ -69,7 +73,7 @@
 
         </div>
         <div class="col-lg-6">
-            
+
         </div>
 
     </div>

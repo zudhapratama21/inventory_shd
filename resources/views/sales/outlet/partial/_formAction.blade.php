@@ -1,7 +1,7 @@
 <div style="text-align:center;">
     <div class="d-flex flex-nowrap">               
         @can('outlet-delete')
-        <a href="javascript:destroy({{ $id }})" class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3">
+        <a href="javascript:hapus({{ $id }})" class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3">
             <span class="svg-icon svg-icon-md svg-icon-primary">
                 <!--begin::Svg Icon | path:assets/media/svg/icons/General/Trash.svg--><svg
                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"

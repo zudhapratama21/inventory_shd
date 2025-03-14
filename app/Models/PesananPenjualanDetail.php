@@ -37,4 +37,15 @@ class PesananPenjualanDetail extends Model
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
+
+    public function tempsj()
+    {
+        return $this->hasOne(TempSj::class, 'pesanan_penjualan_detail_id');
+    }
+
+ 
+    public function pesananpenjualan()
+    {
+        return $this->belongsTo(PesananPenjualan::class, 'pesanan_penjualan_id', 'id');
+    }
 }

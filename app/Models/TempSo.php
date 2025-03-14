@@ -21,7 +21,7 @@ class TempSo extends Model
         'ongkir',
         'keterangan',
         'user_id',
-        'ppn'
+        'ppn',        
     ];
 
     public function products()

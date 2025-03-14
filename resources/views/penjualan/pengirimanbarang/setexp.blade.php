@@ -1,235 +1,563 @@
 @extends('layouts.app', ['title' => $title])
 
 @section('content')
-<!--begin::Content-->
-<div class="content  d-flex flex-column flex-column-fluid" id="kt_content">
-    <!--begin::Subheader-->
+    <!--begin::Content-->
+    <div class="content  d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
 
-    <!--end::Subheader-->
+        <!--end::Subheader-->
 
-    <!--begin::Entry-->
-    <div class="d-flex flex-column-fluid mt-10">
-        <!--begin::Container-->
-        <div class=" container ">
-            @if (session('status'))
-            <div class="alert alert-custom alert-danger fade show pb-2 pt-2" role="alert">
-                <div class="alert-icon"><i class="flaticon-warning"></i></div>
-                <div class="alert-text">{{ session('status') }}</div>
-                <div class="alert-close">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true"><i class="ki ki-close"></i></span>
-                    </button>
-                </div>
-            </div>
-
-            @endif
-            @if (session('sukses'))
-            <div class="alert alert-custom alert-success fade show pb-2 pt-2" role="alert">
-                <div class="alert-icon"><i class="flaticon-warning"></i></div>
-                <div class="alert-text">{{ session('sukses') }}</div>
-                <div class="alert-close">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true"><i class="ki ki-close"></i></span>
-                    </button>
-                </div>
-            </div>
-
-            @endif
-            <div class="row ">
-
-                <div class="col-lg-12">
-                    <!--begin::Card-->
-
-
-                    <div class="card card-custom gutter-b">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <h3 class="card-label">
-                                    Pengiriman Barang
-                                    <small>{{ $pengirimanbarangdetail->pengirimanbarangs->kode }}</small>
-                                </h3>
-                            </div>
-                            <div class="card-toolbar">
-                                <!--begin::Button-->
-                                <a href="{{ route('pengirimanbarang.inputexp', $pengirimanbarang) }}"
-                                    class="btn btn-danger font-weight-bolder ">
-                                    <i class="flaticon2-fast-back"></i>
-                                    Back
-                                </a>
-                                <!--end::Button-->
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <table>
-                                <tr>
-                                    <th>Produk</th>
-                                    <td>:</td>
-                                    <td>{{ $pengirimanbarangdetail->products->nama }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Qty Dikirim</th>
-                                    <td>:</td>
-                                    <td>{{ $pengirimanbarangdetail->qty }}</td>
-                                </tr>
-                            </table>
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid mt-10">
+            <!--begin::Container-->
+            <div class=" container ">
+                @if (session('status'))
+                    <div class="alert alert-custom alert-danger fade show pb-2 pt-2" role="alert">
+                        <div class="alert-icon"><i class="flaticon-warning"></i></div>
+                        <div class="alert-text">{{ session('status') }}</div>
+                        <div class="alert-close">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true"><i class="ki ki-close"></i></span>
+                            </button>
                         </div>
                     </div>
+                @endif
+                @if (session('sukses'))
+                    <div class="alert alert-custom alert-success fade show pb-2 pt-2" role="alert">
+                        <div class="alert-icon"><i class="flaticon-warning"></i></div>
+                        <div class="alert-text">{{ session('sukses') }}</div>
+                        <div class="alert-close">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true"><i class="ki ki-close"></i></span>
+                            </button>
+                        </div>
+                    </div>
+                @endif
+                <div class="row ">
+
+                    <div class="col-lg-12">
+                        <!--begin::Card-->
 
 
-                </div>
-            </div>
-            <div class="row">
-
-                <div class="col-lg-12">
-                    <!--begin::Card-->
-                    <div class="card card-custom">
-                        <div class="card-header py-3">
-                            <div class="card-title">
-                                <span class="card-icon">
-                                    <span class="svg-icon svg-icon-md svg-icon-primary">
-                                        <!--begin::Svg Icon | path:assets/media/svg/icons/Shopping/Chart-bar1.svg--><svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
-                                            viewBox="0 0 24 24" version="1.1">
-                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                <rect x="0" y="0" width="24" height="24" />
-                                                <rect fill="#000000" opacity="0.3" x="12" y="4" width="3" height="13"
-                                                    rx="1.5" />
-                                                <rect fill="#000000" opacity="0.3" x="7" y="9" width="3" height="8"
-                                                    rx="1.5" />
-                                                <path
-                                                    d="M5,19 L20,19 C20.5522847,19 21,19.4477153 21,20 C21,20.5522847 20.5522847,21 20,21 L4,21 C3.44771525,21 3,20.5522847 3,20 L3,4 C3,3.44771525 3.44771525,3 4,3 C4.55228475,3 5,3.44771525 5,4 L5,19 Z"
-                                                    fill="#000000" fill-rule="nonzero" />
-                                                <rect fill="#000000" opacity="0.3" x="17" y="11" width="3" height="6"
-                                                    rx="1.5" />
-                                            </g>
-                                        </svg>
-                                        <!--end::Svg Icon--></span> </span>
-                                <h3 class="card-label">Daftar Expired Date Produk</h3>
+                        <div class="card card-custom gutter-b">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <h3 class="card-label">
+                                        Pengiriman Barang
+                                        <small>{{ $pengirimandet->PengirimanBarangs->kode }}</small>
+                                    </h3>
+                                </div>
+                                <div class="card-toolbar">
+                                    <!--begin::Button-->
+                                    <a href="{{ route('pengirimanbarang.inputexp', $pengirimandet->PengirimanBarangs) }}"
+                                        class="btn btn-danger font-weight-bolder ">
+                                        <i class="flaticon2-fast-back"></i>
+                                        Back
+                                    </a>
+                                    <!--end::Button-->
+                                </div>
                             </div>
-                            <div class="card-toolbar">
-                                <!--begin::Button-->
-                                @can('pengirimanbarang-create')
-                                <a href="{{ route('pengirimanbarang.listexp', $pengirimanbarangdetail) }}"
-                                    class="btn btn-primary font-weight-bolder ">
-                                    <i class="flaticon2-add"></i>
-                                    Tambah Tgl. Expired Date
-                                </a>
-                                @endcan
-
-                                <!--end::Button-->
+                            <div class="card-body">
+                                <table>
+                                    <tr>
+                                        <th>Produk</th>
+                                        <td>:</td>
+                                        <td>{{ $pengirimandet->products->nama }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Qty Dikirim</th>
+                                        <td>:</td>
+                                        <td>{{ $pengirimandet->qty }}</td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <!--begin: Datatable-->
-                            <table class="table yajra-datatable collapsed ">
-                                <thead class="datatable-head">
-                                    <tr>
-                                        <th>Tanggal</th>
-                                        <th>Supplier</th>
-                                        <th>Harga Beli</th>
-                                        <th>Diskon Beli (Rp.)</th>
-                                        <th>Diskon Beli (%)</th>
-                                        <th>Lot</th>
-                                        <th>Qty</th>                                        
-                                        <th style="width: 15%">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($listExp as $item)
-                                    <tr>
-                                        <td>{{ $item->tanggal->format("d F Y")  }}</td>
-                                    <td>{{$item->stockExp->supplier ? $item->stockExp->supplier->nama : '-'}}</td>
-                                        <td>{{$item->harga_beli}}</td>
-                                        <td>{{$item->diskon_persen_beli}}</td>
-                                        <td>{{$item->diskon_rupiah_beli}}</td>
-                                        <td>{{ $item->stockExp->lot }}</td>
-                                        <td>{{ $item->qty * -1 }}</td>
-                                        <td>
-                                            <div style="text-align:center;">
-                                                <div class="d-flex flex-nowrap">
-                                                    <a href="javascript:show_confirm({{ $item->id }})"
-                                                        class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3">
-                                                        <span class="svg-icon svg-icon-md svg-icon-primary">
-                                                            <!--begin::Svg Icon | path:assets/media/svg/icons/General/Trash.svg--><svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
-                                                                height="24px" viewBox="0 0 24 24" version="1.1">
-                                                                <g stroke="none" stroke-width="1" fill="none"
-                                                                    fill-rule="evenodd">
-                                                                    <rect x="0" y="0" width="24" height="24" />
-                                                                    <path
-                                                                        d="M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z"
-                                                                        fill="#000000" fill-rule="nonzero" />
-                                                                    <path
-                                                                        d="M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z"
-                                                                        fill="#000000" opacity="0.3" />
-                                                                </g>
-                                                            </svg>
-                                                            <!--end::Svg Icon--></span> </a>
 
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            <!--end: Datatable-->
 
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-lg-12">
+                        <!--begin::Card-->
+                        <div class="card card-custom">
+                            <div class="card-header py-3">
+                                <div class="card-title">
+                                    <h3 class="card-label">Daftar Produk</h3>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <!--begin: Datatable-->
+                                <table class="table yajra-datatable-dataproduk collapsed ">
+                                    <thead class="datatable-head">
+                                        <tr>
+                                            <th>Tanggal Exp</th>
+                                            <th>Supplier</th>
+                                            <th>Harga Beli</th>
+                                            <th>Diskon Beli (Rp.)</th>
+                                            <th>Diskon Beli (%)</th>
+                                            <th>Lot</th>
+                                            <th>Qty</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                                <!--end: Datatable-->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-lg-12">
+                        <!--begin::Card-->
+                        <div class="card card-custom">
+                            <div class="card-header py-3">
+                                <div class="card-title">
+                                    <h3 class="card-label">Daftar Produk Yang Dikirim</h3>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <!--begin: Datatable-->
+                                <table class="table yajra-datatable-dataprodukirim collapsed ">
+                                    <thead class="datatable-head">
+                                        <tr>
+                                            <th>Tanggal Exp</th>
+                                            <th>Supplier</th>
+                                            <th>Harga Beli</th>
+                                            <th>Diskon Beli (Rp.)</th>
+                                            <th>Diskon Beli (%)</th>
+                                            <th>Lot</th>
+                                            <th>Qty</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                                <!--end: Datatable-->
+
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <!--end::Container-->
         </div>
-        <!--end::Container-->
+        <!--end::Entry-->
     </div>
-    <!--end::Entry-->
-</div>
-<!--end::Content-->
-<div id="modal-confirm-delete"></div>
-<div id="modal-show-detail"></div>
+    <!--end::Content-->
+    <div id="modal-setbarang"></div>
 @endsection
 @push('script')
-<script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6') }}"></script>
-<script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
-<script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
+    <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
+    <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
+    <script src="{{ asset('assets/js/pages/features/miscellaneous/blockui.js?v=7.0.6') }} "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
+        integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css"
+        integrity="sha512-O03ntXoVqaGUTAeAmvQ2YSzkCvclZEcPQu1eqloPaHfJ5RuNGiS4l+3duaidD801P50J28EHyonCV06CUlTSag=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
 
 
 
 
-<script type="text/javascript">
-    $(function () {
-   
-         
-    });
-   
-    function show_confirm(data_id){
-        $.ajax({
-            type: 'POST',
-            url: '{{ route('pengirimanbarang.hapusexp') }}',
-            dataType: 'html',
-            headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
-            data: {id:data_id, "_token": "{{ csrf_token() }}"},
-            
-            success: function (data){
-                console.log(data);
-                $('#modal-confirm-delete').html(data);
-                $('#exampleModal').modal('show');
-            },
-            error: function(data){
-                console.log(data);
-            }
+    <script type="text/javascript">
+        let product_id = {{ $pengirimandet->product_id }};
+        let status = {{ $pengirimandet->products->status_exp }}
+        let pengirimandet = {{ $pengirimandet->id }}
+        $(function() {
+            dataexp();
+            daftarbarang();
         });
-    }
 
-    function htmlDecode(data){
-        var txt = document.createElement('textarea');
-        txt.innerHTML=data;
-        return txt.value;
-    }
 
-    
-    
-</script>
+        function initializeDataTable(selector, url, columns) {
+            return $(selector).DataTable({
+                responsive: true,
+                processing: true,
+                serverSide: true,
+                order: [],
+                ajax: {
+                    url: url,
+                    type: "POST",
+                    data: function(params) {
+                        params.product_id = product_id;
+                        params.status = status;
+                        params.pengirimandet = pengirimandet;
+                        params._token = "{{ csrf_token() }}";
+                        return params;
+                    }
+                },
+                columns: columns,
+                columnDefs: [{
+                        responsivePriority: 1,
+                        targets: 0
+                    },
+                    {
+                        responsivePriority: 2,
+                        targets: -1
+                    }
+                ]
+            });
+        }
+
+        function dataexp() {
+            initializeDataTable('.yajra-datatable-dataproduk', "{{ route('pengirimanbarang.daftarproduk') }}",
+                [{
+                        data: 'tanggal',
+                        searchable: false,
+                        name: 'tanggal'
+                    },
+                    {
+                        data: 'supplier',
+                        searchable: false,
+                        name: 'supplier'
+                    },
+                    {
+                        data: 'harga_beli',
+                        searchable: false,
+                        name: 'harga_beli'
+                    },
+                    {
+                        data: 'diskon_persen',
+                        searchable: false,
+                        name: 'diskon_persen'
+                    },
+                    {
+                        data: 'diskon_rupiah',
+                        searchable: false,
+                        name: 'diskon_rupiah'
+                    },
+                    {
+                        data: 'lot',
+                        searchable: false,
+                        name: 'lot'
+                    },
+                    {
+                        data: 'qty',
+                        searchable: false,
+                        name: 'qty'
+                    },
+                    {
+                        data: 'status',
+                        searchable: false,
+                        render: function(data) {
+                            if (data == 1) {
+                                return '<span class="badge badge-success badge-sm">Sudah Dipilih</span>'
+                            } else {
+                                return '<span class="badge badge-info badge-sm">Belum Dipilih</span>'
+                            }
+                        }
+                    },
+                    {
+                        data: 'action',
+                        render: function(data) {
+                            return '<span class="btn btn-primary btn-sm" onclick="pilihbarang(' + data +
+                                ')">Pilih</span>'
+                        }
+                    }
+                ]);
+        }
+
+        function pilihbarang(id) {
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('pengirimanbarang.formbarang') }}',
+                dataType: 'html',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                beforeSend: function() {
+                    KTApp.blockPage();
+                },
+                data: {
+                    id: id,
+                    status: status,
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    $('#modal-setbarang').html(data);
+                    $('#formbarang').modal('show');
+                },
+                error: function(data) {
+                    console.log(data);
+                },
+                complete: function() {
+                    KTApp.unblock();
+                }
+            });
+        }
+
+        function submitbarang() {
+            var stok_id = document.getElementById('stok_id').value;
+            var qty = document.getElementById('qty_kirim').value;
+
+            //alert(product_id);
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('pengirimanbarang.submitbarang') }}',
+                dataType: 'html',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                beforeSend: function() {
+                    KTApp.blockPage();
+                },
+                data: {
+                    "stok_id": stok_id,
+                    "qty": qty,
+                    "status": status,
+                    "pengirimandet": pengirimandet,
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    $('#formbarang').modal('hide');
+                    iziToast.success({
+                        title: 'Success',
+                        message: 'Data Berhasil Ditambahkan',
+                        position: 'topRight',
+                    });
+
+                    $('.yajra-datatable-dataproduk').DataTable().ajax.reload(null, false);
+                    $('.yajra-datatable-dataprodukirim').DataTable().ajax.reload(null, false);
+
+                },
+                error: function(xhr) {
+                    const response = JSON.parse(xhr.responseText);
+                    if (xhr.status === 422) {
+                        // Error qty melebihi stok
+                        iziToast.error({
+                            title: 'error',
+                            message: response.message,
+                            position: 'topRight',
+                        });
+                    }
+
+                    if (xhr.status === 500) {
+                        // Error qty melebihi stok
+                        iziToast.error({
+                            title: 'error',
+                            message: response.message,
+                            position: 'topRight',
+                        });
+                    }
+                },
+                complete: function() {
+                    KTApp.unblock();
+                }
+            });
+        }
+
+        function daftarbarang() {
+            initializeDataTable('.yajra-datatable-dataprodukirim', "{{ route('pengirimanbarang.daftarprodukkirim') }}",
+                [{
+                        data: 'tanggal',
+                        searchable: false,
+                        name: 'tanggal'
+                    },
+                    {
+                        data: 'supplier',
+                        searchable: false,
+                        name: 'supplier'
+                    },
+                    {
+                        data: 'harga_beli',
+                        searchable: false,
+                        name: 'harga_beli'
+                    },
+                    {
+                        data: 'diskon_persen_beli',
+                        searchable: false,
+                        name: 'diskon_persen_beli'
+                    },
+                    {
+                        data: 'diskon_rupiah_beli',
+                        searchable: false,
+                        name: 'diskon_rupiah_beli'
+                    },
+                    {
+                        data: 'lot',
+                        searchable: false,
+                        name: 'lot'
+                    },
+                    {
+                        data: 'qty',
+                        searchable: false,
+                        name: 'qty'
+                    },
+                    {
+                      data: 'action', 
+                      render: function(data){
+                          return htmlDecode(data);
+                      },
+                      className:"nowrap",
+                  },
+                ]);
+        }
+
+        function hapusbarang(id) {
+            Swal.fire({
+                icon: "question",
+                title: "Mau menghapus data ini ?",
+                showCancelButton: true,
+                confirmButtonText: "Save",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ route('pengirimanbarang.hapusbarang') }}',
+                        dataType: 'html',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        beforeSend: function() {
+                            KTApp.blockPage();
+                        },
+                        data: {
+                            "id": id,
+                            "status": status,
+                            "pengirimandet": pengirimandet,
+                            "_token": "{{ csrf_token() }}"
+                        },
+                        success: function(data) {
+                            iziToast.success({
+                                title: 'Success',
+                                message: 'Data Berhasil Dihapus',
+                                position: 'topRight',
+                            });
+                            $('.yajra-datatable-dataproduk').DataTable().ajax.reload(null, false);
+                            $('.yajra-datatable-dataprodukirim').DataTable().ajax.reload(null, false);
+                        },
+                        error: function(data) {
+                            console.log(data);
+                        },
+                        complete: function() {
+                            KTApp.unblock();
+                        }
+                    });
+                }
+            });
+        }
+
+        function htmlDecode(data){
+            var txt = document.createElement('textarea');
+            txt.innerHTML=data;
+            return txt.value;
+        }
+
+        function editExp(id){
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('pengirimanbarang.editexp') }}',
+                dataType: 'html',
+                headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
+                data: {
+                    id:id,
+                    status:status, 
+                    "_token": "{{ csrf_token() }}"},
+                beforeSend: function() {
+                    KTApp.blockPage();
+                },
+                success: function(data){
+                    $('#modal-setbarang').html(data);
+                    $('#formexp').modal('show');
+                },
+                error: function(xhr) {
+                    const response = JSON.parse(xhr.responseText);
+                    if (xhr.status === 422) {
+                        // Error qty melebihi stok
+                        iziToast.error({
+                            title: 'error',
+                            message: response.message,
+                            position: 'topRight',
+                        });
+                    }
+
+                    if (xhr.status === 500) {
+                        // Error qty melebihi stok
+                        iziToast.error({
+                            title: 'error',
+                            message: response.message,
+                            position: 'topRight',
+                        });
+                    }
+                },
+                complete: function() {
+                    KTApp.unblock();
+                }
+            });            
+        }
+
+        function submitexp(data_id) {
+            var harga_beli = document.getElementById('harga_beli').value;
+            var diskon_persen = document.getElementById('diskon_persen').value;
+            var diskon_rupiah = document.getElementById('diskon_rupiah').value;
+
+            //alert(product_id);
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('pengirimanbarang.submitexp') }}',
+                dataType: 'html',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                beforeSend: function() {
+                    KTApp.blockPage();
+                },
+                data: {
+                    "harga_beli": harga_beli,
+                    "diskon_persen": diskon_persen,
+                    "status": status,
+                    "diskon_rupiah": diskon_rupiah,
+                    "id": data_id,
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    $('#formexp').modal('hide');
+                    iziToast.success({
+                        title: 'Success',
+                        message: 'Data Berhasil Ditambahkan',
+                        position: 'topRight',
+                    });
+
+                    $('.yajra-datatable-dataproduk').DataTable().ajax.reload(null, false);
+                    $('.yajra-datatable-dataprodukirim').DataTable().ajax.reload(null, false);
+
+                },
+                error: function(xhr) {
+                    const response = JSON.parse(xhr.responseText);
+                    if (xhr.status === 422) {
+                        // Error qty melebihi stok
+                        iziToast.error({
+                            title: 'error',
+                            message: response.message,
+                            position: 'topRight',
+                        });
+                    }
+
+                    if (xhr.status === 500) {
+                        // Error qty melebihi stok
+                        iziToast.error({
+                            title: 'error',
+                            message: response.message,
+                            position: 'topRight',
+                        });
+                    }
+                },
+                complete: function() {
+                    KTApp.unblock();
+                }
+            });
+        }
+    </script>
 @endpush

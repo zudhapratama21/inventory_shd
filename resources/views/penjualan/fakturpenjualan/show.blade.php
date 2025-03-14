@@ -465,8 +465,8 @@
                             <div class="form-group">
                                 <label for="">Apakah Jatuh Tempo terhitung dari tanggal tanda terima ? </label>
                                 <select name="top_status" class="form-control" id="">
-                                    <option value="Ya">Ya</option>
-                                    <option value="Tidak">Tidak</option>
+                                    <option value="ya">Ya</option>
+                                    <option value="tidak">Tidak</option>
                                 </select>
 
                             </div>

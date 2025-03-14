@@ -35,8 +35,6 @@
 
 
                 </div>
-
-
                 <div class="modal-body" style="height: 400px;">
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="kt_tab_pane_1_3" role="tabpanel"
@@ -54,6 +52,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
+
                                         <label class="col-lg-2 col-form-label">Qty</label>
                                         <div class="col-lg-2">
                                             <input type="number" class="form-control" id="qty" name="qty"
@@ -72,7 +71,7 @@
                                         <label class="col-lg-2 col-form-label">Harga</label>
                                         <div class="col-lg-10">
                                             <input type="text" class="form-control" id="hargajual" name="hargajual"
-                                                value="{{$hargaProduk ? $hargaProduk->hargajual : 0}}" />
+                                                value="{{ $hargaProduk ? $hargaProduk->hargajual : 0 }}" />
                                         </div>
                                     </div>
 
@@ -145,10 +144,10 @@
                                 <tbody>
                                     @foreach ($penjualan as $item)
                                         <tr>
-                                            <td>{{$item->fakturpenjualan->customers->nama}}</td>
-                                            <td>{{number_format($item->hargajual, 0, ',', '.') }}</td>
-                                            <td>{{$item->diskon_persen}}</td>
-                                            <td>{{$item->diskon_rp}}</td>                                            
+                                            <td>{{ $item->fakturpenjualan->customers->nama }}</td>
+                                            <td>{{ number_format($item->hargajual, 0, ',', '.') }}</td>
+                                            <td>{{ $item->diskon_persen }}</td>
+                                            <td>{{ $item->diskon_rp }}</td>
                                         </tr>
                                     @endforeach
 
@@ -170,10 +169,10 @@
                                 <tbody>
                                     @foreach ($pembelian as $item)
                                         <tr>
-                                            <td>{{$item->fakturpembelian->suppliers->nama}}</td>
-                                            <td>{{number_format($item->hargabeli, 0, ',', '.') }}</td>
-                                            <td>{{$item->diskon_persen}}</td>
-                                            <td>{{$item->diskon_rp}}</td>                                            
+                                            <td>{{ $item->fakturpembelian->suppliers->nama }}</td>
+                                            <td>{{ number_format($item->hargabeli, 0, ',', '.') }}</td>
+                                            <td>{{ $item->diskon_persen }}</td>
+                                            <td>{{ $item->diskon_rp }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -217,16 +216,23 @@
                                         value="{{ $product_name }}" />
                                     <input type="hidden" id="product_id" name="product_id"
                                         value="{{ $item->product_id }}">
-                                    <input type="hidden" id="id" name="id" value="{{ $item->id }}">
+                                    <input type="hidden" id="id" name="id"
+                                        value="{{ $item->id }}">
                                 </div>
                             </div>
+
+
+                            
                             <div class="form-group row">
                                 <label class="col-lg-2 col-form-label">Qty</label>
                                 <div class="col-lg-2">
                                     <input type="number" class="form-control" id="qty" name="qty"
-                                        value="{{ $item->qty }}" />
+                                        value="{{ $item->qty }}"
+                                        {{ $status ? ($status > 2 ? 'disabled' : '') : '' }} />
                                 </div>
                             </div>
+
+
                             <div class="form-group row">
                                 <label class="col-lg-2 col-form-label">Satuan </label>
                                 <div class="col-lg-10">

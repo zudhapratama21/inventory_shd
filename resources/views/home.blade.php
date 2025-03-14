@@ -7,729 +7,115 @@
             <div class=" container  d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
                 <!--begin::Info-->
                 <div class="d-flex align-items-center flex-wrap mr-1">
-
                     <!--begin::Heading-->
-                    <div class="d-flex flex-column">
-                        <!--begin::Title-->
-                        <h2 class="text-white font-weight-bold my-2 mr-5">
-                            Dashboard </h2>
-                        <!--end::Title-->
+                    <div class="d-flex">                                                                                                
+                        
 
-                        <!--begin::Breadcrumb-->
-                        <div class="d-flex align-items-center font-weight-bold my-2">
-                            <!--begin::Item-->
-                            <a href="#" class="opacity-75 hover-opacity-100">
-                                <i class="flaticon2-shelter text-white icon-1x"></i>
-                            </a>
-                            <!--end::Item-->
-                            <!--begin::Item-->
-                            <span class="label label-dot label-sm bg-white opacity-75 mx-3"></span>
-                            <a href="" class="text-white text-hover-white opacity-75 hover-opacity-100">
-                                Dashboard </a>
-                            <!--end::Item-->
-                            <!--begin::Item-->
-
-
-                            <!--end::Item-->
-                        </div>
+                        <div class="card card-custom gutter-b">
+                            <div class="card-body">
+                                <ul class="nav nav-tabs nav-bold nav-tabs-line">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#kt_tab_pane_1_4">
+                                            <span class="nav-icon"><i class="flaticon2-chat-1"></i></span>
+                                            <span class="nav-text">Pekerjaan</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#kt_tab_pane_2_4">
+                                            <span class="nav-icon"><i class="flaticon2-drop"></i></span>
+                                            <span class="nav-text">Analisis</span>
+                                        </a>
+                                    </li>                                        
+                                </ul>                              
+                            </div>                           
+                        </div>                        
                         <!--end::Breadcrumb-->
                     </div>
                     <!--end::Heading-->
-
-                </div>
-                <!--end::Info-->
-
-                <!--begin::Toolbar-->
-
-                <!--end::Toolbar-->
+                </div>                
             </div>
         </div>
         <!--end::Subheader-->
 
         <!--begin::Entry-->
-        <div class="d-flex flex-column-fluid">
-            <!--begin::Container-->
-            <div class=" container ">
-                <!--begin::Dashboard-->
-                <div class="col-lg-12">
-
-                    <div class="card card-custom gutter-b">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <h3 class="card-label">
-                                    Laman Pengumuman
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <!--begin::Accordion-->
-                            <div class="accordion  accordion-toggle-arrow" id="accordionExample4">
-                                <div class="card">
-                                    <div class="card-header" id="headingOne4">
-                                        <div class="card-title" data-toggle="collapse" data-target="#collapseOne4">
-                                            <i class="flaticon2-layers-1"></i> Pengumuman Terbaru
+        <div class="d-flex flex-column-fluid">            
+            <div class="container ">   
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="kt_tab_pane_1_4" role="tabpanel" aria-labelledby="kt_tab_pane_1_4">
+                        <div class="row">
+                            <div class="col-lg-12">
+        
+                                <div class="card card-custom gutter-b">
+                                    <div class="card-header">
+                                        <div class="card-title">
+                                            <h3 class="card-label">
+                                                Laman Pengumuman
+                                            </h3>
                                         </div>
                                     </div>
-                                    <div id="collapseOne4" class="collapse show" data-parent="#accordionExample4">
-                                        <div class="card-body">
-                                            <h3>{{ $pengumuman->subject }}</h3>
-                                            <p>Dibuat Oleh : {{ $pengumuman->pembuat->name }} || dibuat pada :
-                                                {{ \Carbon\Carbon::parse($pengumuman->updated_at)->format('d F Y') }} </p>
-                                            <hr>
-                                            <p>
-                                                {!! $pengumuman->description !!}
-                                            </p>
-                                            <a href="{{ asset('storage/pengumuman/' . $pengumuman->file) }}"
-                                                class="btn btn-primary btn-sm" download><i
-                                                    class="fas fa-download"></i>Download File</a>
+                                    <div class="card-body">
+                                        <!--begin::Accordion-->
+                                        <div class="accordion  accordion-toggle-arrow" id="accordionExample4">
+                                            <div class="card">
+                                                <div class="card-header" id="headingOne4">
+                                                    <div class="card-title" data-toggle="collapse" data-target="#collapseOne4">
+                                                        <i class="flaticon2-layers-1"></i> Pengumuman Terbaru
+                                                    </div>
+                                                </div>
+                                                <div id="collapseOne4" class="collapse show" data-parent="#accordionExample4">
+                                                    <div class="card-body">
+                                                        <h3>{{ $pengumuman->subject }}</h3>
+                                                        <p>Dibuat Oleh : {{ $pengumuman->pembuat->name }} || dibuat pada :
+                                                            {{ \Carbon\Carbon::parse($pengumuman->updated_at)->format('d F Y') }} </p>
+                                                        <hr>
+                                                        <p>
+                                                            {!! $pengumuman->description !!}
+                                                        </p>
+                                                        <a href="{{ asset('storage/pengumuman/' . $pengumuman->file) }}"
+                                                            class="btn btn-primary btn-sm" download><i
+                                                                class="fas fa-download"></i>Download File</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card">
+                                                <div class="card-header" id="headingTwo4">
+                                                    <div class="card-title collapsed" data-toggle="collapse"
+                                                        data-target="#collapseTwo4">
+                                                        <i class="flaticon2-copy"></i> Pengumuman yang lain
+                                                    </div>
+                                                </div>
+                                                <div id="collapseTwo4" class="collapse" data-parent="#accordionExample4">
+                                                    <div class="card-body">
+                                                        <table
+                                                            class="table table-separate table-head-custom table-checkable table  yajra-datatable-pengumuman collapsed ">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Tanggal</th>
+                                                                    <th>Topic</th>
+                                                                    <th>Subject</th>
+                                                                    <th>Download File</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card">
-                                    <div class="card-header" id="headingTwo4">
-                                        <div class="card-title collapsed" data-toggle="collapse"
-                                            data-target="#collapseTwo4">
-                                            <i class="flaticon2-copy"></i> Pengumuman yang lain
-                                        </div>
-                                    </div>
-                                    <div id="collapseTwo4" class="collapse" data-parent="#accordionExample4">
-                                        <div class="card-body">
-                                            <table
-                                                class="table table-separate table-head-custom table-checkable table  yajra-datatable-pengumuman collapsed ">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Tanggal</th>
-                                                        <th>Topic</th>
-                                                        <th>Subject</th>
-                                                        <th>Download File</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
+        
                             </div>
                         </div>
+                        @include('partial.table.keuangan')                
                     </div>
 
-                </div>
-
-                @can('grafikpenjualan-list')
-                <div class="row">
-                    <div class="col-lg-12">
-                        <!--begin::Card-->
-
-                        <div class="card card-custom gutter-b">
-                            <!--begin::Header-->
-                            <div class="card-header h-auto d-flex justify-content-between">
-                                <!--begin::Title-->
-                                <div class="card-title py-5">
-                                    <h3 class="card-label">
-                                        Grafik Penjualan
-                                    </h3>
-                                </div>
-
-                                <div class="card-toolbar">
-                                    <h6 class="badge badge-info">Total Penjualan : </h6>
-
-                                    <input type="text" class="form-control text-right" id="grandtotal" name="grandtotal"
-                                        value="0" readonly="readonly">
-                                </div>
-
-
-                                <!--end::Title-->
-                            </div>
-                            <!--end::Header-->
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="">Tahun</label>
-                                            <select name="chart_year" class="form-control" id="grafik_tahun"
-                                                onchange="filterYear()">
-                                                @php
-                                                    $year = 2020;
-                                                @endphp
-                                                @foreach (range(date('Y'), $year) as $x)
-                                                    <option value="{{ $x }}">{{ $x }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="">Kategori Pesanan</label>
-                                            <select name="chart_kategori" class="form-control" id="grafik_kategori"
-                                                onchange="filterKategori()">
-                                                <option value="All" selected>Semua</option>
-                                                @foreach ($kategori as $x)
-                                                    <option value="{{ $x->id }}">{{ $x->nama }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="">Customer</label>
-                                            <select name="chart_kategori" class="form-control" id="kt_select2_1"
-                                                onchange="filtercustomergrafik()">
-                                                <option value="All" selected>Semua</option>
-                                                @foreach ($customer as $x)
-                                                    <option value="{{ $x->id }}">{{ $x->nama }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="">Sales</label>
-                                            <select name="chart_kategori" class="form-control" id="kt_select2_2"
-                                                onchange="filtersalesgrafik()">
-                                                <option value="All" selected>Semua</option>
-                                                @foreach ($sales as $x)
-                                                    <option value="{{ $x->id }}">{{ $x->nama }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="">Principle</label>
-                                            <select name="chart_kategori" class="form-control" id="kt_select2_4"
-                                                onchange="filterprinciplegrafik()">
-                                                <option value="All" selected>Semua</option>
-                                                @foreach ($supplier as $x)
-                                                    <option value="{{ $x->id }}">{{ $x->nama }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="">Merk</label>
-                                            <select name="chart_kategori" class="form-control" id="kt_select2_5"
-                                                onchange="filtermerkgrafik()">
-                                                <option value="All" selected>Semua</option>
-                                                @foreach ($merk as $x)
-                                                    <option value="{{ $x->id }}">{{ $x->nama }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-
-                                <!--begin::Chart-->
-                                {{-- <div id="penjualanchart"></div> --}}
-                                <div>
-                                    <canvas id="myChart" height="100"></canvas>
-                                </div>
-                                <!--end::Chart-->
-                            </div>
-                        </div>
-
-
-                        <!--end::Card-->
-                    </div>
-                </div>
-                @endcan
-                
-
-
-                @can('grafikkategori-list')
-                <div class="row">
-                    <div class="col-md-6">
-                        <!--begin::Tiles Widget 1-->
-                        <div class="card card-custom gutter-b card-stretch">
-                            <!--begin::Header-->
-                            <div class="card-header border-0 pt-5">
-                                <div class="card-title">
-                                    <div class="card-label">
-                                        <div class="font-weight-bolder">Grafik Per Kategori</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--end::Header-->
-
-                            {{-- Grafik --}}
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="">Tahun</label>
-                                    <select name="chart_year" class="form-control" id="chart_kategori"
-                                        onchange="filterYearKategori()">
-                                        @php
-                                            $year = 2020;
-                                            https: //e-katalog.lkpp.go.id/katalog/produk/detail/83636355?type=regency&location_id=290
-                                        @endphp
-                                        @foreach (range(date('Y'), $year) as $x)
-                                            <option value="{{ $x }}">{{ $x }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <canvas id="KategoriChart" height="100"></canvas>
-                            </div>
-
-                            {{-- end Of Grafik --}}
-
-                        </div>
-                        <!--end::Tiles Widget 1-->
-                    </div>
-                </div>
-                @endcan
-                <!--begin::Row-->
-               
-                @can('grafikproduk-list')
-                <div class="row">
-                    <div class="col-xl-12">
-                        <!--begin::Tiles Widget 1-->
-                        <div class="card card-custom gutter-b card-stretch">
-                            <!--begin::Header-->
-                            <div class="card-header border-0 pt-5">
-                                <div class="card-title">
-                                    <div class="card-label">
-                                        <div class="font-weight-bolder">Grafik Penjualan Produk</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--end::Header-->
-
-                            {{-- Grafik --}}
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="">Tahun</label>
-                                            <select name="chart_year" class="form-control" id="grafikproduk_tahun"
-                                                onchange="filteryearproduk()">
-                                                @php
-                                                    $year = 2020;
-                                                @endphp
-                                                @foreach (range(date('Y'), $year) as $x)
-                                                    <option value="{{ $x }}">{{ $x }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="">Produk</label>
-                                            <select name="chart_year" class="form-control" id="kt_select2_3"
-                                                onchange="filterProduk()">
-                                                @foreach ($produk as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->kode }} -
-                                                        {{ $item->nama }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <canvas id="produkChart" height="100"></canvas>
-                            </div>
-
-                            {{-- end Of Grafik --}}
-
-                        </div>
-                        <!--end::Tiles Widget 1-->
-                    </div>
-                </div>
-                @endcan
-              
-                <!--end::Row-->
-                @can('tabletopproduk-list')
-                      {{--  BEST PRODUK --}}
-                <div class="row">
-                    <div class="col-xl-12">
-                        <!--begin::Tiles Widget 1-->
-                        <div class="card card-custom gutter-b card-stretch">
-                            <!--begin::Header-->
-                            <div class="card-header border-0 pt-5">
-                                <div class="card-title">
-                                    <div class="card-label">
-                                        <div class="font-weight-bolder">Top Produk</div>
-                                    </div>
-                                </div>
-
-                                <div class="card-toolbar">
-
-                                    <form method="POST" action="{{ route('home.exporttopproduct') }}">
-                                        @csrf
-                                        <input type="hidden" name="tahun" value="2024" id="tahun">
-                                        <input type="hidden" name="bulan_product" value="all" id="bulan_product">
-                                        <input type="hidden" name="kategori_product" value="all"
-                                            id="kategori_product">
-
-                                        {{-- <button type="submit" class="btn btn-success font-weight-bolder mr-4">
-                                            <i class="flaticon-download "></i>
-                                            Download Excel
-                                        </button> --}}
-                                    </form>
-
-
-                                </div>
-                            </div>
-                            <!--end::Header-->
-
-                            {{-- Grafik --}}
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="">Tahun</label>
-                                            <select name="chart_year" class="form-control" id="produk_tahun"
-                                                onchange="filteryearbestproduk()">
-                                                @php
-                                                    $year = 2020;
-                                                @endphp
-                                                @foreach (range(date('Y'), $year) as $x)
-                                                    <option value="{{ $x }}">{{ $x }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="">Tipe</label>
-                                            <select name="chart_year" class="form-control" id="produk_tipe"
-                                                onchange="filtertypebestproduk()">
-                                                <option value="harga" selected>Harga</option>
-                                                <option value="stok">Stok</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="">Bulan</label>
-                                            <select name="chart_year" class="form-control" id="produk_bulan"
-                                                onchange="filterbulanbestproduk()">
-                                                <option value="All" selected>Semua</option>
-                                                @foreach ($bulan as $item)
-                                                    <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="">Kategori Pesanan</label>
-                                            <select name="chart_year" class="form-control" id="produk_kategori"
-                                                onchange="filterkategoribestproduk()">
-                                                <option value="All" selected>Semua</option>
-                                                @foreach ($kategori as $x)
-                                                    <option value="{{ $x->id }}">{{ $x->nama }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="">Sales</label>
-                                            <select name="chart_year" class="form-control" id="kt_select2_7"
-                                                onchange="filtersalesbestproduk()">
-                                                <option value="All" selected>Semua</option>
-                                                @foreach ($sales as $x)
-                                                    <option value="{{ $x->id }}">{{ $x->nama }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="">Merk</label>
-                                            <select name="chart_year" class="form-control" id="kt_select2_8"
-                                                onchange="filtermerkbestproduk()">
-                                                <option value="All" selected>Semua</option>
-                                                @foreach ($merk as $x)
-                                                    <option value="{{ $x->id }}">{{ $x->nama }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                {{-- <canvas id="chartbestproduk" height="100"></canvas> --}}
-
-                                <table
-                                    class="table table-separate table-head-custom table-checkable table  yajra-datatable collapsed ">
-                                    <thead>
-                                        <tr>
-                                            <th>Tanggal</th>
-                                            <th>Nama Produk</th>
-                                            <th>Qty</th>
-                                            <th>Total Penjualan</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            {{-- end Of Grafik --}}
-
-                        </div>
-                        <!--end::Tiles Widget 1-->
-                    </div>
-                </div>
-                {{-- END OF BEST PRODUK --}}
-                @endcan
-
-                @can('tabletopcustomer')
-                     {{-- TOP CUSTOMER --}}
-                <div class="row">
-                    <div class="col-xl-12">
-                        <!--begin::Tiles Widget 1-->
-                        <div class="card card-custom gutter-b card-stretch">
-                            <!--begin::Header-->
-                            <div class="card-header border-0 pt-5">
-                                <div class="card-title">
-
-                                    <div class="card-label">
-                                        <div class="font-weight-bolder">Top Customer</div>
-                                    </div>
-                                </div>
-
-                                <div class="card-toolbar">
-
-                                    <form method="POST" action="{{ route('home.exporttopcustomer') }}">
-                                        @csrf
-                                        <input type="hidden" name="tahun_customer" value="2024" id="tahun_customer">
-                                        <input type="hidden" name="bulan_customer" value="all" id="bulan_customer">
-                                        <input type="hidden" name="kategori_customer" value="all"
-                                            id="kategori_customer">
-
-                                        {{-- <button type="submit" class="btn btn-success font-weight-bolder mr-4">
-                                            <i class="flaticon-download "></i>
-                                            Download Excel
-                                        </button> --}}
-                                    </form>
-                                </div>
-                            </div>
-                            <!--end::Header-->
-
-                            {{-- Grafik --}}
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="">Tahun</label>
-                                            <select name="chart_year" class="form-control" id="kt_select2_13"
-                                                onchange="filteryeartopcustomer()">
-                                                @php
-                                                    $year = 2020;
-                                                @endphp
-                                                @foreach (range(date('Y'), $year) as $x)
-                                                    <option value="{{ $x }}">{{ $x }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="">Bulan</label>
-                                            <select name="chart_year" class="form-control" id="kt_select2_15"
-                                                onchange="filterbulantopcustomer()">
-                                                <option value="All" selected>Semua</option>
-                                                @foreach ($bulan as $item)
-                                                    <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="">Kategori Pesanan</label>
-                                            <select name="chart_year" class="form-control" id="kt_select2_16"
-                                                onchange="filterkategoritopcustomer()">
-                                                <option value="All" selected>Semua</option>
-                                                @foreach ($kategori as $x)
-                                                    <option value="{{ $x->id }}">{{ $x->nama }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="">Sales</label>
-                                            <select name="chart_year" class="form-control" id="sales_customer"
-                                                onchange="filtersalestopcustomer()">
-                                                <option value="All" selected>Semua</option>
-                                                @foreach ($sales as $x)
-                                                    <option value="{{ $x->id }}">{{ $x->nama }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                {{-- <canvas id="chartbestproduk" height="100"></canvas> --}}
-
-                                <table
-                                    class="table table-separate table-head-custom table-checkable table  yajra-datatabletopcustomer collapsed ">
-                                    <thead>
-                                        <tr>
-                                            <th>Bulan Transaksi</th>
-                                            <th>Nama Customer</th>
-                                            <th>Qty</th>
-                                            <th>Total Penjualan</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            {{-- end Of Grafik --}}
-
-                        </div>
-                        <!--end::Tiles Widget 1-->
-                    </div>
-                </div>
-                {{-- END TOP CUSTOMER --}}
-                @endcan                       
-                @can('tabletopprinciple')
-                     {{-- TOP PRINCIPLE --}}
-                <div class="row">
-                    <div class="col-xl-12">
-                        <!--begin::Tiles Widget 1-->
-                        <div class="card card-custom gutter-b card-stretch">
-                            <!--begin::Header-->
-                            <div class="card-header border-0 pt-5">
-                                <div class="card-title">
-
-                                    <div class="card-label">
-                                        <div class="font-weight-bolder">Top Principle</div>
-                                    </div>
-                                </div>
-
-                                <div class="card-toolbar">
-
-                                    <form method="POST" action="{{ route('home.exporttopcustomer') }}">
-                                        @csrf
-                                        <input type="hidden" name="tahun_customer" value="2024" id="tahun_customer">
-                                        <input type="hidden" name="bulan_customer" value="all" id="bulan_customer">
-                                        <input type="hidden" name="kategori_customer" value="all"
-                                            id="kategori_customer">
-
-                                        {{-- <button type="submit" class="btn btn-success font-weight-bolder mr-4">
-                                            <i class="flaticon-download "></i>
-                                            Download Excel
-                                        </button> --}}
-                                    </form>
-                                </div>
-                            </div>
-                            <!--end::Header-->
-
-                            {{-- Grafik --}}
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="">Tahun</label>
-                                            <select name="chart_year" class="form-control" id="topprincipletahun"
-                                                onchange="filteryeartopprinciple()">
-                                                @php
-                                                    $year = 2020;
-                                                @endphp
-                                                @foreach (range(date('Y'), $year) as $x)
-                                                    <option value="{{ $x }}">{{ $x }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="">Bulan</label>
-                                            <select name="chart_year" class="form-control" id="topprinciplebulan"
-                                                onchange="filterbulantopprinciple()">
-                                                <option value="All" selected>Semua</option>
-                                                @foreach ($bulan as $item)
-                                                    <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="">Kategori Pesanan</label>
-                                            <select name="chart_year" class="form-control" id="topprinciplekategori"
-                                                onchange="filterkategoritopprinciple()">
-                                                <option value="All" selected>Semua</option>
-                                                @foreach ($kategori as $x)
-                                                    <option value="{{ $x->id }}">{{ $x->nama }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="">Sales</label>
-                                            <select name="chart_year" class="form-control" id="sales_principle"
-                                                onchange="filtersalestopprinciple()">
-                                                <option value="All" selected>Semua</option>
-                                                @foreach ($sales as $x)
-                                                    <option value="{{ $x->id }}">{{ $x->nama }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                {{-- <canvas id="chartbestproduk" height="100"></canvas> --}}
-
-                                <table
-                                    class="table table-separate table-head-custom table-checkable table  yajra-datatabletopprinciple collapsed ">
-                                    <thead>
-                                        <tr>
-                                            <th>Bulan Transaksi</th>
-                                            <th>Nama Supplier</th>
-                                            <th>Qty</th>
-                                            <th>Total Penjualan</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            {{-- end Of Grafik --}}
-
-                        </div>
-                        <!--end::Tiles Widget 1-->
-                    </div>
-                </div>
-                {{-- END OF TOP PRINCIPLE --}}
-                @endcan    
+                    <div class="tab-pane fade " id="kt_tab_pane_2_4" role="tabpanel" aria-labelledby="kt_tab_pane_2_4">  
+                        @include('partial.table.analisis')                  
+                    </div>  
+                </div>                                                          
             </div>
             <!--end::Container-->
         </div>
@@ -802,32 +188,12 @@
         let topprinciplekategori = 'All';
         let sales_principle = 'All';
 
-        // =========================================================================================================================
-        $(document).ready(function() {  
-            // if (hasPermission('grafikpenjualan-list')) {
-            //     chartyear();
-            // }
-           
-            
-            // if (hasPermission('grafikkategori-list')) {
-            //     chart_kategori();
-            // }
-            // if (hasPermission('grafikproduk-list')) {
-            //     chartProduk();
-            // }
-            // if (hasPermission('tabletopproduk-list')) {
-            //     datatable();
-            //     datatableCustomer();
-            // }
-            // if (hasPermission('tabletopcustomer-list')) {
-            //     datatabletopcustomer();
-            //     datatablelistproduct();
-            // }           
-            // if (hasPermission('tabletopprinciple-list')) {
-            //     datatabletopPrinciple();
-            //     datatableProductByPrinciple();
-            // }                       
+        // ================================  TAHUN ==============================
+        let tahunrekaphutang = {{ now()->format('Y') }};
+        let tahunrekappiutang = {{ now()->format('Y') }};
 
+        // =========================================================================================================================
+        $(document).ready(function() {                          
             const permissionActions = {
                 'grafikpenjualan-list': [chartyear],
                 'grafikkategori-list': [chart_kategori],
@@ -835,6 +201,12 @@
                 'tabletopproduk-list': [datatable, datatableCustomer],
                 'tabletopcustomer-list': [datatabletopcustomer, datatablelistproduct],
                 'tabletopprinciple-list': [datatabletopPrinciple, datatableProductByPrinciple],
+                'datapengiriman-list': [datatablepesanan],
+                'datapenerimaan-list': [datatablepembelian],
+                'datahutang-list' : [datatablehutang],
+                'datapiutang-list' : [datatablepiutang],
+                'rekaphutang-list' :[datahutang],
+                'rekappiutang-list' :[datapiutang]
                 };
 
                 Object.entries(permissionActions).forEach(([permission, actions]) => {
@@ -1603,17 +975,10 @@
                 serverSide: true,
                 order: [],
                 ajax: {
-                    url: "{{ route('pengumuman.homedatatable') }}",
-                    // headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
+                    url: "{{ route('pengumuman.homedatatable') }}",                    
                     type: "POST",
-                    data: function(params) {
-                        // params.year = tahunProduk,
-                        //     params.bulan = bulanProduk,
-                        //     params.tipe = tipe,
-                        //     params.kategori = kategoriProduk,
-                        //     params.sales = salesProduk,
-                        //     params.merk = merkProduk,
-                            params._token = "{{ csrf_token() }}";
+                    data: function(params) {                        
+                        params._token = "{{ csrf_token() }}";
                         return params;
                     }
                 },
@@ -1676,5 +1041,192 @@
                 }
             });
         }
+
+        function initializeDataTable(selector, url, columns) {
+                return $(selector).DataTable({
+                    responsive: true,
+                    processing: true,
+                    serverSide: true,
+                    order: [],
+                    ajax: {
+                        url: url,
+                        type: "POST",
+                        data: function(params) {
+                            params._token = "{{ csrf_token() }}";
+                            return params;
+                        }
+                    },
+                    columns: columns,
+                    columnDefs: [
+                        { responsivePriority: 1, targets: 0 },
+                        { responsivePriority: 2, targets: -1 }
+                    ]
+                });
+         }
+
+         function renderActionButton(urlBase, data) {
+            return `<a href="${urlBase}/${data}/create" class="btn btn-success btn-sm">
+                        <i class="flaticon2-check-mark"></i> Pilih
+                    </a>`;
+        }
+
+        function renderActionButton(urlBase, data) {
+            return `<a href="${urlBase}/${data}/create" class="btn btn-success btn-sm">
+                        <i class="flaticon2-check-mark"></i> Pilih
+                    </a>`;
+        }
+
+        function renderAgeBadge(data) {
+            var badgeClass = data > 0 ? 'badge-info' : 'badge-danger';
+            return `<span class="badge ${badgeClass}">${data} Hari</span>`;
+        }
+
+        function datatablepesanan() {            
+            initializeDataTable('.yajra-datatable-pengiriman', "{{ route('home.pengiriman') }}", [
+                { data: 'kode', name: 'kode' },
+                { data: 'tanggal', name: 'tanggal' },
+                { data: 'customer', name: 'customers.nama' },
+                { data: 'umur', searchable: false, render: renderAgeBadge },
+                { data: 'status', name: 'StatusSo.nama', searchable: false },
+                { data: 'keterangan_internal', name: 'keterangan_internal'},
+                { data: 'action', render: data => renderActionButton('penjualan/pengirimanbarang', data), className: "nowrap" }
+            ]);
+        }
+
+        function datatablepembelian() {            
+            initializeDataTable('.yajra-datatable-pembelian', "{{ route('home.penerimaan') }}", [
+                { data: 'kode', name: 'kode' },
+                { data: 'tanggal', name: 'tanggal' },
+                { data: 'supplier', name: 'suppliers.nama' },
+                { data: 'umur', searchable: false, render: renderAgeBadge },
+                { data: 'status', name: 'statusPO.nama' },
+                { data: 'keterangan_internal', name: 'keterangan_internal' },
+                { data: 'action', render: data => renderActionButton('pembelian/penerimaanbarang', data), className: "nowrap" }
+            ]);
+        }
+
+        function datatablehutang() {
+            initializeDataTable('.yajra-datatable-hutang', "{{ route('home.hutang') }}", [
+                { data: 'tanggal_top',searchable: false, name: 'tanggal_top' },
+                { data: 'nama_supplier', name: 'suppliers.nama' },
+                { data: 'kode_faktur', name: 'FakturPO.kode' },
+                { data: 'no_faktur_supplier', name: 'FakturPO.no_faktur_supplier' },
+                { data: 'total',searchable: false, name: 'total' },
+                { data: 'dibayar',searchable: false, name: 'dibayar' },
+                { data: 'sisa',searchable: false, name: 'sisa' },                
+                { data: 'umur', searchable: false, render: renderAgeBadge },
+                { data: 'status', render : function(data){
+                    if (data == 1) {
+                        return '<span class="badge badge-info">Belum Jatuh Tempo</span>';
+                    }else{
+                        return '<span class="badge badge-danger">Sudah Jatuh Tempo</span>';
+                    }
+                }},
+                { data: 'action', render: data => renderActionButton('pembayaran/pembayaranhutang', data), className: "nowrap" }
+            ]);
+        }
+
+        function datatablepiutang() {
+            initializeDataTable('.yajra-datatable-piutang', "{{ route('home.piutang') }}", [
+                { data: 'tanggal_top',searchable: false, name: 'tanggal_top' },
+                { data: 'no_kpa', name: 'fakturpenjualan.no_kpa' },
+                { data: 'customer', name: 'customers.nama' },               
+                { data: 'total',searchable: false, name: 'total' },                
+                { data: 'dibayar',searchable: false, name: 'dibayar' },
+                { data: 'sisa',searchable: false, name: 'sisa' },                
+                { data: 'umur', searchable: false, render: renderAgeBadge },
+                { data: 'status', render : function(data){
+                    if (data == 1) {
+                        return '<span class="badge badge-info">Belum Jatuh Tempo</span>';
+                    }else{
+                        return '<span class="badge badge-danger">Sudah Jatuh Tempo</span>';
+                    }
+                }},                
+                { data: 'sales', name: 'sales' },
+                { data: 'action', render: data => renderActionButton('pembayaran/pembayaranhutang', data), className: "nowrap" }
+            ]);
+        }
+
+        function datahutang() {
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('home.rekaphutang') }}',
+                dataType: 'html',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'tahun': tahunrekaphutang,
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    let response = JSON.parse(data);                                                                                                   
+                    $('#hutang-lunas').html(response.total_lunas);
+                    $('#hutang-belum-lunas').html(response.total_belum_lunas);
+                    $('#hutang-jatuh-tempo').html(response.total_jatuh_tempo);
+                    $('#hutang-belum-jatuh-tempo').html(response.total_belum_jatuh_tempo);
+
+                    $('#totalhutangtahunan').html(response.hutangtotaltahunan);
+                    $('#totalhutangseluruh').html(response.hutangtotal);
+                    // Update the width of the progress bar based on the percentage values
+                    $('#progress-hutang-lunas').css('width', response.persenlunas + '%');
+                    $('#progress-hutang-belum-lunas').css('width', response.persenbelumlunas + '%');
+                    $('#progress-jatuh-tempo').css('width', response.persenjatuhtempo + '%');
+                    $('#progress-belum-jatuh-tempo').css('width', response.persenbelumjatuhtempo + '%');                                        
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            });
+        }
+
+       
+
+        function datapiutang(params) {
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('home.rekappiutang') }}',
+                dataType: 'html',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'tahun': tahunrekappiutang,
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    let response = JSON.parse(data);                                                                                                   
+                    $('#piutang-lunas').html(response.total_lunas);
+                    $('#piutang-belum-lunas').html(response.total_belum_lunas);
+                    $('#piutang-jatuh-tempo').html(response.total_jatuh_tempo);
+                    $('#piutang-belum-jatuh-tempo').html(response.total_belum_jatuh_tempo);
+
+                    $('#totalpiutangtahunan').html(response.piutangtotaltahunan);
+                    $('#totalpiutangseluruh').html(response.piutangtotal);
+
+                    // Update the width of the progress bar based on the percentage values
+                    $('#progress-piutang-lunas').css('width', response.persenlunas + '%');
+                    $('#progress-piutang-belum-lunas').css('width', response.persenbelumlunas + '%');
+                    $('#progress-piutang-jatuh-tempo').css('width', response.persenjatuhtempo + '%');
+                    $('#progress-piutang-belum-jatuh-tempo').css('width', response.persenbelumjatuhtempo + '%');                                
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            });
+        }
+        
+        function filterhutang() {
+            let e = document.getElementById("rekaphutang");
+            tahunrekaphutang = e.options[e.selectedIndex].value;
+            datahutang();
+        }
+
+        function filterpiutang(){
+            let e = document.getElementById("rekappiutang");
+            tahunrekappiutang = e.options[e.selectedIndex].value;
+            datapiutang();
+        }              
+        
     </script>
 @endpush

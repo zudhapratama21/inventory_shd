@@ -1,6 +1,6 @@
 <!-- Modal-->
 @if($mode == "new")
-<div class="modal fade" id="setBarangModal" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop"
+<div class="modal fade" id="modal-barang" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
         <div class="modal-content">
@@ -11,7 +11,7 @@
                 </button>
             </div>
             <div class="modal-body" style="height: 400px;">
-
+                <input type="hidden" id="canvassingdetail_id" value="{{$canvas->id}}">
                 <form class="form">
                     <div class="card-body">
                         <div class="form-group row">
@@ -19,25 +19,15 @@
                             <div class="col-lg-10">
                                 <input type="text" readonly="readonly" disabled="disabled"
                                     class="form-control form-control-solid" name="nama" id="nama"
-                                    value="{{ $product->nama }}" />
-                                <input type="hidden" id="product_id" name="product_id" value="{{ $product->id }}">
-                                <input type="hidden" id="canvassingdetail_id" name="canvassingdetail_id" value="{{ $canvas->id }}">
-                                <input type="hidden" id="canvassing_id" name="canvassing_id" value="{{ $canvas->canvassing_pesanan_id }}">
+                                    value="{{ $canvas->product->nama }}" />                                
                                 
                             </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-lg-2 col-form-label">Stok</label>
-                            <div class="col-lg-2">
-                                <input type="text" readonly="readonly" class="form-control" id="stok" name="stok"
-                                    value="{{ $product->stok }}" />
-                            </div>
-                        </div>
+                        </div>                      
                         <div class="form-group row">
                             <label class="col-lg-2 col-form-label">Qty Canvassing</label>
                             <div class="col-lg-2">
                                 <input type="text" class="form-control" id="qty_canvassing"
-                                    name="qty_canvassing" value="{{$canvas->qty}}"  max="{{$product->stok}}" min="0" readonly/>
+                                    name="qty_canvassing" value="{{$canvas->qty}}"  min="0" readonly/>
                             </div>
                         </div> 
 
@@ -45,7 +35,7 @@
                             <label class="col-lg-2 col-form-label">Qty Sisa</label>
                             <div class="col-lg-2">
                                 <input type="text" class="form-control" id="qty_canvassing"
-                                    name="qty_canvassing" value="{{$canvas->qty_sisa}}"  max="{{$product->stok}}" min="0" readonly/>
+                                    name="qty_canvassing" value="{{$canvas->qty_sisa}}"  min="0" readonly/>
                             </div>
                         </div> 
                         
@@ -55,23 +45,7 @@
                                 <input type="text" class="form-control" id="qty_kembali"
                                     name="qty_kembali" />
                             </div>
-                        </div> 
-
-                        <div class="form-group row">
-                            <label class="col-lg-2 col-form-label">Satuan </label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control form-control-solid" readonly="readonly"
-                                    id="satuan" name="satuan" value="{{ $product->satuan }}" />
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label class="col-lg-2 col-form-label">Keterangan</label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control" id="keterangan" name="keterangan" value="{{$canvas->keterangan}}" readonly/>
-                            </div>
-                        </div>
-
+                        </div>                        
                     </div>
                 </form>
 
@@ -87,7 +61,7 @@
 
 </div>
 @else
-<div class="modal fade" id="setBarangModal" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop"
+<div class="modal fade" id="modal-barang" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
         <div class="modal-content">

@@ -2,36 +2,52 @@
     <div class="form-group row">
         <label class="col-lg-1 col-form-label text-right">Customer:</label>
         <div class="col-lg-4">
-            <select class="form-control select2" id="customer_id" name="customer_id" required>
-                <option value="">Pilih Customer</option>
-                @foreach ($customers as $cg)
-                @if ($pesananpenjualan->customer_id == $cg->id)
-                <option selected="selected" value="{{ $cg->id }}">{{ $cg->nama }}</option>
+            @if ($countfaktur > 0)
+                <select name="customer_id" id="" class="form-control" disabled>
+                    <option value="{{ $pesananpenjualan->customer_id }}">{{ $pesananpenjualan->customers->nama }}
+                    </option>
+                </select>
+            @else
+                @if ($pesananpenjualan->status_so_id == 1 || $pesananpenjualan->status_so_id == 2)
+                        <select class="form-control select2" id="customer_id" name="customer_id" required>
+                            <option value="">Pilih Customer</option>
+                            @foreach ($customers as $cg)
+                                @if ($pesananpenjualan->customer_id == $cg->id)
+                                    <option selected="selected" value="{{ $cg->id }}">{{ $cg->nama }}</option>
+                                @else
+                                    <option value="{{ $cg->id }}">{{ $cg->nama }}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                    
                 @else
-                <option value="{{ $cg->id }}">{{ $cg->nama }}</option>
+                    <select name="customer_id" id="" class="form-control" disabled>
+                        <option value="{{ $pesananpenjualan->customer_id }}">{{ $pesananpenjualan->customers->nama }}</option>
+                    </select>
                 @endif
 
-                @endforeach
-            </select>
+
+            @endif            
             @error('customer_id')
-            <div class="invalid-feedback">{{ $message }}</div>
+                <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
         <label class="col-lg-2 col-form-label text-right">Tanggal:</label>
         <div class="col-lg-4">
             <div class="input-group date">
-                @if($pesananpenjualan->tanggal <> null)
+                @if ($pesananpenjualan->tanggal != null)
                     <input type="text" class="form-control" name="tanggal" readonly
-                        value="{{ $pesananpenjualan->tanggal->format("d-m-Y") }}" id="tgl1" required/>
-                    @else
-                    <input type="text" class="form-control" name="tanggal" readonly value="{{ $tglNow }}" id="tgl1" required/>
-                    @endif
+                        value="{{ $pesananpenjualan->tanggal->format('d-m-Y') }}" id="tgl1" required />
+                @else
+                    <input type="text" class="form-control" name="tanggal" readonly value="{{ $tglNow }}"
+                        id="tgl1" required />
+                @endif
 
-                    <div class="input-group-append">
-                        <span class="input-group-text">
-                            <i class="la la-calendar"></i>
-                        </span>
-                    </div>
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i class="la la-calendar"></i>
+                    </span>
+                </div>
             </div>
             <span class="form-text text-muted">Please enter your contact number</span>
         </div>
@@ -42,22 +58,21 @@
             <select class="form-control select2" id="komoditas" name="komoditas_id" required>
                 <option value="">Pilih Komoditas</option>
                 @foreach ($komoditass as $cg)
-                @if ($pesananpenjualan->komoditas_id == $cg->id)
-                <option selected="selected" value="{{ $cg->id }}">{{ $cg->nama }}</option>
-                @else
-                <option value="{{ $cg->id }}">{{ $cg->nama }}</option>
-                @endif
-
+                    @if ($pesananpenjualan->komoditas_id == $cg->id)
+                        <option selected="selected" value="{{ $cg->id }}">{{ $cg->nama }}</option>
+                    @else
+                        <option value="{{ $cg->id }}">{{ $cg->nama }}</option>
+                    @endif
                 @endforeach
             </select>
             @error('komoditas_id')
-            <div class="invalid-feedback">{{ $message }}</div>
+                <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
         <label class="col-lg-2 col-form-label text-right">TOP:</label>
         <div class="col-lg-4">
             <input type="number" name="top" id="top" class="form-control" placeholder="Enter Term of Payment"
-                value="30"  />
+                value="{{ $pesananpenjualan->top }}" @if ($countfaktur || $pesananpenjualan->status_so_id == 3 || $pesananpenjualan->status_so_id == 4  > 0) disabled @endif />
             <span class="form-text text-muted">Isi Dalam Satuan Hari, Contoh : 30</span>
         </div>
     </div>
@@ -68,75 +83,78 @@
                 <option value="">Pilih Kategori</option>
                 @foreach ($kategoris as $cg)
                     @if ($pesananpenjualan->kategoripesanan_id == $cg->id)
-                    <option value="{{ $cg->id }}" selected>{{ $cg->nama }}</option>
+                        <option value="{{ $cg->id }}" selected>{{ $cg->nama }}</option>
                     @else
-                    <option value="{{ $cg->id }}">{{ $cg->nama }}</option>
+                        <option value="{{ $cg->id }}">{{ $cg->nama }}</option>
                     @endif
                 @endforeach
             </select>
             @error('kategoripesanan_id')
-            <div class="invalid-feedback">{{ $message }}</div>
+                <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
         <label class="col-lg-2 col-form-label text-right">No. Surat Pesanan Cust.:</label>
         <div class="col-lg-4">
             <input type="text" id="no_so" name="no_so" class="form-control"
-                placeholder="No. Surat Pesanan Penjualan (Jika Ada)" value="{{$pesananpenjualan->no_so}}" />
+                placeholder="No. Surat Pesanan Penjualan (Jika Ada)" value="{{ $pesananpenjualan->no_so }}" />
         </div>
     </div>
     <div class="form-group row">
         <label class="col-lg-1 col-form-label text-right">ID Paket:</label>
         <div class="col-lg-4">
             <input type="text" id="id_paket" name="id_paket" class="form-control"
-                placeholder="Khusus e-Katalog (Jika Ada)" value="{{$pesananpenjualan->id_paket}}"/>
+                placeholder="Khusus e-Katalog (Jika Ada)" value="{{ $pesananpenjualan->id_paket }}" />
         </div>
 
         <label class="col-lg-2 col-form-label text-right">Tanggal. Surat Pesanan Cust.:</label>
         <div class="col-lg-4">
             <div class="input-group date">
                 {{-- @dd(Carbon\Carbon::parse($pesananpenjualan->tanggal_pesanan_customer)->format("d-m-Y")) --}}
-                @if($pesananpenjualan->tanggal_pesanan_customer <> null)                            
-                     <input type="text" name="tanggal_pesanan_customer" class="form-control" value="{{Carbon\Carbon::parse($pesananpenjualan->tanggal_pesanan_customer)->format("d/m/Y")}}" id="kt_datepicker_3"> 
-                 @else                       
-                       <input type="text" name="tanggal_pesanan_customer" class="form-control" value="{{$tglNow}}"  id="kt_datepicker_3"/>
-                 @endif
+                @if ($pesananpenjualan->tanggal_pesanan_customer != null)
+                    <input type="text" name="tanggal_pesanan_customer" class="form-control"
+                        value="{{ Carbon\Carbon::parse($pesananpenjualan->tanggal_pesanan_customer)->format('d/m/Y') }}"
+                        id="kt_datepicker_3">
+                @else
+                    <input type="text" name="tanggal_pesanan_customer" class="form-control"
+                        value="{{ $tglNow }}" id="kt_datepicker_3" />
+                @endif
 
-                 <div class="input-group-append">
-                     <span class="input-group-text">
-                         <i class="la la-calendar"></i>
-                     </span>
-                 </div>    
-             </div>
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i class="la la-calendar"></i>
+                    </span>
+                </div>
+            </div>
         </div>
-       
+
     </div>
     <div class="form-group row">
         <label class="col-lg-1 col-form-label text-right">Sumber Dana:</label>
         <div class="col-lg-4">
             <input type="text" id="sumber_dana" name="sumber_dana" class="form-control"
-                placeholder="Khusus e-Katalog (Jika Ada)" value="{{$pesananpenjualan->nama_paket}}"/>
+                placeholder="Khusus e-Katalog (Jika Ada)" value="{{ $pesananpenjualan->nama_paket }}" />
         </div>
 
         <label class="col-lg-2 col-form-label text-right">Nama Paket :</label>
         <div class="col-lg-4">
             <input type="text" id="nama_paket" name="nama_paket" class="form-control"
-                placeholder="Khusus e-Katalog (Jika Ada)" value="{{$pesananpenjualan->nama_paket}}"/>
+                placeholder="Khusus e-Katalog (Jika Ada)" value="{{ $pesananpenjualan->nama_paket }}" />
         </div>
-       
+
     </div>
     <div class="form-group row">
         <label class="col-lg-1 col-form-label text-right">Pemesan:</label>
         <div class="col-lg-4">
             <input type="text" id="pemesan" name="pemesan" class="form-control"
-                placeholder="Khusus e-Katalog (Jika Ada)" value="{{$pesananpenjualan->pemesan}}"/>
+                placeholder="Khusus e-Katalog (Jika Ada)" value="{{ $pesananpenjualan->pemesan }}" />
         </div>
 
         <label class="col-lg-2 col-form-label text-right">Tahun Anggaran :</label>
         <div class="col-lg-4">
             <input type="text" id="tahun_anggaran" name="tahun_anggaran" class="form-control"
-                placeholder="Khusus e-Katalog (Jika Ada)" value="{{$pesananpenjualan->tahun_anggaran}}" />
+                placeholder="Khusus e-Katalog (Jika Ada)" value="{{ $pesananpenjualan->tahun_anggaran }}" />
         </div>
-       
+
     </div>
     <div class="form-group row">
         <label class="col-lg-1 col-form-label text-right">Sales:</label>
@@ -144,28 +162,36 @@
             <select class="form-control select2" id="sales_id" name="sales_id" required>
                 <option value="">Pilih Sales</option>
                 @foreach ($saless as $cg)
-                @if ($pesananpenjualan->sales_id == $cg->id)
-                <option selected="selected" value="{{ $cg->id }}">{{ $cg->nama }}</option>
-                @else
-                <option value="{{ $cg->id }}">{{ $cg->nama }}</option>
-                @endif
-
+                    @if ($pesananpenjualan->sales_id == $cg->id)
+                        <option selected="selected" value="{{ $cg->id }}">{{ $cg->nama }}</option>
+                    @else
+                        <option value="{{ $cg->id }}">{{ $cg->nama }}</option>
+                    @endif
                 @endforeach
             </select>
             @error('sales_id')
-            <div class="invalid-feedback">{{ $message }}</div>
+                <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
 
         <label class="col-lg-2 col-form-label text-right">PPK :</label>
         <div class="col-lg-4">
-            <input type="text" id="ppk" name="ppk" class="form-control" placeholder="Khusus e-Katalog (Jika Ada)" value="{{$pesananpenjualan->ppk}}"/>
+            <input type="text" id="ppk" name="ppk" class="form-control"
+                placeholder="Khusus e-Katalog (Jika Ada)" value="{{ $pesananpenjualan->ppk }}" />
         </div>
 
 
     </div>
     <div class="text-right mb-3">
-        <a href="javascript:caribarang({{$pesananpenjualan->id}})" class="btn btn-sm btn-primary"><i class="flaticon2-add"></i>Tambah Barang</a>
+        
+        @if ($countfaktur == 0)        
+            @if ($pesananpenjualan->status_so_id == 1 || $pesananpenjualan->status_so_id == 2)
+                <a href="javascript:caribarang({{ $pesananpenjualan->id }})" class="btn btn-sm btn-primary"><i
+                        class="flaticon2-add"></i>Tambah Barang</a>
+            @endif
+
+        @endif
+
     </div>
     <div class="form-group row">
         <div class="col-lg-12">
@@ -195,10 +221,17 @@
 
     <div class="separator separator-dashed my-5"></div>
     <div class="form-group row">
-        <div class="col-lg-6">
+        <div class="col-lg-3">
             <label class="">Keterangan:</label>
             <div class="kt-input-icon kt-input-icon--right">
-                <textarea class="form-control" name="keterangan" id="keterangan">{{$pesananpenjualan->keterangan}}</textarea>
+                <textarea class="form-control" name="keterangan" id="keterangan">{{ $pesananpenjualan->keterangan }}</textarea>
+            </div>
+
+        </div>
+        <div class="col-lg-3">
+            <label class="">Keterangan Internal <span class="text-danger"  style="font-size: 70%"">(Keterangan ini tidak muncul diprint)</span>:</label> <br>            
+            <div class="kt-input-icon kt-input-icon--right">
+                <textarea class="form-control" name="keterangan_internal" id="keterangan">{{ $pesananpenjualan->keterangan_internal }}</textarea>
             </div>
 
         </div>
@@ -208,12 +241,12 @@
                     <label class="col-lg-7 col-form-label text-right">Subtotal :</label>
                     <div class="col-lg-5 mb-2">
                         <div id="div_subtotal">
-                            <input type="text" id="subtotal" class="form-control text-right" 
-                                readonly="readonly" value="">
+                            <input type="text" id="subtotal" class="form-control text-right" readonly="readonly"
+                                value="">
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="row">
                     <label class="col-lg-7 col-form-label text-right">Diskon :</label>
                     <div class="col-lg-5 mb-2">
@@ -221,24 +254,23 @@
                             <a href="javascript:editdiskon();" class="btn  btn-icon btn-success mr-1">
                                 <i class="flaticon-edit"></i>
                             </a>
-                            <input type="text" class="form-control text-right" id="diskon"  value="0"
+                            <input type="text" class="form-control text-right" id="diskon" value="0"
                                 readonly="readonly">
-                        </div>                        
+                        </div>
                     </div>
                 </div>
 
                 <div class="row">
                     <label class="col-lg-7 col-form-label text-right">Ongkir :</label>
                     <div class="col-lg-5 mb-2">
-                        <input type="text" id="ongkirheader" readonly="readonly" 
-                            class="form-control text-right">
+                        <input type="text" id="ongkirheader" readonly="readonly" class="form-control text-right">
                     </div>
                 </div>
-                
+
                 <div class="row">
                     <label class="col-lg-7 col-form-label text-right">Total :</label>
                     <div class="col-lg-5 mb-2">
-                        <input type="text" id="total" readonly="readonly"  class="form-control text-right">
+                        <input type="text" id="total" readonly="readonly" class="form-control text-right">
                     </div>
                 </div>
                 <div class="row">
@@ -248,16 +280,15 @@
                             <a href="javascript:editppn();" class="btn  btn-icon btn-primary mr-1">
                                 <i class="flaticon-edit"></i>
                             </a>
-                            <input type="text" class="form-control text-right" id="ppn"  value="0"
+                            <input type="text" class="form-control text-right" id="ppn" value="0"
                                 readonly="readonly">
                         </div>
                     </div>
-                </div>               
+                </div>
                 <div class="row">
                     <label class="col-lg-7 col-form-label text-right">Grand Total :</label>
                     <div class="col-lg-5">
-                        <input type="text" id="grandtotal" readonly="readonly" 
-                            class="form-control text-right">
+                        <input type="text" id="grandtotal" readonly="readonly" class="form-control text-right">
                     </div>
                 </div>
             </div>

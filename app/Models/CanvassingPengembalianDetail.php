@@ -15,11 +15,13 @@ class CanvassingPengembalianDetail extends Model
 
     protected $fillable  = [
         'canvassing_kembali_id',
+        'canvassing_pesanan_detail_id',
         'product_id',
         'tanggal',
         'qty',
         'qty_sisa',
-        'qty_kirim',        
+        'qty_kirim',       
+        'status_data'
     ];
 
 
@@ -43,6 +45,12 @@ class CanvassingPengembalianDetail extends Model
     public function updater()
     {
         return $this->belongsTo(User::class, 'updated_by', 'id');
+    }
+
+  
+    public function canvassingpesanandetail()
+    {
+        return $this->belongsTo(CanvassingPesananDetail::class, 'canvassing_pesanan_detail_id', 'id');
     }
 
 

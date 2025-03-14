@@ -177,7 +177,7 @@
                         </div>
                     </div>
                 </div>
-            </div>                        
+            </div>
         </div>
     @endsection
     @push('script')
@@ -185,9 +185,20 @@
         <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
         <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
         <script src="{{ asset('/assets/js/pages/crud/forms/widgets/bootstrap-datepicker.js?v=7.0.6') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
+            integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css"
+            integrity="sha512-O03ntXoVqaGUTAeAmvQ2YSzkCvclZEcPQu1eqloPaHfJ5RuNGiS4l+3duaidD801P50J28EHyonCV06CUlTSag=="
+            crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
 
 
         <script type="text/javascript">
+            let customer = null;
+            let kategori = null;
+
             $(function() {
                 hitungAll()
 
@@ -249,6 +260,9 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
                     data: {
                         id: data_id,
                         "_token": "{{ csrf_token() }}"
@@ -258,6 +272,9 @@
                         console.log(data);
                         $('#modal-setbarang').html(data);
                         $('#setBarangModal').modal('show');
+                    },
+                    complete: function() {
+                        KTApp.unblock();
                     },
                     error: function(data) {
                         console.log(data);
@@ -273,9 +290,16 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
+
                     data: {
                         id: data_id,
                         "_token": "{{ csrf_token() }}"
+                    },
+                    complete: function() {
+                        KTApp.unblock();
                     },
 
                     success: function(data) {
@@ -310,6 +334,9 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
                     data: {
                         "product_id": product_id,
                         "qty": qty,
@@ -323,7 +350,9 @@
                         "ppn": ppn,
                         "_token": "{{ csrf_token() }}"
                     },
-
+                    complete: function() {
+                        KTApp.unblock();
+                    },
                     success: function(data) {
                         console.log(data);
 
@@ -356,6 +385,9 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
                     data: {
                         "id": id,
                         "product_id": product_id,
@@ -377,6 +409,9 @@
                         $('#setBarangModal').modal('hide');
                         hitungAll()
                     },
+                    complete: function() {
+                        KTApp.unblock();
+                    },
                     error: function(data) {
                         console.log(data);
                     }
@@ -391,6 +426,9 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
                     data: {
                         "id": "",
                         "_token": "{{ csrf_token() }}"
@@ -400,6 +438,9 @@
                         console.log(data);
                         $('#tabel_detil').html(data);
 
+                    },
+                    complete: function() {
+                        KTApp.unblock();
                     },
                     error: function(data) {
                         console.log(data);
@@ -420,11 +461,19 @@
                         id: data_id,
                         "_token": "{{ csrf_token() }}"
                     },
-
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
+                    complete: function() {
+                        KTApp.unblock();
+                    },
                     success: function(data) {
                         console.log(data);
                         $('#modal-setdiskon').html(data);
                         $('#setDiskonModal').modal('show');
+                    },
+                    complete: function() {
+                        KTApp.unblock();
                     },
                     error: function(data) {
                         console.log(data);
@@ -443,6 +492,12 @@
                     dataType: 'html',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
+                    complete: function() {
+                        KTApp.unblock();
                     },
                     data: {
                         "id_diskon": id_diskon,
@@ -473,6 +528,12 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
+                    complete: function() {
+                        KTApp.unblock();
+                    },
                     data: {
                         id: data_id,
                         "_token": "{{ csrf_token() }}"
@@ -500,6 +561,12 @@
                     dataType: 'html',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
+                    complete: function() {
+                        KTApp.unblock();
                     },
                     data: {
                         "id_ppn": id_ppn,
@@ -536,6 +603,12 @@
                     dataType: 'html',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
+                    complete: function() {
+                        KTApp.unblock();
                     },
                     data: {
                         id: data_id,
@@ -584,6 +657,12 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
+                    complete: function() {
+                        KTApp.unblock();
+                    },
                     data: {
                         "_token": "{{ csrf_token() }}"
                     },
@@ -606,6 +685,12 @@
                     dataType: 'html',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
+                    complete: function() {
+                        KTApp.unblock();
                     },
                     data: {
                         "_token": "{{ csrf_token() }}"
@@ -630,6 +715,12 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
+                    complete: function() {
+                        KTApp.unblock();
+                    },
                     data: {
                         "_token": "{{ csrf_token() }}"
                     },
@@ -652,6 +743,12 @@
                     dataType: 'html',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
+                    complete: function() {
+                        KTApp.unblock();
                     },
                     data: {
                         "_token": "{{ csrf_token() }}"
@@ -676,6 +773,12 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
+                    complete: function() {
+                        KTApp.unblock();
+                    },
                     data: {
                         "_token": "{{ csrf_token() }}"
                     },
@@ -699,10 +802,15 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
+                    complete: function() {
+                        KTApp.unblock();
+                    },
                     data: {
                         "_token": "{{ csrf_token() }}"
                     },
-
                     success: function(data) {
                         console.log(data);
                         $('#grandtotal').val(data);
@@ -713,6 +821,36 @@
                     }
                 });
             }
+
+            // function hitungPPH() {                
+            //     let c = document.getElementById('customer_id').value
+            //     customer = e.options[e.selectedIndex].value;
+
+            //     let k = document.getElementById('kategori').value
+            //     kategori = k.options[k.selectedIndex].value;
+
+            //     $.ajax({
+            //         type: 'POST',
+            //         url: '{{ route('pesananpenjualan.hitungpph') }}',
+            //         dataType: 'html',
+            //         headers: {
+            //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //         },
+            //         data: {
+            //             customer : customer,
+            //             kategori : kategori,
+            //             "_token": "{{ csrf_token() }}"
+            //         },
+
+            //         success: function(data) {                        
+            //             $('#pph').val(data);
+
+            //         },
+            //         error: function(data) {
+            //             console.log(data);
+            //         }
+            //     });
+            // }
 
             function hitungAll() {
                 loadTempSO();

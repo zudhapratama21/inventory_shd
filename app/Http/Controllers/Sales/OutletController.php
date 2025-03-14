@@ -22,7 +22,7 @@ class OutletController extends Controller
 
     public function datatable(Request $request)
     {
-        $outlet = Outlet::with('user')->orderBy('id','asc');
+        $outlet = Outlet::with('user')->orderBy('id','desc');
 
         return DataTables::of($outlet)
                 ->addIndexColumn()              

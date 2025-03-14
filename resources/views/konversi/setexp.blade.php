@@ -118,7 +118,8 @@
                                             </g>
                                         </svg>
                                         <!--end::Svg Icon--></span> </span>
-                                <h3 class="card-label">Daftar Expired Date Produk</h3>
+                                
+                                <h3 class="card-label">Daftar @if ($status == 1) Produk Expired @else Produk Non Expired @endif</h3>                                
                             </div>                          
                         </div>
                         <div class="card-body">
@@ -128,49 +129,34 @@
                                     <tr>
                                         <th>Tanggal</th>
                                         <th>Lot</th>
-                                        <th>Qty</th>                                        
+                                        <th>Qty</th>     
+                                        <th>Harga Beli</th>                                   
+                                        <th>Diskon (%)</th>
+                                        <th>Diskon (Rp.)</th>
                                         <th style="width: 15%">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    
-                                
-                                    @if ($products->status_exp == 1) 
-                                        @foreach ($exp as $item)
-                                            <tr>
-                                                <td>{{ $item->tanggal->format("d F Y")  }}</td>
-                                                <td>{{ $item->lot ? $item->lot : '-' }}</td>
-                                                <td>{{ $item->qty }}</td>
-                                                <td>                                                
-                                                    <div style="text-align:center;">
-                                                        <div class="d-flex flex-nowrap">                                                            
-                                                            <a href="javascript:set_qty({{ $item->id }},'exp')"
-                                                                class="btn btn-success btn-sm">
-                                                                <i class="flaticon2-check-mark"></i> Pilih
-                                                            </a>                                                            
-                                                        </div>
-                                                    </div>                                                                                                    
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    @else
-                                    <tr>
-                                        <td>Barang Non Expired</td>
-                                        <td>Barang Non Expired</td>
-                                        <td>Barang Non Expired</td>                                        
-                                        <td>
-                                            <div style="text-align:center;">
-                                                <div class="d-flex flex-nowrap">                                                            
-                                                    <a href="javascript:set_qty({{ $products->id }},'noexp')"
-                                                        class="btn btn-success btn-sm">
-                                                        <i class="flaticon2-check-mark"></i> Pilih
-                                                    </a>                                                            
-                                                </div>
-                                            </div> 
-                                        </td>
-                                    </tr>
-                                    @endif
-                                   
+                                <tbody>                                                                                                        
+                                    @foreach ($stok as $item)
+                                        <tr>
+                                            <td>{{ $item->tanggal ? $item->tanggal->format("d F Y") : '-' }}</td>
+                                            <td>{{ $item->lot ? $item->lot : '-' }}</td>
+                                            <td>{{ $item->qty }}</td>   
+                                            <td>{{ $item->harga_beli ? $item->harga_beli : '-' }}</td>                                                
+                                            <td>{{ $item->diskon_persen ? $item->diskon_persen : '-' }}</td>
+                                            <td>{{ $item->diskon_rupiah ? $item->diskon_rupiah : '-' }}</td>
+                                            <td>                                                
+                                                <div style="text-align:center;">
+                                                    <div class="d-flex flex-nowrap">                                                            
+                                                        <a href="javascript:set_qty({{ $item->id }},{{ $status }})"
+                                                            class="btn btn-success btn-sm">
+                                                            <i class="flaticon2-check-mark"></i> Pilih
+                                                        </a>                                                            
+                                                    </div>
+                                                </div>                                                                                                    
+                                            </td>
+                                        </tr>
+                                    @endforeach                                                                                                                                              
                                 </tbody>
                             </table>
                             <!--end: Datatable-->

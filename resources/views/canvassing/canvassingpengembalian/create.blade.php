@@ -1,416 +1,352 @@
 @extends('layouts.app', ['title' => $title])
 
 @section('content')
-<!--begin::Content-->
-<div class="content  d-flex flex-column flex-column-fluid" id="kt_content">
-    <!--begin::Subheader-->
+    <!--begin::Content-->
+    <div class="content  d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
 
-    <!--end::Subheader-->
+        <!--end::Subheader-->
 
-    <!--begin::Entry-->
-    <div class="d-flex flex-column-fluid mt-10">
-        <!--begin::Container-->
-        <div class=" container ">
-            @if (session('status'))
-            <div class="alert alert-custom alert-success fade show pb-2 pt-2" role="alert">
-                <div class="alert-icon"><i class="flaticon-warning"></i></div>
-                <div class="alert-text">{{ session('status') }}</div>
-                <div class="alert-close">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true"><i class="ki ki-close"></i></span>
-                    </button>
-                </div>
-            </div>
-
-            @endif
-            <div class="row">
-
-                <div class="col-lg-12">
-                    <!--begin::Card-->
-                    <div class="card card-custom gutter-b example example-compact">
-                        <div class="card-header ">
-                            <div class="card-title">
-                                <span class="card-icon">
-                                    <span class="svg-icon svg-icon-primary svg-icon-2x">
-                                        <!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\themes\metronic\theme\html\demo2\dist/../src/media/svg/icons\Communication\Shield-user.svg--><svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
-                                            viewBox="0 0 24 24" version="1.1">
-                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                <rect x="0" y="0" width="24" height="24" />
-                                                <path
-                                                    d="M4,4 L11.6314229,2.5691082 C11.8750185,2.52343403 12.1249815,2.52343403 12.3685771,2.5691082 L20,4 L20,13.2830094 C20,16.2173861 18.4883464,18.9447835 16,20.5 L12.5299989,22.6687507 C12.2057287,22.8714196 11.7942713,22.8714196 11.4700011,22.6687507 L8,20.5 C5.51165358,18.9447835 4,16.2173861 4,13.2830094 L4,4 Z"
-                                                    fill="#000000" opacity="0.3" />
-                                                <path
-                                                    d="M12,11 C10.8954305,11 10,10.1045695 10,9 C10,7.8954305 10.8954305,7 12,7 C13.1045695,7 14,7.8954305 14,9 C14,10.1045695 13.1045695,11 12,11 Z"
-                                                    fill="#000000" opacity="0.3" />
-                                                <path
-                                                    d="M7.00036205,16.4995035 C7.21569918,13.5165724 9.36772908,12 11.9907452,12 C14.6506758,12 16.8360465,13.4332455 16.9988413,16.5 C17.0053266,16.6221713 16.9988413,17 16.5815,17 C14.5228466,17 11.463736,17 7.4041679,17 C7.26484009,17 6.98863236,16.6619875 7.00036205,16.4995035 Z"
-                                                    fill="#000000" opacity="0.3" />
-                                            </g>
-                                        </svg>
-                                        <!--end::Svg Icon--></span>
-                                </span>
-                                <h3 class="card-label">Canvassing Pengembalian</h3>
-                            </div>
-
-                            <div class="card-toolbar">
-                                {{-- <a href="{{ route('assignpermission.index') }}"
-                                class="btn btn-light-danger font-weight-bold mr-2">
-                                <i class="flaticon2-left-arrow-1"></i> Back
-                                </a> --}}
-                            </div>
-                        </div>
-
-                        
-                        <!--begin::Form-->
-                        <div class="card-body">
-
-                            <form class="form" method="POST" 
-                                action="{{ route('canvassingpengembalian.store') }}"
-                                >
-                                @csrf
-                                @include('canvassing.canvassingpengembalian.partial._form-control', ['submit' => 'Save'])
-                            </form>
-                        </div>
-                        <!--end::Card-->
-
-
-                    </div>
-                </div>
-
-            </div>
-            <!--end::Container-->
-        </div>
-        <!--end::Entry-->
-    </div>
-    <!--end::Content-->
-    <div id="modal-confirm-delete">
-        <!-- Modal-->
-        <div class="modal fade" id="detailDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <form id="destroy-form" action="#">
-                        <input type="hidden" id="id_detail" name="id_detail" value="">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Are You Sure?</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <i aria-hidden="true" class="ki ki-close"></i>
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid mt-10">
+            <!--begin::Container-->
+            <div class=" container ">
+                @if (session('status'))
+                    <div class="alert alert-custom alert-success fade show pb-2 pt-2" role="alert">
+                        <div class="alert-icon"><i class="flaticon-warning"></i></div>
+                        <div class="alert-text">{{ session('status') }}</div>
+                        <div class="alert-close">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true"><i class="ki ki-close"></i></span>
                             </button>
                         </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <span class="svg-icon svg-icon-primary svg-icon-4x">
-                                        <!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\themes\metronic\theme\html\demo2\dist/../src/media/svg/icons\Code\Warning-2.svg--><svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
-                                            viewBox="0 0 24 24" version="1.1">
-                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                <rect x="0" y="0" width="24" height="24" />
-                                                <path
-                                                    d="M11.1669899,4.49941818 L2.82535718,19.5143571 C2.557144,19.9971408 2.7310878,20.6059441 3.21387153,20.8741573 C3.36242953,20.9566895 3.52957021,21 3.69951446,21 L21.2169432,21 C21.7692279,21 22.2169432,20.5522847 22.2169432,20 C22.2169432,19.8159952 22.1661743,19.6355579 22.070225,19.47855 L12.894429,4.4636111 C12.6064401,3.99235656 11.9909517,3.84379039 11.5196972,4.13177928 C11.3723594,4.22181902 11.2508468,4.34847583 11.1669899,4.49941818 Z"
-                                                    fill="#000000" opacity="0.3" />
-                                                <rect fill="#000000" x="11" y="9" width="2" height="7" rx="1" />
-                                                <rect fill="#000000" x="11" y="17" width="2" height="2" rx="1" />
-                                            </g>
-                                        </svg>
-                                        <!--end::Svg Icon--></span>
-                                </div>
-                                <div class="col-md-10 " style="display: inline;">
-                                    <div class="align-middle">
-                                        Deleting Detail Data, will be permanently removed from
-                                        system.
-                                    </div>
+                    </div>
+                @endif
+                <div class="row">
+
+                    <div class="col-lg-12">
+                        <!--begin::Card-->
+                        <div class="card card-custom gutter-b example example-compact">
+                            <div class="card-header ">
+                                <div class="card-title">
+                                    <span class="card-icon">
+                                        <span class="svg-icon svg-icon-primary svg-icon-2x">
+                                            <!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\themes\metronic\theme\html\demo2\dist/../src/media/svg/icons\Communication\Shield-user.svg--><svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
+                                                viewBox="0 0 24 24" version="1.1">
+                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                    <rect x="0" y="0" width="24" height="24" />
+                                                    <path
+                                                        d="M4,4 L11.6314229,2.5691082 C11.8750185,2.52343403 12.1249815,2.52343403 12.3685771,2.5691082 L20,4 L20,13.2830094 C20,16.2173861 18.4883464,18.9447835 16,20.5 L12.5299989,22.6687507 C12.2057287,22.8714196 11.7942713,22.8714196 11.4700011,22.6687507 L8,20.5 C5.51165358,18.9447835 4,16.2173861 4,13.2830094 L4,4 Z"
+                                                        fill="#000000" opacity="0.3" />
+                                                    <path
+                                                        d="M12,11 C10.8954305,11 10,10.1045695 10,9 C10,7.8954305 10.8954305,7 12,7 C13.1045695,7 14,7.8954305 14,9 C14,10.1045695 13.1045695,11 12,11 Z"
+                                                        fill="#000000" opacity="0.3" />
+                                                    <path
+                                                        d="M7.00036205,16.4995035 C7.21569918,13.5165724 9.36772908,12 11.9907452,12 C14.6506758,12 16.8360465,13.4332455 16.9988413,16.5 C17.0053266,16.6221713 16.9988413,17 16.5815,17 C14.5228466,17 11.463736,17 7.4041679,17 C7.26484009,17 6.98863236,16.6619875 7.00036205,16.4995035 Z"
+                                                        fill="#000000" opacity="0.3" />
+                                                </g>
+                                            </svg>
+                                            <!--end::Svg Icon--></span>
+                                    </span>
+                                    <h3 class="card-label">Canvassing Pengembalian</h3>
                                 </div>
 
+                                <div class="card-toolbar">
+                                </div>
                             </div>
 
+
+                            <!--begin::Form-->
+                            <div class="card-body">
+
+                                <form class="form" method="POST" action="{{ route('canvassingpengembalian.store') }}">
+                                    @csrf
+                                    @include('canvassing.canvassingpengembalian.partial._form-control', [
+                                        'submit' => 'Save',
+                                    ])
+                                </form>
+                            </div>
+                            <!--end::Card-->
+
+
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-light-primary font-weight-bold"
-                                data-dismiss="modal">Cancel</button>
-                            <button type="button" onClick="javascript:destroy_detail();"
-                                class="btn btn-danger font-weight-bold">Yes, Delete Now !</button>
-                        </div>
-                    </form>
+                    </div>
+
                 </div>
+                <!--end::Container-->
             </div>
+            <!--end::Entry-->
         </div>
-        <!-- Modal-->
-    </div>
-    <div id="modal-caribarang"></div>
-    <div id="modal-setbarang"></div>
-    <div id="modal-setdiskon"></div>
-    <div id="modal-setppn"></div>
+        <!--end::Content-->
 
-    <div id="xcontohmodal">
-        <!-- Modal-->
-
-        <div class="modal fade" id="caribarang" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Cari Barang</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <i aria-hidden="true" class="ki ki-close"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body" style="height: 400px;">
-
-                        <table class="table  yajra-datatable collapsed ">
-                            <thead class="datatable-head">
-                                <tr>
-                                    <th>Kode</th>
-                                    <th>Nama Barang</th>
-                                    <th>Qty</th>
-                                    <th>Qty Sisa</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($canvasdet as $item)
-                                    <td>{{ $item->product->kode }}</td>
-                                    <td>{{ $item->product->nama }}</td>                                                                        
-                                    <td>{{ $item->qty }}</td>
-                                    <td>{{ $item->qty_sisa }}</td>
-                                    <td><a href="javascript:pilihBarang({{ $item->id }})"
-                                            class="btn btn-light-success btn-sm font-weight-bold ">Pilih</a>
-                                    </td>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light-primary font-weight-bold"
-                            data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        <script>
-
-        </script>
-        <!-- Modal-->
-    </div>
+        <div id="modal-setbarang"></div>
     @endsection
     @push('script')
-    <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6"') }}"></script>
-    <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
-    <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
-    <script src="{{ asset('/assets/js/pages/crud/forms/widgets/bootstrap-datepicker.js?v=7.0.6') }}"></script>
+        <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
+        <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
+        <script src="{{ asset('/assets/js/pages/crud/forms/widgets/bootstrap-datepicker.js?v=7.0.6') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
+            integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css"
+            integrity="sha512-O03ntXoVqaGUTAeAmvQ2YSzkCvclZEcPQu1eqloPaHfJ5RuNGiS4l+3duaidD801P50J28EHyonCV06CUlTSag=="
+            crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
 
 
-    <script type="text/javascript">
-        $(function () {
-            hitungAll()
-      
-            var table = $('.yajra-datatable').DataTable({
-            responsive: true,
-            processing: true,
-            serverSide: true,
-            ajax: "{{ route('canvassingpengembalian.caribarang') }}",
-            columns: [
-                //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                {data: 'kode', name: 'kode'},
-                {data: 'nama', name: 'nama'},
-                {data: 'katalog', name: 'katalog'},
-                {
-                        data: 'action', 
-                        render: function(data){
-                            return htmlDecode(data);
+        <script type="text/javascript">
+            let canvassing_id = {{ $canvas->id }};
+            $(function() {
+                tablecanvassing();
+                datatableinput();
+            });
+
+            function htmlDecode(data) {
+                var txt = document.createElement('textarea');
+                txt.innerHTML = data;
+                return txt.value;
+            }
+
+            function tablecanvassing() {
+                var table = $('.yajra-datatablecanvassing').DataTable({
+                    responsive: false,
+                    processing: true,
+                    serverSide: true,
+                    searching: false,
+                    paging: false, 
+                    info: false, 
+                    lengthChange: false,
+                    ajax: {
+                        url: "{{ route('canvassingpengembalian.datacanvassing') }}",
+                        type: "POST",
+                        data: function(params) {
+                            params.canvassing_id = canvassing_id,
+                                params._token = "{{ csrf_token() }}";
+                            return params;
+                        }
+                    },
+                    columns: [{
+                            data: 'product',
+                            name: 'product'
                         },
-                        className:"nowrap",
+                        {
+                            data: 'qty',
+                            name: 'qty'
+                        },
+                        {
+                            data: 'qty_sisa',
+                            name: 'qty_sisa'
+                        },
+                        {
+                            data: 'temp_canvas',
+                            name: 'temp_canvas',
+                            render: function(data, type, row) {
+                                if (data === 1) {
+                                    return '<span class="badge badge-success">Sudah Dipilih</span>';
+                                } else {
+                                    return '<span class="badge badge-warning">Belum Dipilih</span>';
+                                }
+                            }
+                        },
+                        {
+                            data: 'action',
+                            render: function(data, type, row) {
+                                return ' <span class="btn btn-outline-primary btn-sm" onclick="pilihBarang(' +
+                                    row.id +
+                                    ')">pilih</span>';
+                            },
+                            className: "nowrap",
+                        },
+                    ],
+                    columnDefs: [{
+                            responsivePriority: 1,
+                            targets: 1
+                        },
+
+                    ],
+                });
+            }
+
+            function pilihBarang(data_id) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('canvassingpengembalian.setbarang') }}',
+                    dataType: 'html',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-            ],
-                columnDefs: [
-                {
-                    responsivePriority: 1,
-                    targets: 1
-                },
-                
-                ],
-            });
-      
-    });
-
-    function htmlDecode(data){
-        var txt = document.createElement('textarea');
-        txt.innerHTML=data;
-        return txt.value;
-    }
-    function caribarang(){
-        $('#caribarang').modal('show');
-        
-    }
-    function pilihBarang(data_id){
-        $('#caribarang').modal('hide');
-        //alert(data_id);
-        $.ajax({
-                type: 'POST',
-                url: '{{ route('canvassingpengembalian.setbarang') }}',
-                dataType: 'html',
-                headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
-                data: {id:data_id, "_token": "{{ csrf_token() }}"},
-                
-                success: function (data){
-                    console.log(data);
-                    $('#modal-setbarang').html(data);
-                    $('#setBarangModal').modal('show');
-                },
-                error: function(data){
-                    console.log(data);
-                }
-        });
-    }
-
-    function editBarang(data_id){
-        $.ajax({
-                type: 'POST',
-                url: '{{ route('canvassingpengembalian.editbarang') }}',
-                dataType: 'html',
-                headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
-                data: {id:data_id, "_token": "{{ csrf_token() }}"},
-                
-                success: function (data){
-                    console.log(data);
-                    $('#modal-setbarang').html(data);
-                    $('#setBarangModal').modal('show');
-                },
-                error: function(data){
-                    console.log(data);
-                }
-        });
-    }
-    function submitItem(){
-        var product_id = document.getElementById('product_id').value;
-        var stok = document.getElementById('stok').value;        
-        var qty = document.getElementById('qty_canvassing').value;              
-        var qty_kembali = document.getElementById('qty_kembali').value;  
-        var keterangan = document.getElementById('keterangan').value;
-        var canvassing_id = document.getElementById('canvassing_id').value;      
-        var canvassingdetail_id = document.getElementById('canvassingdetail_id').value;                 
-
-        //alert(product_id);
-        $.ajax({
-                type: 'POST',
-                url: '{{ route('canvassingpengembalian.inputtempcanvas') }}',
-                dataType: 'html',
-                headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
-                data: {
-                    "product_id": product_id,
-                    "qty": qty,
-                    "qty_kembali" : qty_kembali,
-                    "canvassing_id" : canvassing_id,
-                    'canvassingdetail_id' : canvassingdetail_id,                    
-                    "stok" : stok,                                        
-                    "keterangan": keterangan,
-                     "_token": "{{ csrf_token() }}"
+                    beforeSend: function() {
+                        KTApp.blockPage();
                     },
-                
-                success: function (data){
-                    console.log(data);
-                    $('#setBarangModal').modal('hide');
-                    hitungAll();
-                },
-                error: function(data){
-                    console.log(data);
-                }
-        });
-    }
-
-    function updateItem(){
-        var id = document.getElementById('id').value;
-        var product_id = document.getElementById('product_id').value;          
-        var qty = document.getElementById('qty').value;              
-        var qty_sisa = document.getElementById('qty_sisa').value; 
-        var qty_kembali = document.getElementById('qty_kembali').value;  
-        var keterangan = document.getElementById('keterangan').value;        
-
-        $.ajax({
-                type: 'POST',
-                url: '{{ route('canvassingpengembalian.updatebarang') }}',
-                dataType: 'html',
-                headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
-                data: {
-                    "id": id,
-                    "product_id": product_id,
-                    "qty": qty,    
-                    "qty_sisa" : qty_sisa,
-                    "qty_kembali" : qty_kembali,
-                    "keterangan": keterangan,
-                     "_token": "{{ csrf_token() }}"
+                    data: {
+                        id: data_id,
+                        "_token": "{{ csrf_token() }}"
                     },
-                
-                success: function (data){
-                    console.log(data);
-
-                    $('#setBarangModal').modal('hide');
-                    hitungAll()
-                },
-                error: function(data){
-                    console.log(data);
-                }
-        });
-    }
-    
-    function loadTempSO(){
-        $.ajax({
-                type: 'POST',
-                url: '{{ route('canvassingpengembalian.loadtempcanvas') }}',
-                dataType: 'html',
-                headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
-                data: {
-                    "id" : "",
-                     "_token": "{{ csrf_token() }}"
+                    success: function(data) {
+                        $('#modal-setbarang').html(data);
+                        $('#modal-barang').modal('show');
                     },
-                
-                success: function (data){
-                    console.log(data);
-                    $('#tabel_detil').html(data);
+                    complete: function() {
+                        KTApp.unblock();
+                    },
+                    error: function(data) {
+                        console.log(data);
+                    }
+                });
+            }
 
-                },
-                error: function(data){
-                    console.log(data);
-                }
-        });
-    }
+            function submitItem() {
+                var qty_kembali = document.getElementById('qty_kembali').value;
+                var canvassingdetail_id = document.getElementById('canvassingdetail_id').value;
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('canvassingpengembalian.inputtempcanvas') }}',
+                    dataType: 'html',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: {
+                        "qty_kembali": qty_kembali,
+                        "canvassingdetail_id": canvassingdetail_id,
+                        "_token": "{{ csrf_token() }}"
+                    },
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
+                    success: function(data) {
+                        $('#modal-barang').modal('hide');
+                        $('.yajra-datatablecanvassing').DataTable().ajax.reload(null, false);
+                        $('.yajra-datatableinput').DataTable().ajax.reload(null, false);
 
-    
-    function delete_confirm(data_id){
-        $('#detailDeleteModal').modal('show');
-         $('#id_detail').val(data_id);
-        // var a = $('#id_detail').val();
-        //alert(a);
-    }
+                        iziToast.success({
+                            title: 'success',
+                            message: 'Data Berhasil Ditambahkan',
+                            position: 'topRight',
+                        });
+                    },
+                    error: function(xhr) {
+                        const response = JSON.parse(xhr.responseText);
+                        if (xhr.status === 422) {
+                            // Error qty melebihi stok
+                            iziToast.error({
+                                title: 'error',
+                                message: response.message,
+                                position: 'topRight',
+                            });
+                        }
 
-    function destroy_detail(){
-        var data_id = $('#id_detail').val();
-        //alert(data_id);
-        $.ajax({
-                type: 'POST',
-                url: '{{ route('canvassingpengembalian.destroy_detail') }}',
-                dataType: 'html',
-                headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
-                data: {id:data_id,"_method":"delete", "_token": "{{ csrf_token() }}"},
-                
-                success: function (data){
-                    console.log(data);
-                    $('#detailDeleteModal').modal('hide');
-                    hitungAll();
-                },
-                error: function(data){
-                    console.log(data);
-                }
-            });
-    }		
-	
+                        if (xhr.status === 500) {
+                            // Error qty melebihi stok
+                            iziToast.error({
+                                title: 'error',
+                                message: response.message,
+                                position: 'topRight',
+                            });
+                        }
+                    },
+                    complete: function() {
+                        KTApp.unblock();
+                    }
+                });
+            }
 
-    function hitungAll(){
-        loadTempSO();        
-    }
-    </script>
+            function datatableinput() {
+                var table = $('.yajra-datatableinput').DataTable({
+                    responsive: false,
+                    processing: true,
+                    serverSide: true,
+                    searching: false,
+                    paging: false, 
+                    info: false, // Hilangkan informasi jumlah data (e.g. "Showing 1 to 1 of 1 entries")
+                    lengthChange: false, // Hilangkan dropdown "Show 10 entries"
+                    ajax: {
+                        url: "{{ route('canvassingpengembalian.loadtempcanvas') }}",
+                        type: "POST",
+                        data: function(params) {
+                            params.canvassing_id = canvassing_id,
+                                params._token = "{{ csrf_token() }}";
+                            return params;
+                        }
+                    },
+                    columns: [{
+                            data: 'product',
+                            name: 'product'
+                        },
+                        {
+                            data: 'qty',
+                            name: 'qty'
+                        },
+                        {
+                            data: 'qty_sisa',
+                            name: 'qty_sisa'
+                        },
+                        {
+                            data: 'qty_kirim',
+                            name: 'qty_kirim'
+                        },
+                        {
+                            data: 'action',
+                            render: function(data, type, row) {
+                                return ' <span class="btn btn-outline-danger btn-sm" onclick="hapustemp(' +
+                                    row.id +
+                                    ')"><i class="flaticon2-trash"></i></span>';
+                            },
+                            className: "nowrap",
+                        },
+                    ],
+                    columnDefs: [{
+                            responsivePriority: 1,
+                            targets: 1
+                        },
+
+                    ],
+                });
+            }
+
+            function hapustemp(id) {
+
+                Swal.fire({
+                    icon: "question",
+                    title: "Mau menghapus data ini ?",
+                    showCancelButton: true,
+                    confirmButtonText: "Save",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'POST',
+                            url: '{{ route('canvassingpengembalian.hapustemp') }}',
+                            dataType: 'html',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            beforeSend: function() {
+                                KTApp.blockPage();
+                            },
+                            data: {
+                                id: id,                                
+                                "_token": "{{ csrf_token() }}"
+                            },
+                            success: function(data) {
+                                iziToast.success({
+                                    title: 'Success',
+                                    message: 'Data Berhasil Dihapus',
+                                    position: 'topRight',
+                                });
+                                $('.yajra-datatablecanvassing').DataTable().ajax.reload(null, false);
+                                $('.yajra-datatableinput').DataTable().ajax.reload(null, false);                                
+                            },
+                            error: function(data) {
+                                console.log(data);
+                            },
+                            complete: function() {
+                                KTApp.unblock();
+                            }
+                        });
+                    }
+                });
+            }                    
+        </script>
     @endpush

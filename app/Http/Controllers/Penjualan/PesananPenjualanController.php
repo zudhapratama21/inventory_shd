@@ -38,10 +38,7 @@ class PesananPenjualanController extends Controller
     public function index()
     {
         $title = "Pesanan Penjualan";
-        $pesananpenjualan = PesananPenjualan::with(['customers', 'kategoripesanan', 'komoditas', 'statusSO'])->orderByDesc('id');
-
-        $data = $pesananpenjualan->get();
-
+        $pesananpenjualan = PesananPenjualan::with(['customers', 'kategoripesanan', 'komoditas', 'statusSO','FakturSO'])->orderByDesc('id');        
         if (request()->ajax()) {
             return Datatables::of($pesananpenjualan)
                 ->addIndexColumn()
@@ -49,7 +46,8 @@ class PesananPenjualanController extends Controller
                     return $so->customers->nama;
                 })
                 ->addColumn('status', function (PesananPenjualan $so) {
-                    return $so->statusSO->nama;
+                    $status = $so->status_so_id;                    
+                    return view('penjualan.pesananpenjualan.partial.badge',compact('status'));
                 })
                 ->editColumn('tanggal', function (PesananPenjualan $so) {
                     return $so->tanggal ? with(new Carbon($so->tanggal))->format('d-m-Y') : '';
@@ -63,7 +61,7 @@ class PesananPenjualanController extends Controller
                 })
                 ->make(true);
         }
-        return view('penjualan.pesananpenjualan.index', compact('title', 'data'));
+        return view('penjualan.pesananpenjualan.index', compact('title'));
     }
 
     public function create()
@@ -271,8 +269,7 @@ class PesananPenjualanController extends Controller
 
     // update
     public function update(Request $request, $id)
-    {
-
+    {        
         $data = request()->except(['_token', '_method']);;
         $tanggal = $request->tanggal;
         if ($tanggal <> null) {
@@ -285,12 +282,9 @@ class PesananPenjualanController extends Controller
             $tanggalcustomer = Carbon::createFromFormat('d/m/Y', $request->tanggal_pesanan_customer)->format('Y-m-d');;
         }
 
-
-
         $data['tanggal'] = $tanggal;
         $data['tanggal_pesanan_customer'] = $tanggalcustomer;
-        $hasil = PesananPenjualan::where('id', $id)->update($data);
-        // dd($hasil);
+        $hasil = PesananPenjualan::where('id', $id)->update($data);        
 
         return redirect()->route('pesananpenjualan.index')->with('status', 'Pesanan Penjualan (Sales Order) berhasil diubah !');
     }
@@ -312,9 +306,10 @@ class PesananPenjualanController extends Controller
         $productx = Product::where('id', '=', $id_product)->get()->first();
         $product_name = $productx->nama;
         $mode = "edit";
+        $status = null;
 
 
-        return view('penjualan.pesananpenjualan._setbarang', compact('product_name', 'mode', 'item', 'product'));
+        return view('penjualan.pesananpenjualan._setbarang', compact('product_name', 'mode', 'item', 'product','status'));
     }
 
     public function updatebarang(Request $request)
@@ -585,7 +580,7 @@ class PesananPenjualanController extends Controller
     public function edit($id)
     {
         $title = "Pesanan Penjualan";
-        $pesananpenjualan = PesananPenjualan::findOrFail($id);
+        $pesananpenjualan = PesananPenjualan::with('FakturSO','customers')->findOrFail($id);
         $customers = Customer::get();
         $komoditass = Komoditas::get();
         $kategoris = Kategoripesanan::get();
@@ -601,13 +596,14 @@ class PesananPenjualanController extends Controller
         $deletedTempPPN = TempPpn::where('jenis', '=', "SO")
             ->where('user_id', '=', Auth::user()->id)
             ->delete();
+        $countfaktur = count($pesananpenjualan->FakturSO);
 
         //insertt temp
         $tempDiskon = TempDiskon::create(['jenis' => 'SO', 'persen' => '0', 'rupiah' => '0', 'user_id' => Auth::user()->id]);
         $tempPPN    = TempPpn::create(['jenis' => 'SO', 'persen' => '11', 'user_id' => Auth::user()->id]);
 
 
-        return view('penjualan.pesananpenjualan.edit', compact('title', 'saless', 'tglNow', 'customers', 'pesananpenjualan', 'komoditass', 'kategoris'));
+        return view('penjualan.pesananpenjualan.edit', compact('title', 'saless', 'tglNow', 'customers', 'pesananpenjualan', 'komoditass', 'kategoris','countfaktur'));
     }
 
     public function caribarangdetail($id)
@@ -706,7 +702,7 @@ class PesananPenjualanController extends Controller
 
         $pesanan->grandtotal = $grandtotal;
         $pesanan->update();
-        // kalkulasi datanya 
+        // kalkulasi datanya  
 
 
     }
@@ -715,8 +711,9 @@ class PesananPenjualanController extends Controller
     {
         $id = $request->pesanan_id;
         $dataBarangDetail = PesananPenjualanDetail::with('products')->where('pesanan_penjualan_id', $id)->get();
-
-        return view('penjualan.pesananpenjualan._tabeldetailso', compact('dataBarangDetail'));
+        $pesanan = PesananPenjualan::with('FakturSO')->where('id', $id)->first();        
+        $status = $pesanan->status_so_id;
+        return view('penjualan.pesananpenjualan._tabeldetailso', compact('dataBarangDetail','status'));        
     }
 
     public function destroyPesananDetail(Request $request)
@@ -749,14 +746,16 @@ class PesananPenjualanController extends Controller
 
     public function editBarangDetail(Request $request)
     {
-        $item = PesananPenjualanDetail::where('id', '=', $request->id)->first();
+        $item = PesananPenjualanDetail::with('pesananpenjualan')->where('id', $request->id)->first();        
+
         $id_product = $item->product_id;
 
         $product = new Product;
         $productx = Product::where('id', '=', $id_product)->first();
         $product_name = $productx->nama;
+        $status = $item->pesananpenjualan->status_so_id;
         $mode = "edit";
-        return view('penjualan.pesananpenjualan._setbarang', compact('product_name', 'mode', 'item', 'product'));
+        return view('penjualan.pesananpenjualan._setbarang', compact('product_name', 'mode', 'item', 'product','status'));
     }
 
     public function updateBarangDetail(Request $request)
@@ -979,4 +978,12 @@ class PesananPenjualanController extends Controller
         //                                                             ,'perBaris'
         //                                                            ));
     }
+
+    // public function hitungpph (Request $request)
+    // {
+    //     $tmp = TempSo::where('user_id', '=', Auth::user()->id)->get();
+        
+
+
+    // }
 }

@@ -24,4 +24,10 @@ class TempPb extends Model
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
+
+    
+    public function pesananpembeliandetail()
+    {
+        return $this->belongsTo(PesananPembelianDetail::class, 'pesanan_pembelian_detail_id', 'id');
+    }
 }

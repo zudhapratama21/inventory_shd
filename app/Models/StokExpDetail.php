@@ -28,12 +28,17 @@ class StokExpDetail extends Model
         'id_sj_detail',
         'konversi_id',
         'konversi_detail_id',
+        'canvassing_id',
+        'canvassing_detail_id',
+        'canvassingkembali_id',
+        'canvassingkembali_detail_id',
         'harga_beli',
         'diskon_persen_beli',
         'diskon_rupiah_beli',
         'harga_jual',
         'diskon_persen_jual',
-        'diskon_rupiah_jual'
+        'diskon_rupiah_jual',
+        'stokexpdet_id'
     ];
 
     protected $dates = ['tanggal'];

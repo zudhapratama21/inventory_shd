@@ -6,8 +6,12 @@ use App\Exports\TopCustomerExport;
 use App\Exports\TopProductExport;
 use App\Models\Customer;
 use App\Models\HRD\Pengumuman;
+use App\Models\Hutang;
 use App\Models\Kategoripesanan;
 use App\Models\Merk;
+use App\Models\PesananPembelian;
+use App\Models\PesananPenjualan;
+use App\Models\Piutang;
 use App\Models\Product;
 use App\Models\Sales;
 use App\Models\Supplier;
@@ -66,7 +70,7 @@ class HomeController extends Controller
             })
             ->editColumn('file', function ($data) {
                 $file = $data->file;
-                return view('pengumuman.partial.button',compact('file'));
+                return view('pengumuman.partial.button', compact('file'));
             })
             ->addColumn('action', function ($row) {
                 $pengumuman_id =  $row->id;
@@ -885,5 +889,266 @@ class HomeController extends Controller
                 return view('partial.button', compact('product_id'));
             })
             ->make(true);
+    }
+
+    public function datatablepengiriman(Request $request)
+    {
+        $pengiriman = PesananPenjualan::with(['customers', 'StatusSO'])->whereIn('status_so_id', [2, 3])->orderBy('id', 'asc');
+        // dd($data);
+        return DataTables::of($pengiriman)
+            ->addIndexColumn()
+            ->editColumn('tanggal', function ($data) {
+                return Carbon::parse($data->tanggal)->format('d-m-Y');
+            })
+            ->editColumn('customer', function ($data) {
+                return $data->customers->nama;
+            })
+            ->editColumn('status', function ($data) {
+                return $data->StatusSo->nama;
+            })
+            ->editColumn('umur', function ($data) {
+                $tanggalLampau = Carbon::parse($data->tanggal);
+                $umurHari = $tanggalLampau->diffInDays(Carbon::now());
+                return $umurHari;
+            })
+            ->addColumn('action', function ($row) {
+                return $row->id;
+            })
+            ->make(true);
+    }
+
+    public function datatablepenerimaan(Request $request)
+    {
+        $pesananpembelians = PesananPembelian::with('suppliers', 'statusPO')
+            ->whereIn('status_po_id', [2, 3]);
+
+
+        return Datatables::of($pesananpembelians)
+            ->addIndexColumn()
+            ->addColumn('supplier', function (PesananPembelian $po) {
+                return $po->suppliers->nama;
+            })
+            ->addColumn('status', function (PesananPembelian $po) {
+                return $po->statusPO->nama;
+            })
+            ->editColumn('tanggal', function (PesananPembelian $po) {
+                return $po->tanggal ? with(new Carbon($po->tanggal))->format('d-m-Y') : '';
+            })
+            ->editColumn('umur', function ($data) {
+                $tanggalLampau = Carbon::parse($data->tanggal);
+                $umurHari = $tanggalLampau->diffInDays(Carbon::now());
+                return $umurHari;
+            })
+            ->addColumn('action', function ($row) {
+                return $row->id;
+            })
+            ->make(true);
+    }
+
+    public function datatablehutang(Request $request)
+    {
+        $hutangs =  Hutang::where('status', '=', '1')
+            ->with(['suppliers' => function ($query) {
+                $query->select('id', 'nama');
+            }, 'FakturPO'])
+            ->orderBy('id', 'asc');
+
+        return Datatables::of($hutangs)
+            ->addIndexColumn()
+            ->addColumn('nama_supplier', function ($pb) {
+                return $pb->suppliers->nama;
+            })
+            ->addColumn('kode_faktur', function ($pb) {
+                return $pb->FakturPO->kode;
+            })
+            ->addColumn('no_faktur_supplier', function ($pb) {
+                return $pb->FakturPO->no_faktur_supplier;
+            })
+            ->editColumn('total', function ($pb) {
+                return $pb->total ? with(number_format($pb->total, 0, ',', '.')) : '';
+            })
+            ->editColumn('dibayar', function ($pb) {
+                return $pb->dibayar ? with(number_format($pb->dibayar, 0, ',', '.')) : '0';
+            })
+            ->editColumn('sisa', function ($pb) {
+                $sisa = $pb->total - $pb->dibayar;
+                return $sisa ? with(number_format($sisa, 0, ',', '.')) : '0';
+            })
+            ->editColumn('umur', function ($data) {
+                $tanggalTop = Carbon::parse($data->tanggal_top)->startOfDay();
+                $hariIni = Carbon::now()->startOfDay();
+                $selisihHari = $hariIni->diffInDays($tanggalTop, false);
+                return $selisihHari;
+            })
+            ->editColumn('status', function ($data) {
+                $tanggalTop = Carbon::parse($data->tanggal_top)->startOfDay();
+                $hariIni = Carbon::now()->startOfDay();
+                $selisihHari = $hariIni->diffInDays($tanggalTop, false);
+
+                if ($selisihHari > 0) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            })
+            ->editColumn('tanggal_top', function ($pb) {
+                return $pb->tanggal_top ? with(new Carbon($pb->tanggal_top))->format('d-m-Y') : '';
+            })
+            ->addColumn('action', function ($row) {
+                return $row->id;
+            })
+            ->make(true);
+    }
+
+    public function datatablepiutang()
+    {
+        $piutangs = Piutang::with(['customers', 'fakturpenjualan', 'SO.sales'])
+            ->where('status', '1')
+            ->orderBy('id', 'asc');
+
+        return Datatables::of($piutangs)
+            ->addIndexColumn()
+            ->addColumn('customer', function ($pb) {
+                return $pb->customers->nama;
+            })
+            ->addColumn('no_kpa', function ($pb) {
+                return $pb->fakturpenjualan->no_kpa;
+            })
+            ->editColumn('tanggal_top', function ($pb) {
+                return $pb->tanggal_top ? with(new Carbon($pb->tanggal_top))->format('d-m-Y') : '';
+            })
+            ->editColumn('total', function ($pb) {
+                return $pb->total ? with(number_format($pb->total, 0, ',', '.')) : '';
+            })
+            ->editColumn('dibayar', function ($pb) {
+                return $pb->dibayar ? with(number_format($pb->dibayar, 0, ',', '.')) : '0';
+            })
+            ->addColumn('sisa', function ($pb) {
+                $sisa = $pb->total - $pb->dibayar;
+                return $sisa ? with(number_format($sisa, 0, ',', '.')) : '0';
+            })
+            ->addColumn('sales', function ($pb) {
+                return $pb->SO->sales->nama;
+            })
+            ->editColumn('umur', function ($data) {
+                $tanggalTop = Carbon::parse($data->tanggal_top)->startOfDay();
+                $hariIni = Carbon::now()->startOfDay();
+                $selisihHari = $hariIni->diffInDays($tanggalTop, false);
+                return $selisihHari;
+            })
+            ->editColumn('status', function ($data) {
+                $tanggalTop = Carbon::parse($data->tanggal_top)->startOfDay();
+                $hariIni = Carbon::now()->startOfDay();
+                $selisihHari = $hariIni->diffInDays($tanggalTop, false);
+                if ($selisihHari > 0) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            })
+            ->addColumn('action', function ($row) {
+                return $row->id;
+            })
+            ->make(true);
+    }
+
+
+    public function rekaphutang(Request $request)
+    {
+        $hutangs =  Hutang::get();
+
+        $jatuhTempo = $hutangs->filter(function ($hutang) {
+            $tanggalTop = Carbon::parse($hutang->tanggal_top)->startOfDay();
+            $hariIni = Carbon::now()->startOfDay();
+            return $hariIni->greaterThanOrEqualTo($tanggalTop) && $hutang->status == 1;
+        });
+
+        $belumJatuhTempo = $hutangs->filter(function ($hutang) {
+            $tanggalTop = Carbon::parse($hutang->tanggal_top)->startOfDay();
+            $hariIni = Carbon::now()->startOfDay();
+            return $hariIni->lessThan($tanggalTop) && $hutang->status == 1;
+        });
+
+        $year = $request->tahun ?? now()->format('Y');
+
+        $sudahLunas = $hutangs->filter(function ($hutang) use ($year) {
+            return $hutang->status == 2 && Carbon::parse($hutang->tanggal_top)->year == $year;
+        });
+
+        $belumLunas = $hutangs->filter(function ($hutang) use ($year) {
+            return $hutang->status == 1 && Carbon::parse($hutang->tanggal_top)->year == $year;
+        });
+
+        $totalJatuhTempo = $jatuhTempo->sum('total') - $jatuhTempo->sum('dibayar');
+        $totalBelumJatuhTempo = $belumJatuhTempo->sum('total') - $belumJatuhTempo->sum('dibayar');
+        $totalSudahLunas = $sudahLunas->sum('total');
+        $totalBelumLunas = $belumLunas->sum('total') - $belumLunas->sum('dibayar');
+        $persenlunas = $totalSudahLunas / ($totalSudahLunas + $totalBelumLunas) * 100;
+        $persenjatuhtempo = $totalJatuhTempo / ($totalJatuhTempo + $totalBelumJatuhTempo) * 100;
+        $hutangtotal = $totalJatuhTempo + $totalBelumJatuhTempo;
+        $hutangtotaltahunan = $totalSudahLunas +  $totalBelumLunas;
+
+        return response()->json([
+            'total_jatuh_tempo' => 'Rp.' . number_format($totalJatuhTempo, 0, ',', '.'),
+            'total_belum_jatuh_tempo' => 'Rp.' . number_format($totalBelumJatuhTempo, 0, ',', '.'),
+            'total_lunas' => 'Rp.' . number_format($totalSudahLunas, 0, ',', '.'),
+            'total_belum_lunas' => 'Rp.' . number_format($totalBelumLunas, 0, ',', '.'),
+            'hutangtotal' =>    'Rp.' . number_format($hutangtotal, 0, ',', '.'),
+            'hutangtotaltahunan' =>    'Rp.' . number_format($hutangtotaltahunan, 0, ',', '.'),
+            'persenlunas' => (int)$persenlunas,
+            'persenbelumlunas' => (int)(100 - (int)$persenlunas),
+            'persenjatuhtempo' => (int)$persenjatuhtempo,
+            'persenbelumjatuhtempo' => (int)(100 - (int)$persenjatuhtempo)
+
+        ]);
+    }
+
+    public function rekappiutang(Request $request)
+    {
+        $piutangs = Piutang::get();
+
+        $jatuhTempo = $piutangs->filter(function ($piutang) {
+            $tanggalTop = Carbon::parse($piutang->tanggal_top)->startOfDay();
+            $hariIni = Carbon::now()->startOfDay();
+            return $hariIni->greaterThanOrEqualTo($tanggalTop) && $piutang->status == 1;
+        });
+
+        $belumJatuhTempo = $piutangs->filter(function ($piutang) {
+            $tanggalTop = Carbon::parse($piutang->tanggal_top)->startOfDay();
+            $hariIni = Carbon::now()->startOfDay();
+            return $hariIni->lessThan($tanggalTop) && $piutang->status == 1;
+        });
+
+        $year = $request->tahun ?? now()->format('Y');
+
+        $sudahLunas = $piutangs->filter(function ($piutang) use ($year) {
+            return $piutang->status == 2 && Carbon::parse($piutang->tanggal_top)->year == $year;
+        });
+
+        $belumLunas = $piutangs->filter(function ($piutang) use ($year) {
+            return $piutang->status == 1 && Carbon::parse($piutang->tanggal_top)->year == $year;
+        });
+
+        $totalJatuhTempo = $jatuhTempo->sum('total') - $jatuhTempo->sum('dibayar');
+        $totalBelumJatuhTempo = $belumJatuhTempo->sum('total') - $belumJatuhTempo->sum('dibayar');
+        $totalSudahLunas = $sudahLunas->sum('total');
+        $totalBelumLunas = $belumLunas->sum('total') - $belumLunas->sum('dibayar');
+        $persenlunas = $totalSudahLunas / ($totalSudahLunas + $totalBelumLunas) * 100;
+        $persenjatuhtempo = $totalJatuhTempo / ($totalJatuhTempo + $totalBelumJatuhTempo) * 100;
+        $piutangtotal = $totalJatuhTempo + $totalBelumJatuhTempo;
+        $piutangtotaltahunan = $totalSudahLunas + $totalBelumLunas;
+
+        return response()->json([
+            'total_jatuh_tempo' => 'Rp.' . number_format($totalJatuhTempo, 0, ',', '.'),
+            'total_belum_jatuh_tempo' => 'Rp.' . number_format($totalBelumJatuhTempo, 0, ',', '.'),
+            'total_lunas' => 'Rp.' . number_format($totalSudahLunas, 0, ',', '.'),
+            'total_belum_lunas' => 'Rp.' . number_format($totalBelumLunas, 0, ',', '.'),
+            'piutangtotal' => 'Rp.' . number_format($piutangtotal, 0, ',', '.'),
+            'piutangtotaltahunan' => 'Rp.' . number_format($piutangtotaltahunan, 0, ',', '.'),
+            'persenlunas' => (int)$persenlunas,
+            'persenbelumlunas' => (int)(100 - (int)$persenlunas),
+            'persenjatuhtempo' => (int)$persenjatuhtempo,
+            'persenbelumjatuhtempo' => (int)(100 - (int)$persenjatuhtempo)
+        ]);
     }
 }

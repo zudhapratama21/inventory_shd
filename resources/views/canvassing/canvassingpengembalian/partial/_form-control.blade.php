@@ -2,7 +2,7 @@
    <div class="form-group row">
         <label class="col-lg-1 col-form-label text-right">Customer:</label>
         <div class="col-lg-4">
-           <input type="text" class="form-control" value="{{$canvas->customer->nama}}" readonly>           
+           <input type="text" class="form-control" value="{{$canvas->customer->nama}}" readonly disabled>           
         </div>
         <label class="col-lg-2 col-form-label text-right">Tanggal:</label>
         <div class="col-lg-4">
@@ -18,40 +18,54 @@
         <input type="hidden" name="canvassing_id" value="{{$canvas->id}}">
     </div>
 
-    {{-- <div class="form-group row">
-        <label class="col-lg-1 col-form-label text-right">No. SO:</label>
-        <div class="col-lg-4">
-            <input type="text" name="no_so" id="no_so" readonly="readonly" class="form-control"
-                value="{{ $canvassing->kode }}" />
-        </div>
-    </div> --}}
+    
+    <h6><i class="flaticon-add-label-button text-danger"></i> Daftar Produk Canvasing</h6>
+    
 
-    <div class="text-right mb-3">
-        <a href="javascript:caribarang()" class="btn btn-sm btn-primary"><i class="flaticon2-add"></i>Tambah Barang</a>
-    </div>
     <div class="form-group row">
         <div class="col-lg-12">
-            <div id="tabel_detil" class="table-responsive">
-                <table class="table">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>Kode barang</th>
+            <div class="table-responsive">
+                <table class="table yajra-datatablecanvassing collapsed ">
+                    <thead class="datatable-head">
+                        <tr>                            
                             <th>Nama Barang</th>                            
-                            <th style="width: 5%">Qty</th>
-                            <th style="width: 5%">Qty Sisa</th>
-                            <th style="width: 5%">Qty Kirim</th>
-                            <th></th>
-                            
-                            
+                            <th>Qty</th>
+                            <th>Qty Sisa</th>                            
+                            <th>Status</th>                            
+                            <th>Action</th>                                                        
                         </tr>
                     </thead>
                     <tbody>
-
+                        
                     </tbody>
                 </table>
             </div>
         </div>
+    </div> 
 
+    
+    <hr>
+    <h6><i class="flaticon-add-label-button text-danger"></i> Produk Terpilih</h6>
+    
+    <div class="form-group row">
+        <div class="col-lg-12">
+            <div class="table-responsive">
+                <table class="table yajra-datatableinput collapsed ">
+                    <thead class="datatable-head">
+                        <tr>                            
+                            <th style="width: 50%">Nama Barang</th>                            
+                            <th>Qty</th>
+                            <th>Qty Sisa</th>
+                            <th>Qty Kembali</th>                                                        
+                            <th>Action</th>                                                        
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <div class="separator separator-dashed my-5"></div>

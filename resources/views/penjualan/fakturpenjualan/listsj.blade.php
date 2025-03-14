@@ -111,14 +111,13 @@
 
 
 <script type="text/javascript">
-    $(function () {
-   
+    $(function () {   
           var table = $('.yajra-datatable').DataTable({
               responsive: true,
               processing: true, 
               serverSide: true,
               autoWidth: false,
-              ajax: "{{ route('fakturpenjualan.listsj') }}",
+              ajax: "{{ route('fakturpenjualan.datatablelistsj') }}",
               columns: [
                 //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                   {data: 'kode', name: 'kode'},

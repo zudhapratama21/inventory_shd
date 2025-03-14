@@ -91,9 +91,6 @@
 <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
 <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
 
-
-
-
 <script type="text/javascript">
     $(function () {   
           var table = $('.yajra-datatable').DataTable({
@@ -124,8 +121,7 @@
             ],
         });
           
-    });
-   
+    });   
 
     function htmlDecode(data){
         var txt = document.createElement('textarea');
@@ -133,56 +129,9 @@
         return txt.value;
     }
 
-    function show_confirm(data_id){
-        $.ajax({
-            type: 'POST',
-            url: '{{ route('pengirimanbarang.delete') }}',
-            dataType: 'html',
-            headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
-            data: {id:data_id, "_token": "{{ csrf_token() }}"},
-            
-            success: function (data){
-                console.log(data);
-                $('#modal-confirm-delete').html(data);
-                $('#exampleModal').modal('show');
-            },
-            error: function(data){
-                console.log(data);
-            }
-        });
-    }
-
     function setEXxp(){
         $('#setExp').modal('show');
     }
 
-    // function submitItem(){
-    //     var detail_id = document.getElementById('detail_id').value;
-    //     var qty = document.getElementById('qty_stok').value;
-    //     var qty_konversi = document.getElementById('qty_konversi').value;
-
-    //     //alert(product_id);
-    //     $.ajax({
-    //             type: 'POST',
-    //             url: '{{ route('konversisatuan.inputqty') }}',
-    //             dataType: 'html',
-    //             headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
-    //             data: {
-    //                 "detail_id": detail_id,
-    //                 "qty_stok": qty,
-    //                 "qty_konversi": qty_konversi,
-    //                  "_token": "{{ csrf_token() }}"
-    //                 },
-                
-    //             success: function (data){                    
-    //                 $('#setExp').modal('hide');
-    //             },
-    //             error: function(data){
-    //                 console.log(data);
-    //             }
-    //     });
-    // }
-
-    
 </script>
 @endpush

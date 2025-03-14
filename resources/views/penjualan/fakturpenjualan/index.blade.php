@@ -181,7 +181,7 @@
                 serverSide: true,
                 autoWidth: true,
                 scrollX: true,
-                ajax: "{{ route('fakturpenjualan.index') }}",
+                ajax: "{{ route('fakturpenjualan.datatable') }}",
                 columns: [
                     //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                     {

@@ -148,6 +148,8 @@
     <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6') }}"></script>
     <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
     <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
 
 
     <script type="text/javascript">
@@ -170,8 +172,7 @@
                         return params;
                     }
                 },
-                columns: [
-                    {
+                columns: [{
                         data: 'nama',
                         name: 'nama'
                     },
@@ -236,7 +237,13 @@
                     // $('#modal-tambah-data').html(data);
                     $('#tambahdata').modal('hide');
 
-                    swal("Good job!", "Data Berhasil Ditambahkan!", "success");
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Your work has been saved",
+                        showConfirmButton: false,
+                        timer: 1000
+                    });
                     $('.yajra-datatable').DataTable().ajax.reload(null, false);
 
                 },
@@ -252,44 +259,45 @@
             return txt.value;
         }
 
-        function destroy(data_id) {
+        function hapus(data_id) {
+            Swal.fire({
+                icon: "question",
+                title: "Kamu mau menghapus data ini ?",
+                showCancelButton: true,
+                confirmButtonText: "Save",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ route('outlet.hapus') }}',
+                        dataType: 'html',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {
+                            id: data_id,
+                            "_token": "{{ csrf_token() }}"
+                        },
 
-            swal({
-                    title: "Apakah anda yakin menghapus item ini ?",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        $.ajax({
-                            type: 'POST',
-                            url: '{{ route('outlet.delete') }}',
-                            dataType: 'html',
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            data: {
-                                id: data_id,
-                                "_token": "{{ csrf_token() }}"
-                            },
+                        success: function(data) {
+                            Swal.fire({
+                                position: "center",
+                                icon: "success",
+                                title: "Data Berhasil Dihapus",
+                                showConfirmButton: false,
+                                timer: 1000
+                            });
 
-                            success: function(data) {
-                                swal("Poof! Your imaginary file has been deleted!", {
-                                    icon: "success",
-                                });
+                            $('.yajra-datatable').DataTable().ajax.reload(null, false);
+                        },
+                        error: function(data) {
+                            console.log(data);
+                        }
+                    });
+                } else {
 
-                                $('.yajra-datatable').DataTable().ajax.reload(null, false);
-                            },
-                            error: function(data) {
-                                console.log(data);
-                            }
-                        });
-
-                    } else {
-
-                    }
-                });
+                }
+            });
 
 
 

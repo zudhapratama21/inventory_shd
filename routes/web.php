@@ -99,10 +99,15 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::post('/datatabletopprinciple', [HomeController::class, 'datatableTopPrinciple'])->name('datatable.topPrinciple');
     Route::post('/datatabletopproductbyprinciple', [HomeController::class, 'datatableProdukbyPrinciple'])->name('datatable.productbyprinciple');
     
-    
+    // keuangan 
+    Route::post('/pengiriman', [HomeController::class, 'datatablepengiriman'])->name('home.pengiriman');
+    Route::post('/penerimaan', [HomeController::class, 'datatablepenerimaan'])->name('home.penerimaan');
+    Route::post('/hutang', [HomeController::class, 'datatablehutang'])->name('home.hutang');
+    Route::post('/piutang', [HomeController::class, 'datatablepiutang'])->name('home.piutang');
 
-
-
+    // rekap hutang
+    Route::post('/rekaphutang', [HomeController::class, 'rekaphutang'])->name('home.rekaphutang');
+    Route::post('/rekappiutang', [HomeController::class, 'rekappiutang'])->name('home.rekappiutang');
 
     Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('profile/edit', [ProfileController::class, 'updateProfileInformation']);
@@ -427,32 +432,26 @@ Route::middleware('has.role')->prefix('pembelian')->group(function () {
         Route::put('{penerimaanbarang}/edit', [PenerimaanBarangController::class, 'update'])->name('penerimaanbarang.update');
         Route::get('{penerimaanbarang}/show', [PenerimaanBarangController::class, 'show'])->name('penerimaanbarang.show');
         Route::get('{penerimaanbarang}/showdata', [PenerimaanBarangController::class, 'showData'])->name('penerimaanbarang.showData');
-
         
-
-
-        Route::post('delete', [PenerimaanBarangController::class, 'delete'])->name('penerimaanbarang.delete');
-        Route::delete('delete', [PenerimaanBarangController::class, 'destroy'])->name('penerimaanbarang.destroy');
+        Route::post('datatablebarang', [PenerimaanBarangController::class, 'datatablebarang'])->name('penerimaanbarang.datatablebarang');
+        Route::post('datatablebarangterima', [PenerimaanBarangController::class, 'datatablebarangterima'])->name('penerimaanbarang.datatablebarangterima');
+        Route::post('hapusbarang', [PenerimaanBarangController::class, 'hapusbarang'])->name('penerimaanbarang.hapusbarang');
+        
+        Route::post('delete', [PenerimaanBarangController::class, 'destroy'])->name('penerimaanbarang.destroy');
         Route::get('caribarang', [PenerimaanBarangController::class, 'caribarang'])->name('penerimaanbarang.caribarang');
-        Route::post('setbarang', [PenerimaanBarangController::class, 'setbarang'])->name('penerimaanbarang.setbarang');
-        Route::post('editbarang', [PenerimaanBarangController::class, 'editbarang'])->name('penerimaanbarang.editbarang');
-        Route::post('updatebarang', [PenerimaanBarangController::class, 'updatebarang'])->name('penerimaanbarang.updatebarang');
-
+        Route::post('setbarang', [PenerimaanBarangController::class, 'setbarang'])->name('penerimaanbarang.setbarang');    
         Route::post('inputtemppb', [PenerimaanBarangController::class, 'inputtemppb'])->name('penerimaanbarang.inputtemppb');
-        Route::post('loadtemppb', [PenerimaanBarangController::class, 'loadtemppb'])->name('penerimaanbarang.loadtemppb');
-
-        Route::delete('delete_detail', [PenerimaanBarangController::class, 'destroy_detail'])->name('penerimaanbarang.destroy_detail');
+            
 
         Route::get('listpo', [PenerimaanBarangController::class, 'listpo'])->name('penerimaanbarang.listpo');
+        Route::post('listpesanan', [PenerimaanBarangController::class, 'listpesanan'])->name('penerimaanbarang.listpesanan');
 
         Route::get('{penerimaanbarang}/inputexp', [PenerimaanBarangController::class, 'inputexp'])->name('penerimaanbarang.inputexp');
-        Route::get('{penerimaanbarangdetail}/setexp', [PenerimaanBarangController::class, 'setexp'])->name('penerimaanbarang.setexp');
+        Route::post('setexp', [PenerimaanBarangController::class, 'setexp'])->name('penerimaanbarang.setexp');        
+        Route::post('saveexp', [PenerimaanBarangController::class, 'saveexp'])->name('penerimaanbarang.saveexp');
+        Route::post('listexp', [PenerimaanBarangController::class, 'listexp'])->name('penerimaanbarang.listexp');
 
-        Route::get('{penerimaanbarangdetail}/formsetexp', [PenerimaanBarangController::class, 'formsetexp'])->name('penerimaanbarang.formsetexp');
-        Route::post('{penerimaanbarangdetail}/saveexp', [PenerimaanBarangController::class, 'saveexp'])->name('penerimaanbarang.saveexp');
-
-        Route::post('hapusexp', [PenerimaanBarangController::class, 'hapusexp'])->name('penerimaanbarang.hapusexp');
-        Route::delete('destroy_exp', [PenerimaanBarangController::class, 'destroy_exp'])->name('penerimaanbarang.destroy_exp');
+        Route::post('hapusexp', [PenerimaanBarangController::class, 'hapusexp'])->name('penerimaanbarang.hapusexp');        
 
         Route::get('{penerimaanbarang}/print_a5', [PenerimaanBarangController::class, 'print_a5'])->name('penerimaanbarang.print_a5');
     });
@@ -553,6 +552,10 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
         // PRINT PENJUALAN
         Route::get('{pesananpenjualan}/print_a4', [PesananPenjualanController::class, 'print_a4'])->name('pesananpenjualan.print_a4');
 
+        Route::post('hitungpph', [PesananPenjualanController::class, 'hitungpph'])->name('pesananpenjualan.hitungpph');
+
+        
+
 
     });
 
@@ -566,27 +569,35 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
         Route::get('{pengirimanbarang}/show', [PengirimanBarangController::class, 'show'])->name('pengirimanbarang.show');
         Route::get('{pengirimanbarang}/showData', [PengirimanBarangController::class, 'showData'])->name('pengirimanbarang.showData');
 
-        Route::post('delete', [PengirimanBarangController::class, 'delete'])->name('pengirimanbarang.delete');
-        Route::delete('delete', [PengirimanBarangController::class, 'destroy'])->name('pengirimanbarang.destroy');
+        // ============== new ===========
+        Route::post('datatablebarang', [PengirimanBarangController::class, 'datatablebarang'])->name('pengirimanbarang.datatablebarang');
+        
+        Route::post('delete', [PengirimanBarangController::class, 'destroy'])->name('pengirimanbarang.destroy');
         Route::get('caribarang', [PengirimanBarangController::class, 'caribarang'])->name('pengirimanbarang.caribarang');
         Route::post('setbarang', [PengirimanBarangController::class, 'setbarang'])->name('pengirimanbarang.setbarang');
         Route::post('editbarang', [PengirimanBarangController::class, 'editbarang'])->name('pengirimanbarang.editbarang');
         Route::post('updatebarang', [PengirimanBarangController::class, 'updatebarang'])->name('pengirimanbarang.updatebarang');
 
         Route::post('inputtempsj', [PengirimanBarangController::class, 'inputtempsj'])->name('pengirimanbarang.inputtempsj');
-        Route::post('loadtempsj', [PengirimanBarangController::class, 'loadtempsj'])->name('pengirimanbarang.loadtempsj');
+        Route::post('daftarbarang', [PengirimanBarangController::class, 'daftarbarang'])->name('pengirimanbarang.daftarbarang');
 
-        Route::delete('delete_detail', [PengirimanBarangController::class, 'destroy_detail'])->name('pengirimanbarang.destroy_detail');
+        Route::post('deletetemp', [PengirimanBarangController::class, 'deletetemp'])->name('pengirimanbarang.deletetemp');
 
         Route::get('listso', [PengirimanBarangController::class, 'listso'])->name('pengirimanbarang.listso');
 
+        // untuk set detail pengiriman
+
         Route::get('{pengirimanbarang}/inputexp', [PengirimanBarangController::class, 'inputexp'])->name('pengirimanbarang.inputexp');
-        Route::get('{pengirimanbarangdetail}/setexp', [PengirimanBarangController::class, 'setexp'])->name('pengirimanbarang.setexp');
-        Route::get('{pengirimanbarangdetail}/listexp', [PengirimanBarangController::class, 'listexp'])->name('pengirimanbarang.listexp');
-        Route::get('{stokExp}/{pengirimanbarangdetail}/formsetexp', [PengirimanBarangController::class, 'formsetexp'])->name('pengirimanbarang.formsetexp');                
-        Route::post('{stokExp}/{pengirimanbarangdetail}/saveexp', [PengirimanBarangController::class, 'saveexp'])->name('pengirimanbarang.saveexp');
-        Route::post('hapusexp', [PengirimanBarangController::class, 'hapusexp'])->name('pengirimanbarang.hapusexp');
-        Route::delete('destroy_exp', [PengirimanBarangController::class, 'destroy_exp'])->name('pengirimanbarang.destroy_exp');
+        Route::get('{id}/setdaftarkirim', [PengirimanBarangController::class, 'setdaftarkirim'])->name('pengirimanbarang.setdaftarkirim');
+        Route::post('daftarproduk', [PengirimanBarangController::class, 'daftarProduk'])->name('pengirimanbarang.daftarproduk'); 
+        Route::post('daftarprodukkirim', [PengirimanBarangController::class, 'daftarProdukKirim'])->name('pengirimanbarang.daftarprodukkirim'); 
+        Route::post('formbarang', [PengirimanBarangController::class, 'formBarang'])->name('pengirimanbarang.formbarang'); 
+        Route::post('submitbarang', [PengirimanBarangController::class, 'simpanProdukKirim'])->name('pengirimanbarang.submitbarang'); 
+        Route::post('hapusbarang', [PengirimanBarangController::class, 'hapusbarang'])->name('pengirimanbarang.hapusbarang'); 
+        Route::post('editexp', [PengirimanBarangController::class, 'editexp'])->name('pengirimanbarang.editexp'); 
+        Route::post('submitexp', [PengirimanBarangController::class, 'submitexp'])->name('pengirimanbarang.submitexp'); 
+        
+        
 
         // untuk set harga non expired 
         Route::get('{pengirimanbarangdetail}/setproduk', [PengirimanBarangController::class, 'setProduk'])->name('pengirimanbarang.setproduk');
@@ -659,7 +670,10 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
         Route::post('tandaterima/{id}', [FakturPenjualanController::class, 'tandaTerima'])->name('fakturpenjualan.tandaterima');
         Route::put('edittandaterima/{id}', [FakturPenjualanController::class, 'editTandaTerima'])->name('fakturpenjualan.edittandaterima');
 
-        Route::post('revision}', [FakturPenjualanController::class, 'revision'])->name('fakturpenjualan.revision');
+        Route::post('revision', [FakturPenjualanController::class, 'revision'])->name('fakturpenjualan.revision');
+
+        Route::get('datatablelistsj', [FakturPenjualanController::class, 'datatablelistsj'])->name('fakturpenjualan.datatablelistsj');
+        Route::get('datatable', [FakturPenjualanController::class, 'datatable'])->name('fakturpenjualan.datatable');
 
 
       
@@ -699,7 +713,7 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
         Route::get('', [LaporanStokController::class, 'index'])->name('laporanstok.index');
         Route::get('stokproduk', [LaporanStokController::class, 'stokproduk'])->name('laporanstok.stokproduk');
         Route::get('{product}/detailstok', [LaporanStokController::class, 'detailstok'])->name('laporanstok.detailstok');
-        Route::get('{stokexp}/{product}/detailexp', [LaporanStokController::class, 'detailexp'])->name('laporanstok.detailexp');
+        Route::get('{id}/{status}/detailexp', [LaporanStokController::class, 'detailexp'])->name('laporanstok.detailexp');
         Route::get('kartustok', [LaporanStokController::class, 'kartustok'])->name('laporanstok.kartustok');
         Route::get('{product}/kartustok', [LaporanStokController::class, 'kartustokdetail'])->name('laporanstok.kartustokdetail');
         Route::get('expstok', [LaporanStokController::class, 'expstok'])->name('laporanstok.expstok');
@@ -718,6 +732,12 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
 
         Route::get('getexp', [LaporanStokController::class, 'getdataexp'])->name('laporanstok.getdataexp');
         Route::get('getnonexp', [LaporanStokController::class, 'getdatanonexp'])->name('laporanstok.getdatanonexp');
+
+        Route::post('listexp', [LaporanStokController::class, 'listexp'])->name('laporanstok.listexp');
+        Route::post('formexp', [LaporanStokController::class, 'formexp'])->name('laporanstok.formexp');
+        Route::post('simpanexp', [LaporanStokController::class, 'simpanexp'])->name('laporanstok.simpanexp');
+        Route::post('createexp', [LaporanStokController::class, 'createexp'])->name('laporanstok.createexp');
+        Route::post('hapusexp', [LaporanStokController::class, 'hapusexp'])->name('laporanstok.hapusexp');
 
 
         
@@ -887,7 +907,7 @@ Route::middleware('has.role')->prefix('konversi')->group(function () {
         Route::post('setqty', [KonversiController::class, 'setQty'])->name('konversisatuan.setqty');
         Route::post('inputqty', [KonversiController::class, 'inputQty'])->name('konversisatuan.inputqty');
 
-        Route::get('caribarang', [KonversiController::class, 'caribarang'])->name('konversisatuan.caribarang');
+        Route::post('caribarang', [KonversiController::class, 'caribarang'])->name('konversisatuan.caribarang');
         Route::post('setbarang', [KonversiController::class, 'setbarang'])->name('konversisatuan.setbarang');        
 
         Route::post('submititem', [KonversiController::class, 'submitItem'])->name('konversisatuan.inputtempkonversi');
@@ -927,10 +947,22 @@ Route::middleware('has.role')->prefix('canvassing')->group(function () {
         Route::delete('delete_detail', [CanvassingPesananController::class, 'destroy_detail'])->name('canvassing.destroy_detail');
 
         Route::get('{canvassing}/show', [CanvassingPesananController::class, 'show'])->name('canvassing.show');
+        Route::get('{id}/print', [CanvassingPesananController::class, 'print'])->name('canvassing.print');
 
-        Route::post('delete', [CanvassingPesananController::class, 'delete'])->name('canvassing.delete');
-        Route::delete('delete', [CanvassingPesananController::class, 'destroy'])->name('canvassing.destroy');
+        Route::post('destroy', [CanvassingPesananController::class, 'destroy'])->name('canvassing.destroy');        
         
+        // ==================== KHUSUS EXP 
+        Route::get('{id}/listexp', [CanvassingPesananController::class, 'listexp'])->name('canvassing.listexp');
+        Route::get('{canvassing_id}/{id_produk}/setexp', [CanvassingPesananController::class, 'setexp'])->name('canvassing.setexp');
+
+        Route::post('productexp', [CanvassingPesananController::class, 'productexp'])->name('canvassing.productexp');
+        Route::post('productnonexp', [CanvassingPesananController::class, 'productnonexp'])->name('canvassing.productnonexp');
+
+        Route::post('formsetexp', [CanvassingPesananController::class, 'formsetexp'])->name('canvassing.formsetexp');
+        Route::post('inputexp', [CanvassingPesananController::class, 'inputexp'])->name('canvassing.inputexp');
+        Route::post('hapusexp', [CanvassingPesananController::class, 'hapusexp'])->name('canvassing.hapusexp');
+
+        Route::post('daftarprodukkirim', [CanvassingPesananController::class, 'daftarprodukkirim'])->name('canvassing.daftarprodukkirim');
 
     });
 
@@ -940,21 +972,31 @@ Route::middleware('has.role')->prefix('canvassing')->group(function () {
         Route::get('{canvassingpengembalian}/create', [CanvassingPengembalianController::class, 'create'])->name('canvassingpengembalian.create');
         Route::POST('store', [CanvassingPengembalianController::class, 'store'])->name('canvassingpengembalian.store');
 
-        Route::get('caribarang', [CanvassingPengembalianController::class, 'caribarang'])->name('canvassingpengembalian.caribarang');
+        Route::post('datacanvassing', [CanvassingPengembalianController::class, 'datacanvassing'])->name('canvassingpengembalian.datacanvassing');
         Route::post('setbarang', [CanvassingPengembalianController::class, 'setbarang'])->name('canvassingpengembalian.setbarang');        
 
         Route::post('inputtempcanvas', [CanvassingPengembalianController::class, 'inputTempCanvas'])->name('canvassingpengembalian.inputtempcanvas');        
         Route::post('loadtempcanvas', [CanvassingPengembalianController::class, 'loadTempCanvas'])->name('canvassingpengembalian.loadtempcanvas');        
 
-        Route::post('editbarang', [CanvassingPengembalianController::class, 'editbarang'])->name('canvassingpengembalian.editbarang');
-        Route::post('updatebarang', [CanvassingPengembalianController::class, 'updatebarang'])->name('canvassingpengembalian.updatebarang');
-
-        Route::delete('delete_detail', [CanvassingPengembalianController::class, 'destroy_detail'])->name('canvassingpengembalian.destroy_detail');
-
-        Route::post('delete', [CanvassingPengembalianController::class, 'delete'])->name('canvassingpengembalian.delete');
-        Route::delete('delete', [CanvassingPengembalianController::class, 'destroy'])->name('canvassingpengembalian.destroy');
+        Route::post('hapustemp', [CanvassingPengembalianController::class, 'hapustemp'])->name('canvassingpengembalian.hapustemp');     
+        
+        Route::post('delete', [CanvassingPengembalianController::class, 'destroy'])->name('canvassingpengembalian.destroy');
 
         Route::get('{canvassingpengembalian}/show', [CanvassingPengembalianController::class, 'show'])->name('canvassingpengembalian.show');
+
+        // =============== KHUSUS EXP ===============================
+        Route::get('{id}/listexp', [CanvassingPengembalianController::class, 'listexp'])->name('canvassingpengembalian.listexp');
+        Route::get('{canvassingpengembalian_id}/{id_produk}/setexp', [CanvassingPengembalianController::class, 'setexp'])->name('canvassingpengembalian.setexp');
+
+        Route::post('productexp', [CanvassingPengembalianController::class, 'productexp'])->name('canvassingpengembalian.productexp');
+        Route::post('productnonexp', [CanvassingPengembalianController::class, 'productnonexp'])->name('canvassingpengembalian.productnonexp');
+
+        Route::post('formsetexp', [CanvassingPengembalianController::class, 'formsetexp'])->name('canvassingpengembalian.formsetexp');
+        Route::post('inputexp', [CanvassingPengembalianController::class, 'inputexp'])->name('canvassingpengembalian.inputexp');
+        Route::post('hapusexp', [CanvassingPengembalianController::class, 'hapusexp'])->name('canvassingpengembalian.hapusexp');
+
+        Route::post('daftarkembali', [CanvassingPengembalianController::class, 'daftarkembali'])->name('canvassingpengembalian.daftarkembali');
+        
 
         
     });
@@ -1076,7 +1118,7 @@ Route::middleware('has.role')->prefix('sales')->group(function () {
         Route::post('/store', [OutletController::class, 'store'])->name('outlet.store');                  
         Route::post('/edit', [OutletController::class, 'edit'])->name('outlet.edit');                  
         Route::post('/update', [OutletController::class, 'update'])->name('outlet.update'); 
-        Route::post('/delete', [OutletController::class, 'destroy'])->name('outlet.delete');  
+        Route::post('/delete', [OutletController::class, 'destroy'])->name('outlet.hapus');  
 
         Route::post('/import', [OutletController::class, 'import'])->name('outlet.import');  
     });

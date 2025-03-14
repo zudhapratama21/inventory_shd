@@ -4,7 +4,10 @@
             <th style="width: 10%">Kode barang</th>
             <th>Nama Barang</th>
             <th style="width: 5%">Satuan</th>
-            <th style="width: 5%">Qty</th>           
+            <th style="width: 5%">Qty</th>      
+            <th style="width: 5%">Harga Beli</th>           
+            <th style="width: 5%">Diskon (%)</th>      
+            <th style="width: 5%">Diskon (Rp.)</th>      
             <th style="width: 10%">Action</th>
         </tr>
     </thead>
@@ -14,7 +17,10 @@
             <td>{{ $item->product->kode }}</td>
             <td>{{ $item->product->nama }}</td>
             <td>{{ $item->satuan }}</td>
-            <td>{{ $item->qty }}</td>            
+            <td>{{ $item->qty }}</td>   
+            <td>{{ $item->harga_beli }}</td>   
+            <td>{{ $item->diskon_persen }}</td>   
+            <td>{{ $item->diskon_rupiah }}</td>            
             <td>
                 <div style="text-align:center;">
                     <div class="d-flex flex-nowrap">

@@ -23,4 +23,9 @@ class TempSj extends Model
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
+   
+    public function sodet()
+    {
+        return $this->belongsTo(PesananPenjualanDetail::class, 'pesanan_penjualan_detail_id', 'id');
+    }
 }

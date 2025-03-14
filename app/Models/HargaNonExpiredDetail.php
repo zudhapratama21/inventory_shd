@@ -20,12 +20,19 @@ class HargaNonExpiredDetail extends Model
         'id_pb_detail',
         'id_sj',
         'id_sj_detail',
+        'konversi_id',
+        'konversi_detail_id',
+        'canvassing_id',
+        'canvassing_detail_id',
+        'canvassingkembali_id',
+        'canvassingkembali_detail_id',
         'harga_jual',
         'harga_beli',
         'diskon_persen_jual',
         'diskon_rupiah_jual',
         'diskon_persen_beli',
-        'diskon_rupiah_beli'
+        'diskon_rupiah_beli',
+        'harganonexpdetail_id'
     ];
  
     public function harganonexpired()
