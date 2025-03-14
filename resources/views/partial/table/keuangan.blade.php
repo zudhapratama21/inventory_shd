@@ -74,7 +74,7 @@
 
                         <div class="col-md-6">
                             <div class="row mb-3 d-flex justify-content-between">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <p><b>Hutang Keseluruhan</b></p>
                                 </div>
                             </div>
@@ -193,7 +193,7 @@
 
                         <div class="col-md-6">
                             <div class="row mb-3 d-flex justify-content-between">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <p><b>Piutang Keseluruhan</b></p>
                                 </div>
                             </div>
