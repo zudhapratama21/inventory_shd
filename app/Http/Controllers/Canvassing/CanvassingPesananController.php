@@ -621,7 +621,7 @@ class CanvassingPesananController extends Controller
             'canvassingdetails' => $canvassingdetails
         ];
 
-        $pdf = PDF::loadView('canvassing.canvassing.print', $data)->setPaper('a5', 'portrait');
+        $pdf = PDF::loadView('canvassing.canvassing.print', $data)->setPaper('a5', 'landscape');
         return $pdf->download($canvassing->kode . '.pdf');
        
     }

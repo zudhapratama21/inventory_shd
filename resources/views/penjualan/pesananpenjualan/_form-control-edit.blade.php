@@ -21,7 +21,7 @@
                         </select>
                     
                 @else
-                    <select name="customer_id" id="" class="form-control" disabled>
+                    <select name="customer_id" id="" class="form-control" readonly>
                         <option value="{{ $pesananpenjualan->customer_id }}">{{ $pesananpenjualan->customers->nama }}</option>
                     </select>
                 @endif

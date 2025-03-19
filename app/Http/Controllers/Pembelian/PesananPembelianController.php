@@ -603,8 +603,7 @@ class PesananPembelianController extends Controller
     }
 
     public function update(Request $request , $id)
-    {
-        // dd($request->all());
+    {                
         $data = request()->except(['_token','_method']);;
         $tanggal = $request->tanggal;
         if ($tanggal <> null) {

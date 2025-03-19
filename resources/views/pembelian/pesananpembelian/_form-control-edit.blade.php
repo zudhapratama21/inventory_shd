@@ -5,7 +5,7 @@
         <label class="col-lg-1 col-form-label text-right">Supplier:</label>
         <div class="col-lg-4">
             @if ($pesananpembelian->status_po_id == 1 || $pesananpembelian->status_po_id == 2)
-            <select class="form-control select2" id="supplier_id" name="supplier_id">
+            <select class="form-control select2" name="supplier_id" id="supplier_id" >
                 <option value="">Pilih Supplier</option>
                 @foreach ($suppliers as $cg)
                     @if ($pesananpembelian->supplier_id == $cg->id)
@@ -16,7 +16,7 @@
                 @endforeach
             </select>
             @else
-            <select name="supplier_id" id="" class="form-control" disabled>
+            <select name="supplier_id" id="supplier_id" class="form-control" readonly>
                 <option value="{{ $pesananpembelian->supplier_id }}">{{ $pesananpembelian->suppliers->nama }}</option>
             </select>
             @endif

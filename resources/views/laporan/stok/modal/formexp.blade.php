@@ -25,20 +25,20 @@
                     
                     <div class="form-group">
                         <label for="">Harga Beli</label> 
-                        <input type="text" value="{{$stok->harga_beli}}" id="harga_beli" class="form-control"  disabled>
+                        <input type="text" value="{{$stok->harga_beli}}" id="harga_beli" class="form-control" >
                     </div>
                     <div class="form-group">
                         <label for="">Diskon (%)</label> 
-                        <input type="text" value="{{$stok->diskon_persen}}" id="diskon_persen" class="form-control"  disabled>
+                        <input type="text" value="{{$stok->diskon_persen}}" id="diskon_persen" class="form-control" >
                     </div>
                     <div class="form-group">
                         <label for="">Diskon (Rp.)</label> 
-                        <input type="text" value="{{$stok->diskon_rupiah}}" id="diskon_rupiah" class="form-control"  disabled>
+                        <input type="text" value="{{$stok->diskon_rupiah}}" id="diskon_rupiah" class="form-control" >
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" onclick="simpanexp()" class="btn btn-success mr-2">Submit</button>
+                <button type="button" onclick="submitbarang()" class="btn btn-success mr-2">Submit</button>
                 <button type="button" class="btn btn-light-primary font-weight-bold"
                     data-dismiss="modal">Close</button>
             </div>

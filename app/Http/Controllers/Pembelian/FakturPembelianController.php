@@ -490,5 +490,25 @@ class FakturPembelianController extends Controller
         }
     }
 
+    public function syncronisasi ()
+    {
+        // cek semua pesanan pembelian yang status po nya 4
+        $pesananPembelians = PesananPembelian::where('status_po_id', 4)->get();
+
+        foreach ($pesananPembelians as $pesananPembelian) {
+            // cek apakah ada faktur pembelian yang sudah dibuat untuk pesanan pembelian ini
+            $fakturPembelian = FakturPembelian::where('pesanan_pembelian_id', $pesananPembelian->id)->first();
+
+            if ($fakturPembelian) {
+            // jika ada, ubah status po menjadi 5
+            $pesananPembelian->status_po_id = 5;
+            $pesananPembelian->save();
+            }
+        }
+
+        return back();
+
+    }
+
 
 }

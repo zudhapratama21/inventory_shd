@@ -788,46 +788,32 @@ class FakturPenjualanController extends Controller
 
     public function syncronisasi()
     {
-        //    $fakturpenjualan = FakturPenjualan::get();
-
-        //    foreach ($fakturpenjualan as $value) {
-        //         NoKPA::where('no_kpa',$value->no_kpa)->update([
-        //             'status' => 'Tidak Aktif'
-        //         ]);
-        //    }
-
-        //    return back();
-
-        $fakturpenjualandetail = FakturPenjualanDetail::with('fakturpenjualan.customers')->get();
-        foreach ($fakturpenjualandetail as $value) {
-            if ($value->fakturpenjualan->customers->kategori_id == 13 || $value->fakturpenjualan->customers->kategori_id == 17) {
-                if ($value->total > 2000000) {
-                    $value->update([
-                        'pph' => 1.5,
-                        'total_pph' => 1.5 * $value->total / 100
-                    ]);
-                }
-            }
-        }
-        return back();
-
-        //   $fakturpenjualandetail = FakturPenjualanDetail::whereHas('fakturpenjualan' , function ($q){
-        //         $q->where('customer_id' , 672);
-        //   })->get();
-
-        //   foreach ($fakturpenjualandetail as $key) {
-        //         if ($key->hargajual  == 0) {
-        //             HargaNonExpiredDetail::where('id_sj_detail',$key->pengiriman_barang_detail_id)->update([
-        //                 'qty' => 0
-        //             ]);
-
-        //             StokExpDetail::where('id_sj_detail',$key->pengiriman_barang_detail_id)->update([
-        //                 'qty' => 0
+       
+        // $fakturpenjualandetail = FakturPenjualanDetail::with('fakturpenjualan.customers')->get();
+        // foreach ($fakturpenjualandetail as $value) {
+        //     if ($value->fakturpenjualan->customers->kategori_id == 13 || $value->fakturpenjualan->customers->kategori_id == 17) {
+        //         if ($value->total > 2000000) {
+        //             $value->update([
+        //                 'pph' => 1.5,
+        //                 'total_pph' => 1.5 * $value->total / 100
         //             ]);
         //         }
-        //   }
+        //     }
+        // }
+        // return back();
 
-        //   return back();          
+        //dapatkan semua data pesanan penjualan yang status_so_id 4 
+        // lalu looping semuanya jika ditemukan ada di faktur penjualan maka ubah statusnya menjadi 5
+        
+        $pesanan = PesananPenjualan::where('status_so_id',4)->get();
+        foreach ($pesanan as $value) {
+            $fakturpenjualan = FakturPenjualan::where('pesanan_penjualan_id',$value->id)->first();
+            if ($fakturpenjualan) {
+                $value->update([
+                    'status_so_id' => 5
+                ]);
+            }
+        }
     }
 
     public function syncronisasi2($id)

@@ -72,6 +72,7 @@ use App\Http\Controllers\Sales\PerformaSalesController;
 use App\Http\Controllers\Sales\PlanMarketingController;
 use App\Http\Controllers\Sales\TargetSalesController;
 use App\Http\Controllers\Teknisi\KunjunganTeknisiController;
+use App\Http\Controllers\Teknisi\LaporanPlanTeknisiController;
 use App\Http\Controllers\Teknisi\MaintenanceController;
 use App\Http\Controllers\Teknisi\PlanTeknisiController;
 use App\Http\Controllers\Teknisi\RencanaAktivitasTeknisiController;
@@ -482,6 +483,8 @@ Route::middleware('has.role')->prefix('pembelian')->group(function () {
 
         Route::get('listpb', [FakturPembelianController::class, 'listpb'])->name('fakturpembelian.listpb');
         Route::get('{fakturpembelian}/print_a4', [FakturPembelianController::class, 'print_a4'])->name('fakturpembelian.print_a4');
+
+        Route::get('syncronisasi', [FakturPembelianController::class, 'syncronisasi'])->name('fakturpembelian.syncronisasi');
     });
 });
 
@@ -892,6 +895,15 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
         Route::post('/print', [LaporanRencanaKunjunganController::class, 'print'])->name('laporanrencanakunjungan.print');        
         
     });
+
+    Route::prefix('laporanplanteknisi')->group(function () {    
+        Route::get('', [LaporanPlanTeknisiController::class, 'index'])->name('laporanrencanakunjungan.index');        
+        Route::get('/list', [LaporanPlanTeknisiController::class, 'list'])->name('laporanrencanakunjungan.list');
+        Route::get('/{id}/show', [LaporanPlanTeknisiController::class, 'show'])->name('laporanrencanakunjungan.show');
+        Route::post('/print', [LaporanPlanTeknisiController::class, 'print'])->name('laporanrencanakunjungan.print');                
+    });
+
+
 
 
 });

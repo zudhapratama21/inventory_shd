@@ -1,6 +1,6 @@
 <div class="row">
    
-        @can('rekaphutang')
+        @can('rekaphutang-list')
         <div class="col-lg-6">
             <!--begin::Card-->
 
@@ -119,7 +119,7 @@
         </div>
             <!--end::Card-->
         @endcan
-        @can('rekappiutang')
+        @can('rekappiutang-list')
         <div class="col-lg-6">
             <!--begin::Card-->
 

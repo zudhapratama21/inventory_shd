@@ -153,20 +153,7 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
-        $request->validate([            
-            'nama' => ['required', 'max:255'],
-            'productcategory_id' => ['required'],
-            'productsubcategory_id' => ['required'],
-            'merk_id' => ['required'],
-            'satuan' => ['required'],
-            'hargajual' => ['required', 'numeric'],
-            'hargabeli' => ['required', ' numeric'],
-            'diskon_persen' => ['numeric', 'between:0,99.99'],
-            'diskon_rp' => ['numeric'],
-            'status' => ['required'],
-            'status_exp' => ['required'],
-        ]);
-
+        
         $tglIjinEdar = $request->exp_ijinedar;
         
         if ($tglIjinEdar <> null) {

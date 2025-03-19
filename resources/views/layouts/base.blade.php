@@ -32,7 +32,7 @@
 
     <!--begin::Layout Themes(used by all pages)-->
     <!--end::Layout Themes-->
-    <link rel="shortcut icon" href="{{ asset('logo_bsb_2.png') }}" />
+    {{-- <link rel="shortcut icon" href="{{ asset('logo_bsb_2.png') }}" /> --}}
 
     <style type="text/css">
         .signature-pad {

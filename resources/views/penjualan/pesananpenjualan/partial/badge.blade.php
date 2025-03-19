@@ -10,4 +10,4 @@
     <span class="badge badge-success badge-sm">sudah terfaktur</span>
 @else
     <span class="badge badge-info badge-sm">{{ ucfirst($status) }}</span>
-@endif
+@endif  

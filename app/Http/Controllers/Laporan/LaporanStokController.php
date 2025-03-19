@@ -102,7 +102,7 @@ class LaporanStokController extends Controller
                 ->whereNull('deleted_at')
                 ->orderBy('tanggal', 'desc')
                 ->get();
-        }
+        }        
 
 
         return view('laporan.stok.detailexp', compact('title',  'product', 'stokExpDetail'));
