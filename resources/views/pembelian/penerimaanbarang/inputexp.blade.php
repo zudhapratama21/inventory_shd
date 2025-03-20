@@ -322,7 +322,14 @@
                             $('.yajra-datatable-exp').DataTable().ajax.reload(null, false);
                         },
                         error: function(data) {
-                            console.log(data);
+                            const response = JSON.parse(xhr.responseText);
+                            if (xhr.status === 500 || xhr.status === 422) {
+                                iziToast.error({
+                                    title: 'error',
+                                    message: response.message,
+                                    position: 'topRight',
+                                });
+                            }
                         },
                         complete: function() {
                             KTApp.unblock();
