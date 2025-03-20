@@ -75,13 +75,23 @@ class LaporanStokController extends Controller
     {
         $title = "Laporan Stok";
         $supplier = Supplier::get();
-        return view('laporan.stok.detailstok', compact('title', 'product', 'supplier'));
+
+        if ($product->status_exp == 1) {
+            $stokExp = StokExp::where('product_id', '=', $product->id)
+                ->where('qty', '<>', '0')->get();
+        }else{
+            $stokExp = HargaNonExpired::where('product_id', '=', $product->id)
+                ->where('qty', '<>', '0')->get();
+        }
+
+        $status = $product->status_exp;        
+        
+        return view('laporan.stok.detailstok', compact('title', 'product', 'supplier','stokExp','status'));
     }
 
     public function detailexp($id, $status)
     {
-        $title = "Laporan Stok";
-
+        $title = "Laporan Stok";                
         if ($status == 1) {
             $stokexp = StokExpDetail::with('products')->where('id', '=', $id)->first();
             $product = $stokexp->products;

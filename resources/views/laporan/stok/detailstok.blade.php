@@ -75,7 +75,33 @@
 
                                     </tbody>
                                 </table>
-                            </div>                 
+                            </div>   
+                            @else
+
+                            <div class="card-body">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Tanggal</th>
+                                        <th>Lot</th>
+                                        <th>Jumlah</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    @foreach ($stokExp as $index => $item)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $item->tanggal->format("d F Y") }}</td>
+                                        <td>{{ $item->lot ? $item->lot : 'Non Exp' }}</td>
+                                        <td>{{ $item->qty }}</td>
+                                        <td><a
+                                                href="{{ route('laporanstok.detailexp', ['id' => $item->id , 'status' => $status ]) }}">[Detail]</a>
+                                        </td>
+    
+                                    </tr>
+                                    @endforeach
+                                </table>
+                            </div>
+
                             @endcan
                             
                                           
