@@ -42,8 +42,11 @@ use App\Http\Controllers\Laporan\LaporanStokController;
 use App\Http\Controllers\Laporan\LaporanPembayaranController;
 use App\Http\Controllers\Laporan\LaporanPembelianController;
 use App\Http\Controllers\Laporan\laporanPlanMarketingController;
+use App\Http\Controllers\Laporan\LaporanPlanTeknisiController;
+use App\Http\Controllers\Laporan\LaporanRencanaAktivitasTeknisiController;
 use App\Http\Controllers\Laporan\LaporanRencanaKunjunganController;
 use App\Http\Controllers\Laporan\LaporanSalesController;
+use App\Http\Controllers\Laporan\LaporanTeknisiController;
 use App\Http\Controllers\Master\ProductGroupController;
 use App\Http\Controllers\Master\KategoriPesananController;
 use App\Http\Controllers\Master\ProductCategoryController;
@@ -72,7 +75,6 @@ use App\Http\Controllers\Sales\PerformaSalesController;
 use App\Http\Controllers\Sales\PlanMarketingController;
 use App\Http\Controllers\Sales\TargetSalesController;
 use App\Http\Controllers\Teknisi\KunjunganTeknisiController;
-use App\Http\Controllers\Teknisi\LaporanPlanTeknisiController;
 use App\Http\Controllers\Teknisi\MaintenanceController;
 use App\Http\Controllers\Teknisi\PlanTeknisiController;
 use App\Http\Controllers\Teknisi\RencanaAktivitasTeknisiController;
@@ -897,12 +899,26 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
     });
 
     Route::prefix('laporanplanteknisi')->group(function () {    
-        Route::get('', [LaporanPlanTeknisiController::class, 'index'])->name('laporanrencanakunjungan.index');        
-        Route::get('/list', [LaporanPlanTeknisiController::class, 'list'])->name('laporanrencanakunjungan.list');
-        Route::get('/{id}/show', [LaporanPlanTeknisiController::class, 'show'])->name('laporanrencanakunjungan.show');
-        Route::post('/print', [LaporanPlanTeknisiController::class, 'print'])->name('laporanrencanakunjungan.print');                
+        Route::get('', [LaporanPlanTeknisiController::class, 'index'])->name('laporanplanteknisi.index');        
+        Route::get('/list', [LaporanPlanTeknisiController::class, 'list'])->name('laporanplanteknisi.list');                      
     });
 
+    Route::prefix('laporanrencanaaktivitasteknisi')->group(function () {    
+        Route::get('', [LaporanRencanaAktivitasTeknisiController::class, 'index'])->name('laporanrencanaaktivitasteknisi.index');        
+        Route::get('/list', [LaporanRencanaAktivitasTeknisiController::class, 'list'])->name('laporanrencanaaktivitasteknisi.list');
+        Route::get('/{id}/show', [LaporanRencanaAktivitasTeknisiController::class, 'show'])->name('laporanrencanaaktivitasteknisi.show');                      
+    });
+
+    Route::prefix('laporankunjunganteknisi')->group(function () {
+    
+        Route::get('', [LaporanTeknisiController::class, 'index'])->name('laporanteknisi.index');        
+        // Route::post('/datatable', [LaporanTeknisiController::class, 'datatable'])->name('laporanteknisi.datatable');
+        Route::get('/list', [LaporanTeknisiController::class, 'list'])->name('laporanteknisi.list');
+        Route::get('/{id}/show', [LaporanTeknisiController::class, 'show'])->name('laporanteknisi.show');
+
+        Route::post('/datatablesales', [LaporanTeknisiController::class, 'datatablesales'])->name('laporanteknisi.datatablesales');              
+        
+    });
 
 
 

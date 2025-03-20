@@ -241,7 +241,6 @@
 </div>
 
 
-
 @can('datapengiriman-list')
     <div class="row">
         <div class="col-xl-12">
