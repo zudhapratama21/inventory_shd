@@ -920,7 +920,7 @@ class HomeController extends Controller
     public function datatablepenerimaan(Request $request)
     {
         $pesananpembelians = PesananPembelian::with('suppliers', 'statusPO')
-            ->whereIn('status_po_id', [1,2, 3]);
+            ->whereIn('status_po_id', [1,2, 3])->orderBy('id', 'asc');
             
         return Datatables::of($pesananpembelians)
             ->addIndexColumn()

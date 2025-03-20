@@ -58,7 +58,7 @@
                                         tambah barang</button>
                                 </div>
                                 <table class="table yajra-datatable-dataexp collapsed ">
-                                    <thead class="datatable-head" ">
+                                    <thead class="datatable-head">
                                         <tr>
                                             <th>Tanggal Exp</th>
                                             <th>Supplier</th>
