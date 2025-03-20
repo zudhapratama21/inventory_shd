@@ -153,7 +153,7 @@ class LaporanStokController extends Controller
     }
 
     public function simpanexp(Request $request)
-    {
+    {        
         try {
             if ($request->status == 1) {
                 $stok = StokExp::where('id', '=', $request->stok_id)->update([

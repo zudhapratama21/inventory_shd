@@ -287,6 +287,7 @@
                     let harga_beli = document.getElementById('harga_beli').value;
                     let diskon_persen = document.getElementById('diskon_persen').value;
                     let diskon_rupiah = document.getElementById('diskon_rupiah').value;
+                    let tanggal = document.getElementById('tanggal').value;
                     $.ajax({
                         type: 'POST',
                         url: '{{ route('laporanstok.simpanexp') }}',
@@ -305,6 +306,7 @@
                             "harga_beli": harga_beli,
                             "diskon_persen": diskon_persen,
                             "diskon_rupiah": diskon_rupiah,
+                            "tanggal": tanggal,
                             "_token": "{{ csrf_token() }}"
                         },
                         success: function(data) {
@@ -371,6 +373,7 @@
                             "diskon_persen": diskon_persen,
                             "diskon_rupiah": diskon_rupiah,
                             "supplier": supplier,
+                            "tanggal": tanggal,
                             "_token": "{{ csrf_token() }}"
                         },
                         success: function(data) {
