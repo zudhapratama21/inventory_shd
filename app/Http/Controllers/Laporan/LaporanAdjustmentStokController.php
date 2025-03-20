@@ -6,6 +6,7 @@ use App\Exports\LaporanAdjustmentStok;
 use App\Exports\SyncExport;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\StokExp;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -54,6 +55,14 @@ class LaporanAdjustmentStokController extends Controller
 
     public function sync()
     {    
-        return Excel::download(new SyncExport(), 'Syncronisasi.xlsx');       
+
+        $product = Product::where('status_exp',1)->where('stok',0)->get();    
+        foreach ($product as $key => $item) {
+            $stok = StokExp::where('product_id',$item->id)->update([
+                'qty' => $item->stok
+            ]);                       
+        }
+        return back();        
+        
     }
 }
