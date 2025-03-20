@@ -321,7 +321,7 @@
                             $('.yajra-datatable').DataTable().ajax.reload(null, false);
                             $('.yajra-datatable-exp').DataTable().ajax.reload(null, false);
                         },
-                        error: function(data) {
+                        error: function(xhr) {
                             const response = JSON.parse(xhr.responseText);
                             if (xhr.status === 500 || xhr.status === 422) {
                                 iziToast.error({

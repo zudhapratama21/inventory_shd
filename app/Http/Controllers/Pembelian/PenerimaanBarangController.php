@@ -642,7 +642,7 @@ class PenerimaanBarangController extends Controller
                 return Carbon::parse($pb->tanggal)->format('d-m-Y');
             })
             ->editColumn('lot', function ($pb) {
-                return $pb->stockExp->lot;
+                return $pb->stockExp->lot ? $pb->stockExp->lot : '-';
             })
             ->editColumn('qty', function ($pb) {
                 return $pb->qty;
