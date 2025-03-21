@@ -158,25 +158,6 @@
         return txt.value;
     }
 
-    function show_confirm(data_id){
-        $.ajax({
-            type: 'POST',
-            url: '{{ route('penerimaanbarang.delete') }}',
-            dataType: 'html',
-            headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
-            data: {id:data_id, "_token": "{{ csrf_token() }}"},
-            
-            success: function (data){
-                console.log(data);
-                $('#modal-confirm-delete').html(data);
-                $('#exampleModal').modal('show');
-            },
-            error: function(data){
-                console.log(data);
-            }
-        });
-    }
-
     
 </script>
 @endpush
