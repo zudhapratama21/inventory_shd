@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Laporan;
 use App\Exports\LaporanAdjustmentStok;
 use App\Exports\SyncExport;
 use App\Http\Controllers\Controller;
+use App\Models\HargaNonExpired;
 use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -54,6 +55,16 @@ class LaporanAdjustmentStokController extends Controller
 
     public function sync()
     {    
-        return Excel::download(new SyncExport(), 'Syncronisasi.xlsx');       
+        // Tarik semua produk yang status exp nya 0
+        $products = Product::where('status_exp', 0)->where('stok',0)->get();
+
+        foreach ($products as $product) {
+            HargaNonExpired::where('product_id', $product->id)->update([
+                'qty' => 0
+            ]);                        
+        }
+        return back();
+
+        // return Excel::download(new SyncExport(), 'Syncronisasi.xlsx');       
     }
 }
