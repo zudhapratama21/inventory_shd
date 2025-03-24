@@ -618,7 +618,9 @@ class PesananPembelianController extends Controller
             'kategoripesanan_id' => $request->kategoripesanan_id,
             'keterangan' => $request->keterangan,
             'no_so' => $request->no_so,
-            'no_so_customer' => $request->no_so_customer
+            'no_so_customer' => $request->no_so_customer,
+            'keterangan' => $request->keterangan,
+            'keterangan_internal' => $request->keterangan_internal
         ]);
         
 

@@ -102,7 +102,6 @@
 
 <script type="text/javascript">
     $(function () {
-   
           var table = $('.yajra-datatable').DataTable({
               responsive: true,
               processing: true,
@@ -159,9 +158,5 @@
         txt.innerHTML=data;
         return txt.value;
     }
-
-    
-
-    
 </script>
 @endpush
