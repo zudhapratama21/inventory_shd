@@ -33,14 +33,13 @@
                             @foreach ($errors->all() as $error)
                             {{ $error }}</br>
                             @endforeach
-
                         </div>
                         @endif
                     </div>
                     <form class="form" id="kt_login_signin_form" action="/login" method="post">
                         @csrf
                         
-                        <div class="form-group mb-5">
+                        <div class="form-group mb-5">   
                             <input
                                 class="form-control h-auto form-control-solid py-4 px-8 @error('email') is-invalid @enderror"
                                 type="text" placeholder="Email" name="email" autocomplete="off" />

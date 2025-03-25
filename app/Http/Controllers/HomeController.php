@@ -17,14 +17,26 @@ use App\Models\Sales;
 use App\Models\Supplier;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class HomeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
+        // Hapus semua cache
+        Artisan::call('cache:clear');
+        Artisan::call('config:clear');
+        Artisan::call('view:clear');
+        Artisan::call('route:clear');
+
         $kategori = Kategoripesanan::get();
         $produk = Product::get();
         $customer = Customer::get();
@@ -920,8 +932,8 @@ class HomeController extends Controller
     public function datatablepenerimaan(Request $request)
     {
         $pesananpembelians = PesananPembelian::with('suppliers', 'statusPO')
-            ->whereIn('status_po_id', [1,2, 3])->orderBy('id', 'asc');
-            
+            ->whereIn('status_po_id', [1, 2, 3])->orderBy('id', 'asc');
+
         return Datatables::of($pesananpembelians)
             ->addIndexColumn()
             ->addColumn('supplier', function (PesananPembelian $po) {
