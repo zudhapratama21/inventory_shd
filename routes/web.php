@@ -17,6 +17,7 @@ use App\Http\Controllers\HRD\SettingCutiController;
 use App\Http\Controllers\HRD\SuratMenyuratController;
 use App\Http\Controllers\HRD\TipeSuratController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\Keuangan\SubBiayaController;
 use App\Http\Controllers\Konversi\KonversiController;
 use App\Http\Controllers\KunjunganSales\KunjunganSalesController;
 use App\Http\Controllers\Laporan\LaporanAdjustmentStokController;
@@ -78,12 +79,11 @@ use App\Http\Controllers\Teknisi\KunjunganTeknisiController;
 use App\Http\Controllers\Teknisi\MaintenanceController;
 use App\Http\Controllers\Teknisi\PlanTeknisiController;
 use App\Http\Controllers\Teknisi\RencanaAktivitasTeknisiController;
+use Illuminate\Support\Facades\Auth;
 
-Route::middleware('auth', 'verified')->group(function () {
-    // Route::get('/', function () {
-    //     return view('home');
-    // });
-    Route::get('/', [HomeController::class, 'index']);
+Auth::routes();
+Route::middleware('auth', 'verified')->group(function () {    
+    Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::post('/chartyear', [HomeController::class, 'chartyear'])->name('chart.year');
     Route::post('/chartkategori', [HomeController::class, 'chartkategori'])->name('chart.kategori');
     Route::post('/chartproduk', [HomeController::class, 'grafikProduk'])->name('chart.produk');
@@ -1073,6 +1073,17 @@ Route::middleware('has.role')->prefix('biaya')->group(function () {
             Route::delete('/delete', [BiayaOperationalController::class, 'destroy'])->name('biayaoperational.destroy');       
             
         });
+
+        Route::prefix('subjenisbiaya')->group(function () {
+            Route::get('', [SubBiayaController::class, 'index'])->name('subjenisbiaya.index');        
+            Route::get('/create', [BiayaOperationalController::class, 'create'])->name('subjenisbiaya.create');        
+            // Route::post('/create', [BiayaOperationalController::class, 'store'])->name('subjenisbiaya.store');        
+            // Route::get('/{subjenisbiaya}/edit', [BiayaOperationalController::class, 'edit'])->name('subjenisbiaya.edit');       
+            // Route::put('/{subjenisbiaya}/edit', [BiayaOperationalController::class, 'update'])->name('subjenisbiaya.update');                   
+            // Route::post('/delete', [BiayaOperationalController::class, 'delete'])->name('subjenisbiaya.delete');       
+            // Route::delete('/delete', [BiayaOperationalController::class, 'destroy'])->name('subjenisbiaya.destroy');       
+            
+        });
 });
 
 Route::middleware('has.role')->prefix('sales')->group(function () {
@@ -1378,6 +1389,4 @@ Route::prefix('tipesurat')->group(function () {
 });
 
 
-Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

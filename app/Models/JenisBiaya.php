@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Keuangan\SubBiaya;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,6 +27,12 @@ class JenisBiaya extends Model
     public function biayaoperational()
     {
         return $this->hasMany(BiayaOperational::class, 'jenis_biaya_id');
+    }
+
+    
+    public function subjenisbiaya()
+    {
+        return $this->hasMany(SubBiaya::class, 'jenisbiaya_id');
     }
     
 

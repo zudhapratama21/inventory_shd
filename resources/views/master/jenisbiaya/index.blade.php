@@ -66,17 +66,21 @@
                                 <h3 class="card-label">Data Jenis Biaya</h3>
                             </div>
                             <div class="card-toolbar">
-                            
-                                @can('jenisbiaya-create')
-                                <a href="{{ route('jenisbiaya.create') }}"
-                                    class="btn btn-primary font-weight-bolder">
-                                    <i class="flaticon2-add"></i>
-                                    Jenis Biaya
-                                </a>
+                                @can('subjenisbiaya-list')
+                                    <a href="{{ route('subjenisbiaya.index') }}"
+                                        class="btn btn-info font-weight-bolder mr-2">                                        
+                                        Sub Jenis Biaya
+                                    </a>
                                 @endcan
 
-
-                                <!--end::Button-->
+                                @can('jenisbiaya-create')
+                                    <a href="{{ route('jenisbiaya.create') }}"
+                                        class="btn btn-primary font-weight-bolder">
+                                        <i class="flaticon2-add"></i>
+                                        Jenis Biaya
+                                    </a>
+                                @endcan
+                                                                
                             </div>
                         </div>
                         <div class="card-body">

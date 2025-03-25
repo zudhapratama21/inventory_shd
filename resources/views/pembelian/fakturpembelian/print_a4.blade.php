@@ -26,7 +26,7 @@
 </head>
 
 <body style="font-family: sans-serif;">
-    @for($i = 1; $i <= $totalPage; $i++) <table width=" 100%" style="margin-top: 0px; border-collapse:collapse">
+    @for($i = 1; $i <= $totalPage; $i++) <table width=" 100%" style="margin-top: 0px;">
         <tr>
             <td colspan="4" style=" border-bottom: 1px solid black;">FAKTUR PEMBELIAN</td>
             <td colspan="2" style=" border-bottom: 1px solid black; text-align:right">No. Faktur :

@@ -28,7 +28,7 @@
 
 <body style="font-family: sans-serif;position: relative;">
     @for ($i = 1; $i <= $totalPage; $i++)
-        <table width="100%" style="margin-top: 0px; border-collapse:collapse">
+        <table width="100%" style="margin-top: 0px">
             <tr>
                 <td width="40%" style="font-size: 70%; vertical-align: top;">
                     <h3>PT BRILIAN SUKSES BERKAH</h3>
@@ -89,6 +89,11 @@
 
             </tr>
 
+
+
+        </table>
+
+        <table width="100%">
             <tr>
                 <td colspan="6" style="vertical-align: top;display: flex">
                     <div class="isi" style="height: 450px;">
@@ -153,7 +158,6 @@
                     </div>
                 </td>
             </tr>
-
         </table>
         <br /><br /><br /> <br> <br> <br> <br>
 
@@ -238,7 +242,7 @@
 
                                 <td style='font-size: 70%; text-align:center; vertical-align:top'>Sidoarjo,
                                     {{ $pesananpembelian->tanggal->format("d
-                                                                    F Y") }}
+                                                                                                                                                                                                                    F Y") }}
 
                                     <br /><br /> <br /><br /> <br /> <br />
                                     <u>HEPPY WAHYU PURNOMO</u> <br />
@@ -276,5 +280,3 @@
 </body>
 
 </html>
-
-
