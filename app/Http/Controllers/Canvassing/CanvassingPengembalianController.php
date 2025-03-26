@@ -12,6 +12,7 @@ use App\Models\HargaNonExpired;
 use App\Models\HargaNonExpiredDetail;
 use App\Models\InventoryTransaction;
 use App\Models\Product;
+use App\Models\StokExp;
 use App\Models\StokExpDetail;
 use App\Models\TempCanvasPengembalian;
 use App\Traits\CodeTrait;
@@ -487,7 +488,8 @@ class CanvassingPengembalianController extends Controller
                         'message' => 'Qty tidak boleh 0'
                     ], 422);
                 }
-                $stok = StokExpDetail::where('id', $request->id)->first();            
+                $stok = StokExpDetail::where('id', $request->id)->first();   
+                $exp = StokExp::where('id', $stok->stok_exp_id)->first();         
                 if (!$stok) {
                     DB::rollBack();
                     return response()->json([
@@ -502,9 +504,9 @@ class CanvassingPengembalianController extends Controller
                         'status' => 'error',
                         'message' => 'Qty tidak boleh melebihi stok'
                     ], 422);
-                }
-                $qty = $stok->qty + $request->qty;
-                $stok->update([
+                }                
+                $qty = $exp->qty + $request->qty;
+                $exp->update([
                     'qty' => $qty
                 ]);
 
@@ -538,6 +540,7 @@ class CanvassingPengembalianController extends Controller
                 
             } else {
                 $stok = HargaNonExpiredDetail::where('id', $request->id)->first();
+                $nonexp = HargaNonExpired::where('id', $stok->harganonexpired_id)->first();
                 if ((-1 * $stok->qty) < $request->qty) {
                     DB::rollBack();
                     return response()->json([
@@ -545,8 +548,8 @@ class CanvassingPengembalianController extends Controller
                         'message' => 'Qty tidak boleh melebihi stok'
                     ], 422);
                 }
-                $qty = $stok->qty + $request->qty;
-                $stok->update([
+                $qty = $nonexp->qty + $request->qty;
+                $nonexp->update([
                     'qty' => $qty
                 ]);
 

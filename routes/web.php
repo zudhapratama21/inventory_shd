@@ -1076,7 +1076,8 @@ Route::middleware('has.role')->prefix('biaya')->group(function () {
 
         Route::prefix('subjenisbiaya')->group(function () {
             Route::get('', [SubBiayaController::class, 'index'])->name('subjenisbiaya.index');        
-            Route::get('/create', [BiayaOperationalController::class, 'create'])->name('subjenisbiaya.create');        
+            Route::post('/create', [BiayaOperationalController::class, 'create'])->name('subjenisbiaya.create');        
+            Route::post('/datatable', [SubBiayaController::class, 'datatable'])->name('subjenisbiaya.datatable');        
             // Route::post('/create', [BiayaOperationalController::class, 'store'])->name('subjenisbiaya.store');        
             // Route::get('/{subjenisbiaya}/edit', [BiayaOperationalController::class, 'edit'])->name('subjenisbiaya.edit');       
             // Route::put('/{subjenisbiaya}/edit', [BiayaOperationalController::class, 'update'])->name('subjenisbiaya.update');                   

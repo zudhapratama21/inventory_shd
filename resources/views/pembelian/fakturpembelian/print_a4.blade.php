@@ -16,7 +16,7 @@
         tr {
             border: 1px solid black;
         }
-
+        
         @media print {
             .tabpage {
                 page-break-after: always

@@ -90,7 +90,7 @@
                     <form action="">
                         <div class="form-group">
                             <label for="">Nama Sub Biaya</label>
-                            <input type="text" class="form-control" name="nama_subbiaya" id="nama_subbiaya">
+                            <input type="text" class="form-control" name="nama" id="nama">
                         </div>
 
                         <div class="form-group">
@@ -101,7 +101,9 @@
                         <div class="form-group">
                             <label for="">Jenis Biaya</label> <br>
                             <select class="form-control" id="kt_select2_3">
-                                <option value="">tes</option>
+                                @foreach ($biaya as $item)
+                                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -129,5 +131,117 @@
     <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6"') }}"></script>
     <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
     <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
-    <script type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
+        integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css"
+        integrity="sha512-O03ntXoVqaGUTAeAmvQ2YSzkCvclZEcPQu1eqloPaHfJ5RuNGiS4l+3duaidD801P50J28EHyonCV06CUlTSag=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            datatable();
+        });
+
+        function datatable() {
+            var table = $('.yajra-datatable').DataTable({
+                responsive: true,
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('subjenisbiaya.datatable') }}",
+                    type: "POST",
+                    data: function(params) {                       
+                        params._token = "{{ csrf_token() }}";
+                        return params;   
+                    }            
+                },
+                columns: [{
+                        data: 'nama',
+                        name: 'nama'
+                    },
+                    {
+                        data: 'no_akun',
+                        name: 'no_akun'
+                    },
+                    {
+                        data: 'biaya.nama',
+                        name: 'biaya.nama'
+                    },
+                    {
+                        data: 'keterangan',
+                        name: 'keterangan'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    },
+                ]
+            });
+        }
+
+        function store() {
+            var nama = document.getElementById('nama').value;
+            var no_akun = document.getElementById('no_akun').value;
+            var diskon_rupiah = document.getElementById('diskon_rupiah').value;
+
+            //alert(product_id);
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('subjenisbiaya.create') }}',
+                dataType: 'html',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                beforeSend: function() {
+                    KTApp.blockPage();
+                },
+                data: {
+                    "harga_beli": harga_beli,
+                    "diskon_persen": diskon_persen,
+                    "status": status,
+                    "diskon_rupiah": diskon_rupiah,
+                    "id": data_id,
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    $('#formexp').modal('hide');
+                    iziToast.success({
+                        title: 'Success',
+                        message: 'Data Berhasil Ditambahkan',
+                        position: 'topRight',
+                    });
+
+                    $('.yajra-datatable-dataproduk').DataTable().ajax.reload(null, false);
+                    $('.yajra-datatable-dataprodukirim').DataTable().ajax.reload(null, false);
+
+                },
+                error: function(xhr) {
+                    const response = JSON.parse(xhr.responseText);
+                    if (xhr.status === 422) {
+                        // Error qty melebihi stok
+                        iziToast.error({
+                            title: 'error',
+                            message: response.message,
+                            position: 'topRight',
+                        });
+                    }
+                    if (xhr.status === 500) {
+                        // Error qty melebihi stok
+                        iziToast.error({
+                            title: 'error',
+                            message: response.message,
+                            position: 'topRight',
+                        });
+                    }
+                },
+                complete: function() {
+                    KTApp.unblock();
+                }
+            });
+        }
+    </script>
 @endpush
