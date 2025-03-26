@@ -20,7 +20,7 @@ class AbsensiImport implements ToModel
         if ($this->no > 0) {
             $karyawan = Karyawan::where('no_emp',$row[0])->first();
             if ($karyawan) {                
-                $timetanggal = DateTime::createFromFormat('d/m/Y', $row[5])->format('Y-m-d');            
+                $timetanggal = DateTime::createFromFormat('d/m/Y', $row[2])->format('Y-m-d');            
 
                 if ($row[3] == null && $row[4] == null) {
                     $day = Carbon::parse($timetanggal)->format('l');
@@ -63,7 +63,7 @@ class AbsensiImport implements ToModel
                     'karyawan_id' => $karyawan->id,
                     'clock_in' => $row[3],
                     'clock_out' => $row[4],
-                    'work_time' => $row[5],
+                    'work_time' => $row[2],
                     'tanggal' => Carbon::parse($timetanggal)->format('Y-m-d'),
                     'status' => $status,
                     'keterangan' =>  ''       
