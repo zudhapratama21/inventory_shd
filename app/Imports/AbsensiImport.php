@@ -22,7 +22,7 @@ class AbsensiImport implements ToModel
             if ($karyawan) {                
                 $timetanggal = DateTime::createFromFormat('d/m/Y', $row[5])->format('Y-m-d');            
 
-                if ($row[9] == null && $row[10] == null) {
+                if ($row[3] == null && $row[4] == null) {
                     $day = Carbon::parse($timetanggal)->format('l');
                     if ($day == 'Saturday' || $day == 'Sunday') {
                         $status = 'weekend';
@@ -40,15 +40,15 @@ class AbsensiImport implements ToModel
                     }   
                          
                 }
-                elseif ($row[9] == "" && $row[10] !=="") {
+                elseif ($row[3] == "" && $row[4] !=="") {
                     
                     $status = 'error';
                 }
-                elseif ($row[9] !== null && $row[10] !== null) {
+                elseif ($row[3] !== null && $row[4] !== null) {
                     $day = Carbon::parse($timetanggal)->format('l');
                     if ($day == 'Saturday' || $day == 'Sunday') {                          
                         $status = 'weekend';                                          
-                    }else if (Carbon::parse($row[9])->format('H:i')  > Carbon::parse('08:10')->format('H:i')) {
+                    }else if (Carbon::parse($row[3])->format('H:i')  > Carbon::parse('08:10')->format('H:i')) {
                         $status = 'terlambat';
                     }else{
                         $status = 'ontime';
@@ -61,9 +61,9 @@ class AbsensiImport implements ToModel
                                               
                 $absensi = Absensi::create([
                     'karyawan_id' => $karyawan->id,
-                    'clock_in' => $row[9],
-                    'clock_out' => $row[10],
-                    'work_time' => $row[17],
+                    'clock_in' => $row[3],
+                    'clock_out' => $row[4],
+                    'work_time' => $row[5],
                     'tanggal' => Carbon::parse($timetanggal)->format('Y-m-d'),
                     'status' => $status,
                     'keterangan' =>  ''       

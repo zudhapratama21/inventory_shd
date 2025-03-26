@@ -638,19 +638,31 @@ class CanvassingPengembalianController extends Controller
             if ($request->status == 1) {
                 $stok = StokExpDetail::where('id', $request->id)->first();
                 $qty = $stok->qty;
-                $stokexp = StokExp::where('id', $stok->stokexpdet_id)->first();
+                $stokexp = StokExpDetail::where('id', $stok->stokexpdet_id)->first();
                 $qtyexp =  -1 * ($qty -  ($stokexp->qty));                           
                 $stokexp->update([
                     'qty' => $qtyexp
+                ]);
+
+                $exp = StokExp::where('id', $stok->stok_exp_id)->first();
+                $stokqty = $exp->qty - $qty;
+                $exp->update([
+                    'qty' => $stokqty
                 ]);
                 $stok->delete();
             } else {
                 $stok = HargaNonExpiredDetail::where('id', $request->id)->first();
                 $qty = $stok->qty;
-                $stokexp = HargaNonExpired::where('id', $stok->harganonexpdet_id)->first();
+                $stokexp = HargaNonExpiredDetail::where('id', $stok->harganonexpdet_id)->first();
                 $qtyexp =  -1 * ($qty -  (-1 * $stokexp->qty));
                 $stokexp->update([
                     'qty' => $qtyexp
+                ]);
+
+                $nonexp = HargaNonExpired::where('id', $stok->harganonexpired_id)->first();
+                $stokqty = $nonexp->qty - $qty;    
+                $nonexp->update([
+                    'qty' => $stokqty
                 ]);
                 $stok->delete();
             }
