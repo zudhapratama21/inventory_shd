@@ -644,10 +644,10 @@ class CanvassingPengembalianController extends Controller
                     'qty' => $qtyexp
                 ]);
 
-                $exp = StokExp::where('id', $stok->stok_exp_id)->first();
+                $exp = StokExp::where('id', $stokexp->stok_exp_id)->first();
                 $stokqty = $exp->qty - $qty;
                 $exp->update([
-                    'qty' => $stokqty
+                    'qty' => $stokqty  
                 ]);
                 $stok->delete();
             } else {
@@ -659,7 +659,7 @@ class CanvassingPengembalianController extends Controller
                     'qty' => $qtyexp
                 ]);
 
-                $nonexp = HargaNonExpired::where('id', $stok->harganonexpired_id)->first();
+                $nonexp = HargaNonExpired::where('id', $stokexp->harganonexpired_id)->first();
                 $stokqty = $nonexp->qty - $qty;    
                 $nonexp->update([
                     'qty' => $stokqty
