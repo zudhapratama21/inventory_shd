@@ -477,7 +477,6 @@ class CanvassingPengembalianController extends Controller
     {
 
         $canvassingpengembaliandet = CanvassingPengembalianDetail::with('canvassingpesanandetail', 'product')->where('id', $request->canvassingdetail_id)->first();
-
         DB::beginTransaction();
         try {
             if ($request->status == 1) {
@@ -504,7 +503,11 @@ class CanvassingPengembalianController extends Controller
                         'status' => 'error',
                         'message' => 'Qty tidak boleh melebihi stok'
                     ], 422);
-                }                
+                }       
+                $stok->update([
+                    'qty' => $stok->qty + $request->qty
+                ]);
+
                 $qty = $exp->qty + $request->qty;
                 $exp->update([
                     'qty' => $qty
@@ -549,6 +552,9 @@ class CanvassingPengembalianController extends Controller
                     ], 422);
                 }
                 $qty = $nonexp->qty + $request->qty;
+                $stok->update([
+                    'qty' => $stok->qty + $request->qty
+                ]);
                 $nonexp->update([
                     'qty' => $qty
                 ]);
