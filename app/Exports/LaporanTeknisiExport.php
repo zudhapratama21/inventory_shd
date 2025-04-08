@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Models\KunjunganTeknisi;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromView;
@@ -23,38 +24,20 @@ class LaporanTeknisiExport implements FromView
     {
         $tgl1 = Carbon::parse($this->data['tanggal_mulai'])->format('Y-m-d');
         $tgl2 = Carbon::parse($this->data['tanggal_selesai'])->format('Y-m-d');   
-        $biaya = DB::table('kunjungan_teknisi as kj')
-                    ->join('users as u','kj.user_id','=','u.id');
-        
-        if ($this->data['tanggal_mulai']) {            
-            if (!$this->data['tanggal_selesai']) {
-               $biaya->where('kj.tanggal','>=',$tgl1);
-                                
-            }else{
-               $biaya->where('kj.tanggal','>=',$tgl1)
-                     ->where('kj.tanggal','<=',$tgl2);
-            }
-        }elseif($this->data['tanggal_selesai']){
-            if (!$this->data['tanggal_mulai']) {
-                $biaya->where('kj.tanggal','<=',$tgl2);
-            }else{
-                $biaya->where('kj.tanggal','>=',$tgl1)
-                     ->where('kj.tanggal','<=',$tgl2);
-            }
-        }else{
-             $biaya;
-        }
+        $sales = $this->data['sales'];
 
-        if ($this->data['sales'] !== 'All' ) {
-           $biaya->where('kj.user_id','=',$this->data['sales']);                    
-        }else{
-           $biaya;
-        }
+        $biaya = KunjunganTeknisi::with('user')
+                 ->where('tanggal','>=',$tgl1)
+                 ->where('tanggal','<=',$tgl2)
+                 ->whereHas('user', function($query) use($sales) {
+                    if ($sales !== 'All') {
+                        $query->where('users.sales_id', '=', $sales);             
+                    }                            
+                 })->get();                    
+       
 
-        $data= $biaya->select('kj.*','u.name as nama_sales')->get();       
-        
         return view('laporan.teknisi.export.kunjunganteknisi',[
-            'data' => $data
+            'data' => $biaya
         ]);        
     }
 }
