@@ -447,7 +447,7 @@
                     });
                 }
 
-                function hapus(id) {
+                function hapus(id) {        
                     Swal.fire({
                         icon: "question",
                         title: "Mau menghapus data ini ?",

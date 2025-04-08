@@ -916,7 +916,9 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
         Route::get('/list', [LaporanTeknisiController::class, 'list'])->name('laporanteknisi.list');
         Route::get('/{id}/show', [LaporanTeknisiController::class, 'show'])->name('laporanteknisi.show');
 
-        Route::post('/datatablesales', [LaporanTeknisiController::class, 'datatablesales'])->name('laporanteknisi.datatablesales');              
+        Route::post('/datatablesales', [LaporanTeknisiController::class, 'datatablesales'])->name('laporanteknisi.datatablesales');  
+        
+        Route::post('/print', [LaporanTeknisiController::class, 'print'])->name('laporanteknisi.print'); 
         
     });
 
@@ -1076,13 +1078,9 @@ Route::middleware('has.role')->prefix('biaya')->group(function () {
 
         Route::prefix('subjenisbiaya')->group(function () {
             Route::get('', [SubBiayaController::class, 'index'])->name('subjenisbiaya.index');        
-            Route::post('/create', [BiayaOperationalController::class, 'create'])->name('subjenisbiaya.create');        
-            Route::post('/datatable', [SubBiayaController::class, 'datatable'])->name('subjenisbiaya.datatable');        
-            // Route::post('/create', [BiayaOperationalController::class, 'store'])->name('subjenisbiaya.store');        
-            // Route::get('/{subjenisbiaya}/edit', [BiayaOperationalController::class, 'edit'])->name('subjenisbiaya.edit');       
-            // Route::put('/{subjenisbiaya}/edit', [BiayaOperationalController::class, 'update'])->name('subjenisbiaya.update');                   
-            // Route::post('/delete', [BiayaOperationalController::class, 'delete'])->name('subjenisbiaya.delete');       
-            // Route::delete('/delete', [BiayaOperationalController::class, 'destroy'])->name('subjenisbiaya.destroy');       
+            Route::post('/create', [SubBiayaController::class, 'store'])->name('subjenisbiaya.create');        
+            Route::post('/datatable', [SubBiayaController::class, 'datatable'])->name('subjenisbiaya.datatable');            
+            Route::post('/delete', [SubBiayaController::class, 'delete'])->name('subjenisbiaya.delete');                                                
             
         });
 });

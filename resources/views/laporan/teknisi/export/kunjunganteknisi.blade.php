@@ -6,9 +6,7 @@
             <th>Jam</th>
             <th>Sales</th>
             <th>Customer</th>
-            <th>Aktivitas</th>
-            <th>Foto</th>
-            <th>TTD</th>                                
+            {{-- <th>Aktivitas</th>                                        --}}
         </tr>
     </thead>
     <tbody>
@@ -22,7 +20,7 @@
                 <td>{{ date('H:i', strtotime($item->jam_buat)) }}</td>
                 <td>{{$item->nama_sales}}</td>
                 <td>{{$item->customer}}</td>
-                <td>{!! $item->aktifitas !!}</td>                   
+                <td>{{ $item->aktifitas }}</td>                   
             </tr>
         @endforeach
     </tbody>

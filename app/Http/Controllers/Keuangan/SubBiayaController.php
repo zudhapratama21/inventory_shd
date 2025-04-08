@@ -23,12 +23,30 @@ class SubBiayaController extends Controller
     $biaya = SubBiaya::with('jenisbiaya')->orderBy('id', 'desc');
     return DataTables::of($biaya)
       ->addIndexColumn()
-      ->editColumn('jenis_biaya', function ($po) {
+      ->editColumn('jenisbiaya', function ($po) {
         return $po->jenisbiaya->nama;
       })
       ->addColumn('action', function ($row) {
         return $row->id;
       })
       ->make(true);
+  }
+
+  public function store(Request $request)
+  {
+      SubBiaya::create([
+        'nama' => $request->nama,
+        'keterangan' => $request->keterangan,
+        'no_akun' => $request->no_akun,
+        'jenisbiaya_id' => $request->jenisbiaya
+      ]);
+
+      return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan']);
+  }
+
+  public function delete(Request $request)
+  {
+     SubBiaya::destroy($request->id);
+     return response()->json(['status' => 'success', 'message' => 'Data berhasil dihapus']);
   }
 }

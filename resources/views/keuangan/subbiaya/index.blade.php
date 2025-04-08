@@ -118,7 +118,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light-primary font-weight-bold"
                         data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary font-weight-bold">Save changes</button>
+                    <button type="button" class="btn btn-primary font-weight-bold" onclick="store()">Save changes</button>
                 </div>
             </div>
         </div>
@@ -152,10 +152,10 @@
                 ajax: {
                     url: "{{ route('subjenisbiaya.datatable') }}",
                     type: "POST",
-                    data: function(params) {                       
+                    data: function(params) {
                         params._token = "{{ csrf_token() }}";
-                        return params;   
-                    }            
+                        return params;
+                    }
                 },
                 columns: [{
                         data: 'nama',
@@ -166,8 +166,8 @@
                         name: 'no_akun'
                     },
                     {
-                        data: 'biaya.nama',
-                        name: 'biaya.nama'
+                        data: 'jenisbiaya',
+                        name: 'jenisbiaya.nama'
                     },
                     {
                         data: 'keterangan',
@@ -175,10 +175,12 @@
                     },
                     {
                         data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
-                    },
+                        render: function(data) {
+
+                            return '<span class="btn btn-danger btn-sm ml-2" onclick="hapus(' +
+                                data + ')"><i class="fas fa-trash"></i></span>';
+                        }
+                    }
                 ]
             });
         }
@@ -186,9 +188,11 @@
         function store() {
             var nama = document.getElementById('nama').value;
             var no_akun = document.getElementById('no_akun').value;
-            var diskon_rupiah = document.getElementById('diskon_rupiah').value;
+            var keterangan = document.getElementById('keterangan').value;
+            var e = document.getElementById("kt_select2_3");
+            var jenisbiaya = e.options[e.selectedIndex].value;
 
-            //alert(product_id);
+
             $.ajax({
                 type: 'POST',
                 url: '{{ route('subjenisbiaya.create') }}',
@@ -200,48 +204,103 @@
                     KTApp.blockPage();
                 },
                 data: {
-                    "harga_beli": harga_beli,
-                    "diskon_persen": diskon_persen,
-                    "status": status,
-                    "diskon_rupiah": diskon_rupiah,
-                    "id": data_id,
+                    "nama": nama,
+                    "no_akun": no_akun,                    
+                    "keterangan": keterangan,
+                    "jenisbiaya": jenisbiaya,
                     "_token": "{{ csrf_token() }}"
                 },
                 success: function(data) {
-                    $('#formexp').modal('hide');
+                    $('#tambahdata').modal('hide');
                     iziToast.success({
                         title: 'Success',
                         message: 'Data Berhasil Ditambahkan',
                         position: 'topRight',
                     });
 
-                    $('.yajra-datatable-dataproduk').DataTable().ajax.reload(null, false);
-                    $('.yajra-datatable-dataprodukirim').DataTable().ajax.reload(null, false);
+                    $('.yajra-datatable').DataTable().ajax.reload(null, false);
+
+                    // $('#nama').val('');
+                    // $('#no_akun').val('');
+                    // $('#keterangan').val('');
+                    // $('#kt_select2_3').val('').trigger('change');
 
                 },
                 error: function(xhr) {
                     const response = JSON.parse(xhr.responseText);
-                    if (xhr.status === 422) {
+                    if (xhr.status === 422 || xhr.status === 500) {
                         // Error qty melebihi stok
                         iziToast.error({
                             title: 'error',
                             message: response.message,
                             position: 'topRight',
                         });
-                    }
-                    if (xhr.status === 500) {
-                        // Error qty melebihi stok
-                        iziToast.error({
-                            title: 'error',
-                            message: response.message,
-                            position: 'topRight',
-                        });
-                    }
+                    }                
                 },
                 complete: function() {
                     KTApp.unblock();
                 }
             });
         }
+
+        function hapus(id) {
+            Swal.fire({
+                icon: "question",
+                title: "Mau menghapus data ini ?",
+                showCancelButton: true,
+                confirmButtonText: "Save",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ route('subjenisbiaya.delete') }}',
+                        dataType: 'html',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        beforeSend: function() {
+                            KTApp.blockPage();
+                        },
+                        data: {
+                            "id": id,
+                            "_token": "{{ csrf_token() }}"
+                        },
+                        success: function(data) {
+                            iziToast.success({
+                                title: 'Success',
+                                message: 'Data Berhasil Dihapus',
+                                position: 'topRight',
+                            });
+
+                            $('.yajra-datatable').DataTable().ajax.reload(null, false);
+                        },
+                        error: function(xhr) {
+                            const response = JSON.parse(xhr.responseText);
+                            if (xhr.status === 422) {
+                                // Error qty melebihi stok
+                                iziToast.error({
+                                    title: 'error',
+                                    message: response.message,
+                                    position: 'topRight',
+                                });
+                            }
+
+                            if (xhr.status === 500) {
+                                // Error qty melebihi stok
+                                iziToast.error({
+                                    title: 'error',
+                                    message: response.message,
+                                    position: 'topRight',
+                                });
+                            }
+                        },
+                        complete: function() {
+                            KTApp.unblock();
+                        }
+                    });
+                }
+            });
+        }
+
     </script>
 @endpush

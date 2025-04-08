@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Laporan;
 
+use App\Exports\LaporanTeknisiExport;
 use App\Http\Controllers\Controller;
 use App\Models\KunjunganTeknisi;
 use App\Models\Outlet;
@@ -11,6 +12,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class LaporanTeknisiController extends Controller
@@ -188,4 +190,13 @@ class LaporanTeknisiController extends Controller
             })
             ->make(true);
     }
+
+    public function print (Request $request)
+    {
+        $data = $request->all();           
+        $now = Carbon::parse(now())->format('Y-m-d');
+        return Excel::download(new LaporanTeknisiExport($data), 'laporankunjunganteknisi-'.$now.'.xlsx');
+    }
+
+
 }
