@@ -193,7 +193,7 @@ class LaporanTeknisiController extends Controller
 
     public function print (Request $request)
     {
-        $data = $request->all();           
+        $data = $request->all();                   
         $now = Carbon::parse(now())->format('Y-m-d');
         return Excel::download(new LaporanTeknisiExport($data), 'laporankunjunganteknisi-'.$now.'.xlsx');
     }

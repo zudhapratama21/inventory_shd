@@ -26,12 +26,12 @@ class LaporanTeknisiExport implements FromView
         $tgl2 = Carbon::parse($this->data['tanggal_selesai'])->format('Y-m-d');   
         $sales = $this->data['sales'];
 
-        $biaya = KunjunganTeknisi::with('user')
+        $biaya = KunjunganTeknisi::with('outlet')
                  ->where('tanggal','>=',$tgl1)
                  ->where('tanggal','<=',$tgl2)
                  ->whereHas('user', function($query) use($sales) {
                     if ($sales !== 'All') {
-                        $query->where('users.sales_id', '=', $sales);             
+                        $query->where('users.id', '=', $sales);             
                     }                            
                  })->get();                    
        
