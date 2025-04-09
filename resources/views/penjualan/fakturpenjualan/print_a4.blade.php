@@ -126,7 +126,7 @@
             </tr>
 
         </table>
-        <br /><br /><br />
+        <br /><br />
 
 
         <hr style="margin-bottom: 0px; margin-top: 0px; border-width: 1px 0px 0px;">
@@ -215,8 +215,7 @@
                     {{ $fakturpenjualan->SO->tanggal_pesanan_customer ? \Carbon\Carbon::parse($fakturpenjualan->SO->tanggal_pesanan_customer)->format('d/m/Y') : '-' }}
                 </td>
             </tr>
-        </table>
-        <br />
+        </table>        
         <table width="100%">
             <tr>
                 <td style='font-size: 70%; width: 15%; line-height:90%; vertical-align:top'>PENERIMA,
@@ -231,8 +230,6 @@
                 <td style='font-size: 70%; width: 55%; line-height:90%; vertical-align:top'><b>KETERANGAN :
                         <br />{{ $fakturpenjualan->keterangan }}</b>
                     <br /> <br /><br /> <br /> <br /><br /><br /> <br /><br /> <br /> <br />
-
-
                 </td>
 
                 <td style='font-size: 70%; text-align:center; vertical-align:top'>Sidoarjo,
@@ -249,7 +246,6 @@
             <p style="font-size:55%;text-align:center"><b> Pembayaran dapat ditransfer ke Rek : <b>Bank BCA No.675 222
                         2289
                     </b> , <b>Bank JATIM No. 066 1292 229</b> a/n PT.BRILIAN SUKSES BERKAH</b></p>
-
         </div>
 
 
