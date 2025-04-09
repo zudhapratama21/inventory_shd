@@ -33,10 +33,10 @@
             </tr>
             <tr>
                 <td colspan="6" style="text-align: center; border-bottom: 1px solid black;">
-                    <h1 style="margin-top: 5px; margin-bottom: 10px;">PT BRILIAN SUKSES BERKAH</h1>
-                    <h5 style="margin-top: 0px; margin-bottom: 5px;">Juanda Regency Blok H-06, JL. Raya Bypass Juanda
+                    <h1 style="margin-top: 2px; margin-bottom: 4px;">PT BRILIAN SUKSES BERKAH</h1>
+                    <h5 style="margin-top: 0px; margin-bottom: 3px;">Juanda Regency Blok H-06, JL. Raya Bypass Juanda
                         NO.11, Pabean-Sedati, Sidoarjo , Kode Pos 61253</h5>
-                    <h5 style="margin-top: 0px;margin-bottom: 5px;">IDAK : 13102201284910012 | NPWP :
+                    <h5 style="margin-top: 0px;margin-bottom: 2px;">IDAK : 13102201284910012 | NPWP :
                         61.097.970.0-643.000</h5>
                 </td>
 
