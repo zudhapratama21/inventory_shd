@@ -1058,7 +1058,7 @@ class HomeController extends Controller
                 }
             })
             ->addColumn('action', function ($row) {
-                return $row->fakturpenjualan->id;
+                return $row->id;
             })
             ->make(true);
     }
@@ -1083,11 +1083,11 @@ class HomeController extends Controller
         $year = $request->tahun ?? now()->format('Y');
 
         $sudahLunas = $hutangs->filter(function ($hutang) use ($year) {
-            return $hutang->status == 2 && Carbon::parse($hutang->tanggal_top)->year == $year;
+            return $hutang->status == 2 && Carbon::parse($hutang->tanggal)->year == $year;
         });
 
         $belumLunas = $hutangs->filter(function ($hutang) use ($year) {
-            return $hutang->status == 1 && Carbon::parse($hutang->tanggal_top)->year == $year;
+            return $hutang->status == 1 && Carbon::parse($hutang->tanggal)->year == $year;
         });
 
         $totalJatuhTempo = $jatuhTempo->sum('total') - $jatuhTempo->sum('dibayar');
@@ -1133,11 +1133,11 @@ class HomeController extends Controller
         $year = $request->tahun ?? now()->format('Y');
 
         $sudahLunas = $piutangs->filter(function ($piutang) use ($year) {
-            return $piutang->status == 2 && Carbon::parse($piutang->tanggal_top)->year == $year;
+            return $piutang->status == 2 && Carbon::parse($piutang->tanggal)->year == $year;
         });
 
         $belumLunas = $piutangs->filter(function ($piutang) use ($year) {
-            return $piutang->status == 1 && Carbon::parse($piutang->tanggal_top)->year == $year;
+            return $piutang->status == 1 && Carbon::parse($piutang->tanggal)->year == $year;
         });
 
         $totalJatuhTempo = $jatuhTempo->sum('total') - $jatuhTempo->sum('dibayar');
