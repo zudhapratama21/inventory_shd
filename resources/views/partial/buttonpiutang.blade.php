@@ -1,0 +1,1 @@
+<a href="{{ route('pembayaranpiutang.create', ['id'=>$id]) }}" class="btn btn-primary btn-sm">pilih</a>

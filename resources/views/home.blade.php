@@ -1143,7 +1143,13 @@
                     }
                 }},                
                 { data: 'sales', name: 'sales' },
-                { data: 'action', render: data => renderActionButton('pembayaran/pembayaranpiutang', data), className: "nowrap" }
+                {
+                        data: 'action',
+                        render: function(data) {
+                            return htmlDecode(data);
+                        },
+                        className: "nowrap",
+                    },
             ]);
         }
 
