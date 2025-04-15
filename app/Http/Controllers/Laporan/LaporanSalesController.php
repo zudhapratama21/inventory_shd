@@ -41,14 +41,14 @@ class LaporanSalesController extends Controller
     public function datatable(Request $request)
     {
         $sales =    DB::table('kunjungan_sales')
-            ->join('outlets', 'kunjungan_sales.outlet_id', '=', 'outlets.id')
-            ->groupBy('kunjungan_sales.outlet_id', 'kunjungan_sales.user_id')
-            ->orderBy('kunjungan_sales.id', 'desc')
+            ->join('outlets', 'kunjungan_sales.outlet_id', '=', 'outlets.id')           
             ->where('kunjungan_sales.deleted_at', '=', null)
             ->where('kunjungan_sales.outlet_id', '<>', null)
             ->when($request->tahun !== 'All', fn($query) => $query->whereYear('tanggal', $request->tahun))
             ->when($request->bulan !== 'All', fn($query) => $query->whereMonth('tanggal', $request->bulan))
             ->when($request->sales !== 'All', fn($query) => $query->where('user_id', $request->sales))
+            ->groupBy('kunjungan_sales.outlet_id')
+            ->orderBy('kunjungan_sales.id', 'desc')
             ->select(
                 'outlets.id as id_outlet',
                 'outlets.nama as outlet',
