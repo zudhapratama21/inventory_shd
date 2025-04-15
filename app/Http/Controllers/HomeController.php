@@ -1058,8 +1058,7 @@ class HomeController extends Controller
                 }
             })
             ->addColumn('action', function ($row) {
-                $id = $row->id;
-                return view('partial.buttonpiutang', compact('id'));
+                return $row->fakturpenjualan->id;
             })
             ->make(true);
     }
