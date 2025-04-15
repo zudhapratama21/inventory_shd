@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Bank;
 use App\Models\BiayaOperational;
 use App\Models\JenisBiaya;
+use App\Models\Keuangan\SubBiaya;
 use App\Models\Sales;
 use App\Traits\CodeTrait;
 use Carbon\Carbon;
@@ -69,7 +70,7 @@ class BiayaOperationalController extends Controller
     public function create()
     {
         $title = "Tambah Biaya Operational";
-        $jenisbiaya = JenisBiaya::get();
+        $jenisbiaya = JenisBiaya::with('subjenisbiaya')->get();
         $bank = Bank::get();
         $sales = Sales::get();
         $count = 0;
@@ -79,11 +80,14 @@ class BiayaOperationalController extends Controller
   
     public function store(Request $request)
     {        
+        $jenisbiaya = SubBiaya::where('jenisbiaya_id', $request->jenis_biaya_id)->first();
             $data = $request->all();            
             BiayaOperational::create([
                 'tanggal' => $request->tanggal,
-                'jenis_biaya_id' => $request->jenis_biaya_id,
-                'nominal' => $request->nominal,        
+                'kode' => $request->kode,
+                'jenis_biaya_id' => $jenisbiaya->jenisbiaya_id,
+                'subjenis_biaya_id' => $request->jenis_biaya_id,
+                'nominal' => $request->nominal,      
                 'sales_id' => $data['sales_id'],
                 'bank_id' => $request->bank_id,
                 'verified' => 'Diterima',

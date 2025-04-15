@@ -14,6 +14,7 @@ class BiayaOperational extends Model
     protected $table = 'biaya_operationals';            
     protected $fillable = [
         'tanggal',
+        'kode',
         'jenis_biaya_id',
         'nominal',        
         'sales_id',

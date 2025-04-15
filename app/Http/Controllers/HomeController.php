@@ -1141,6 +1141,7 @@ class HomeController extends Controller
         });
 
         $totalJatuhTempo = $jatuhTempo->sum('total') - $jatuhTempo->sum('dibayar');
+        
         $totalBelumJatuhTempo = $belumJatuhTempo->sum('total') - $belumJatuhTempo->sum('dibayar');
         $totalSudahLunas = $sudahLunas->sum('total');
         $totalBelumLunas = $belumLunas->sum('total') - $belumLunas->sum('dibayar');

@@ -1,46 +1,57 @@
-<div class="card-body">    
+<div class="card-body">
     <div class="form-group">
         <label>Tanggal :</label>
-        <input type="date" name="tanggal" value="{{ old('tanggal') ? $biayaoperational->tanggal : ''}}"
+        <input type="date" name="tanggal" value="{{ old('tanggal') ? $biayaoperational->tanggal : '' }}"
             class="form-control @error('tanggal') is-invalid @enderror" placeholder="Masukkan Tanggal" />
         @error('tanggal')
-        <div class="invalid-feedback">{{ $message }}</div>
+            <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
-    
+
+    <div class="form-group">
+        <label>Kode :</label>
+        <input type="input" name="kode" class="form-control" placeholder="kode" required/>
+        @error('keterangan')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+
     <div class="form-group">
         <label>Jenis Biaya :</label>
-        <select name="jenis_biaya_id" id="kt_select2_3" class="form-control">
-
+        <select name="jenis_biaya_id" class="form-control select2" id="kt_select2_4">
             @foreach ($jenisbiaya as $item)
-                <option value="{{$item->id}}">{{$item->nama}}</option>          
+                <optgroup label="{{ $item->nama }}">
+                    @foreach ($item->subjenisbiaya as $data)
+                        <option value="{{ $data->id }}">{{ $data->nama }}</option>
+                    @endforeach
+                </optgroup>
             @endforeach
 
         </select>
-        
+
         @error('nama')
-        <div class="invalid-feedback">{{ $message }}</div>
+            <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
-    
+
     <div class="form-group">
         <label>Nominal :</label>
-        <input type="number" name="nominal" value="{{ old('nominal') ? $biayaoperational->nominal : ''}}"
+        <input type="number" name="nominal" value="{{ old('nominal') ? $biayaoperational->nominal : '' }}"
             class="form-control @error('nominal') is-invalid @enderror" placeholder="Masukkan Nominal Biaya" />
         @error('nominal')
-        <div class="invalid-feedback">{{ $message }}</div>
+            <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
-    
+
     <div class="form-group">
         <label>Request :</label>
         <select type="text" name="sales_id" class="form-control" id="kt_select2_2">
             @foreach ($sales as $item)
-                <option value="{{$item->id}}">{{$item->nama}}</option>
+                <option value="{{ $item->id }}">{{ $item->nama }}</option>
             @endforeach
         </select>
         @error('nama')
-        <div class="invalid-feedback">{{ $message }}</div>
+            <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
 
@@ -49,22 +60,22 @@
         <select name="bank_id" id="kt_select2_1" class="form-control">
 
             @foreach ($bank as $item)
-                    <option value="{{$item->id}}">{{$item->nama}}</option>      
+                <option value="{{ $item->id }}">{{ $item->nama }}</option>
             @endforeach
 
         </select>
 
         @error('sumberdana')
-        <div class="invalid-feedback">{{ $message }}</div>
+            <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
 
     <div class="form-group">
         <label>Keterangan :</label>
-        <input type="text" name="keterangan" value="{{ old('keterangan') ? $biayaoperational->keterangan : ''}}"
+        <input type="text" name="keterangan" value="{{ old('keterangan') ? $biayaoperational->keterangan : '' }}"
             class="form-control" placeholder="Keterangan" />
         @error('keterangan')
-        <div class="invalid-feedback">{{ $message }}</div>
+            <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
 
