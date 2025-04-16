@@ -1096,8 +1096,8 @@ class HomeController extends Controller
         $totalBelumLunas = $belumLunas->sum('total') - $belumLunas->sum('dibayar');
         $persenlunas = $totalSudahLunas / ($totalSudahLunas + $totalBelumLunas) * 100;
         $persenjatuhtempo = $totalJatuhTempo / ($totalJatuhTempo + $totalBelumJatuhTempo) * 100;
-        $hutangtotal = $totalJatuhTempo + $totalBelumJatuhTempo;
-        $hutangtotaltahunan = $totalSudahLunas +  $totalBelumLunas;
+        $hutangtotal = $jatuhTempo->sum('total') + $belumJatuhTempo->sum('total');
+        $hutangtotaltahunan = $sudahLunas->sum('total') +  $belumLunas->sum('total');
 
         return response()->json([
             'total_jatuh_tempo' => 'Rp.' . number_format($totalJatuhTempo, 0, ',', '.'),
@@ -1147,8 +1147,8 @@ class HomeController extends Controller
         $totalBelumLunas = $belumLunas->sum('total') - $belumLunas->sum('dibayar');
         $persenlunas = $totalSudahLunas / ($totalSudahLunas + $totalBelumLunas) * 100;
         $persenjatuhtempo = $totalJatuhTempo / ($totalJatuhTempo + $totalBelumJatuhTempo) * 100;
-        $piutangtotal = $totalJatuhTempo + $totalBelumJatuhTempo;
-        $piutangtotaltahunan = $totalSudahLunas + $totalBelumLunas;
+        $piutangtotal = $jatuhTempo->sum('total') + $belumJatuhTempo->sum('total');
+        $piutangtotaltahunan = $sudahLunas->sum('total') + $belumLunas->sum('total');
 
         return response()->json([
             'total_jatuh_tempo' => 'Rp.' . number_format($totalJatuhTempo, 0, ',', '.'),
