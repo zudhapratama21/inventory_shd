@@ -1117,7 +1117,7 @@ class HomeController extends Controller
     public function rekappiutang(Request $request)
     {
         $piutangs = Piutang::get();
-
+        
         $jatuhTempo = $piutangs->filter(function ($piutang) {
             $tanggalTop = Carbon::parse($piutang->tanggal_top)->startOfDay();
             $hariIni = Carbon::now()->startOfDay();

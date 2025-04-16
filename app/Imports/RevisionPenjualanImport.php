@@ -2,7 +2,9 @@
 
 namespace App\Imports;
 
+use App\Models\FakturPenjualan;
 use App\Models\HargaNonExpiredDetail;
+use App\Models\Piutang;
 use App\Models\Product;
 use App\Models\StokExpDetail;
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -13,26 +15,26 @@ class RevisionPenjualanImport implements ToModel
     public function model(array $row)
     {
         if ($this->no !== 0) {
-            //    cek jenis expired 
-            $harga = str_replace(",", ".", $row[6]);
-            $product = Product::where('id', $row[3])->first();
-            if ($product) {                
-                if ($product->status_exp == 1) {
-                    StokExpDetail::where('id', $row[1])->update([
-                        'harga_beli' => $harga,
-                        'diskon_persen_beli' => $row[7],
-                        'diskon_rupiah_beli' => $row[8],
-                    ]);
-                } else {
-                    HargaNonExpiredDetail::where('id', $row[1])->update([
-                        'harga_beli' => $harga,
-                        'diskon_persen_beli' => $row[7],
-                        'diskon_rupiah_beli' => $row[8],
-                    ]);
-                }
+            //    cek jenis expired                               
+            $faktur = FakturPenjualan::where('kode', $row[0])->first();            
+            if ($faktur) {
+                $piutang = Piutang::where('faktur_penjualan_id', $faktur->id)->update([
+                    'status' => 1
+                ]);              
             }
+
+        }else{
+            $piutang = Piutang::whereYear('tanggal', 2024)->update([
+                'status' => 2
+            ]);
+
+            $piutang = Piutang::whereYear('tanggal', 2023)->update([
+                'status' => 2
+            ]);
         }
         $this->no++;
         return;
     }
 }
+
+
