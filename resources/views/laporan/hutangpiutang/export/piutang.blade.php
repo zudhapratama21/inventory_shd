@@ -2,6 +2,7 @@
     <thead>
         <tr>
             <th>No</th>
+            <th>Tanggal Faktur</th>
             <th>Tanggal</th>
             <th>Tanggal TOP</th>
             <th>Customer</th>
@@ -24,6 +25,7 @@
         @foreach ($hutang as $item)
             <tr>
                 <td>{{$no++}}</td>
+                <td>{{$item->tanggal_faktur ? date('d/m/Y', strtotime($item->tanggal_faktur))  : 'tidak ada' }}</td>
                 <td>{{$item->tanggal ? date('d/m/Y', strtotime($item->tanggal))  : 'tidak ada' }}</td>
                 <td>{{$item->tanggal_top ? date('d/m/Y', strtotime($item->tanggal_top))  : 'tidak ada' }}</td>
                 <td>{{$item->nama_customer}}</td>

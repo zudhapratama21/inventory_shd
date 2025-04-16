@@ -680,6 +680,8 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
         Route::get('datatablelistsj', [FakturPenjualanController::class, 'datatablelistsj'])->name('fakturpenjualan.datatablelistsj');
         Route::get('datatable', [FakturPenjualanController::class, 'datatable'])->name('fakturpenjualan.datatable');
 
+        Route::post('hapusdouble', [FakturPenjualanController::class, 'hapusdouble'])->name('fakturpenjualan.hapusdouble');
+
 
       
     });

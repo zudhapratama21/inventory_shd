@@ -123,7 +123,7 @@
                   {data: 'customers', name: 'customers.nama',searchable:true},
                   {data: 'total', name: 'total'},
                   {data: 'dibayar', name: 'dibayar'},
-                  {data: 'sisa', name: 'sisa'},
+                  {data: 'sisa', name: 'sisa',searchable:false},
                   {data: 'tanggal_top', name: 'tanggal_top'},
                   {
                       data: 'action', 

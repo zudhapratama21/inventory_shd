@@ -55,6 +55,10 @@
                     </g>
                 </svg>
                 <!--end::Svg Icon--></span> </a>
+        
+        <a href="javascript:hapus({{ $id }})" class="btn btn-outline-danger btn-sm">
+            hapus double
+        </a>
         @endcan
     </div>
 </div>

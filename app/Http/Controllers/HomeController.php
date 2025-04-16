@@ -1137,7 +1137,7 @@ class HomeController extends Controller
         });
 
         $belumLunas = $piutangs->filter(function ($piutang) use ($year) {
-            return $piutang->status == 1 && Carbon::parse($piutang->tanggal)->year == $year;
+            return $piutang->status == 1 && Carbon::parse($piutang->tanggal)->year == $year;    
         });
 
         $totalJatuhTempo = $jatuhTempo->sum('total') - $jatuhTempo->sum('dibayar');
@@ -1163,4 +1163,5 @@ class HomeController extends Controller
             'persenbelumjatuhtempo' => (int)(100 - (int)$persenjatuhtempo)
         ]);
     }
+    
 }

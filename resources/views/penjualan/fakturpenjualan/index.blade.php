@@ -66,7 +66,8 @@
                                 <div class="card-toolbar">
 
                                     <a href="{{ route('fakturpenjualan.syncronisasi') }}"
-                                        class="btn btn-success font-weight-bolder mr-4" data-toggle="modal" data-target="#revision">
+                                        class="btn btn-success font-weight-bolder mr-4" data-toggle="modal"
+                                        data-target="#revision">
                                         <i class="flaticon2-heart-rate-monitor"></i>
                                         Import Revision
                                     </a>
@@ -138,7 +139,8 @@
                         </button>
                     </div>
                     <div class="modal-body" style="height: 400px;">
-                        <form action="{{ route('fakturpenjualan.revision') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('fakturpenjualan.revision') }}" method="POST"
+                            enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
                                 <label for="">Upload Excel</label>
@@ -150,7 +152,7 @@
                             </div>
 
 
-                        </form>                     
+                        </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light-primary font-weight-bold"
@@ -158,16 +160,15 @@
                     </div>
                 </div>
             </div>
-    
+
         </div>
     </div>
-
-    
 @endsection
 @push('script')
     <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6') }}"></script>
     <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
     <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
 
 
 
@@ -272,5 +273,37 @@
                 }
             });
         }
+
+        function hapus(id) {
+            Swal.fire({
+                icon: "question",
+                title: "Mau menghapus data ini ?",
+                showCancelButton: true,
+                confirmButtonText: "Save",
+            }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                                type: 'POST',
+                                url: '{{ route('fakturpenjualan.hapusdouble') }}',
+                                dataType: 'html',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                data: {
+                                    id: id,
+                                    "_token": "{{ csrf_token() }}"
+                                },
+                                success: function(data) {
+                                    $('.yajra-datatable').DataTable().ajax.reload(null, false);
+                                    Swal.fire({
+                                            icon: "success",
+                                            title: "Anda Berhasil Menghapus Data",
+                                            showCancelButton: false,                                            
+                                        });
+                                    }
+                                });
+                        }
+                    });
+            }
     </script>
 @endpush
