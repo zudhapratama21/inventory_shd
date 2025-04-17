@@ -1058,7 +1058,7 @@ class HomeController extends Controller
                 }
             })
             ->addColumn('action', function ($row) {
-                return $row->id;
+                return $row->fakturpenjualan->id;
             })
             ->make(true);
     }
