@@ -270,17 +270,20 @@ class PesananPenjualanController extends Controller
     // update
     public function update(Request $request, $id)
     {        
+        
         $data = request()->except(['_token', '_method']);;
         $tanggal = $request->tanggal;
         if ($tanggal <> null) {
             $tanggal = Carbon::createFromFormat('d-m-Y', $tanggal)->format('Y-m-d');
         }
+        
 
         $tanggalcustomer = null;
 
         if ($request->tanggal_pesanan_customer <> null) {
-            $tanggalcustomer = Carbon::createFromFormat('d/m/Y', $request->tanggal_pesanan_customer)->format('Y-m-d');;
-        }
+            $tanggalcustomer = Carbon::createFromFormat('m/d/Y', $request->tanggal_pesanan_customer)->format('Y-m-d');;
+        }        
+        
 
         $data['tanggal'] = $tanggal;
         $data['tanggal_pesanan_customer'] = $tanggalcustomer;
