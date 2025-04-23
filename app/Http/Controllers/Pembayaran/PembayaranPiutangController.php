@@ -112,8 +112,8 @@ class PembayaranPiutangController extends Controller
                 return $pb->tanggal_top ? with(new Carbon($pb->tanggal_top))->format('d-m-Y') : '';
             })
             ->addColumn('action', function (Piutang $row) {
-                $pilihUrl = route('pembayaranpiutang.create', ['id' => $row->id]);
-                $id = $row->id;
+                $pilihUrl = route('pembayaranpiutang.create', ['id' => $row->fakturpenjualan->id]);
+                $id = $row->fakturpenjualan->id;
                 return view('pembayaran.pembayaranpiutang._pilihAction', compact('pilihUrl', 'id'));
             })
             ->make(true);
