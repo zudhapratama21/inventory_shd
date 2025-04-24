@@ -106,6 +106,7 @@
                                             <th>No. Pengiriman</th>
                                             <th>Customer</th>
                                             <th>Status Diterima ?</th>
+                                            <th>Status Promo</th>
                                             <th style="width: 15%">Action</th>
                                         </tr>
                                     </thead>
@@ -214,6 +215,20 @@
                         name: 'status_diterima'
                     },
                     {
+                        data: 'status_cn',
+                        name: 'status_cn',
+                        searchable: false,
+                        render: function(data) {
+                            if (data === 'Sudah') {
+                                return '<span class="badge badge-success">Sudah</span>';
+                            } else if (data === 'Belum') {
+                                return '<span class="badge badge-danger">Belum</span>';
+                            } else {
+                                return '<span class="badge badge-secondary">-</span>';
+                            }
+                        },
+                    },
+                    {
                         data: 'action',
                         render: function(data) {
                             return htmlDecode(data);
@@ -281,29 +296,29 @@
                 showCancelButton: true,
                 confirmButtonText: "Save",
             }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                                type: 'POST',
-                                url: '{{ route('fakturpenjualan.hapusdouble') }}',
-                                dataType: 'html',
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                data: {
-                                    id: id,
-                                    "_token": "{{ csrf_token() }}"
-                                },
-                                success: function(data) {
-                                    $('.yajra-datatable').DataTable().ajax.reload(null, false);
-                                    Swal.fire({
-                                            icon: "success",
-                                            title: "Anda Berhasil Menghapus Data",
-                                            showCancelButton: false,                                            
-                                        });
-                                    }
-                                });
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ route('fakturpenjualan.hapusdouble') }}',
+                        dataType: 'html',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {
+                            id: id,
+                            "_token": "{{ csrf_token() }}"
+                        },
+                        success: function(data) {
+                            $('.yajra-datatable').DataTable().ajax.reload(null, false);
+                            Swal.fire({
+                                icon: "success",
+                                title: "Anda Berhasil Menghapus Data",
+                                showCancelButton: false,
+                            });
                         }
                     });
-            }
+                }
+            });
+        }
     </script>
 @endpush

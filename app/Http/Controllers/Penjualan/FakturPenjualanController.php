@@ -56,7 +56,7 @@ class FakturPenjualanController extends Controller
 
     public function datatable()
     {
-        $fakturpenjualan = FakturPenjualan::with(['customers',  'statusFJ', 'so', 'sj'])->orderBy('id', 'desc');
+        $fakturpenjualan = FakturPenjualan::with(['customers',  'statusFJ', 'so', 'sj','fakturpenjualandetail'])->orderBy('id', 'desc');
         return Datatables::of($fakturpenjualan)
             ->addIndexColumn()
             ->addColumn('customer', function (FakturPenjualan $sj) {
@@ -77,6 +77,9 @@ class FakturPenjualanController extends Controller
             ->editColumn('status_diterima', function (FakturPenjualan $sj) {
                 $status = $sj->status_diterima;
                 return view('penjualan.fakturpenjualan.partial.statusditerima', compact('status'));
+            })
+            ->editColumn('status_cn', function ($sj) {
+                return $sj->total_cn ? 'Sudah' : 'Belum';
             })
             ->addColumn('action', function ($row) {
                 $editUrl = route('fakturpenjualan.edit', ['fakturpenjualan' => $row->id]);

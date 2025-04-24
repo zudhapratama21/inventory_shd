@@ -74,22 +74,21 @@ class FakturPenjualan extends Model
         return $this->belongsTo(User::class, 'updated_by', 'id');
     }
 
- 
+
     public function fakturpenjualandetail()
     {
         return $this->hasMany(FakturPenjualanDetail::class, 'faktur_penjualan_id');
     }
 
-  
+
     public function nopajak()
     {
         return $this->belongsTo(NoFakturPajak::class, 'pajak_id', 'id');
     }
 
-    
+
     public function piutang()
     {
         return $this->hasMany(Piutang::class, 'faktur_penjualan_id');
     }
-    
 }
