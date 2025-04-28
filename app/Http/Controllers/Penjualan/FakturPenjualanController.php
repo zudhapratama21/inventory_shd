@@ -79,7 +79,8 @@ class FakturPenjualanController extends Controller
                 return view('penjualan.fakturpenjualan.partial.statusditerima', compact('status'));
             })
             ->editColumn('status_cn', function ($sj) {
-                return $sj->total_cn ? 'Sudah' : 'Belum';
+                $status = is_null($sj->total_cn) ? 'Belum' : 'Sudah';
+                return $status;
             })
             ->addColumn('action', function ($row) {
                 $editUrl = route('fakturpenjualan.edit', ['fakturpenjualan' => $row->id]);
@@ -625,6 +626,7 @@ class FakturPenjualanController extends Controller
 
         $harga1 = $request->cn_persen;
         $harga = str_replace(',', '.', $harga1) * 1;
+        
 
         $subtotal = $fakturpenjualandetail->total;
         $data['cn_rupiah'] = $subtotal * $harga / 100;
@@ -636,7 +638,7 @@ class FakturPenjualanController extends Controller
             'cn_total' => $data['cn_total']
         ]);
 
-        $totalCN = FakturPenjualanDetail::where('faktur_penjualan_id', $fakturpenjualandetail->faktur_penjualan_id)->sum('cn_total');
+        $totalCN = FakturPenjualanDetail::where('faktur_penjualan_id', $fakturpenjualandetail->faktur_penjualan_id)->sum('cn_total');        
         FakturPenjualan::where('id', $fakturpenjualandetail->faktur_penjualan_id)->update([
             'total_cn' => $totalCN,
         ]);

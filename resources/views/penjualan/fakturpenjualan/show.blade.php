@@ -411,8 +411,8 @@
                                 <a href="{{ asset('storage/bukti_tandaterima/' . $fakturpenjualan->foto_bukti) }}" class="btn btn-primary btn-sm" download><i class="fas fa-download"></i></a>
                                 <input type="file" class="form-control" name="foto_bukti"> 
                             </div>
-                            <div class="form-group">
-                                <label for="">Status</label>
+                            <div class="form-group">  
+                                 <label for="">Status</label>
                                 <select name="status_diterima" id="" class="form-control">
                                     <option value="{{$fakturpenjualan->status_diterima}}" selected>{{ucfirst($fakturpenjualan->status_diterima)}}</option>
                                     <option value="terima">Terima</option>
