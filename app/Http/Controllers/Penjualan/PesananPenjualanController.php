@@ -276,12 +276,10 @@ class PesananPenjualanController extends Controller
         if ($tanggal <> null) {
             $tanggal = Carbon::createFromFormat('d-m-Y', $tanggal)->format('Y-m-d');
         }
-        
-
+    
         $tanggalcustomer = null;
-
         if ($request->tanggal_pesanan_customer <> null) {
-            $tanggalcustomer = Carbon::createFromFormat('m/d/Y', $request->tanggal_pesanan_customer)->format('Y-m-d');;
+            $tanggalcustomer = Carbon::parse($request->tanggal_pesanan_customer)->format('Y-m-d');
         }        
         
 

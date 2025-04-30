@@ -108,22 +108,16 @@
 
         <label class="col-lg-2 col-form-label text-right">Tanggal. Surat Pesanan Cust.:</label>
         <div class="col-lg-4">
-            <div class="input-group date">
-                {{-- @dd(Carbon\Carbon::parse($pesananpenjualan->tanggal_pesanan_customer)->format("d-m-Y")) --}}
+            <div class="input-group date">                  
+                
                 @if ($pesananpenjualan->tanggal_pesanan_customer != null)
-                    <input type="text" name="tanggal_pesanan_customer" class="form-control"
-                        value="{{ Carbon\Carbon::parse($pesananpenjualan->tanggal_pesanan_customer)->format('d/m/Y') }}"
-                        id="kt_datepicker_3">
+                    <input type="date" class="form-control" name="tanggal_pesanan_customer"
+                        value="{{ $pesananpenjualan->tanggal_pesanan_customer }}"  required />
                 @else
-                    <input type="text" name="tanggal_pesanan_customer" class="form-control"
-                        value="{{ $tglNow }}" id="kt_datepicker_3" />
+                    <input type="date" class="form-control" name="tanggal_pesanan_customer" value="{{ $tglNow }}"
+                         required />
                 @endif
-
-                <div class="input-group-append">
-                    <span class="input-group-text">
-                        <i class="la la-calendar"></i>
-                    </span>
-                </div>
+                   
             </div>
         </div>
 

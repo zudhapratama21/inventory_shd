@@ -95,13 +95,7 @@
         <label class="col-lg-2 col-form-label text-right">Tanggal. Surat Pesanan Cust.:</label>
         <div class="col-lg-4">    
             <div class="input-group date">
-                <input type="text" name="tanggal_pesanan_customer" class="form-control"  id="kt_datepicker_3" placeholder="Masukan Tanggal Customer (Jika Ada)"/>
-
-                <div class="input-group-append">
-                    <span class="input-group-text">
-                        <i class="la la-calendar"></i>
-                    </span>
-                </div>  
+                <input type="date" name="tanggal_pesanan_customer" class="form-control"  placeholder="Masukan Tanggal Customer (Jika Ada)"/>              
             </div>                             
         </div>
       
