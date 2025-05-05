@@ -123,7 +123,7 @@
                 processing: true,
                 serverSide: true,
                 autoWidth: false,
-                ajax: "{{ route('pesananpenjualan.datatable') }}",
+                ajax: "{{ route('pesananpenjualan.index') }}",
                 columns: [
                     //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                     {
