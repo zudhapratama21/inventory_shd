@@ -77,6 +77,20 @@
                                 </div>
                             </div>
                             <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="">Product</label>
+                                            <select name="chart_year" class="form-control" id="kt_select2_4"
+                                                onchange="filterproduct()">
+                                                <option value="All" selected>Semua</option>
+                                                @foreach ($product as $item)
+                                                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                                 <!--begin: Datatable-->
                                 <table class="table yajra-datatable collapsed ">
                                     <thead class="datatable-head">
@@ -117,6 +131,7 @@
 
 
     <script type="text/javascript">
+        let product_id = 'All';
         $(function() {
             datatablepesanan();
         });
@@ -127,7 +142,15 @@
                 processing: true,
                 serverSide: true,
                 autoWidth: false,
-                ajax: "{{ route('pesananpembelian.index') }}",
+                ajax: {
+                    url: "{{ route('pesananpembelian.datatable') }}",
+                    type: "POST",
+                    data: function(params) {
+                        params.product_id = product_id;
+                        params._token = "{{ csrf_token() }}";
+                        return params;
+                    }
+                },
                 columns: [
                     //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                     {
@@ -150,19 +173,18 @@
                         data: 'status',
                         render: function(data) {
                             if (data == 1) {
-                                return '<span class="badge badge-primary")">draft</span>'; 
-                            }else if (data == 2) {
+                                return '<span class="badge badge-primary")">draft</span>';
+                            } else if (data == 2) {
                                 return '<span class="badge badge-primary">posting</span>';
-                            }else if (data == 3) {
+                            } else if (data == 3) {
                                 return '<span class="badge badge-info">terkirim sebagian</span>';
-                            }else if (data == 4) {
+                            } else if (data == 4) {
                                 return '<span class="badge badge-info">terkirim seluruhnya</span>';
-                            }else if (data == 5) {
+                            } else if (data == 5) {
                                 return '<span class="badge badge-success">terfaktur</span>';
+                            } else {
+                                return '<span class="badge badge-danger">-</span>';
                             }
-                             else {
-                                return '<span class="badge badge-danger">-</span>';   
-                            }                            
                         }
                     },
                     {
@@ -252,6 +274,13 @@
                     console.log(data);
                 }
             });
+        }
+
+        function filterproduct() {
+            let e = document.getElementById("kt_select2_4");
+            product_id = e.options[e.selectedIndex].value;            
+            $('.yajra-datatable').DataTable().ajax.reload(null, false);
+            
         }
     </script>
 @endpush

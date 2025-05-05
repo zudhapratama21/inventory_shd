@@ -75,25 +75,15 @@
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th class="pl-0 font-weight-bold text-muted  text-uppercase">Kode
-                                            </th>
-                                            <th class="text-left font-weight-bold text-muted text-uppercase">Produk
-                                            </th>
-                                            <th class="text-left font-weight-bold text-muted text-uppercase">Satuan
-                                            </th>
-                                            <th class="text-left font-weight-bold text-muted text-uppercase">Qty</th>
-                                            <th class="text-left font-weight-bold text-muted text-uppercase">Harga</th>
-                                            {{-- <th class="text-left font-weight-bold text-muted text-uppercase">Disk.(%)
-                                            </th>
-                                            <th class="text-left font-weight-bold text-muted text-uppercase">
-                                                Disk.(Rp.)</th> --}}
-                                            <th class="text-left font-weight-bold text-muted text-uppercase">Subtotal
-                                            </th>
-                                            {{-- <th class="text-left font-weight-bold text-muted text-uppercase">Total
-                                                Disc.</th> --}}
-                                            <th class="text-left font-weight-bold text-muted text-uppercase">Total</th>                                            
-                                            <th class="text-left font-weight-bold text-muted text-uppercase">CN</th>                                            
-                                            <th class="text-left font-weight-bold text-muted text-uppercase">Aksi</th>
+                                            <th>Kode</th>
+                                            <th>Produk</th>
+                                            <th>Satuan</th>
+                                            <th>Qty</th>
+                                            <th>Harga</th>                                        
+                                            <th>Subtotal</th>                                            
+                                            <th>Total</th>                                            
+                                            <th>CN</th>                                            
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -407,7 +397,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Save changes</button>
+                <button tyx`pe="submit" class="btn btn-primary">Save changes</button>
               </div>
             </div>
         </form>

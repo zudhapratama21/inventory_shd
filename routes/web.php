@@ -358,6 +358,7 @@ Route::middleware('has.role')->prefix('master')->group(function () {
 Route::middleware('has.role')->prefix('pembelian')->group(function () {
     Route::prefix('pesananpembelian')->group(function () {
         Route::get('', [PesananPembelianController::class, 'index'])->name('pesananpembelian.index');
+        Route::post('datatable', [PesananPembelianController::class, 'datatable'])->name('pesananpembelian.datatable');
         Route::get('create', [PesananPembelianController::class, 'create'])->name('pesananpembelian.create');
         Route::post('create', [PesananPembelianController::class, 'store']);
         Route::get('{pesananpembelian}/edit', [PesananPembelianController::class, 'edit'])->name('pesananpembelian.edit');

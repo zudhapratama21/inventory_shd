@@ -44,32 +44,49 @@ class PesananPembelianController extends Controller
     {
 
         $title = "Pesanan Pembelian";
-        $pesananpembelian = PesananPembelian::with(['suppliers', 'kategoripesanan', 'komoditas', 'statusPO'])->orderByDesc('id');
+        $product = Product::get();
+        return view('pembelian.pesananpembelian.index', compact('title', 'product'));
+    }
 
-        if (request()->ajax()) {
-            return Datatables::of($pesananpembelian)
-                ->addIndexColumn()
-                ->addColumn('supplier', function (PesananPembelian $po) {
-                    return $po->suppliers->nama;
-                })
-                ->addColumn('status', function (PesananPembelian $po) {
-                    return $po->status_po_id;
-                })
-                ->editColumn('tanggal', function (PesananPembelian $po) {
-                    return $po->tanggal ? with(new Carbon($po->tanggal))->format('d-m-Y') : '';
-                })
-                ->addColumn('action', function ($row) {
-                    $editUrl = route('pesananpembelian.edit', ['pesananpembelian' => $row->id]);
-                    $showUrl = route('pesananpembelian.show', ['pesananpembelian' => $row->id]);
-                    $id = $row->id;
-                    $status = $row->status_po_id;
-                    return view('pembelian.pesananpembelian._formAction', compact('editUrl', 'showUrl', 'id', 'status'));
-                })
-                ->make(true);
-        }
-
-
-        return view('pembelian.pesananpembelian.index', compact('title'));
+    public function datatable(Request $request)
+    {
+        $pesananpembelian = PesananPembelian::with([
+            'suppliers', 
+            'kategoripesanan', 
+            'komoditas', 
+            'statusPO',
+            'pesananpembeliandetail' => function ($query) use ($request) {
+                $query->when($request->product_id !== 'All', function ($q) use ($request) {
+                    $q->where('product_id', $request->product_id);
+                });
+            }
+        ])
+        ->when($request->product_id !== 'All', function ($query) use ($request) {
+            $query->whereHas('pesananpembeliandetail', function ($q) use ($request) {
+                $q->where('product_id', $request->product_id);
+            });
+        })
+        ->orderByDesc('id');
+        
+        return Datatables::of($pesananpembelian)
+        ->addIndexColumn()
+        ->addColumn('supplier', function (PesananPembelian $po) {
+            return $po->suppliers->nama;
+        })
+        ->addColumn('status', function (PesananPembelian $po) {
+            return $po->status_po_id;
+        })
+        ->editColumn('tanggal', function (PesananPembelian $po) {
+            return $po->tanggal ? with(new Carbon($po->tanggal))->format('d-m-Y') : '';
+        })
+        ->addColumn('action', function ($row) {
+            $editUrl = route('pesananpembelian.edit', ['pesananpembelian' => $row->id]);
+            $showUrl = route('pesananpembelian.show', ['pesananpembelian' => $row->id]);
+            $id = $row->id;
+            $status = $row->status_po_id;
+            return view('pembelian.pesananpembelian._formAction', compact('editUrl', 'showUrl', 'id', 'status'));
+        })
+        ->make(true);
     }
 
     public function create()
