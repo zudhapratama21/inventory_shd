@@ -608,6 +608,35 @@ class FakturPenjualanController extends Controller
         // ]);
     }
 
+    public function print_a4_koma(FakturPenjualan $fakturpenjualan)
+    {
+        $title = "Print Faktur penjualan";
+        $fakturpenjualandetails = FakturPenjualanDetail::with('products')
+            ->where('faktur_penjualan_id', '=', $fakturpenjualan->id)->get();
+        $jmlBaris  = $fakturpenjualandetails->count();
+        $perBaris = 13;
+        $totalPage = ceil($jmlBaris / $perBaris);
+        $data = [
+            'totalPage' => $totalPage,
+            'perBaris' => $perBaris,
+            'date' => date('d/m/Y'),
+            'fakturpenjualan' => $fakturpenjualan,
+            'fakturpenjualandetails' => $fakturpenjualandetails
+        ];
+        $pdf = PDF::loadView('penjualan.fakturpenjualan.print_a4_koma', $data)->setPaper('a4', 'potrait');;
+        return $pdf->download($fakturpenjualan->no_kpa . '-' . $fakturpenjualan->kode . '.pdf');
+
+        // return view('penjualan.fakturpenjualan.print_a4', [
+        //     'title' => $title,
+        //     'totalPage' => $totalPage,
+        //     'totalPage' => $totalPage,
+        //     'perBaris' => $perBaris,
+        //     'date' => date('d/m/Y'),
+        //     'fakturpenjualan' => $fakturpenjualan,
+        //     'fakturpenjualandetails' => $fakturpenjualandetails
+        // ]);
+    }
+
     public function editCN(FakturPenjualan $fakturpenjualan)
     {
         $title = "Faktur penjualan Detail";

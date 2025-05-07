@@ -650,7 +650,7 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
         Route::post('getnokpa', [FakturPenjualanController::class, 'getNoKpa'])->name('fakturpenjualan.getnokpa');
 
         // cn
-
+        Route::get('{fakturpenjualan}/print_a4_koma', [FakturPenjualanController::class, 'print_a4_koma'])->name('fakturpenjualan.print_a4_koma');
         Route::get('{fakturpenjualan}/print_a4', [FakturPenjualanController::class, 'print_a4'])->name('fakturpenjualan.print_a4');
         Route::get('{fakturpenjualan}/EditCN', [FakturPenjualanController::class, 'editCN'])->name('fakturpenjualan.editCN');
         Route::POST('{fakturpenjualandetail}/EditCN', [FakturPenjualanController::class, 'createCN'])->name('fakturpenjualan.editCN');

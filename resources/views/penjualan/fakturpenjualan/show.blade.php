@@ -88,12 +88,13 @@
                             </div>
                         </div>
                         <!-- end: Invoice header-->
-                        
+
 
                         <!-- begin: Invoice body-->
-                        <div class="row justify-content-center py-8 px-8 py-md-10 px-md-0">                            
+                        <div class="row justify-content-center py-8 px-8 py-md-10 px-md-0">
                             <div class="col-md-9">
-                                <a href="{{ route('fakturpenjualan.syncronisasi2', ['id'=>$fakturpenjualan->id]) }}" class="btn btn-primary btn-sm"><i class="flaticon2-reload-1"></i> Atur Qty</a>
+                                <a href="{{ route('fakturpenjualan.syncronisasi2', ['id' => $fakturpenjualan->id]) }}"
+                                    class="btn btn-primary btn-sm"><i class="flaticon2-reload-1"></i> Atur Qty</a>
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead>
@@ -264,10 +265,20 @@
                                 <div class="d-flex justify-content-between">
                                     <div class="d-flex justify-content-between ">
                                         @can('fakturpenjualan-create')
-                                            <a href="{{ route('fakturpenjualan.print_a4', $fakturpenjualan) }}"
-                                                class="btn btn-primary mr-2" target="_blank">
-                                                <i class="flaticon2-print font-weight-bold"></i> Download & Print
-                                            </a>
+                                            <button type="button" class="btn btn-danger dropdown-toggle"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Print & Download</button>
+                                                
+                                            <div class="dropdown-menu">
+                                                <a href="{{ route('fakturpenjualan.print_a4_koma', $fakturpenjualan) }}"
+                                                    class="btn btn-primary mr-2" target="_blank">
+                                                    <i class="flaticon2-print font-weight-bold"></i> Download & Print Koma
+                                                </a>
+
+                                                <a href="{{ route('fakturpenjualan.print_a4', $fakturpenjualan) }}"
+                                                    class="btn btn-primary mr-2" target="_blank">
+                                                    <i class="flaticon2-print font-weight-bold"></i> Download & Print Tanpa Koma
+                                                </a>
+                                            </div>
                                         @endcan
                                         @can('fakturpenjualan-delete')
                                             <a href="{{ route('fakturpenjualan.kwitansi', $fakturpenjualan) }}"
@@ -399,22 +410,27 @@
                             @method('PUT')
                             <div class="form-group">
                                 <label for="">Tanggal Diterima</label>
-                                <input type="date" class="form-control" value="{{$fakturpenjualan->tanggal_diterima}}" name="tanggal_diterima">
+                                <input type="date" class="form-control"
+                                    value="{{ $fakturpenjualan->tanggal_diterima }}" name="tanggal_diterima">
                             </div>
                             <div class="form-group">
                                 <label for="">No Resi</label>
-                                <input type="text" class="form-control" value="{{$fakturpenjualan->no_resi}}" name="no_resi">
+                                <input type="text" class="form-control" value="{{ $fakturpenjualan->no_resi }}"
+                                    name="no_resi">
                             </div>
-                            <div class="form-group">                                
+                            <div class="form-group">
                                 <label for="">Foto Bukti</label> <br>
-                                <img src="{{ asset('storage/bukti_tandaterima/' . $fakturpenjualan->foto_bukti) }}" alt="" width="30%" style="margin-bottom:10px">
-                                <a href="{{ asset('storage/bukti_tandaterima/' . $fakturpenjualan->foto_bukti) }}" class="btn btn-primary btn-sm" download><i class="fas fa-download"></i></a>
-                                <input type="file" class="form-control" name="foto_bukti"> 
+                                <img src="{{ asset('storage/bukti_tandaterima/' . $fakturpenjualan->foto_bukti) }}"
+                                    alt="" width="30%" style="margin-bottom:10px">
+                                <a href="{{ asset('storage/bukti_tandaterima/' . $fakturpenjualan->foto_bukti) }}"
+                                    class="btn btn-primary btn-sm" download><i class="fas fa-download"></i></a>
+                                <input type="file" class="form-control" name="foto_bukti">
                             </div>
-                            <div class="form-group">  
-                                 <label for="">Status</label>
+                            <div class="form-group">
+                                <label for="">Status</label>
                                 <select name="status_diterima" id="" class="form-control">
-                                    <option value="{{$fakturpenjualan->status_diterima}}" selected>{{ucfirst($fakturpenjualan->status_diterima)}}</option>
+                                    <option value="{{ $fakturpenjualan->status_diterima }}" selected>
+                                        {{ ucfirst($fakturpenjualan->status_diterima) }}</option>
                                     <option value="terima">Terima</option>
                                     <option value="belum terima">Belum Diterima</option>
                                 </select>
@@ -423,7 +439,8 @@
                             <div class="form-group">
                                 <label for="">Apakah Jatuh Tempo terhitung dari tanggal tanda terima ? </label>
                                 <select name="top_status" class="form-control" id="">
-                                    <option value="{{$fakturpenjualan->status_tanggaltop}}" selected>{{ ucfirst($fakturpenjualan->status_tanggaltop)}}</option>
+                                    <option value="{{ $fakturpenjualan->status_tanggaltop }}" selected>
+                                        {{ ucfirst($fakturpenjualan->status_tanggaltop) }}</option>
                                     <option value="ya">Ya</option>
                                     <option value="tidak">Tidak</option>
                                 </select>
