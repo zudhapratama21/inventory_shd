@@ -370,7 +370,7 @@
 {{-- END OF BEST PRODUK --}}
 @endcan
 
-@can('tabletopcustomer')
+@can('tabletopcustomer-list')
     {{-- TOP CUSTOMER --}}
 <div class="row">
     <div class="col-xl-12">
@@ -489,7 +489,7 @@
 </div>
 {{-- END TOP CUSTOMER --}}
 @endcan                       
-@can('tabletopprinciple')
+@can('tabletopprinciple-list')
     {{-- TOP PRINCIPLE --}}
 <div class="row">
     <div class="col-xl-12">
