@@ -683,8 +683,11 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
 
         Route::post('hapusdouble', [FakturPenjualanController::class, 'hapusdouble'])->name('fakturpenjualan.hapusdouble');
 
+        Route::post('datatable', [FakturPenjualanController::class, 'datatabledetail'])->name('fakturpenjualandetail.datatable');
+        Route::post('formcn', [FakturPenjualanController::class, 'formcn'])->name('fakturpenjualan.formcn');
+        Route::post('inputcn', [FakturPenjualanController::class, 'inputcn'])->name('fakturpenjualan.inputcn');
+        Route::post('setcn', [FakturPenjualanController::class, 'setcn'])->name('fakturpenjualan.setcn');
 
-      
     });
 
     Route::prefix('pembayaranhutang')->group(function () {

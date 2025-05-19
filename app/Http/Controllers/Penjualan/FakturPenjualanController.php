@@ -56,7 +56,7 @@ class FakturPenjualanController extends Controller
 
     public function datatable()
     {
-        $fakturpenjualan = FakturPenjualan::with(['customers',  'statusFJ', 'so', 'sj','fakturpenjualandetail'])->orderBy('id', 'desc');
+        $fakturpenjualan = FakturPenjualan::with(['customers',  'statusFJ', 'so', 'sj', 'fakturpenjualandetail'])->orderBy('id', 'desc');
         return Datatables::of($fakturpenjualan)
             ->addIndexColumn()
             ->addColumn('customer', function (FakturPenjualan $sj) {
@@ -254,37 +254,37 @@ class FakturPenjualanController extends Controller
             $request->validate([
                 'tanggal' => ['required'],
             ]);
-    
+
             $datas = $request->all();
             $tanggal = $request->tanggal;
-    
+
             $biaya = TempBiaya::where('jenis', '=', "FJ")
                 ->where('user_id', '=', Auth::user()->id)
                 ->first();
-    
+
             $biayalainlain = $biaya->rupiah;
-    
+
             if ($tanggal <> null) {
                 $tanggal = Carbon::createFromFormat('d-m-Y', $tanggal)->format('Y-m-d');
             }
-    
+
             $kode = $this->getKodeTransaksi("faktur_penjualans", "FJ");
             $id_sj = $pengirimanbarang->id;
             $id_so = $pengirimanbarang->pesanan_penjualan_id;
             $tanggalPengiriman = $pengirimanbarang->tanggal;
-    
+
             $pesanan = PesananPenjualan::where('id', $id_so)->first();
             $tanggal_top = date("Y-m-d", strtotime("+" . $pesanan->top . " days" . $tanggal));
-    
+
             $SJdetails = PengirimanBarangDetail::where('pengiriman_barang_id', '=', $id_sj)->get();
-    
+
             // pajak
             $pajak = NoFakturPajak::where('id', $request->pajak_id)->first();
-    
+
             // nokpa
             $kpa = NoKPA::where('id', $request->kpa_id)->first();
-    
-    
+
+
             //start cek status exp date SJ :
             $status_exp_sj = 1;
             foreach ($SJdetails as $s) {
@@ -292,18 +292,18 @@ class FakturPenjualanController extends Controller
                     $status_exp_sj = 0;
                 }
             }
-    
+
             if ($status_exp_sj == 0) {
                 return redirect()->route('fakturpenjualan.listsj')->with('gagal', 'Terdapat Pengiriman Barang Yang Belum Diinputkan Exp. Date! Silahkah hubungi bagian Logistik untuk menginputnya !');
             }
             // end cek status exp date SJ
-    
+
             $SOdata = PesananPenjualan::with('customers')->find($id_so);
             $ppn_so = $SOdata->ppn;
             $diskon_rupiah_so = $SOdata->diskon_rupiah;
             $diskon_persen_so = $SOdata->diskon_persen;
             $sales_id = $SOdata->sales_id;
-    
+
             $FJdetails = TempFaktursos::where('pengiriman_barang_id', '=', $id_sj)
                 ->where('user_id', '=', Auth::user()->id)->get();
             $subtotal_header = TempFaktursos::where('pengiriman_barang_id', '=', $id_sj)
@@ -311,15 +311,15 @@ class FakturPenjualanController extends Controller
             //$subtotal_header = $total_det;
             $ongkir_header = TempFaktursos::where('pengiriman_barang_id', '=', $id_sj)
                 ->where('user_id', '=', Auth::user()->id)->sum('ongkir');
-    
+
             $total_diskon_detail = TempFaktursos::where('pengiriman_barang_id', '=', $id_sj)
                 ->where('user_id', '=', Auth::user()->id)->sum('total_diskon');
-    
+
             $total_diskon_header = ($subtotal_header * ($diskon_persen_so / 100)) + $diskon_rupiah_so;
             $total_header = $subtotal_header - $total_diskon_header + $ongkir_header;
             $ppn_header = round(($total_header * ($ppn_so / 100)), 2);
             $grandtotal_header = $total_header + $ppn_header  + $biayalainlain;
-    
+
             $datas['kode'] = $kode;
             $datas['tanggal'] = $tanggal;
             $datas['customer_id'] = $pengirimanbarang->customer_id;
@@ -343,25 +343,25 @@ class FakturPenjualanController extends Controller
             $datas['no_seri_pajak'] = $request->no_seri_pajak;
             $datas['no_pajak'] = $pajak->no_pajak;
             $idFaktur = FakturPenjualan::create($datas)->id;
-    
+
             // save di log faktur pajak dan ubah faktur pajak menjadi tidak aktif
             $logpajak = LogNoFakturPajak::create([
                 'nofaktur_id' => $pajak->id,
                 'jenis' => 'FJ',
                 'jenis_id' => $kode
             ]);
-    
+
             // log no kpa
             // ubah status menjadi tidak aktif
             $pajak->update([
                 'status' => 'Tidak Aktif'
             ]);
-    
+
             // // ubah status no kpa menjadi tidak aktif
             $kpa->update([
                 'status' => 'Tidak Aktif'
             ]);
-    
+
             //$ongkir_header = $ongkir_det;
             foreach ($FJdetails as $pb) {
                 $detil = new FakturPenjualanDetail;
@@ -378,14 +378,14 @@ class FakturPenjualanController extends Controller
                 $detil->total = $pb->total;
                 $detil->ongkir = $pb->ongkir;
                 $detil->keterangan = $pb->keterangan;
-    
+
                 if ($SOdata->customers->kategori_id == 17 || $SOdata->customers->kategori_id == 13) {
                     if ($pb->total > 2000000) {
                         $detil->pph = 1.5;
                         $detil->total_pph = $pb->total * 1.5 / 100;
                     }
                 }
-    
+
                 $detil->save();
             }
             #################### update Status PB ##################
@@ -393,7 +393,7 @@ class FakturPenjualanController extends Controller
             $dataPB->status_sj_id = "2";
             $dataPB->save();
             #################### END update status PB ##############
-    
+
             #################### update Piutang ##################
             $piutang = new Piutang;
             $piutang->tanggal = $tanggal;
@@ -409,7 +409,7 @@ class FakturPenjualanController extends Controller
             $piutang->tanggal_top = $tanggal_top;
             $piutang->save();
             #################### end update Piutang ##################
-    
+
 
             // ubah status pesanan penjualan 
             $this->statusPesanan($id_so);
@@ -419,8 +419,6 @@ class FakturPenjualanController extends Controller
             return back()->with('error', $th->getMessage());
             DB::rollBack();
         }
-
-       
     }
 
     public function delete(Request $request)
@@ -655,7 +653,7 @@ class FakturPenjualanController extends Controller
 
         $harga1 = $request->cn_persen;
         $harga = str_replace(',', '.', $harga1) * 1;
-        
+
 
         $subtotal = $fakturpenjualandetail->total;
         $data['cn_rupiah'] = $subtotal * $harga / 100;
@@ -667,7 +665,7 @@ class FakturPenjualanController extends Controller
             'cn_total' => $data['cn_total']
         ]);
 
-        $totalCN = FakturPenjualanDetail::where('faktur_penjualan_id', $fakturpenjualandetail->faktur_penjualan_id)->sum('cn_total');        
+        $totalCN = FakturPenjualanDetail::where('faktur_penjualan_id', $fakturpenjualandetail->faktur_penjualan_id)->sum('cn_total');
         FakturPenjualan::where('id', $fakturpenjualandetail->faktur_penjualan_id)->update([
             'total_cn' => $totalCN,
         ]);
@@ -831,7 +829,7 @@ class FakturPenjualanController extends Controller
 
     public function syncronisasi()
     {
-       
+
         // $fakturpenjualandetail = FakturPenjualanDetail::with('fakturpenjualan.customers')->get();
         // foreach ($fakturpenjualandetail as $value) {
         //     if ($value->fakturpenjualan->customers->kategori_id == 13 || $value->fakturpenjualan->customers->kategori_id == 17) {
@@ -847,7 +845,7 @@ class FakturPenjualanController extends Controller
 
         //dapatkan semua data pesanan penjualan yang status_so_id 4 
         // lalu looping semuanya jika ditemukan ada di faktur penjualan maka ubah statusnya menjadi 5
-        
+
         // $pesanan = PesananPenjualan::where('status_so_id',4)->get();
         // foreach ($pesanan as $value) {
         //     $fakturpenjualan = FakturPenjualan::where('pesanan_penjualan_id',$value->id)->first();
@@ -984,7 +982,6 @@ class FakturPenjualanController extends Controller
         return back();
     }
 
-
     public function revision(Request $request)
     {
         Excel::import(new RevisionPenjualanImport, $request->file('file_revision'));
@@ -992,7 +989,7 @@ class FakturPenjualanController extends Controller
     }
 
     public function statusPesanan($id)
-    {                
+    {
         $pesananPenjualan = PesananPenjualan::find($id);
 
         if ($pesananPenjualan->status_so_id == 4) {
@@ -1005,11 +1002,20 @@ class FakturPenjualanController extends Controller
             }
 
             $pesananPenjualan->save();
+        } elseif ($pesananPenjualan->status_so_id == 5) {
+            $fakturPenjualan = FakturPenjualan::where('pesanan_penjualan_id', $id)->first();
+
+            if ($fakturPenjualan) {
+                $pesananPenjualan->status_so_id = 5;
+            } else {
+                $pesananPenjualan->status_so_id = 4;
+            }
+            $pesananPenjualan->save();
         }
-    }
+    }   
 
 
-    public function hapusdouble (Request $request)
+    public function hapusdouble(Request $request)
     {
         $fakturpenjualan = FakturPenjualan::where('id', $request->id)->first();
         $fakturpenjualandetail = FakturPenjualanDetail::where('faktur_penjualan_id', $fakturpenjualan->id)->get();
@@ -1017,7 +1023,7 @@ class FakturPenjualanController extends Controller
         $piutang = Piutang::where('faktur_penjualan_id', $fakturpenjualan->id)->first();
         if ($piutang->status == 2) {
             return back();
-        }else{
+        } else {
             $piutang->delete();
         }
         foreach ($fakturpenjualandetail as $item) {
@@ -1025,4 +1031,68 @@ class FakturPenjualanController extends Controller
         }
         $fakturpenjualan->delete();
     }
+
+    public function datatabledetail(Request $request)
+    {
+        $fakturpenjualandetails = FakturPenjualanDetail::with('products')->where('faktur_penjualan_id', '=', $request->id)->get();
+
+        return Datatables::of($fakturpenjualandetails)
+            ->addIndexColumn()
+            ->editColumn('hargajual', function (FakturPenjualanDetail $sj) {
+                return number_format($sj->hargajual, 0, ',', '.');
+            })
+            ->editColumn('subtotal', function (FakturPenjualanDetail $sj) {
+                return number_format($sj->subtotal, 0, ',', '.');
+            })
+            ->editColumn('total', function (FakturPenjualanDetail $sj) {
+                return number_format($sj->total, 0, ',', '.');
+            })
+            ->editColumn('cn', function (FakturPenjualanDetail $sj) {
+                return number_format($sj->cn_persen, 0, ',', '.');
+            })
+             ->editColumn('cn_total', function (FakturPenjualanDetail $sj) {
+                return number_format($sj->cn_total, 0, ',', '.');
+            })
+            ->addColumn('action', function ($row) {
+                return $id = $row->id;
+            })
+            ->make(true);
+    }
+
+
+    public function formcn (Request $request)
+    {
+       $id = $request->id;
+       $fakturpenjualandetail = FakturPenjualanDetail::where('id', $id)->first();
+       return view('penjualan.fakturpenjualan.partial.formcn', compact('id', 'fakturpenjualandetail'));
+    }
+
+    public function inputcn (Request $request)
+    {
+        $id = $request->id;
+        $fakturpenjualandetail = FakturPenjualanDetail::where('id', $id)->first();
+        $totalcn = $fakturpenjualandetail->total * $request->cn / 100;
+        $fakturpenjualandetail->update([
+            'cn_persen' => $request->cn,
+            'cn_rupiah' => $totalcn,
+            'cn_total' => $totalcn
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data berhasil disimpan'
+        ]);
+    }    
+
+    public function setcn (Request $request)
+    {
+        $fakturPenjualan = FakturPenjualan::where('id',$request->id)->update([
+            'total_cn' => 0
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data berhasil disimpan'
+        ]);
+    }    
 }

@@ -215,19 +215,24 @@
                         name: 'status_diterima'
                     },
                     {
-                        data: 'status_cn',
+                        data: null,
                         name: 'status_cn',
                         searchable: false,
-                        render: function(data) {
-                            if (data === 'Sudah') {
-                                return '<span class="badge badge-success">Sudah</span>';
-                            } else if (data === 'Belum') {
-                                return '<span class="badge badge-danger">Belum</span>';
+                        render: function(data, type, row) {
+                            var status = row.status_cn;
+                            var id = row.id;
+                            var badge = '';
+                            if (status === 'Sudah') {
+                                badge = '<span class="badge badge-success">Sudah</span>';
+                            } else if (status === 'Belum') {
+                                badge = '<span class="badge badge-danger">Belum</span>';
                             } else {
-                                return '<span class="badge badge-secondary">-</span>';
+                                badge = '<span class="badge badge-secondary">-</span>';
                             }
+                            return badge + '<a class="ml-2" onclick="cn_success(' + id + ')"><i class="text-success flaticon2-check-mark"></i></a>';
                         },
                     },
+                    
                     {
                         data: 'action',
                         render: function(data) {
@@ -319,6 +324,34 @@
                     });
                 }
             });
+        }
+
+        function cn_success(id) {
+              Swal.fire({
+                icon: "question",
+                title: "Mau mengubah status CN ini ?",
+                showCancelButton: true,
+                confirmButtonText: "Save",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ route('fakturpenjualan.setcn') }}',
+                        dataType: 'html',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {
+                            id: id,
+                            "_token": "{{ csrf_token() }}"
+                        },
+                        success: function(data) {
+                            $('.yajra-datatable').DataTable().ajax.reload(null, false);                           
+                        }
+                    });
+                }
+            });
+            
         }
     </script>
 @endpush
