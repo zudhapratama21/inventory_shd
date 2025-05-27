@@ -206,8 +206,7 @@ class PesananPembelianController extends Controller
             DB::rollBack();
             return redirect()->route('pesananpembelian.index')->with('error',$th->getMessage());
         }
-
-       
+            
     }
 
     public function caribarang()

@@ -139,7 +139,6 @@
                   {data: 'tanggal', name: 'tanggal'},
                   {data: 'qty', name: 'qty'},
                   {data: 'stok', name: 'stok'},
-
                   {data: 'jenis', name: 'jenis'},
                   {data: 'jenis_id', name: 'jenis_id'},
                   {data: 'customer', name: 'customer'},

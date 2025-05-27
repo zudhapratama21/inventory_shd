@@ -487,6 +487,13 @@ class FakturPembelianController extends Controller
             }
             
             $pesananPembelian->save();
+        }elseif ($pesananPembelian->status_po_id == 5) {
+            $fakturPembelian = FakturPembelian::where('pesanan_pembelian_id', $id)->first();
+             if ($fakturPembelian) {
+               $pesananPembelian->status_po_id = 5;
+            } else {
+               $pesananPembelian->status_po_id = 4;
+            }
         }
     }
 

@@ -45,8 +45,8 @@
 
     <div class="form-group">
         <label>Request :</label>
-        <select type="text" name="sales_id" class="form-control" id="kt_select2_2">
-            @foreach ($sales as $item)
+        <select type="text" name="karyawan_id" class="form-control" id="kt_select2_2">
+            @foreach ($karyawan as $item)
                 <option value="{{ $item->id }}">{{ $item->nama }}</option>
             @endforeach
         </select>

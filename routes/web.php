@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdjustmentStok\AdjustmentStokController;
+use App\Http\Controllers\AnalisisKeuanganController;
 use App\Http\Controllers\BiayaOperational\BiayaOperationalController;
 use App\Http\Controllers\Canvassing\CanvassingPengembalianController;
 use App\Http\Controllers\Canvassing\CanvassingPesananController;
@@ -70,6 +71,7 @@ use App\Http\Controllers\Penjualan\BiayaLainController;
 use App\Http\Controllers\Penjualan\LabaRugiController;
 use App\Http\Controllers\Permissions\AssignPermissionController;
 use App\Http\Controllers\RencanaKunjunganController;
+use App\Http\Controllers\Sales\CashAdvanceController;
 use App\Http\Controllers\Sales\EvaluasiController;
 use App\Http\Controllers\Sales\OutletController;
 use App\Http\Controllers\Sales\PerformaSalesController;
@@ -82,7 +84,7 @@ use App\Http\Controllers\Teknisi\RencanaAktivitasTeknisiController;
 use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
-Route::middleware('auth', 'verified')->group(function () {    
+Route::middleware('auth', 'verified')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::post('/chartyear', [HomeController::class, 'chartyear'])->name('chart.year');
     Route::post('/chartkategori', [HomeController::class, 'chartkategori'])->name('chart.kategori');
@@ -96,12 +98,12 @@ Route::middleware('auth', 'verified')->group(function () {
 
 
     Route::post('/exportTopProduct', [HomeController::class, 'exportTopProduk'])->name('home.exporttopproduct');
-    Route::post('/exportTopCustomer', [HomeController::class, 'exportTopCustomer'])->name('home.exporttopcustomer');   
+    Route::post('/exportTopCustomer', [HomeController::class, 'exportTopCustomer'])->name('home.exporttopcustomer');
 
     // lis top principle
     Route::post('/datatabletopprinciple', [HomeController::class, 'datatableTopPrinciple'])->name('datatable.topPrinciple');
     Route::post('/datatabletopproductbyprinciple', [HomeController::class, 'datatableProdukbyPrinciple'])->name('datatable.productbyprinciple');
-    
+
     // keuangan 
     Route::post('/pengiriman', [HomeController::class, 'datatablepengiriman'])->name('home.pengiriman');
     Route::post('/penerimaan', [HomeController::class, 'datatablepenerimaan'])->name('home.penerimaan');
@@ -135,7 +137,7 @@ Route::middleware('has.role')->prefix('master')->group(function () {
         Route::prefix('permissions')->group(function () {
             Route::get('', [PermissionController::class, 'index'])->name('permissions.index');
             Route::post('create', [PermissionController::class, 'store'])->name('permissions.create');
-            Route::post('datatable', [PermissionController::class, 'datatable'])->name('permissions.datatable');        
+            Route::post('datatable', [PermissionController::class, 'datatable'])->name('permissions.datatable');
             Route::get('{permission}/edit', [PermissionController::class, 'edit'])->name('permissions.edit');
             Route::put('{permission}/edit', [PermissionController::class, 'update'])->name('permissions.update');
         });
@@ -156,8 +158,6 @@ Route::middleware('has.role')->prefix('master')->group(function () {
             Route::post('delete', [UserController::class, 'delete'])->name('user.delete');
             Route::delete('delete', [UserController::class, 'destroy'])->name('user.destroy');
         });
-
-       
     });
 
     Route::prefix('navigations')->group(function () {
@@ -241,11 +241,8 @@ Route::middleware('has.role')->prefix('master')->group(function () {
         Route::post('import', [ProductController::class, 'import'])->name('product.import');
 
         Route::post('export', [ProductController::class, 'export'])->name('product.export');
-        
+
         Route::get('syncronisasi', [ProductController::class, 'syncronisasi'])->name('product.syncronisasi');
-
-
-
     });
 
     Route::prefix('produkgroup')->group(function () {
@@ -279,8 +276,6 @@ Route::middleware('has.role')->prefix('master')->group(function () {
 
         Route::post('import', [MerkController::class, 'import'])->name('merk.import');
         Route::get('export', [MerkController::class, 'export'])->name('merk.export');
-
-
     });
 
     Route::prefix('productcategory')->group(function () {
@@ -329,29 +324,28 @@ Route::middleware('has.role')->prefix('master')->group(function () {
     });
 
     Route::prefix('jenisbiaya')->group(function () {
-        Route::get('', [JenisBiayaController::class, 'index'])->name('jenisbiaya.index');        
-        Route::get('/create', [JenisBiayaController::class, 'create'])->name('jenisbiaya.create');        
-        Route::post('/create', [JenisBiayaController::class, 'store'])->name('jenisbiaya.store');        
-        Route::get('/{jenisbiaya}/edit', [JenisBiayaController::class, 'edit'])->name('jenisbiaya.edit');       
-        Route::put('/{jenisbiaya}/edit', [JenisBiayaController::class, 'update'])->name('jenisbiaya.update');       
-        Route::post('/delete', [JenisBiayaController::class, 'delete'])->name('jenisbiaya.delete');       
-        Route::delete('/delete', [JenisBiayaController::class, 'destroy'])->name('jenisbiaya.destroy');       
-        
+        Route::get('', [JenisBiayaController::class, 'index'])->name('jenisbiaya.index');
+        Route::get('/create', [JenisBiayaController::class, 'create'])->name('jenisbiaya.create');
+        Route::post('/create', [JenisBiayaController::class, 'store'])->name('jenisbiaya.store');
+        Route::get('/{jenisbiaya}/edit', [JenisBiayaController::class, 'edit'])->name('jenisbiaya.edit');
+        Route::put('/{jenisbiaya}/edit', [JenisBiayaController::class, 'update'])->name('jenisbiaya.update');
+        Route::post('/delete', [JenisBiayaController::class, 'delete'])->name('jenisbiaya.delete');
+        Route::delete('/delete', [JenisBiayaController::class, 'destroy'])->name('jenisbiaya.destroy');
     });
 
     Route::prefix('fakturpajak')->group(function () {
-        Route::get('', [NoFakturPajakController::class, 'index'])->name('fakturpajak.index');        
-        Route::get('/create', [NoFakturPajakController::class, 'create'])->name('fakturpajak.create');        
-        Route::post('/create', [NoFakturPajakController::class, 'store'])->name('fakturpajak.store');        
-        Route::post('/import', [NoFakturPajakController::class, 'import'])->name('fakturpajak.import');        
-        Route::get('/{fakturpajak}/edit', [NoFakturPajakController::class, 'edit'])->name('fakturpajak.edit');       
-        Route::put('/{fakturpajak}/edit', [NoFakturPajakController::class, 'update'])->name('fakturpajak.update');       
-        Route::get('/{fakturpajak}/status', [NoFakturPajakController::class, 'status'])->name('fakturpajak.status');       
-        Route::post('/delete', [NoFakturPajakController::class, 'delete'])->name('fakturpajak.delete');       
-        Route::delete('/destroy', [NoFakturPajakController::class, 'destroy'])->name('fakturpajak.destroy');  
-        
-        
-        Route::post('/importnokpa', [NoFakturPajakController::class, 'importnokpa'])->name('fakturpajak.importnokpa');  
+        Route::get('', [NoFakturPajakController::class, 'index'])->name('fakturpajak.index');
+        Route::get('/create', [NoFakturPajakController::class, 'create'])->name('fakturpajak.create');
+        Route::post('/create', [NoFakturPajakController::class, 'store'])->name('fakturpajak.store');
+        Route::post('/import', [NoFakturPajakController::class, 'import'])->name('fakturpajak.import');
+        Route::get('/{fakturpajak}/edit', [NoFakturPajakController::class, 'edit'])->name('fakturpajak.edit');
+        Route::put('/{fakturpajak}/edit', [NoFakturPajakController::class, 'update'])->name('fakturpajak.update');
+        Route::get('/{fakturpajak}/status', [NoFakturPajakController::class, 'status'])->name('fakturpajak.status');
+        Route::post('/delete', [NoFakturPajakController::class, 'delete'])->name('fakturpajak.delete');
+        Route::delete('/destroy', [NoFakturPajakController::class, 'destroy'])->name('fakturpajak.destroy');
+
+
+        Route::post('/importnokpa', [NoFakturPajakController::class, 'importnokpa'])->name('fakturpajak.importnokpa');
     });
 });
 
@@ -401,7 +395,7 @@ Route::middleware('has.role')->prefix('pembelian')->group(function () {
         Route::get('caribarangdetail/{id}', [PesananPembelianController::class, 'caribarangdetail'])->name('pesananpembelian.caribarangdetail');
         Route::post('setbarang', [PesananPembelianController::class, 'setbarang'])->name('pesananpembelian.setbarang');
 
-        Route::get('{pesananpembelian}/edit', [PesananPembelianController::class, 'edit'])->name('pesananpembelian.edit');        
+        Route::get('{pesananpembelian}/edit', [PesananPembelianController::class, 'edit'])->name('pesananpembelian.edit');
         Route::post('editbarangdetail', [PesananPembelianController::class, 'editBarangDetail'])->name('pesananpembelian.editbarangdetail');
         Route::post('updatebarangdetail', [PesananPembelianController::class, 'updateBarangDetail'])->name('pesananpembelian.updatebarangdetail');
 
@@ -422,8 +416,6 @@ Route::middleware('has.role')->prefix('pembelian')->group(function () {
         Route::post('hitungppndetail', [PesananPembelianController::class, 'hitungPPNDetail'])->name('pesananpembelian.hitungppndetail');
         Route::post('hitungongkirdetail', [PesananPembelianController::class, 'hitungOngkirDetail'])->name('pesananpembelian.hitungongkirdetail');
         Route::post('hitunggrandtotaldetail', [PesananPembelianController::class, 'hitungGrandTotalDetail'])->name('pesananpembelian.hitunggrandtotaldetail');
-
-
     });
 
 
@@ -436,26 +428,26 @@ Route::middleware('has.role')->prefix('pembelian')->group(function () {
         Route::put('{penerimaanbarang}/edit', [PenerimaanBarangController::class, 'update'])->name('penerimaanbarang.update');
         Route::get('{penerimaanbarang}/show', [PenerimaanBarangController::class, 'show'])->name('penerimaanbarang.show');
         Route::get('{penerimaanbarang}/showdata', [PenerimaanBarangController::class, 'showData'])->name('penerimaanbarang.showData');
-        
+
         Route::post('datatablebarang', [PenerimaanBarangController::class, 'datatablebarang'])->name('penerimaanbarang.datatablebarang');
         Route::post('datatablebarangterima', [PenerimaanBarangController::class, 'datatablebarangterima'])->name('penerimaanbarang.datatablebarangterima');
         Route::post('hapusbarang', [PenerimaanBarangController::class, 'hapusbarang'])->name('penerimaanbarang.hapusbarang');
-        
+
         Route::post('delete', [PenerimaanBarangController::class, 'destroy'])->name('penerimaanbarang.destroy');
         Route::get('caribarang', [PenerimaanBarangController::class, 'caribarang'])->name('penerimaanbarang.caribarang');
-        Route::post('setbarang', [PenerimaanBarangController::class, 'setbarang'])->name('penerimaanbarang.setbarang');    
+        Route::post('setbarang', [PenerimaanBarangController::class, 'setbarang'])->name('penerimaanbarang.setbarang');
         Route::post('inputtemppb', [PenerimaanBarangController::class, 'inputtemppb'])->name('penerimaanbarang.inputtemppb');
-            
+
 
         Route::get('listpo', [PenerimaanBarangController::class, 'listpo'])->name('penerimaanbarang.listpo');
         Route::post('listpesanan', [PenerimaanBarangController::class, 'listpesanan'])->name('penerimaanbarang.listpesanan');
 
         Route::get('{penerimaanbarang}/inputexp', [PenerimaanBarangController::class, 'inputexp'])->name('penerimaanbarang.inputexp');
-        Route::post('setexp', [PenerimaanBarangController::class, 'setexp'])->name('penerimaanbarang.setexp');        
+        Route::post('setexp', [PenerimaanBarangController::class, 'setexp'])->name('penerimaanbarang.setexp');
         Route::post('saveexp', [PenerimaanBarangController::class, 'saveexp'])->name('penerimaanbarang.saveexp');
         Route::post('listexp', [PenerimaanBarangController::class, 'listexp'])->name('penerimaanbarang.listexp');
 
-        Route::post('hapusexp', [PenerimaanBarangController::class, 'hapusexp'])->name('penerimaanbarang.hapusexp');        
+        Route::post('hapusexp', [PenerimaanBarangController::class, 'hapusexp'])->name('penerimaanbarang.hapusexp');
 
         Route::get('{penerimaanbarang}/print_a5', [PenerimaanBarangController::class, 'print_a5'])->name('penerimaanbarang.print_a5');
     });
@@ -495,7 +487,7 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
     Route::prefix('pesananpenjualan')->group(function () {
         Route::get('', [PesananPenjualanController::class, 'index'])->name('pesananpenjualan.index');
         Route::get('create', [PesananPenjualanController::class, 'create'])->name('pesananpenjualan.create');
-        Route::post('create', [PesananPenjualanController::class, 'store']);                
+        Route::post('create', [PesananPenjualanController::class, 'store']);
         Route::get('{pesananpenjualan}/show', [PesananPenjualanController::class, 'show'])->name('pesananpenjualan.show');
         Route::post('delete', [PesananPenjualanController::class, 'delete'])->name('pesananpenjualan.delete');
         Route::delete('delete', [PesananPenjualanController::class, 'destroy'])->name('pesananpenjualan.destroy');
@@ -533,7 +525,7 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
         Route::get('caribarangdetail/{id}', [PesananPenjualanController::class, 'caribarangdetail'])->name('pesananpenjualan.caribarangdetail');
         Route::post('setbarang', [PesananPenjualanController::class, 'setbarang'])->name('pesananpenjualan.setbarang');
 
-        Route::get('{pesananpenjualan}/edit', [PesananPenjualanController::class, 'edit'])->name('pesananpenjualan.edit');        
+        Route::get('{pesananpenjualan}/edit', [PesananPenjualanController::class, 'edit'])->name('pesananpenjualan.edit');
         Route::post('editbarangdetail', [PesananPenjualanController::class, 'editBarangDetail'])->name('pesananpenjualan.editbarangdetail');
         Route::post('updatebarangdetail', [PesananPenjualanController::class, 'updateBarangDetail'])->name('pesananpenjualan.updatebarangdetail');
 
@@ -559,10 +551,6 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
         Route::get('{pesananpenjualan}/print_a4', [PesananPenjualanController::class, 'print_a4'])->name('pesananpenjualan.print_a4');
 
         Route::post('hitungpph', [PesananPenjualanController::class, 'hitungpph'])->name('pesananpenjualan.hitungpph');
-
-        
-
-
     });
 
     Route::prefix('pengirimanbarang')->group(function () {
@@ -577,7 +565,7 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
 
         // ============== new ===========
         Route::post('datatablebarang', [PengirimanBarangController::class, 'datatablebarang'])->name('pengirimanbarang.datatablebarang');
-        
+
         Route::post('delete', [PengirimanBarangController::class, 'destroy'])->name('pengirimanbarang.destroy');
         Route::get('caribarang', [PengirimanBarangController::class, 'caribarang'])->name('pengirimanbarang.caribarang');
         Route::post('setbarang', [PengirimanBarangController::class, 'setbarang'])->name('pengirimanbarang.setbarang');
@@ -595,22 +583,22 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
 
         Route::get('{pengirimanbarang}/inputexp', [PengirimanBarangController::class, 'inputexp'])->name('pengirimanbarang.inputexp');
         Route::get('{id}/setdaftarkirim', [PengirimanBarangController::class, 'setdaftarkirim'])->name('pengirimanbarang.setdaftarkirim');
-        Route::post('daftarproduk', [PengirimanBarangController::class, 'daftarProduk'])->name('pengirimanbarang.daftarproduk'); 
-        Route::post('daftarprodukkirim', [PengirimanBarangController::class, 'daftarProdukKirim'])->name('pengirimanbarang.daftarprodukkirim'); 
-        Route::post('formbarang', [PengirimanBarangController::class, 'formBarang'])->name('pengirimanbarang.formbarang'); 
-        Route::post('submitbarang', [PengirimanBarangController::class, 'simpanProdukKirim'])->name('pengirimanbarang.submitbarang'); 
-        Route::post('hapusbarang', [PengirimanBarangController::class, 'hapusbarang'])->name('pengirimanbarang.hapusbarang'); 
-        Route::post('editexp', [PengirimanBarangController::class, 'editexp'])->name('pengirimanbarang.editexp'); 
-        Route::post('submitexp', [PengirimanBarangController::class, 'submitexp'])->name('pengirimanbarang.submitexp'); 
-        
-        
+        Route::post('daftarproduk', [PengirimanBarangController::class, 'daftarProduk'])->name('pengirimanbarang.daftarproduk');
+        Route::post('daftarprodukkirim', [PengirimanBarangController::class, 'daftarProdukKirim'])->name('pengirimanbarang.daftarprodukkirim');
+        Route::post('formbarang', [PengirimanBarangController::class, 'formBarang'])->name('pengirimanbarang.formbarang');
+        Route::post('submitbarang', [PengirimanBarangController::class, 'simpanProdukKirim'])->name('pengirimanbarang.submitbarang');
+        Route::post('hapusbarang', [PengirimanBarangController::class, 'hapusbarang'])->name('pengirimanbarang.hapusbarang');
+        Route::post('editexp', [PengirimanBarangController::class, 'editexp'])->name('pengirimanbarang.editexp');
+        Route::post('submitexp', [PengirimanBarangController::class, 'submitexp'])->name('pengirimanbarang.submitexp');
+
+
 
         // untuk set harga non expired 
         Route::get('{pengirimanbarangdetail}/setproduk', [PengirimanBarangController::class, 'setProduk'])->name('pengirimanbarang.setproduk');
         Route::get('{pengirimanbarangdetail}/listproduk', [PengirimanBarangController::class, 'listProduk'])->name('pengirimanbarang.listproduk');
-        Route::get('{stokproduk}/{pengirimanbarangdetail}/formsetproduk', [PengirimanBarangController::class, 'formSetProduct'])->name('pengirimanbarang.formsetproduk');    
-        Route::post('{stokproduk}/{pengirimanbarangdetail}/saveproduk', [PengirimanBarangController::class, 'saveProduk'])->name('pengirimanbarang.saveproduk'); 
-        Route::post('destroyproduk', [PengirimanBarangController::class, 'destroyProduk'])->name('pengirimanbarang.destroyproduk');           
+        Route::get('{stokproduk}/{pengirimanbarangdetail}/formsetproduk', [PengirimanBarangController::class, 'formSetProduct'])->name('pengirimanbarang.formsetproduk');
+        Route::post('{stokproduk}/{pengirimanbarangdetail}/saveproduk', [PengirimanBarangController::class, 'saveProduk'])->name('pengirimanbarang.saveproduk');
+        Route::post('destroyproduk', [PengirimanBarangController::class, 'destroyProduk'])->name('pengirimanbarang.destroyproduk');
 
         Route::get('{pengirimanbarang}/print_a5', [PengirimanBarangController::class, 'print_a5'])->name('pengirimanbarang.print_a5');
         Route::get('/snycronisasi', [PengirimanBarangController::class, 'syncronisasi'])->name('pengirimanbarang.syncronisasi');
@@ -687,7 +675,6 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
         Route::post('formcn', [FakturPenjualanController::class, 'formcn'])->name('fakturpenjualan.formcn');
         Route::post('inputcn', [FakturPenjualanController::class, 'inputcn'])->name('fakturpenjualan.inputcn');
         Route::post('setcn', [FakturPenjualanController::class, 'setcn'])->name('fakturpenjualan.setcn');
-
     });
 
     Route::prefix('pembayaranhutang')->group(function () {
@@ -732,8 +719,8 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
         Route::post('expstokresult', [LaporanStokController::class, 'expstokresult'])->name('laporanstok.expstokresult');
         Route::post('expstokresult/print', [LaporanStokController::class, 'printExpStok'])->name('laporanstok.expstokresult.print');
 
-        Route::post('kartustokexport', [LaporanStokController::class, 'exportkartustok'])->name('laporanstok.exportkartustok');        
-        
+        Route::post('kartustokexport', [LaporanStokController::class, 'exportkartustok'])->name('laporanstok.exportkartustok');
+
         Route::get('adjustmentstok', [LaporanAdjustmentStokController::class, 'filter'])->name('laporanstok.adjustmentstok');
         Route::post('adjustmentstok/result', [LaporanAdjustmentStokController::class, 'result'])->name('laporanstok.adjustmentstokresult');
         Route::post('adjustmentstok/export', [LaporanAdjustmentStokController::class, 'export'])->name('laporanstok.adjustmentstokexport');
@@ -749,9 +736,6 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
         Route::post('simpanexp', [LaporanStokController::class, 'simpanexp'])->name('laporanstok.simpanexp');
         Route::post('createexp', [LaporanStokController::class, 'createexp'])->name('laporanstok.createexp');
         Route::post('hapusexp', [LaporanStokController::class, 'hapusexp'])->name('laporanstok.hapusexp');
-
-
-        
     });
 
 
@@ -760,22 +744,21 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
         Route::get('', [LaporanPenjualanController::class, 'index'])->name('laporanpenjualan.index');
         Route::get('penjualan', [LaporanPenjualanController::class, 'filterPenjualan'])->name('laporanpenjualan.filterpenjualan');
         Route::get('penjualandetail', [LaporanPenjualanController::class, 'filterPenjualanDetail'])->name('laporanpenjualan.filterpenjualandetail');
-        Route::get('penjualancn', [LaporanPenjualanController::class, 'filterPenjualanCN'])->name('laporanpenjualan.filterpenjualancn');        
+        Route::get('penjualancn', [LaporanPenjualanController::class, 'filterPenjualanCN'])->name('laporanpenjualan.filterpenjualancn');
 
         Route::post('penjualan', [LaporanPenjualanController::class, 'filterDataPenjualan'])->name('laporanpenjualan.filterdatapenjualan');
         Route::post('penjualan/export', [LaporanPenjualanController::class, 'exportPenjualan'])->name('laporanpenjualan.exportpenjualan');
         Route::post('penjualandetail', [LaporanPenjualanController::class, 'filterDataPenjualanDetail'])->name('laporanpenjualan.filterdatapenjualandetail');
         Route::post('penjualandetail/export', [LaporanPenjualanController::class, 'exportPenjualanDetail'])->name('laporanpenjualan.exportpenjualandetail');
         Route::post('penjualancn', [LaporanPenjualanController::class, 'filterDataPenjualanCN'])->name('laporanpenjualan.filterdatapenjualancn');
-        Route::post('penjualancn/export', [LaporanPenjualanController::class, 'exportPenjualanCN'])->name('laporanpenjualan.exportpenjualancn');        
-        
+        Route::post('penjualancn/export', [LaporanPenjualanController::class, 'exportPenjualanCN'])->name('laporanpenjualan.exportpenjualancn');
     });
 
     Route::prefix('laporanpembayaran')->group(function () {
 
         Route::get('', [LaporanPembayaranController::class, 'index'])->name('laporanpembayaran.index');
-        Route::get('pembayaranhutang', [LaporanPembayaranController::class, 'filterHutang'])->name('laporanpembayaran.filterpembayaranhutang');        
-        Route::get('pembayaranhutangdetail', [LaporanPembayaranController::class, 'filterHutangDetail'])->name('laporanpembayaran.filterpembayaranhutangdetail');        
+        Route::get('pembayaranhutang', [LaporanPembayaranController::class, 'filterHutang'])->name('laporanpembayaran.filterpembayaranhutang');
+        Route::get('pembayaranhutangdetail', [LaporanPembayaranController::class, 'filterHutangDetail'])->name('laporanpembayaran.filterpembayaranhutangdetail');
         Route::get('pembayaranpiutang', [LaporanPembayaranController::class, 'filterPiutang'])->name('laporanpembayaran.filterpembayaranpiutang');
         Route::get('pembayaranpiutangdetail', [LaporanPembayaranController::class, 'filterPiutangDetail'])->name('laporanpembayaran.filterpembayaranpiutangdetail');
         Route::get('logtoleransi', [LaporanPembayaranController::class, 'logToleransi'])->name('laporanpembayaran.filterlogtoleransi');
@@ -787,10 +770,9 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
         Route::post('pembayaranhutangdetail/export', [LaporanPembayaranController::class, 'exportPembayaranHutangDetail'])->name('laporanpembayaran.exportpembayaranhutangdetail');
 
         Route::post('pembayaranpiutang', [LaporanPembayaranController::class, 'filterDataPiutang'])->name('laporanpembayaran.filterpembayaranpiutang');
-        Route::post('pembayaranpiutang/export', [LaporanPembayaranController::class, 'exportPembayaranPiutang'])->name('laporanpembayaran.exportpembayaranpiutang'); 
+        Route::post('pembayaranpiutang/export', [LaporanPembayaranController::class, 'exportPembayaranPiutang'])->name('laporanpembayaran.exportpembayaranpiutang');
         Route::post('pembayaranpiutangdetail', [LaporanPembayaranController::class, 'filterPembayaranPiutangDetail'])->name('laporanpembayaran.filterpembayaranpiutangdetail');
-        Route::post('pembayaranpiutangdetail/export', [LaporanPembayaranController::class, 'exportPembayaranPiutangDetail'])->name('laporanpembayaran.exportpembayaranpiutangdetail');                
-        
+        Route::post('pembayaranpiutangdetail/export', [LaporanPembayaranController::class, 'exportPembayaranPiutangDetail'])->name('laporanpembayaran.exportpembayaranpiutangdetail');
     });
 
     Route::prefix('laporanpembelian')->group(function () {
@@ -805,11 +787,10 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
         Route::post('pembelian/export', [LaporanPembelianController::class, 'exportPembelian'])->name('laporanpembelian.exportpembelian');
         Route::post('pembeliandetail', [LaporanPembelianController::class, 'filterDataPembelianDetail'])->name('laporanpembelian.filterdatapembeliandetail');
         Route::post('pembeliandetail/export', [LaporanPembelianController::class, 'exportPembelianDetail'])->name('laporanpembelian.exportpembeliandetail');
-
     });
 
     Route::prefix('laporanhutangpiutang')->group(function () {
-             // GET
+        // GET
         Route::get('', [LaporanHutangPiutangController::class, 'index'])->name('laporanhutangpiutang.index');
         Route::get('hutang', [LaporanHutangPiutangController::class, 'hutang'])->name('laporanhutangpiutang.hutang');
         Route::get('piutang', [LaporanHutangPiutangController::class, 'piutang'])->name('laporanhutangpiutang.piutang');
@@ -823,28 +804,28 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
 
 
     Route::prefix('laporanbiayaoperational')->group(function () {
-                // GET
-        Route::get('', [LaporanBiayaOperationalController::class, 'index'])->name('laporanbiayaoperational.index');        
+        // GET
+        Route::get('', [LaporanBiayaOperationalController::class, 'index'])->name('laporanbiayaoperational.index');
         Route::post('/result', [LaporanBiayaOperationalController::class, 'filter'])->name('laporanbiayaoperational.filter');
-        Route::post('/export', [LaporanBiayaOperationalController::class, 'export'])->name('laporanbiayaoperational.export');        
+        Route::post('/export', [LaporanBiayaOperationalController::class, 'export'])->name('laporanbiayaoperational.export');
     });
 
     Route::prefix('laporanfakturpajak')->group(function () {
-        
+
         // GET
-        Route::get('', [LaporanFakturPajakController::class, 'index'])->name('laporanfakturpajak.index');        
+        Route::get('', [LaporanFakturPajakController::class, 'index'])->name('laporanfakturpajak.index');
         Route::post('/result', [LaporanFakturPajakController::class, 'result'])->name('laporanfakturpajak.filter');
         Route::get('/{id}/detail', [LaporanFakturPajakController::class, 'detail'])->name('laporanfakturpajak.detail');
 
-        Route::post('/exportfaktur', [LaporanFakturPajakController::class, 'exportFaktur'])->name('laporanfakturpajak.exportfaktur');        
-        Route::post('/exportlogfaktur', [LaporanFakturPajakController::class, 'exportLogFaktur'])->name('laporanfakturpajak.exportlogfaktur');        
+        Route::post('/exportfaktur', [LaporanFakturPajakController::class, 'exportFaktur'])->name('laporanfakturpajak.exportfaktur');
+        Route::post('/exportlogfaktur', [LaporanFakturPajakController::class, 'exportLogFaktur'])->name('laporanfakturpajak.exportlogfaktur');
     });
 
 
     Route::prefix('laporanlabarugi')->group(function () {
-        
+
         // GET
-        Route::get('', [LaporanLabaRugiController::class, 'index'])->name('laporanlabarugi.index');        
+        Route::get('', [LaporanLabaRugiController::class, 'index'])->name('laporanlabarugi.index');
         Route::post('/result', [LaporanLabaRugiController::class, 'datatable'])->name('laporanlabarugi.datatable');
         Route::post('/datatablecustomerperproduct', [LaporanLabaRugiController::class, 'datatableCustomerProduct'])->name('laporanlabarugi.datatablecustomerproduct');
 
@@ -855,7 +836,7 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
 
         // =========================================== datatable product ======================================================================
         Route::post('/datatableproduct', [LaporanLabaRugiController::class, 'datatableProduct'])->name('laporanlabarugi.product');
-        Route::post('/productpercustomer', [LaporanLabaRugiController::class, 'datatableProductPerCustomer'])->name('laporanlabarugi.productpercustomer');        
+        Route::post('/productpercustomer', [LaporanLabaRugiController::class, 'datatableProductPerCustomer'])->name('laporanlabarugi.productpercustomer');
 
         // ========================================== datatable cn ======================================================================================
         Route::post('/datatablecn', [LaporanLabaRugiController::class, 'datatableCN'])->name('laporanlabarugi.cn');
@@ -863,20 +844,19 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
 
         Route::get('/{id}/show', [LaporanLabaRugiController::class, 'show'])->name('laporanlabarugi.show');
 
-        Route::post('/print', [LaporanLabaRugiController::class, 'print'])->name('laporanlabarugi.print');        
+        Route::post('/print', [LaporanLabaRugiController::class, 'print'])->name('laporanlabarugi.print');
 
         Route::post('/chartprinciple', [LaporanLabaRugiController::class, 'chartprinciple'])->name('laporanlabarugi.chartprinciple');
 
 
-        Route::get('/filter', [LaporanLabaRugiController::class, 'filterLabaRugi'])->name('laporanlabarugi.filter');        
+        Route::get('/filter', [LaporanLabaRugiController::class, 'filterLabaRugi'])->name('laporanlabarugi.filter');
 
-        Route::post('/filter', [LaporanLabaRugiController::class, 'exportLabaRugi'])->name('laporanlabarugi.filter');        
-        
+        Route::post('/filter', [LaporanLabaRugiController::class, 'exportLabaRugi'])->name('laporanlabarugi.filter');
     });
 
     Route::prefix('laporansales')->group(function () {
-    
-        Route::get('', [LaporanSalesController::class, 'index'])->name('laporansales.index');        
+
+        Route::get('', [LaporanSalesController::class, 'index'])->name('laporansales.index');
         Route::post('/datatable', [LaporanSalesController::class, 'datatable'])->name('laporansales.datatable');
         Route::get('/list', [LaporanSalesController::class, 'list'])->name('laporansales.list');
         Route::get('/{id}/show', [LaporanSalesController::class, 'show'])->name('laporansales.show');
@@ -884,52 +864,46 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
         Route::post('/datatablesales', [LaporanSalesController::class, 'datatablesales'])->name('laporansales.datatablesales');
 
 
-        Route::post('/print', [LaporanSalesController::class, 'print'])->name('laporansales.print');        
-        
+        Route::post('/print', [LaporanSalesController::class, 'print'])->name('laporansales.print');
     });
 
 
     Route::prefix('planmarketing')->group(function () {
-        Route::get('', [laporanPlanMarketingController::class, 'index'])->name('laporanplanmarketing.index');        
+        Route::get('', [laporanPlanMarketingController::class, 'index'])->name('laporanplanmarketing.index');
         Route::get('/list', [laporanPlanMarketingController::class, 'list'])->name('laporanplanmarketing.list');
-        Route::get('/{id}/show', [laporanPlanMarketingController::class, 'show'])->name('laporanplanmarketing.show');                
+        Route::get('/{id}/show', [laporanPlanMarketingController::class, 'show'])->name('laporanplanmarketing.show');
     });
 
     Route::prefix('laporanrencanakunjungan')->group(function () {
-    
-        Route::get('', [LaporanRencanaKunjunganController::class, 'index'])->name('laporanrencanakunjungan.index');        
+
+        Route::get('', [LaporanRencanaKunjunganController::class, 'index'])->name('laporanrencanakunjungan.index');
         Route::get('/list', [LaporanRencanaKunjunganController::class, 'list'])->name('laporanrencanakunjungan.list');
         Route::get('/{id}/show', [LaporanRencanaKunjunganController::class, 'show'])->name('laporanrencanakunjungan.show');
-        Route::post('/print', [LaporanRencanaKunjunganController::class, 'print'])->name('laporanrencanakunjungan.print');        
-        
+        Route::post('/print', [LaporanRencanaKunjunganController::class, 'print'])->name('laporanrencanakunjungan.print');
     });
 
-    Route::prefix('laporanplanteknisi')->group(function () {    
-        Route::get('', [LaporanPlanTeknisiController::class, 'index'])->name('laporanplanteknisi.index');        
-        Route::get('/list', [LaporanPlanTeknisiController::class, 'list'])->name('laporanplanteknisi.list');                      
+    Route::prefix('laporanplanteknisi')->group(function () {
+        Route::get('', [LaporanPlanTeknisiController::class, 'index'])->name('laporanplanteknisi.index');
+        Route::get('/list', [LaporanPlanTeknisiController::class, 'list'])->name('laporanplanteknisi.list');
     });
 
-    Route::prefix('laporanrencanaaktivitasteknisi')->group(function () {    
-        Route::get('', [LaporanRencanaAktivitasTeknisiController::class, 'index'])->name('laporanrencanaaktivitasteknisi.index');        
+    Route::prefix('laporanrencanaaktivitasteknisi')->group(function () {
+        Route::get('', [LaporanRencanaAktivitasTeknisiController::class, 'index'])->name('laporanrencanaaktivitasteknisi.index');
         Route::get('/list', [LaporanRencanaAktivitasTeknisiController::class, 'list'])->name('laporanrencanaaktivitasteknisi.list');
-        Route::get('/{id}/show', [LaporanRencanaAktivitasTeknisiController::class, 'show'])->name('laporanrencanaaktivitasteknisi.show');                      
+        Route::get('/{id}/show', [LaporanRencanaAktivitasTeknisiController::class, 'show'])->name('laporanrencanaaktivitasteknisi.show');
     });
 
     Route::prefix('laporankunjunganteknisi')->group(function () {
-    
-        Route::get('', [LaporanTeknisiController::class, 'index'])->name('laporanteknisi.index');        
+
+        Route::get('', [LaporanTeknisiController::class, 'index'])->name('laporanteknisi.index');
         // Route::post('/datatable', [LaporanTeknisiController::class, 'datatable'])->name('laporanteknisi.datatable');
         Route::get('/list', [LaporanTeknisiController::class, 'list'])->name('laporanteknisi.list');
         Route::get('/{id}/show', [LaporanTeknisiController::class, 'show'])->name('laporanteknisi.show');
 
-        Route::post('/datatablesales', [LaporanTeknisiController::class, 'datatablesales'])->name('laporanteknisi.datatablesales');  
-        
-        Route::post('/print', [LaporanTeknisiController::class, 'print'])->name('laporanteknisi.print'); 
-        
+        Route::post('/datatablesales', [LaporanTeknisiController::class, 'datatablesales'])->name('laporanteknisi.datatablesales');
+
+        Route::post('/print', [LaporanTeknisiController::class, 'print'])->name('laporanteknisi.print');
     });
-
-
-
 });
 
 Route::middleware('has.role')->prefix('konversi')->group(function () {
@@ -944,7 +918,7 @@ Route::middleware('has.role')->prefix('konversi')->group(function () {
         Route::post('inputqty', [KonversiController::class, 'inputQty'])->name('konversisatuan.inputqty');
 
         Route::post('caribarang', [KonversiController::class, 'caribarang'])->name('konversisatuan.caribarang');
-        Route::post('setbarang', [KonversiController::class, 'setbarang'])->name('konversisatuan.setbarang');        
+        Route::post('setbarang', [KonversiController::class, 'setbarang'])->name('konversisatuan.setbarang');
 
         Route::post('submititem', [KonversiController::class, 'submitItem'])->name('konversisatuan.inputtempkonversi');
         Route::post('loadtempkonversi', [KonversiController::class, 'loadKonversi'])->name('konversisatuan.loadkonversi');
@@ -958,10 +932,7 @@ Route::middleware('has.role')->prefix('konversi')->group(function () {
         Route::delete('delete', [KonversiController::class, 'destroy'])->name('konversisatuan.destroy');
 
         Route::get('{konversisatuan}/show', [KonversiController::class, 'show'])->name('konversisatuan.show');
-                
-        
     });
-
 });
 
 Route::middleware('has.role')->prefix('canvassing')->group(function () {
@@ -969,13 +940,13 @@ Route::middleware('has.role')->prefix('canvassing')->group(function () {
         Route::get('', [CanvassingPesananController::class, 'index'])->name('canvassing.index');
         Route::get('create', [CanvassingPesananController::class, 'create'])->name('canvassing.create');
         Route::post('create', [CanvassingPesananController::class, 'store'])->name('canvassing.create');
-        
+
 
         Route::get('caribarang', [CanvassingPesananController::class, 'caribarang'])->name('canvassing.caribarang');
-        Route::post('setbarang', [CanvassingPesananController::class, 'setbarang'])->name('canvassing.setbarang');        
+        Route::post('setbarang', [CanvassingPesananController::class, 'setbarang'])->name('canvassing.setbarang');
 
-        Route::post('inputtempcanvas', [CanvassingPesananController::class, 'inputTempCanvas'])->name('canvassing.inputtempcanvas');        
-        Route::post('loadtempcanvas', [CanvassingPesananController::class, 'loadTempCanvas'])->name('canvassing.loadtempcanvas');        
+        Route::post('inputtempcanvas', [CanvassingPesananController::class, 'inputTempCanvas'])->name('canvassing.inputtempcanvas');
+        Route::post('loadtempcanvas', [CanvassingPesananController::class, 'loadTempCanvas'])->name('canvassing.loadtempcanvas');
 
         Route::post('editbarang', [CanvassingPesananController::class, 'editbarang'])->name('canvassing.editbarang');
         Route::post('updatebarang', [CanvassingPesananController::class, 'updatebarang'])->name('canvassing.updatebarang');
@@ -985,8 +956,8 @@ Route::middleware('has.role')->prefix('canvassing')->group(function () {
         Route::get('{canvassing}/show', [CanvassingPesananController::class, 'show'])->name('canvassing.show');
         Route::get('{id}/print', [CanvassingPesananController::class, 'print'])->name('canvassing.print');
 
-        Route::post('destroy', [CanvassingPesananController::class, 'destroy'])->name('canvassing.destroy');        
-        
+        Route::post('destroy', [CanvassingPesananController::class, 'destroy'])->name('canvassing.destroy');
+
         // ==================== KHUSUS EXP 
         Route::get('{id}/listexp', [CanvassingPesananController::class, 'listexp'])->name('canvassing.listexp');
         Route::get('{canvassing_id}/{id_produk}/setexp', [CanvassingPesananController::class, 'setexp'])->name('canvassing.setexp');
@@ -999,7 +970,6 @@ Route::middleware('has.role')->prefix('canvassing')->group(function () {
         Route::post('hapusexp', [CanvassingPesananController::class, 'hapusexp'])->name('canvassing.hapusexp');
 
         Route::post('daftarprodukkirim', [CanvassingPesananController::class, 'daftarprodukkirim'])->name('canvassing.daftarprodukkirim');
-
     });
 
     Route::prefix('canvassingpengembalian')->group(function () {
@@ -1009,13 +979,13 @@ Route::middleware('has.role')->prefix('canvassing')->group(function () {
         Route::POST('store', [CanvassingPengembalianController::class, 'store'])->name('canvassingpengembalian.store');
 
         Route::post('datacanvassing', [CanvassingPengembalianController::class, 'datacanvassing'])->name('canvassingpengembalian.datacanvassing');
-        Route::post('setbarang', [CanvassingPengembalianController::class, 'setbarang'])->name('canvassingpengembalian.setbarang');        
+        Route::post('setbarang', [CanvassingPengembalianController::class, 'setbarang'])->name('canvassingpengembalian.setbarang');
 
-        Route::post('inputtempcanvas', [CanvassingPengembalianController::class, 'inputTempCanvas'])->name('canvassingpengembalian.inputtempcanvas');        
-        Route::post('loadtempcanvas', [CanvassingPengembalianController::class, 'loadTempCanvas'])->name('canvassingpengembalian.loadtempcanvas');        
+        Route::post('inputtempcanvas', [CanvassingPengembalianController::class, 'inputTempCanvas'])->name('canvassingpengembalian.inputtempcanvas');
+        Route::post('loadtempcanvas', [CanvassingPengembalianController::class, 'loadTempCanvas'])->name('canvassingpengembalian.loadtempcanvas');
 
-        Route::post('hapustemp', [CanvassingPengembalianController::class, 'hapustemp'])->name('canvassingpengembalian.hapustemp');     
-        
+        Route::post('hapustemp', [CanvassingPengembalianController::class, 'hapustemp'])->name('canvassingpengembalian.hapustemp');
+
         Route::post('delete', [CanvassingPengembalianController::class, 'destroy'])->name('canvassingpengembalian.destroy');
 
         Route::get('{canvassingpengembalian}/show', [CanvassingPengembalianController::class, 'show'])->name('canvassingpengembalian.show');
@@ -1032,174 +1002,161 @@ Route::middleware('has.role')->prefix('canvassing')->group(function () {
         Route::post('hapusexp', [CanvassingPengembalianController::class, 'hapusexp'])->name('canvassingpengembalian.hapusexp');
 
         Route::post('daftarkembali', [CanvassingPengembalianController::class, 'daftarkembali'])->name('canvassingpengembalian.daftarkembali');
-        
-
-        
     });
 });
 
 Route::prefix('pengumuman')->group(function () {
-    Route::get('', [PengumumanController::class, 'index'])->name('pengumuman.index'); 
-    Route::post('store', [PengumumanController::class, 'store'])->name('pengumuman.store');        
-    Route::post('datatable', [PengumumanController::class, 'datatable'])->name('pengumuman.datatable');    
+    Route::get('', [PengumumanController::class, 'index'])->name('pengumuman.index');
+    Route::post('store', [PengumumanController::class, 'store'])->name('pengumuman.store');
+    Route::post('datatable', [PengumumanController::class, 'datatable'])->name('pengumuman.datatable');
 
-    Route::post('edit', [PengumumanController::class, 'edit'])->name('pengumuman.edit');    
-    Route::post('update', [PengumumanController::class, 'update'])->name('pengumuman.update');    
+    Route::post('edit', [PengumumanController::class, 'edit'])->name('pengumuman.edit');
+    Route::post('update', [PengumumanController::class, 'update'])->name('pengumuman.update');
 
-    Route::post('show', [PengumumanController::class, 'show'])->name('pengumuman.show');    
+    Route::post('show', [PengumumanController::class, 'show'])->name('pengumuman.show');
 
-    Route::post('destroy', [PengumumanController::class, 'destroy'])->name('pengumuman.destroy');   
+    Route::post('destroy', [PengumumanController::class, 'destroy'])->name('pengumuman.destroy');
 
-    Route::post('homedatatable', [HomeController::class, 'datatablepengumuman'])->name('pengumuman.homedatatable');   
+    Route::post('homedatatable', [HomeController::class, 'datatablepengumuman'])->name('pengumuman.homedatatable');
 });
 
 Route::middleware('has.role')->prefix('adjustment')->group(function () {
     Route::prefix('adjustmentstok')->group(function () {
-        Route::get('', [AdjustmentStokController::class, 'index'])->name('adjustmentstok.index');        
+        Route::get('', [AdjustmentStokController::class, 'index'])->name('adjustmentstok.index');
 
         Route::prefix('expired')->group(function () {
-            Route::get('', [AdjustmentStokController::class, 'expired'])->name('stokexpired.expired'); 
-            Route::post('/import', [AdjustmentStokController::class, 'importExpired'])->name('stokexpired.import');  
-            Route::post('/importrevisi', [AdjustmentStokController::class, 'importRevisiExpired'])->name('stokexpired.importrevisi');               
+            Route::get('', [AdjustmentStokController::class, 'expired'])->name('stokexpired.expired');
+            Route::post('/import', [AdjustmentStokController::class, 'importExpired'])->name('stokexpired.import');
+            Route::post('/importrevisi', [AdjustmentStokController::class, 'importRevisiExpired'])->name('stokexpired.importrevisi');
         });
-    
+
         Route::prefix('nonexpired')->group(function () {
-            Route::get('', [AdjustmentStokController::class, 'nonexpired'])->name('stoknonexpired.nonexpired');        
-            Route::post('/import', [AdjustmentStokController::class, 'importNonExpired'])->name('stoknonexpired.import');        
+            Route::get('', [AdjustmentStokController::class, 'nonexpired'])->name('stoknonexpired.nonexpired');
+            Route::post('/import', [AdjustmentStokController::class, 'importNonExpired'])->name('stoknonexpired.import');
         });
     });
 });
 
 Route::middleware('has.role')->prefix('biaya')->group(function () {
-        Route::prefix('biayaoperational')->group(function () {
-            Route::get('', [BiayaOperationalController::class, 'index'])->name('biayaoperational.index');        
-            Route::get('/create', [BiayaOperationalController::class, 'create'])->name('biayaoperational.create');        
-            Route::post('/create', [BiayaOperationalController::class, 'store'])->name('biayaoperational.store');        
-            Route::get('/{biayaoperational}/edit', [BiayaOperationalController::class, 'edit'])->name('biayaoperational.edit');       
-            Route::put('/{biayaoperational}/edit', [BiayaOperationalController::class, 'update'])->name('biayaoperational.update');                   
-            Route::post('/delete', [BiayaOperationalController::class, 'delete'])->name('biayaoperational.delete');       
-            Route::delete('/delete', [BiayaOperationalController::class, 'destroy'])->name('biayaoperational.destroy');       
-            
-        });
+    Route::prefix('biayaoperational')->group(function () {
+        Route::get('', [BiayaOperationalController::class, 'index'])->name('biayaoperational.index');
+        Route::get('/create', [BiayaOperationalController::class, 'create'])->name('biayaoperational.create');
+        Route::post('/create', [BiayaOperationalController::class, 'store'])->name('biayaoperational.store');
+        Route::get('/{biayaoperational}/edit', [BiayaOperationalController::class, 'edit'])->name('biayaoperational.edit');
+        Route::put('/{biayaoperational}/edit', [BiayaOperationalController::class, 'update'])->name('biayaoperational.update');
+        Route::post('/delete', [BiayaOperationalController::class, 'delete'])->name('biayaoperational.delete');
+    });
 
-        Route::prefix('subjenisbiaya')->group(function () {
-            Route::get('', [SubBiayaController::class, 'index'])->name('subjenisbiaya.index');        
-            Route::post('/create', [SubBiayaController::class, 'store'])->name('subjenisbiaya.create');        
-            Route::post('/datatable', [SubBiayaController::class, 'datatable'])->name('subjenisbiaya.datatable');            
-            Route::post('/delete', [SubBiayaController::class, 'delete'])->name('subjenisbiaya.delete');                                                
-            
-        });
+    Route::prefix('subjenisbiaya')->group(function () {
+        Route::get('', [SubBiayaController::class, 'index'])->name('subjenisbiaya.index');
+        Route::post('/create', [SubBiayaController::class, 'store'])->name('subjenisbiaya.create');
+        Route::post('/datatable', [SubBiayaController::class, 'datatable'])->name('subjenisbiaya.datatable');
+        Route::post('/delete', [SubBiayaController::class, 'delete'])->name('subjenisbiaya.delete');
+    });
 });
 
 Route::middleware('has.role')->prefix('sales')->group(function () {
     Route::prefix('kunjungansales')->group(function () {
-        Route::post('/datatable', [KunjunganSalesController::class, 'datatable'])->name('kunjungansales.datatable'); 
-        Route::get('/show/{kunjungansales}', [KunjunganSalesController::class, 'show'])->name('kunjungansales.show');        
-        Route::get('', [KunjunganSalesController::class, 'index'])->name('kunjungansales.index');          
-        
-         
-        Route::get('/create', [KunjunganSalesController::class, 'create'])->name('kunjungansales.create');        
-        Route::post('/store', [KunjunganSalesController::class, 'store'])->name('kunjungansales.store');        
-        Route::get('/{kunjungansales}/edit', [KunjunganSalesController::class, 'edit'])->name('kunjungansales.edit');       
-        Route::PUT('/{kunjungansales}/update', [KunjunganSalesController::class, 'update'])->name('kunjungansales.update');                   
-        Route::post('/delete', [KunjunganSalesController::class, 'delete'])->name('kunjungansales.delete');       
-        Route::delete('/delete', [KunjunganSalesController::class, 'destroy'])->name('kunjungansales.destroy');       
-        
+        Route::post('/datatable', [KunjunganSalesController::class, 'datatable'])->name('kunjungansales.datatable');
+        Route::get('/show/{kunjungansales}', [KunjunganSalesController::class, 'show'])->name('kunjungansales.show');
+        Route::get('', [KunjunganSalesController::class, 'index'])->name('kunjungansales.index');
+
+
+        Route::get('/create', [KunjunganSalesController::class, 'create'])->name('kunjungansales.create');
+        Route::post('/store', [KunjunganSalesController::class, 'store'])->name('kunjungansales.store');
+        Route::get('/{kunjungansales}/edit', [KunjunganSalesController::class, 'edit'])->name('kunjungansales.edit');
+        Route::PUT('/{kunjungansales}/update', [KunjunganSalesController::class, 'update'])->name('kunjungansales.update');
+        Route::post('/delete', [KunjunganSalesController::class, 'delete'])->name('kunjungansales.delete');
+        Route::delete('/delete', [KunjunganSalesController::class, 'destroy'])->name('kunjungansales.destroy');
     });
 
     Route::prefix('penjualansales')->group(function () {
-        Route::post('/datatablepenjualan', [KunjunganSalesController::class, 'datatablepenjualan'])->name('sales.datatablepenjualan'); 
-        Route::get('/show/{kunjungansales}', [KunjunganSalesController::class, 'show'])->name('penjualansales.show');        
-        Route::get('', [KunjunganSalesController::class, 'indexpenjulaan'])->name('penjualansales.index');                  
+        Route::post('/datatablepenjualan', [KunjunganSalesController::class, 'datatablepenjualan'])->name('sales.datatablepenjualan');
+        Route::get('/show/{kunjungansales}', [KunjunganSalesController::class, 'show'])->name('penjualansales.show');
+        Route::get('', [KunjunganSalesController::class, 'indexpenjulaan'])->name('penjualansales.index');
     });
 
-    Route::prefix('performasales')->group(function () {       
-        Route::get('', [PerformaSalesController::class, 'index'])->name('performasales.index');  
-        Route::get('/{id}/{month}/{category}/detail', [PerformaSalesController::class, 'performasalesdetail'])->name('performasales.performasalesdetail');  
-        Route::post('/performasales', [PerformaSalesController::class, 'dataperformasales'])->name('performasales.dataperformasales'); 
-        Route::post('/grafikperformasales', [PerformaSalesController::class, 'grafikPerformaSales'])->name('performasales.grafikperformasales'); 
+    Route::prefix('performasales')->group(function () {
+        Route::get('', [PerformaSalesController::class, 'index'])->name('performasales.index');
+        Route::get('/{id}/{month}/{category}/detail', [PerformaSalesController::class, 'performasalesdetail'])->name('performasales.performasalesdetail');
+        Route::post('/performasales', [PerformaSalesController::class, 'dataperformasales'])->name('performasales.dataperformasales');
+        Route::post('/grafikperformasales', [PerformaSalesController::class, 'grafikPerformaSales'])->name('performasales.grafikperformasales');
 
         // PERFORMA DALES DETAIL
-        Route::post('/performasales/detailgrafik', [PerformaSalesController::class, 'grafikperformasalesdetail'])->name('performasales.dataperformasales.detailgrafik'); 
-        Route::post('/performasales/performasalesCustomer', [PerformaSalesController::class, 'datatableCustomer'])->name('performasales.dataperformasales.datatableCustomer'); 
+        Route::post('/performasales/detailgrafik', [PerformaSalesController::class, 'grafikperformasalesdetail'])->name('performasales.dataperformasales.detailgrafik');
+        Route::post('/performasales/performasalesCustomer', [PerformaSalesController::class, 'datatableCustomer'])->name('performasales.dataperformasales.datatableCustomer');
 
-        Route::post('/performasales/performasalesProduk', [PerformaSalesController::class, 'datatableProduk'])->name('performasales.dataperformasales.datatableProduk'); 
+        Route::post('/performasales/performasalesProduk', [PerformaSalesController::class, 'datatableProduk'])->name('performasales.dataperformasales.datatableProduk');
 
-        Route::post('/performasales/dataproduct', [PerformaSalesController::class, 'dataProduct'])->name('performasales.dataperformasales.dataproduct'); 
-
-
+        Route::post('/performasales/dataproduct', [PerformaSalesController::class, 'dataProduct'])->name('performasales.dataperformasales.dataproduct');
     });
 
     Route::prefix('targetsales')->group(function () {
-        Route::post('/targetsales/import', [TargetSalesController::class, 'import'])->name('targetsales.import'); 
-        Route::post('/datatable', [TargetSalesController::class, 'datatable'])->name('targetsales.datatable');        
-        Route::get('', [TargetSalesController::class, 'index'])->name('targetsales.index');                  
+        Route::post('/targetsales/import', [TargetSalesController::class, 'import'])->name('targetsales.import');
+        Route::post('/datatable', [TargetSalesController::class, 'datatable'])->name('targetsales.datatable');
+        Route::get('', [TargetSalesController::class, 'index'])->name('targetsales.index');
     });
 
-    Route::prefix('planmarketing')->group(function () {        
-        Route::get('', [PlanMarketingController::class, 'index'])->name('planmarketing.index');                  
-        Route::post('/create', [PlanMarketingController::class, 'create'])->name('planmarketing.create');  
+    Route::prefix('planmarketing')->group(function () {
+        Route::get('', [PlanMarketingController::class, 'index'])->name('planmarketing.index');
+        Route::post('/create', [PlanMarketingController::class, 'create'])->name('planmarketing.create');
 
-        Route::post('/store', [PlanMarketingController::class, 'store'])->name('planmarketing.store');                  
-        Route::post('/datatable', [PlanMarketingController::class, 'datatable'])->name('planmarketing.datatable');  
+        Route::post('/store', [PlanMarketingController::class, 'store'])->name('planmarketing.store');
+        Route::post('/datatable', [PlanMarketingController::class, 'datatable'])->name('planmarketing.datatable');
 
-        Route::get('{id}/edit', [PlanMarketingController::class, 'edit'])->name('planmarketing.edit');  
-        Route::post('update', [PlanMarketingController::class, 'update'])->name('planmarketing.update');  
+        Route::get('{id}/edit', [PlanMarketingController::class, 'edit'])->name('planmarketing.edit');
+        Route::post('update', [PlanMarketingController::class, 'update'])->name('planmarketing.update');
 
-        Route::post('/destroy', [PlanMarketingController::class, 'destroy'])->name('planmarketing.delete');  
+        Route::post('/destroy', [PlanMarketingController::class, 'destroy'])->name('planmarketing.delete');
 
 
-        Route::post('/remind', [PlanMarketingController::class, 'remind'])->name('planmarketing.remind');  
+        Route::post('/remind', [PlanMarketingController::class, 'remind'])->name('planmarketing.remind');
 
-        Route::get('/list', [PlanMarketingController::class, 'list'])->name('planmarketing.list');  
-
+        Route::get('/list', [PlanMarketingController::class, 'list'])->name('planmarketing.list');
     });
 
     Route::prefix('outlet')->group(function () {
         // Route::post('/targetsales/import', [TargetSalesController::class, 'import'])->name('targetsales.import'); 
-        Route::post('/datatable', [OutletController::class, 'datatable'])->name('outlet.datatable');        
-        Route::get('', [OutletController::class, 'index'])->name('outlet.index');             
-        Route::post('/store', [OutletController::class, 'store'])->name('outlet.store');                  
-        Route::post('/edit', [OutletController::class, 'edit'])->name('outlet.edit');                  
-        Route::post('/update', [OutletController::class, 'update'])->name('outlet.update'); 
-        Route::post('/delete', [OutletController::class, 'destroy'])->name('outlet.hapus');  
+        Route::post('/datatable', [OutletController::class, 'datatable'])->name('outlet.datatable');
+        Route::get('', [OutletController::class, 'index'])->name('outlet.index');
+        Route::post('/store', [OutletController::class, 'store'])->name('outlet.store');
+        Route::post('/edit', [OutletController::class, 'edit'])->name('outlet.edit');
+        Route::post('/update', [OutletController::class, 'update'])->name('outlet.update');
+        Route::post('/delete', [OutletController::class, 'destroy'])->name('outlet.hapus');
 
-        Route::post('/import', [OutletController::class, 'import'])->name('outlet.import');  
+        Route::post('/import', [OutletController::class, 'import'])->name('outlet.import');
     });
 
     Route::prefix('rencanakunjungan')->group(function () {
-        Route::get('/datatable', [RencanaKunjunganController::class, 'datatable'])->name('rencanakunjungan.datatable'); 
-        Route::get('/show/{rencanakunjungan}', [RencanaKunjunganController::class, 'show'])->name('rencanakunjungan.show');        
-        Route::get('', [RencanaKunjunganController::class, 'index'])->name('rencanakunjungan.index');          
-        
-         
-        Route::post('/create', [RencanaKunjunganController::class, 'create'])->name('rencanakunjungan.create');        
-        Route::post('/store', [RencanaKunjunganController::class, 'store'])->name('rencanakunjungan.store');        
-        Route::get('/{id}/edit', [RencanaKunjunganController::class, 'edit'])->name('rencanakunjungan.edit');       
-        Route::post('/update', [RencanaKunjunganController::class, 'update'])->name('rencanakunjungan.update');                   
-        Route::post('/delete', [RencanaKunjunganController::class, 'delete'])->name('rencanakunjungan.delete');             
-        
+        Route::get('/datatable', [RencanaKunjunganController::class, 'datatable'])->name('rencanakunjungan.datatable');
+        Route::get('/show/{rencanakunjungan}', [RencanaKunjunganController::class, 'show'])->name('rencanakunjungan.show');
+        Route::get('', [RencanaKunjunganController::class, 'index'])->name('rencanakunjungan.index');
+
+
+        Route::post('/create', [RencanaKunjunganController::class, 'create'])->name('rencanakunjungan.create');
+        Route::post('/store', [RencanaKunjunganController::class, 'store'])->name('rencanakunjungan.store');
+        Route::get('/{id}/edit', [RencanaKunjunganController::class, 'edit'])->name('rencanakunjungan.edit');
+        Route::post('/update', [RencanaKunjunganController::class, 'update'])->name('rencanakunjungan.update');
+        Route::post('/delete', [RencanaKunjunganController::class, 'delete'])->name('rencanakunjungan.delete');
     });
 
     Route::prefix('evaluasi')->group(function () {
         Route::get('', [EvaluasiController::class, 'index'])->name('evaluasi.index');
-        Route::post('/store', [EvaluasiController::class, 'store'])->name('evaluasi.store');        
-        Route::post('/datatable', [EvaluasiController::class, 'datatable'])->name('evaluasi.datatable'); 
-        Route::post('/destroy', [EvaluasiController::class, 'destroy'])->name('evaluasi.destroy');   
+        Route::post('/store', [EvaluasiController::class, 'store'])->name('evaluasi.store');
+        Route::post('/datatable', [EvaluasiController::class, 'datatable'])->name('evaluasi.datatable');
+        Route::post('/destroy', [EvaluasiController::class, 'destroy'])->name('evaluasi.destroy');
 
-        Route::post('/edit', [EvaluasiController::class, 'edit'])->name('evaluasi.edit'); 
-        Route::post('/update', [EvaluasiController::class, 'update'])->name('evaluasi.update');   
-              
+        Route::post('/edit', [EvaluasiController::class, 'edit'])->name('evaluasi.edit');
+        Route::post('/update', [EvaluasiController::class, 'update'])->name('evaluasi.update');
     });
-    
 });
 
 Route::middleware('has.role')->prefix('teknisi')->group(function () {
     Route::prefix('maintenanceproduk')->group(function () {
-        Route::post('/datatable', [MaintenanceController::class, 'datatable'])->name('maintenanceproduk.datatable'); 
-        Route::get('/show/{maintenanceproduk}', [MaintenanceController::class, 'show'])->name('maintenanceproduk.show');        
-        Route::get('', [MaintenanceController::class, 'index'])->name('maintenanceproduk.index');         
-        
+        Route::post('/datatable', [MaintenanceController::class, 'datatable'])->name('maintenanceproduk.datatable');
+        Route::get('/show/{maintenanceproduk}', [MaintenanceController::class, 'show'])->name('maintenanceproduk.show');
+        Route::get('', [MaintenanceController::class, 'index'])->name('maintenanceproduk.index');
+
         //############################### CREATE ##########################################################################
         //=============================== Before Action ===================================================================
         Route::post('/submitbefore', [MaintenanceController::class, 'submitBefore'])->name('maintenanceproduk.submitbefore');
@@ -1208,16 +1165,16 @@ Route::middleware('has.role')->prefix('teknisi')->group(function () {
         Route::post('/deletebefore', [MaintenanceController::class, 'deleteBefore'])->name('maintenanceproduk.deletebefore');
         Route::post('/tabelbefore', [MaintenanceController::class, 'tabelBefore'])->name('maintenanceproduk.tabelbefore');
 
-         //=============================== After Action ===================================================================
-         Route::post('/submitafter', [MaintenanceController::class, 'submitAfter'])->name('maintenanceproduk.submitafter');
-         Route::post('/editafter', [MaintenanceController::class, 'editAfter'])->name('maintenanceproduk.editafter');
-         Route::post('/updateafter', [MaintenanceController::class, 'updateAfter'])->name('maintenanceproduk.updateafter');
-         Route::post('/deleteafter', [MaintenanceController::class, 'deleteAfter'])->name('maintenanceproduk.deleteafter');
-         Route::post('/tabelafter', [MaintenanceController::class, 'tabelAfter'])->name('maintenanceproduk.tabelafter');
-        
-         
-        Route::get('/create', [MaintenanceController::class, 'create'])->name('maintenanceproduk.create');        
-        Route::post('/store', [MaintenanceController::class, 'store'])->name('maintenanceproduk.store'); 
+        //=============================== After Action ===================================================================
+        Route::post('/submitafter', [MaintenanceController::class, 'submitAfter'])->name('maintenanceproduk.submitafter');
+        Route::post('/editafter', [MaintenanceController::class, 'editAfter'])->name('maintenanceproduk.editafter');
+        Route::post('/updateafter', [MaintenanceController::class, 'updateAfter'])->name('maintenanceproduk.updateafter');
+        Route::post('/deleteafter', [MaintenanceController::class, 'deleteAfter'])->name('maintenanceproduk.deleteafter');
+        Route::post('/tabelafter', [MaintenanceController::class, 'tabelAfter'])->name('maintenanceproduk.tabelafter');
+
+
+        Route::get('/create', [MaintenanceController::class, 'create'])->name('maintenanceproduk.create');
+        Route::post('/store', [MaintenanceController::class, 'store'])->name('maintenanceproduk.store');
 
         // ##################################### EDIT ###################################################################
         // ==================================== Before Action ===========================================================
@@ -1227,60 +1184,56 @@ Route::middleware('has.role')->prefix('teknisi')->group(function () {
         Route::post('/editdeletebefore', [MaintenanceController::class, 'destroyEditBefore'])->name('maintenanceprodukedit.deletebefore');
         Route::post('/edittabelbefore', [MaintenanceController::class, 'loadTabelEditBefore'])->name('maintenanceprodukedit.tabelbefore');
 
-         //=============================== After Action ===================================================================
-         Route::post('/editsubmitafter', [MaintenanceController::class, 'EditsubmitAfter'])->name('maintenanceprodukedit.submitafter');
-         Route::post('/editeditafter', [MaintenanceController::class, 'editDataAfter'])->name('maintenanceprodukedit.editafter');
-         Route::post('/editupdateafter', [MaintenanceController::class, 'updateDataAfter'])->name('maintenanceprodukedit.updateafter');
-         Route::post('/editdeleteafter', [MaintenanceController::class, 'destroyEditAfter'])->name('maintenanceprodukedit.deleteafter');
-         Route::post('/edittabelafter', [MaintenanceController::class, 'loadTabelEditAfter'])->name('maintenanceprodukedit.tabelafter');
+        //=============================== After Action ===================================================================
+        Route::post('/editsubmitafter', [MaintenanceController::class, 'EditsubmitAfter'])->name('maintenanceprodukedit.submitafter');
+        Route::post('/editeditafter', [MaintenanceController::class, 'editDataAfter'])->name('maintenanceprodukedit.editafter');
+        Route::post('/editupdateafter', [MaintenanceController::class, 'updateDataAfter'])->name('maintenanceprodukedit.updateafter');
+        Route::post('/editdeleteafter', [MaintenanceController::class, 'destroyEditAfter'])->name('maintenanceprodukedit.deleteafter');
+        Route::post('/edittabelafter', [MaintenanceController::class, 'loadTabelEditAfter'])->name('maintenanceprodukedit.tabelafter');
 
-         Route::get('/{maintenanceproduk}/edit', [MaintenanceController::class, 'edit'])->name('maintenanceproduk.edit');       
-         Route::PUT('/{maintenanceproduk}/update', [MaintenanceController::class, 'update'])->name('maintenanceproduk.update');                   
-        
-         Route::post('/delete', [MaintenanceController::class, 'destroy'])->name('maintenanceproduk.delete');       
+        Route::get('/{maintenanceproduk}/edit', [MaintenanceController::class, 'edit'])->name('maintenanceproduk.edit');
+        Route::PUT('/{maintenanceproduk}/update', [MaintenanceController::class, 'update'])->name('maintenanceproduk.update');
 
-         Route::get('/{maintenanceproduk}/print', [MaintenanceController::class, 'print'])->name('maintenanceproduk.print');                       
-        
+        Route::post('/delete', [MaintenanceController::class, 'destroy'])->name('maintenanceproduk.delete');
+
+        Route::get('/{maintenanceproduk}/print', [MaintenanceController::class, 'print'])->name('maintenanceproduk.print');
     });
 
     Route::prefix('kunjunganteknisi')->group(function () {
         Route::get('', [KunjunganTeknisiController::class, 'index'])->name('kunjunganteknisi.index');
-        Route::get('/show/{kunjunganteknisi}', [KunjunganTeknisiController::class, 'show'])->name('kunjunganteknisi.show');        
+        Route::get('/show/{kunjunganteknisi}', [KunjunganTeknisiController::class, 'show'])->name('kunjunganteknisi.show');
         Route::post('/datatable', [KunjunganTeknisiController::class, 'datatable'])->name('kunjunganteknisi.datatable');
 
         Route::get('/create', [KunjunganTeknisiController::class, 'create'])->name('kunjunganteknisi.create');
         Route::post('/store', [KunjunganTeknisiController::class, 'store'])->name('kunjunganteknisi.store');
 
-        Route::get('/{kunjunganteknisi}/edit', [KunjunganTeknisiController::class, 'edit'])->name('kunjunganteknisi.edit');       
-        Route::PUT('/{kunjunganteknisi}/update', [KunjunganTeknisiController::class, 'update'])->name('kunjunganteknisi.update');  
+        Route::get('/{kunjunganteknisi}/edit', [KunjunganTeknisiController::class, 'edit'])->name('kunjunganteknisi.edit');
+        Route::PUT('/{kunjunganteknisi}/update', [KunjunganTeknisiController::class, 'update'])->name('kunjunganteknisi.update');
 
         Route::post('/destroy', [KunjunganTeknisiController::class, 'destroy'])->name('kunjunganteknisi.destroy');
-    
     });
 
-    Route::prefix('planteknisi')->group(function () {        
-        Route::get('', [PlanTeknisiController::class, 'index'])->name('planteknisi.index');                                  
-        Route::post('/create', [PlanTeknisiController::class, 'create'])->name('planteknisi.create');  
-        Route::post('/store', [PlanTeknisiController::class, 'store'])->name('planteknisi.store');  
-        
-        Route::get('/list', [PlanTeknisiController::class, 'list'])->name('planteknisi.list');  
-        Route::get('{id}/edit', [PlanTeknisiController::class, 'edit'])->name('planteknisi.edit'); 
-        Route::post('update', [PlanTeknisiController::class, 'update'])->name('planteknisi.update');  
-        Route::post('delete', [PlanTeknisiController::class, 'delete'])->name('planteknisi.delete');                   
+    Route::prefix('planteknisi')->group(function () {
+        Route::get('', [PlanTeknisiController::class, 'index'])->name('planteknisi.index');
+        Route::post('/create', [PlanTeknisiController::class, 'create'])->name('planteknisi.create');
+        Route::post('/store', [PlanTeknisiController::class, 'store'])->name('planteknisi.store');
+
+        Route::get('/list', [PlanTeknisiController::class, 'list'])->name('planteknisi.list');
+        Route::get('{id}/edit', [PlanTeknisiController::class, 'edit'])->name('planteknisi.edit');
+        Route::post('update', [PlanTeknisiController::class, 'update'])->name('planteknisi.update');
+        Route::post('delete', [PlanTeknisiController::class, 'delete'])->name('planteknisi.delete');
     });
 
-    Route::prefix('rencanaaktivitas')->group(function () {        
-        Route::get('', [RencanaAktivitasTeknisiController::class, 'index'])->name('rencanaaktivitasteknisi.index');                                  
-        Route::post('/create', [RencanaAktivitasTeknisiController::class, 'create'])->name('rencanaaktivitasteknisi.create');  
-        Route::post('/store', [RencanaAktivitasTeknisiController::class, 'store'])->name('rencanaaktivitasteknisi.store');  
-        
-        Route::get('/list', [RencanaAktivitasTeknisiController::class, 'list'])->name('rencanaaktivitasteknisi.list');  
-        Route::get('{id}/edit', [RencanaAktivitasTeknisiController::class, 'edit'])->name('rencanaaktivitasteknisi.edit'); 
-        Route::post('update', [RencanaAktivitasTeknisiController::class, 'update'])->name('rencanaaktivitasteknisi.update');  
-        Route::post('delete', [RencanaAktivitasTeknisiController::class, 'delete'])->name('rencanaaktivitasteknisi.delete');                   
+    Route::prefix('rencanaaktivitas')->group(function () {
+        Route::get('', [RencanaAktivitasTeknisiController::class, 'index'])->name('rencanaaktivitasteknisi.index');
+        Route::post('/create', [RencanaAktivitasTeknisiController::class, 'create'])->name('rencanaaktivitasteknisi.create');
+        Route::post('/store', [RencanaAktivitasTeknisiController::class, 'store'])->name('rencanaaktivitasteknisi.store');
+
+        Route::get('/list', [RencanaAktivitasTeknisiController::class, 'list'])->name('rencanaaktivitasteknisi.list');
+        Route::get('{id}/edit', [RencanaAktivitasTeknisiController::class, 'edit'])->name('rencanaaktivitasteknisi.edit');
+        Route::post('update', [RencanaAktivitasTeknisiController::class, 'update'])->name('rencanaaktivitasteknisi.update');
+        Route::post('delete', [RencanaAktivitasTeknisiController::class, 'delete'])->name('rencanaaktivitasteknisi.delete');
     });
-
-
 });
 
 Route::middleware('has.role')->prefix('hrd')->group(function () {
@@ -1308,8 +1261,6 @@ Route::middleware('has.role')->prefix('hrd')->group(function () {
         Route::PUT('{id}/update', [LemburController::class, 'update'])->name('lembur.update');
 
         Route::post('/delete', [LemburController::class, 'delete'])->name('lembur.delete');
-
-
     });
 
     Route::prefix('cuti')->group(function () {
@@ -1351,12 +1302,6 @@ Route::middleware('has.role')->prefix('hrd')->group(function () {
 
         Route::get('{id}/delete', [SettingCutiController::class, 'destroy'])->name('settingcuti.delete');
     });
-
-
-
-
-
-
 });
 
 Route::prefix('surat')->group(function () {
@@ -1372,7 +1317,7 @@ Route::prefix('surat')->group(function () {
 
     Route::post('delete', [SuratMenyuratController::class, 'destroy'])->name('suratmenyurat.delete');
 });
-  
+
 Route::prefix('pembuat')->group(function () {
     Route::get('', [PembuatController::class, 'index'])->name('pembuat.index');
     Route::get('/create', [PembuatController::class, 'create'])->name('pembuat.create');
@@ -1393,5 +1338,27 @@ Route::prefix('tipesurat')->group(function () {
     Route::get('{id}/delete', [TipeSuratController::class, 'delete'])->name('tipesurat.delete');
 });
 
+Route::middleware('has.role')->prefix('keuangan')->group(function () {
+    Route::prefix('cashadvance')->group(function () {
+        Route::get('', [CashAdvanceController::class, 'index'])->name('cashadvance.index');        
+        Route::post('/datatable', [CashAdvanceController::class, 'datatable'])->name('cashadvance.datatable');
+        Route::post('/store', [CashAdvanceController::class, 'store'])->name('cashadvance.store');
 
+        Route::post('edit', [CashAdvanceController::class, 'edit'])->name('cashadvance.edit');
+        Route::post('update', [CashAdvanceController::class, 'update'])->name('cashadvance.update');
 
+        Route::post('delete', [CashAdvanceController::class, 'delete'])->name('cashadvance.delete');
+
+        Route::post('reportcash', [CashAdvanceController::class, 'reportcash'])->name('cashadvance.reportcash');
+        Route::post('datatablecash', [CashAdvanceController::class, 'datatablecash'])->name('cashadvance.datatablecash');
+        Route::post('inputcash', [CashAdvanceController::class, 'inputcash'])->name('cashadvance.inputcash');
+        Route::post('deletereportcash', [CashAdvanceController::class, 'deletereportcash'])->name('cashadvance.deletereportcash');
+    });
+
+     Route::prefix('analisis')->group(function () {
+        Route::get('', [AnalisisKeuanganController::class, 'index'])->name('analisiskeuangan.index');        
+        Route::post('/datatable', [AnalisisKeuanganController::class, 'datatable'])->name('analisiskeuangan.datatable');    
+
+        Route::post('/grafikdivisi', [AnalisisKeuanganController::class, 'grafikdivisi'])->name('analisiskeuangan.grafikdivisi');    
+    });
+});

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\BiayaOperational;
 use App\Http\Controllers\Controller;
 use App\Models\Bank;
 use App\Models\BiayaOperational;
+use App\Models\HRD\Karyawan;
 use App\Models\JenisBiaya;
 use App\Models\Keuangan\SubBiaya;
 use App\Models\Sales;
@@ -31,27 +32,29 @@ class BiayaOperationalController extends Controller
     {
         $title = "Biaya Operational";
 
-        $biayaoperational = BiayaOperational::with(['jenisbiaya','bank','sales'])->orderByDesc('id');
+        $biayaoperational = BiayaOperational::with(['jenisbiaya','subbiaya','bank','karyawan'])->orderByDesc('id');        
 
         if (request()->ajax()) {
-            return DataTables::of($biayaoperational)
-                ->addIndexColumn()
+            return DataTables::of($biayaoperational)                
                 ->editColumn('tanggal', function (BiayaOperational $pb) {                    
                     return $pb->tanggal ? with(new Carbon($pb->tanggal))->format('d/m/Y') : '';
                 })
-                ->addColumn('jenis_biaya', function (BiayaOperational $pb) {
+                ->editColumn('jenis_biaya', function (BiayaOperational $pb) {
                     return $pb->jenisbiaya->nama;
+                })
+                ->editColumn('sub_biaya', function (BiayaOperational $pb) {
+                    return $pb->subbiaya->nama;
                 })
                 ->editColumn('nominal', function (BiayaOperational $pb) {
                     return  number_format($pb->nominal , 0, ',', '.');
                 })
-                ->addColumn('sales_id', function (BiayaOperational $pb) {
-                    return $pb->sales->nama;
+                ->editColumn('karyawan_id', function (BiayaOperational $pb) {
+                    return $pb->karyawan->nama;
                 })
-                ->addColumn('sumberdana', function (BiayaOperational $pb) {
+                ->editColumn('sumberdana', function (BiayaOperational $pb) {
                     return $pb->bank->nama;
                 })
-                ->addColumn('keterangan', function (BiayaOperational $pb) {
+                ->editColumn('keterangan', function (BiayaOperational $pb) {
                     return $pb->keterangan;
                 })
                 ->addColumn('action', function ($row) {                    
@@ -72,23 +75,22 @@ class BiayaOperationalController extends Controller
         $title = "Tambah Biaya Operational";
         $jenisbiaya = JenisBiaya::with('subjenisbiaya')->get();
         $bank = Bank::get();
-        $sales = Sales::get();
+        $karyawan = Karyawan::get();
         $count = 0;
-        return view('biayaoperational.create',compact('jenisbiaya','bank','title','count','sales'));
+        return view('biayaoperational.create',compact('jenisbiaya','bank','title','count','karyawan'));
     }
 
   
     public function store(Request $request)
-    {        
-        $jenisbiaya = SubBiaya::where('jenisbiaya_id', $request->jenis_biaya_id)->first();
-            $data = $request->all();            
+    {                 
+            $jenisbiaya = SubBiaya::where('id', $request->jenis_biaya_id)->first();                                   
             BiayaOperational::create([
                 'tanggal' => $request->tanggal,
                 'kode' => $request->kode,
                 'jenis_biaya_id' => $jenisbiaya->jenisbiaya_id,
                 'subjenis_biaya_id' => $request->jenis_biaya_id,
                 'nominal' => $request->nominal,      
-                'sales_id' => $data['sales_id'],
+                'karyawan_id' => $request->karyawan_id,
                 'bank_id' => $request->bank_id,
                 'verified' => 'Diterima',
                 'verified_by' => auth()->user()->id,
@@ -108,36 +110,38 @@ class BiayaOperationalController extends Controller
     public function edit($id)
     {
         $title = 'Ubah Biaya Operational';
-        $biayaoperational = BiayaOperational::with(['jenisbiaya','bank','sales'])->findOrFail($id);
-        $jenisbiaya = JenisBiaya::get();
+        $biayaoperational = BiayaOperational::with(['jenisbiaya','subbiaya','bank','karyawan'])->findOrFail($id);
+        $jenisbiaya = JenisBiaya::with('subjenisbiaya')->get();
         $bank = Bank::get();
-        $sales = Sales::get();
+        $karyawan = Karyawan::get();
 
         return view('biayaoperational.edit',compact(
             'title',
             'biayaoperational',
             'jenisbiaya',
             'bank',
-            'sales'
+            'karyawan'
         ));
     }
 
    
     public function update(Request $request, $id)
     {
-
-        DB::beginTransaction();
-        
+        DB::beginTransaction();        
         try {          
-            $biaya = BiayaOperational::findOrFail($id);
-                        
+            $biaya = BiayaOperational::findOrFail($id);  
+            $jenisbiaya = SubBiaya::where('id', $request->jenis_biaya_id)->first();                                  
             $biaya->update([
                 'tanggal' => $request->tanggal,
-                'jenis_biaya_id' => $request->jenis_biaya_id,
-                'nominal' => $request->nominal,        
-                'request' => $request->request,
+                'kode' => $request->kode,
+                'jenis_biaya_id' => $jenisbiaya->jenisbiaya_id,
+                'subjenis_biaya_id' => $request->jenis_biaya_id,
+                'nominal' => $request->nominal,      
+                'karyawan_id' => $request->karyawan_id,
                 'bank_id' => $request->bank_id,
-                'verifikasi' => 'Diterima'
+                'verified' => 'Diterima',
+                'verified_by' => auth()->user()->id,
+                'keterangan' => $request->keterangan
             ]);
 
             DB::commit();
@@ -151,18 +155,13 @@ class BiayaOperationalController extends Controller
 
     public function delete(Request $request)
     {
-        $data = BiayaOperational::where('id', '=', $request->id)->first();
-        $id = $request->id;        
-
-        return view('biayaoperational._confirmDelete', compact('id'));
-    }
-    
-   
-    public function destroy(Request $request)
-    {
         $biaya = BiayaOperational::findOrFail($request->id);
         $biaya->delete();
-
-        return redirect()->route('biayaoperational.index')->with('status','Biaya Operational berhasil dhapus');
+        
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data berhasil dihapus'
+        ]);
     }
+    
 }

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Blameable;
+use App\Models\HRD\Karyawan;
+use App\Models\Keuangan\SubBiaya;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,15 +18,17 @@ class BiayaOperational extends Model
         'tanggal',
         'kode',
         'jenis_biaya_id',
+        'subjenis_biaya_id',
         'nominal',        
-        'sales_id',
+        'karyawan_id',
         'bank_id',
         'verified',
         'verified_by',
         'keterangan',
         'created_by',
         'updated_by',
-        'deleted_by'
+        'deleted_by',
+        'cashadvance_id',
     ];
 
 
@@ -33,19 +37,25 @@ class BiayaOperational extends Model
         return $this->belongsTo(JenisBiaya::class, 'jenis_biaya_id', 'id');
     }
 
-  
+    public function subbiaya()
+    {
+        return $this->belongsTo(SubBiaya::class, 'subjenis_biaya_id', 'id');
+    }
+
     public function bank()
     {
         return $this->belongsTo(Bank::class, 'bank_id', 'id');
     }
 
    
-    public function sales()
+    public function karyawan()
     {
-        return $this->belongsTo(Sales::class, 'sales_id', 'id');
+        return $this->belongsTo(Karyawan::class, 'karyawan_id', 'id');
     }
-   
 
-  
- 
+     public function cashadvance()
+    {
+        return $this->belongsTo(CashAdvance::class, 'cashadvance_id', 'id');
+    }
+
 }
