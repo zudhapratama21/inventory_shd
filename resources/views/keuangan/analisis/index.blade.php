@@ -60,10 +60,11 @@
                                             name="grandtotal" value="0" readonly>
 
 
-                                        <a href="{{ route('biayaoperational.create') }}"
-                                            class="btn btn-outline-primary font-weight-bolder">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                            data-target="#download">
                                             Download
-                                        </a>
+                                        </button>
+
 
                                     </div>
 
@@ -129,11 +130,11 @@
                                                 </div>
                                             </div>
 
-                                             <div class="col-md-4">
+                                            <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="">Divisi</label>
                                                     <select name="chart_year" class="form-control" id="divisi_id"
-                                                        onclick="filterkategori('divisi_id')">
+                                                        onchange="filterkategori('divisi_id')">
                                                         <option value="" selected>Semua</option>
                                                         @foreach ($divisi as $item)
                                                             <option value="{{ $item->id }}">{{ $item->nama }}
@@ -143,12 +144,12 @@
                                                 </div>
                                             </div>
 
-                                             <div class="col-md-4">
+                                            <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="">Karyawan</label>
-                                                    <select name="chart_year" class="form-control" id="kt_select2_4"
-                                                        onchange="filterkategori('kt_select2_4')">
-                                                            <option value="" selected>Semua</option>
+                                                    <select name="chart_year" class="form-control" id="kt_select2_1"
+                                                        onchange="filterkategori('kt_select2_1')">
+                                                        <option value="all" selected>Semua</option>
                                                         @foreach ($karyawan as $item)
                                                             <option value="{{ $item->id }}">{{ $item->nama }}
                                                             </option>
@@ -187,6 +188,78 @@
     </div>
     <!--end::Content-->
     <div id="modal-confirm-delete"></div>
+
+    <!-- Modal-->
+    <div class="modal fade" id="download" data-backdrop="static" tabindex="-1" role="dialog"
+        aria-labelledby="staticBackdrop" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Download Data</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('analisiskeuangan.download') }}" method="POST" id="form-download">
+                        @csrf
+                        <div class="form-group">
+                            <label for="">Jenis Laporan</label>
+                            <select name="jenis_laporan" class="form-control" id="">
+                                <option value="biaya_operational">Biaya Operational</option>
+                                <option value="cash_advance">Cash Advance</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="">Tanggal Mulai</label>
+                            <input type="date" class="form-control" name="tanggal_mulai" id="tanggal_mulai"
+                                value="{{ now()->format('Y-m-d') }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="">Tanggal Akhir</label>
+                            <input type="date" class="form-control" name="tanggal_akhir" id="tanggal_akhir"
+                                value="{{ now()->format('Y-m-d') }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Jenis Biaya :</label> <br>
+                            <select name="jenisbiaya_id" class="form-control select2" id="kt_select2_8">
+                                @foreach ($jenisbiaya as $item)
+                                    <option value="all" selected>Semua</option>
+                                    <optgroup label="{{ $item->nama }}">
+                                        @foreach ($item->subjenisbiaya as $data)
+                                            <option value="{{ $data->id }}">{{ $data->nama }}</option>
+                                        @endforeach
+                                    </optgroup>
+                                @endforeach
+
+                            </select>
+                            <p style="font-size:70%" class="text-danger">*Jika jenis laporan cash advance , jenis biaya tidak perlu di pilih.</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Karyawan :</label> <br>
+                            <select name="karyawan_id" class="form-control select2" id="kt_select2_4">
+                                <option value="all">Semua</option>
+                                @foreach ($karyawan as $item)
+                                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light-primary font-weight-bold"
+                        data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary font-weight-bold">Save changes</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @include('keuangan.analisis.modal')
 @endsection
 @push('script')
     <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6"') }}"></script>
@@ -200,14 +273,16 @@
 
         // var untuk grafik 
         let tahungrafik = {{ now()->format('Y') }};
-        let karyawan_id = null;
+        let karyawan_id = 'all';
         let divisi_id = null;
+        let jenisbiaya = null;
         let tahun_kategori = {{ now()->format('Y') }};
         let chart = null;
 
         $(document).ready(function() {
             datatable();
             grafikdivisi();
+            datatablehistorycash();
         });
 
         let options = {
@@ -356,15 +431,70 @@
             if (tahunkategori == 'divisi_id') {
                 let e = document.getElementById(tahunkategori);
                 divisi_id = e.options[e.selectedIndex].value;
-            } else if (tahunkategori == 'kt_select2_4') {
+            } else if (tahunkategori == 'kt_select2_1') {
                 let e = document.getElementById(tahunkategori);
                 karyawan_id = e.options[e.selectedIndex].value;
-            }else{
-                // Untuk tahun kategori
+            } else {
                 let e = document.getElementById(tahunkategori);
                 tahun_kategori = e.options[e.selectedIndex].value;
-            }        
+            }
             $('.yajra-datatable').DataTable().ajax.reload(null, false);
+        }
+
+        function reportcash(id) {
+            $('#analisis').modal('show');
+            jenisbiaya = id;
+            $('.yajra-datatable-cash').DataTable().ajax.reload(null, false);
+        }
+
+        function datatablehistorycash() {
+            var table = $('.yajra-datatable-cash').DataTable({
+                responsive: true,
+                processing: true,
+                order: [],
+                ajax: {
+                    url: "{{ route('analisiskeuangan.datatablehistorycash') }}",
+                    type: "POST",
+                    data: function(params) {
+                        params.tahun = tahun_kategori;
+                        params.divisi_id = divisi_id;
+                        params.karyawan_id = karyawan_id;
+                        params.jenisbiaya_id = jenisbiaya;
+                        params._token = "{{ csrf_token() }}";
+                        return params;
+                    }
+                },
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+
+                    {
+                        data: 'tanggal',
+                        name: 'tanggal'
+                    },
+
+                    {
+                        data: 'karyawan',
+                        name: 'karyawan'
+
+                    },
+                    {
+                        data: 'divisi',
+                        name: 'divisi'
+                    },
+                    {
+                        data: 'total_biaya',
+                        name: 'total_biaya'
+                    },
+                    {
+                        data: 'keterangan',
+                        name: 'keterangan'
+                    },
+                ],
+            });
         }
     </script>
 @endpush

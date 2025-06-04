@@ -78,6 +78,10 @@ class FakturPenjualanController extends Controller
                 $status = $sj->status_diterima;
                 return view('penjualan.fakturpenjualan.partial.statusditerima', compact('status'));
             })
+            ->editColumn('status_berkas', function (FakturPenjualan $sj) {
+                $status = $sj->status_berkas;
+                return view('penjualan.fakturpenjualan.partial.statusditerima', compact('status'));
+            })
             ->editColumn('status_cn', function ($sj) {
                 $status = is_null($sj->total_cn) ? 'Belum' : 'Sudah';
                 return $status;
@@ -556,8 +560,6 @@ class FakturPenjualanController extends Controller
             ]);
 
             // ubah data yang ada di faktur penjualan    
-
-
             DB::commit();
 
             return redirect()->route('fakturpenjualan.index')->with('status', 'Faktur Penjualan berhasil diubah!');
@@ -929,15 +931,7 @@ class FakturPenjualanController extends Controller
             'foto_bukti' => $nameFile,
             'no_resi' => $request->no_resi,
             'status_tanggaltop' => $request->top_status
-        ]);
-
-        if ($request->top_status == 'ya') {
-            $piutang = Piutang::where('faktur_penjualan_id', $id)->with('SO')->first();
-            $tanggal_top = date("Y-m-d", strtotime("+" . $piutang->SO->top . " days" . $tanggal));
-            $piutang->update([
-                'tanggal_top' => $tanggal_top
-            ]);
-        }
+        ]);      
 
         return back();
     }
@@ -969,15 +963,7 @@ class FakturPenjualanController extends Controller
             'foto_bukti' => $nameFile,
             'no_resi' => $request->no_resi,
             'status_tanggaltop' => $request->top_status
-        ]);
-
-        if ($request->top_status == 'ya') {
-            $piutang = Piutang::where('faktur_penjualan_id', $id)->with('SO')->first();
-            $tanggal_top = date("Y-m-d", strtotime("+" . $piutang->SO->top . " days" . $tanggal));
-            $piutang->update([
-                'tanggal_top' => $tanggal_top
-            ]);
-        }
+        ]);     
 
         return back();
     }
@@ -1012,7 +998,7 @@ class FakturPenjualanController extends Controller
             }
             $pesananPenjualan->save();
         }
-    }   
+    }
 
 
     public function hapusdouble(Request $request)
@@ -1050,7 +1036,7 @@ class FakturPenjualanController extends Controller
             ->editColumn('cn', function (FakturPenjualanDetail $sj) {
                 return number_format($sj->cn_persen, 0, ',', '.');
             })
-             ->editColumn('cn_total', function (FakturPenjualanDetail $sj) {
+            ->editColumn('cn_total', function (FakturPenjualanDetail $sj) {
                 return number_format($sj->cn_total, 0, ',', '.');
             })
             ->addColumn('action', function ($row) {
@@ -1060,14 +1046,14 @@ class FakturPenjualanController extends Controller
     }
 
 
-    public function formcn (Request $request)
+    public function formcn(Request $request)
     {
-       $id = $request->id;
-       $fakturpenjualandetail = FakturPenjualanDetail::where('id', $id)->first();
-       return view('penjualan.fakturpenjualan.partial.formcn', compact('id', 'fakturpenjualandetail'));
+        $id = $request->id;
+        $fakturpenjualandetail = FakturPenjualanDetail::where('id', $id)->first();
+        return view('penjualan.fakturpenjualan.partial.formcn', compact('id', 'fakturpenjualandetail'));
     }
 
-    public function inputcn (Request $request)
+    public function inputcn(Request $request)
     {
         $id = $request->id;
         $fakturpenjualandetail = FakturPenjualanDetail::where('id', $id)->first();
@@ -1082,11 +1068,11 @@ class FakturPenjualanController extends Controller
             'status' => 'success',
             'message' => 'Data berhasil disimpan'
         ]);
-    }    
+    }
 
-    public function setcn (Request $request)
+    public function setcn(Request $request)
     {
-        $fakturPenjualan = FakturPenjualan::where('id',$request->id)->update([
+        $fakturPenjualan = FakturPenjualan::where('id', $request->id)->update([
             'total_cn' => 0
         ]);
 
@@ -1094,5 +1080,80 @@ class FakturPenjualanController extends Controller
             'status' => 'success',
             'message' => 'Data berhasil disimpan'
         ]);
+    }
+
+    public function inputterimaberkas(Request $request, $id)
+    {        
+        $img = $request->file('foto_bukti_berkas');
+        $nameFile = null;
+        $tanggal = Carbon::parse($request->tanggal_terima)->format('Y-m-d');
+
+        if ($img) {
+            $dataFoto = $img->getClientOriginalName();
+            $waktu = time();
+            $name = $waktu . $dataFoto;
+            $nameFile = Storage::putFileAs('bukti_tandaterima_berkas', $img, $name);
+            $nameFile = $name;
+        }
+
+        $tandaterima = FakturPenjualan::where('id', $id)->update([
+            'status_tanggaltop' => $request->top_status,
+            'tanggal_terima_berkas' => $tanggal,
+            'status_berkas' => $request->status_diterima,
+            'foto_bukti_berkas' => $nameFile,
+            'no_resi_berkas' => $request->no_resi_berkas,
+        ]);
+
+        if ($request->top_status == 'ya') {
+            $piutang = Piutang::where('faktur_penjualan_id', $id)->with('SO')->first();
+            $tanggal_top = date("Y-m-d", strtotime("+" . $piutang->SO->top . " days" . $tanggal));
+            $piutang->update([
+                'tanggal_top' => $tanggal_top
+            ]);
+        }
+
+        return back();
+    }
+
+
+    public function editterimaberkas (Request $request, $id)
+    {        
+        $img = $request->file('foto_bukti_berkas');
+
+        $tanggal = Carbon::parse($request->tanggal_terima)->format('Y-m-d');
+
+        $fakturpenjualan = FakturPenjualan::where('id', $id)->first();
+        $nameFile = $fakturpenjualan->foto_bukti_berkas;
+
+        if ($img) {
+            if ($request->foto_bukti_berkas) {
+                Storage::disk('public')->delete($fakturpenjualan->foto_bukti_berkas);
+            }
+
+            $dataFoto = $img->getClientOriginalName();
+            $waktu = time();
+            $name = $waktu . $dataFoto;
+            $nameFile = Storage::putFileAs('bukti_tandaterima_berkas', $img, $name);
+            $nameFile = $name;
+        }
+        
+        $tandaterima = $fakturpenjualan->update([
+            'status_tanggaltop' => $request->top_status,
+            'tanggal_terima_berkas' => $tanggal,
+            'status_berkas' => $request->status_berkas,
+            'foto_bukti_berkas' => $nameFile,
+            'no_resi_berkas' => $request->no_resi_berkas,
+        ]);
+        
+
+        if ($request->top_status == 'ya') {
+            $piutang = Piutang::where('faktur_penjualan_id', $id)->with('SO')->first();
+            $tanggal_top = date("Y-m-d", strtotime("+" . $piutang->SO->top . " days" . $tanggal));
+            $piutang->update([
+                'tanggal_top' => $tanggal_top
+            ]);
+        }
+
+        return back();
     }    
 }

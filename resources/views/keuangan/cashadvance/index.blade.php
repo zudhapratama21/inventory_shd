@@ -49,9 +49,7 @@
                                                 </g>
                                             </svg>
                                             <!--end::Svg Icon--></span> </span>
-                                    <h3 class="card-label">Data Cash Advance <button
-                                            class="btn btn-icon btn-outline-success" onclick="refreshdata()"><i
-                                                class="flaticon-refresh "></i></button></h3>
+                                    <h3 class="card-label">Data Cash Advance </h3>
                                 </div>
                                 <div class="card-toolbar">
 
@@ -62,8 +60,6 @@
                                         </button>
                                     @endcan
 
-
-                                    <!--end::Button-->
                                 </div>
                             </div>
                             <div class="card-body">
@@ -162,20 +158,12 @@
 
     <script type="text/javascript">
         $(function() {
-            datatable();
-        });
-
-        function datatable() {
             var table = $('.yajra-datatable').DataTable({
-                processing: true,
-                ajax: {
-                    url: "{{ route('cashadvance.datatable') }}",
-                    type: "POST",
-                    data: function(params) {
-                        params._token = "{{ csrf_token() }}";
-                        return params;
-                    }
-                },
+                // responsive: true,
+                // processing: true,
+                // serverSide: true,
+                // autoWidth: false,
+                ajax: "{{ route('cashadvance.datatable') }}",
                 columns: [{
                         data: 'tanggal',
                         name: 'tanggal'
@@ -211,21 +199,10 @@
                         },
                         className: "nowrap",
                     },
-                ],
-                columnDefs: [
-
-                    {
-                        responsivePriority: 1,
-                        targets: 0
-                    },
-                    {
-                        responsivePriority: 2,
-                        targets: -1
-                    },
-                ],
+                ]
             });
+        });
 
-        }
 
         function htmlDecode(data) {
             var txt = document.createElement('textarea');
@@ -292,7 +269,6 @@
                     keterangan: keterangan,
                     "_token": "{{ csrf_token() }}"
                 },
-
                 success: function(data) {
                     document.getElementById('nominal').value = '';
                     document.getElementById('keterangan').value = '';
@@ -312,11 +288,6 @@
                     });
                     $('.yajra-datatable').DataTable().ajax.reload(null, false);
                     $('#tambahcashadvance').modal('hide');
-
-
-
-
-
                 },
                 error: function(data) {
                     console.log(data);
@@ -534,6 +505,8 @@
                 },
 
                 success: function(data) {
+                    // $('#modal-setdata').html(data);
+
                     document.getElementById('nominal').value = '';
                     document.getElementById('keterangan').value = '';
                     var e = document.getElementById("kt_select2_8");
@@ -561,6 +534,7 @@
                     });
 
                     $('.yajra-datatable-reportcash').DataTable().ajax.reload(null, false);
+                    // $('.yajra-datatable').DataTable().ajax.reload(null, false);
                 },
                 error: function(xhr) {
                     const response = JSON.parse(xhr.responseText);
@@ -595,7 +569,7 @@
                             id: id,
                             "_token": "{{ csrf_token() }}"
                         },
-                        success: function(data) {
+                        success: function(data) {                            
                             iziToast.success({
                                 title: 'Success',
                                 message: 'Data Berhasil Dihapus',

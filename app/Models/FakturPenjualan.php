@@ -40,7 +40,11 @@ class FakturPenjualan extends Model
         'status_diterima',
         'foto_bukti',
         'no_resi',
-        'status_tanggaltop'
+        'status_tanggaltop',
+        'tanggal_terima_berkas',
+        'status_berkas',
+        'foto_bukti_berkas',
+        'no_resi_berkas',
     ];
 
     protected $dates = ['tanggal'];

@@ -1163,5 +1163,22 @@ class HomeController extends Controller
             'persenbelumjatuhtempo' => (int)(100 - (int)$persenjatuhtempo)
         ]);
     }
+
+    public function ubahtanggal (Request $request)
+    {
+       $id = $request->id;
+       return view('partial.modal.ubahtanggal',compact('id'));
+    }
+
+    public function simpantanggal (Request $request)
+    {
+        $id = $request->id;
+        $tanggal = Carbon::parse($request->tanggaljatuhtempo)->format('Y-m-d');
+        Piutang::where('id', $id)->update(['tanggal_top' => $tanggal]);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Tanggal berhasil diubah'
+        ]);             
+    }
     
 }

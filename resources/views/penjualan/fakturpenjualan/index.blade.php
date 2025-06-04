@@ -105,7 +105,8 @@
                                             <th>No. Surat Pesanan</th>
                                             <th>No. Pengiriman</th>
                                             <th>Customer</th>
-                                            <th>Status Diterima ?</th>
+                                            <th>Status Diterima Barang ?</th>
+                                            <th>Status Diterima Berkas ?</th>
                                             <th>Status Promo</th>
                                             <th style="width: 15%">Action</th>
                                         </tr>
@@ -213,6 +214,10 @@
                     {
                         data: 'status_diterima',
                         name: 'status_diterima'
+                    },
+                     {
+                        data: 'status_berkas',
+                        name: 'status_berkas'
                     },
                     {
                         data: null,

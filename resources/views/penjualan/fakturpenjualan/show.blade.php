@@ -265,9 +265,10 @@
                                 <div class="d-flex justify-content-between">
                                     <div class="d-flex justify-content-between ">
                                         @can('fakturpenjualan-create')
-                                            <button type="button" class="btn btn-danger dropdown-toggle"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Print & Download</button>
-                                                
+                                            <button type="button" class="btn btn-danger dropdown-toggle mr-2"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Print &
+                                                Download</button>
+
                                             <div class="dropdown-menu">
                                                 <a href="{{ route('fakturpenjualan.print_a4_koma', $fakturpenjualan) }}"
                                                     class="btn btn-primary mr-2" target="_blank">
@@ -276,7 +277,8 @@
 
                                                 <a href="{{ route('fakturpenjualan.print_a4', $fakturpenjualan) }}"
                                                     class="btn btn-primary mr-2" target="_blank">
-                                                    <i class="flaticon2-print font-weight-bold"></i> Download & Print Tanpa Koma
+                                                    <i class="flaticon2-print font-weight-bold"></i> Download & Print Tanpa
+                                                    Koma
                                                 </a>
                                             </div>
                                         @endcan
@@ -301,10 +303,20 @@
                                             </a>
                                         @endcan
 
-                                        <button type="button" class="btn btn-danger ml-4" data-toggle="modal"
-                                            data-target="#exampleModalLong">
-                                            <i class="fas fa-home"></i> Tanda Terima
-                                        </button>
+                                        @can('fakturpenjualan-delete')
+                                            <button type="button" class="btn btn-danger ml-4" data-toggle="modal"
+                                                data-target="#exampleModalLong">
+                                                <i class="flaticon-tool "></i> Tanda Terima
+                                            </button>
+                                        @endcan
+
+                                        @can('fakturpenjualan-delete')
+                                              <button type="button" class="btn btn-success ml-4" data-toggle="modal"
+                                                data-target="#tandaterimaberkas">
+                                                <i class="flaticon-email "></i> Tanda Terima Berkas
+                                            </button>
+                                        @endcan
+
 
                                         @can('labarugi-list')
                                             <a href="{{ route('fakturpenjualan.labarugi.show', ['fakturpenjualan' => $fakturpenjualan->id]) }}"
@@ -332,63 +344,6 @@
         <!--end::Entry-->
     </div>
     <!--end::Content-->
-    <div id="modal-confirm-delete">
-        <!-- Modal-->
-        <div class="modal fade" id="detailDeleteModal" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <form id="destroy-form" action="#">
-                        <input type="hidden" id="id_detail" name="id_detail" value="">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Are You Sure?</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <i aria-hidden="true" class="ki ki-close"></i>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <span class="svg-icon svg-icon-primary svg-icon-4x">
-                                        <!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\themes\metronic\theme\html\demo2\dist/../src/media/svg/icons\Code\Warning-2.svg--><svg
-                                            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                            width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                <rect x="0" y="0" width="24" height="24" />
-                                                <path
-                                                    d="M11.1669899,4.49941818 L2.82535718,19.5143571 C2.557144,19.9971408 2.7310878,20.6059441 3.21387153,20.8741573 C3.36242953,20.9566895 3.52957021,21 3.69951446,21 L21.2169432,21 C21.7692279,21 22.2169432,20.5522847 22.2169432,20 C22.2169432,19.8159952 22.1661743,19.6355579 22.070225,19.47855 L12.894429,4.4636111 C12.6064401,3.99235656 11.9909517,3.84379039 11.5196972,4.13177928 C11.3723594,4.22181902 11.2508468,4.34847583 11.1669899,4.49941818 Z"
-                                                    fill="#000000" opacity="0.3" />
-                                                <rect fill="#000000" x="11" y="9" width="2" height="7"
-                                                    rx="1" />
-                                                <rect fill="#000000" x="11" y="17" width="2" height="2"
-                                                    rx="1" />
-                                            </g>
-                                        </svg>
-                                        <!--end::Svg Icon-->
-                                    </span>
-                                </div>
-                                <div class="col-md-10 " style="display: inline;">
-                                    <div class="align-middle">
-                                        Deleting Detail Data, will be permanently removed from
-                                        system.
-                                    </div>
-                                </div>
-
-                            </div>
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-light-primary font-weight-bold"
-                                data-dismiss="modal">Cancel</button>
-                            <button type="button" onClick="javascript:destroy_detail();"
-                                class="btn btn-danger font-weight-bold">Yes, Delete Now !</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <!-- Modal-->
-    </div>
 
 
     {{-- MODAL TANDA TERIMA --}}
@@ -435,17 +390,7 @@
                                     <option value="belum terima">Belum Diterima</option>
                                 </select>
                             </div>
-
-                            <div class="form-group">
-                                <label for="">Apakah Jatuh Tempo terhitung dari tanggal tanda terima ? </label>
-                                <select name="top_status" class="form-control" id="">
-                                    <option value="{{ $fakturpenjualan->status_tanggaltop }}" selected>
-                                        {{ ucfirst($fakturpenjualan->status_tanggaltop) }}</option>
-                                    <option value="ya">Ya</option>
-                                    <option value="tidak">Tidak</option>
-                                </select>
-
-                            </div>
+                           
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-light-primary font-weight-bold"
                                     data-dismiss="modal">Close</button>
@@ -467,7 +412,7 @@
                                 <input type="text" class="form-control" name="no_resi">
                             </div>
                             <div class="form-group">
-                                <label for="">Foto Bukti</label>
+                                <label for="">Foto Bukti Terima Barang</label>
                                 <input type="file" class="form-control" name="foto_bukti">
                             </div>
                             <div class="form-group">
@@ -477,11 +422,112 @@
                                     <option value="terima">Diterima</option>
                                     <option value="belum terima">Belum Diterima</option>
                                 </select>
+                            </div>                          
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light-primary font-weight-bold"
+                                    data-dismiss="modal">Close</button>
+                                <button type="input" class="btn btn-primary font-weight-bold">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                @endif
+
+
+            </div>
+        </div>
+    </div>
+    {{-- END MODAL  --}}
+
+      {{-- MODAL TANDA TERIMA --}}
+    <div class="modal fade" id="tandaterimaberkas" data-backdrop="static" tabindex="-1" role="dialog"
+        aria-labelledby="staticBackdrop" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Tanda Terima Berkas</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                @if ($fakturpenjualan->status_berkas !== null)
+                    <div class="modal-body">
+                        <form action="{{ route('fakturpenjualan.editterimaberkas', ['id' => $fakturpenjualan->id]) }}"
+                            method="POST" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+                            <div class="form-group">
+                                <label for="">Tanggal Diterima Berkas</label>
+                                <input type="date" class="form-control"
+                                    value="{{ $fakturpenjualan->tanggal_terima_berkas }}" name="tanggal_terima_berkas">
+                            </div>
+                            <div class="form-group">
+                                <label for="">No Resi</label>
+                                <input type="text" class="form-control" value="{{ $fakturpenjualan->no_resi_berkas }}"
+                                    name="no_resi_berkas">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Foto Bukti</label> <br>
+                                <img src="{{ asset('storage/bukti_tandaterima_berkas/' . $fakturpenjualan->foto_bukti_berkas) }}"
+                                    alt="" width="30%" style="margin-bottom:10px">
+                                <a href="{{ asset('storage/bukti_tandaterima_berkas/' . $fakturpenjualan->foto_bukti_berkas) }}"
+                                    class="btn btn-primary btn-sm" download><i class="fas fa-download"></i></a>
+                                <input type="file" class="form-control" name="foto_bukti_berkas">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Status</label>
+                                <select name="status_berkas" id="" class="form-control">
+                                    <option value="{{ $fakturpenjualan->status_berkas }}" selected>
+                                        {{ ucfirst($fakturpenjualan->status_berkas) }}</option>
+                                    <option value="terima">Terima</option>
+                                    <option value="belum terima">Belum Diterima</option>
+                                </select>
                             </div>
 
                             <div class="form-group">
                                 <label for="">Apakah Jatuh Tempo terhitung dari tanggal tanda terima ? </label>
                                 <select name="top_status" class="form-control" id="">
+                                    <option value="{{ $fakturpenjualan->status_tanggaltop }}" selected>
+                                        {{ ucfirst($fakturpenjualan->status_tanggaltop) }}</option>
+                                    <option value="ya">Ya</option>
+                                    <option value="tidak">Tidak</option>
+                                </select>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light-primary font-weight-bold"
+                                    data-dismiss="modal">Close</button>
+                                <button type="input" class="btn btn-primary font-weight-bold">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                @else
+                    <div class="modal-body">
+                          <form action="{{ route('fakturpenjualan.inputterimaberkas', ['id' => $fakturpenjualan->id])}}"
+                            method="POST" enctype="multipart/form-data">
+                            @csrf                            
+                            <div class="form-group">
+                                <label for="">Tanggal Diterima Berkas</label>
+                                <input type="date" class="form-control" name="tanggal_terima_berkas">
+                            </div>
+                            <div class="form-group">
+                                <label for="">No Resi</label>
+                                <input type="text" class="form-control" name="no_resi_berkas">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Foto Bukti</label> <br>                                
+                                <input type="file" class="form-control" name="foto_bukti_berkas">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Status</label>
+                                <select name="status_diterima" id="" class="form-control">                                                                          
+                                    <option value="terima">Terima</option>
+                                    <option value="belum terima">Belum Diterima</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="">Apakah Jatuh Tempo terhitung dari tanggal tanda terima ? </label>
+                                <select name="top_status" class="form-control" id="">                                    
                                     <option value="ya">Ya</option>
                                     <option value="tidak">Tidak</option>
                                 </select>

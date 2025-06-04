@@ -44,11 +44,10 @@ class CashAdvanceController extends Controller
         ]);
     }
 
-    public function datatable(Request $request)
+    public function datatable()
     {
-        $data = CashAdvance::with('karyawan')->orderBy('id', 'desc');
-        return DataTables::of($data)
-            ->addIndexColumn()
+        $data = CashAdvance::with('karyawan')->orderBy('id', 'desc')->get();
+        return DataTables::of($data)            
             ->editColumn('tanggal', function ($row) {
                 return Carbon::parse($row->tanggal)->format('d-m-Y');
             })
@@ -59,7 +58,6 @@ class CashAdvanceController extends Controller
                 $tanggal = Carbon::parse($row->tanggal);
                 $now = Carbon::now();
                 $umur = $now->diffInDays($tanggal);
-
                 $mode = 1;
                 return view('keuangan.cashadvance.action', compact('mode', 'umur'));
             })

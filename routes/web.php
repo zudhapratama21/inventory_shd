@@ -114,6 +114,9 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::post('/rekaphutang', [HomeController::class, 'rekaphutang'])->name('home.rekaphutang');
     Route::post('/rekappiutang', [HomeController::class, 'rekappiutang'])->name('home.rekappiutang');
 
+    Route::post('/ubahtanggal', [HomeController::class, 'ubahtanggal'])->name('home.ubahtanggal');
+    Route::post('/simpantanggal', [HomeController::class, 'simpantanggal'])->name('home.simpantanggal');
+
     Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('profile/edit', [ProfileController::class, 'updateProfileInformation']);
 
@@ -675,6 +678,11 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
         Route::post('formcn', [FakturPenjualanController::class, 'formcn'])->name('fakturpenjualan.formcn');
         Route::post('inputcn', [FakturPenjualanController::class, 'inputcn'])->name('fakturpenjualan.inputcn');
         Route::post('setcn', [FakturPenjualanController::class, 'setcn'])->name('fakturpenjualan.setcn');
+
+
+        Route::post('inputterimaberkas/{id}', [FakturPenjualanController::class, 'inputterimaberkas'])->name('fakturpenjualan.inputterimaberkas');
+        Route::put('editterimaberkas/{id}', [FakturPenjualanController::class, 'editterimaberkas'])->name('fakturpenjualan.editterimaberkas');
+
     });
 
     Route::prefix('pembayaranhutang')->group(function () {
@@ -1341,7 +1349,7 @@ Route::prefix('tipesurat')->group(function () {
 Route::middleware('has.role')->prefix('keuangan')->group(function () {
     Route::prefix('cashadvance')->group(function () {
         Route::get('', [CashAdvanceController::class, 'index'])->name('cashadvance.index');        
-        Route::post('/datatable', [CashAdvanceController::class, 'datatable'])->name('cashadvance.datatable');
+        Route::get('/datatable', [CashAdvanceController::class, 'datatable'])->name('cashadvance.datatable');
         Route::post('/store', [CashAdvanceController::class, 'store'])->name('cashadvance.store');
 
         Route::post('edit', [CashAdvanceController::class, 'edit'])->name('cashadvance.edit');
@@ -1360,5 +1368,10 @@ Route::middleware('has.role')->prefix('keuangan')->group(function () {
         Route::post('/datatable', [AnalisisKeuanganController::class, 'datatable'])->name('analisiskeuangan.datatable');    
 
         Route::post('/grafikdivisi', [AnalisisKeuanganController::class, 'grafikdivisi'])->name('analisiskeuangan.grafikdivisi');    
+
+        Route::post('/download', [AnalisisKeuanganController::class, 'download'])->name('analisiskeuangan.download');    
+
+        Route::post('/historycash', [AnalisisKeuanganController::class, 'historycash'])->name('analisiskeuangan.historycash');    
+        Route::post('/datatablehistorycash', [AnalisisKeuanganController::class, 'datatablehistorycash'])->name('analisiskeuangan.datatablehistorycash');    
     });
 });

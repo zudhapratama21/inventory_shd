@@ -48,8 +48,7 @@ class LaporanHutangExport implements FromView
         }else{
             $tanggalFilter = $pembayaran;
         }
-                    
-        
+                                    
         if ($this->data['supplier'] == 'all') {  
 
             $customerfilter = $tanggalFilter->join('suppliers as s','h.supplier_id','=','s.id');

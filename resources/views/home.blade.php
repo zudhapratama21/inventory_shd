@@ -8,8 +8,8 @@
                 <!--begin::Info-->
                 <div class="d-flex align-items-center flex-wrap mr-1">
                     <!--begin::Heading-->
-                    <div class="d-flex">                                                                                                
-                        
+                    <div class="d-flex">
+
 
                         <div class="card card-custom gutter-b">
                             <div class="card-body">
@@ -25,26 +25,27 @@
                                             <span class="nav-icon"><i class="flaticon2-drop"></i></span>
                                             <span class="nav-text">Analisis</span>
                                         </a>
-                                    </li>                                        
-                                </ul>                              
-                            </div>                           
-                        </div>                        
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                         <!--end::Breadcrumb-->
                     </div>
                     <!--end::Heading-->
-                </div>                
+                </div>
             </div>
         </div>
         <!--end::Subheader-->
 
         <!--begin::Entry-->
-        <div class="d-flex flex-column-fluid">            
-            <div class="container ">   
+        <div class="d-flex flex-column-fluid">
+            <div class="container ">
                 <div class="tab-content">
-                    <div class="tab-pane fade show active" id="kt_tab_pane_1_4" role="tabpanel" aria-labelledby="kt_tab_pane_1_4">
+                    <div class="tab-pane fade show active" id="kt_tab_pane_1_4" role="tabpanel"
+                        aria-labelledby="kt_tab_pane_1_4">
                         <div class="row">
                             <div class="col-lg-12">
-        
+
                                 <div class="card card-custom gutter-b">
                                     <div class="card-header">
                                         <div class="card-title">
@@ -58,15 +59,18 @@
                                         <div class="accordion  accordion-toggle-arrow" id="accordionExample4">
                                             <div class="card">
                                                 <div class="card-header" id="headingOne4">
-                                                    <div class="card-title" data-toggle="collapse" data-target="#collapseOne4">
+                                                    <div class="card-title" data-toggle="collapse"
+                                                        data-target="#collapseOne4">
                                                         <i class="flaticon2-layers-1"></i> Pengumuman Terbaru
                                                     </div>
                                                 </div>
-                                                <div id="collapseOne4" class="collapse show" data-parent="#accordionExample4">
+                                                <div id="collapseOne4" class="collapse show"
+                                                    data-parent="#accordionExample4">
                                                     <div class="card-body">
                                                         <h3>{{ $pengumuman->subject }}</h3>
                                                         <p>Dibuat Oleh : {{ $pengumuman->pembuat->name }} || dibuat pada :
-                                                            {{ \Carbon\Carbon::parse($pengumuman->updated_at)->format('d F Y') }} </p>
+                                                            {{ \Carbon\Carbon::parse($pengumuman->updated_at)->format('d F Y') }}
+                                                        </p>
                                                         <hr>
                                                         <p>
                                                             {!! $pengumuman->description !!}
@@ -106,16 +110,16 @@
                                         </div>
                                     </div>
                                 </div>
-        
+
                             </div>
                         </div>
-                        @include('partial.table.keuangan')                
+                        @include('partial.table.keuangan')
                     </div>
 
-                    <div class="tab-pane fade " id="kt_tab_pane_2_4" role="tabpanel" aria-labelledby="kt_tab_pane_2_4">  
-                        @include('partial.table.analisis')                  
-                    </div>  
-                </div>                                                          
+                    <div class="tab-pane fade " id="kt_tab_pane_2_4" role="tabpanel" aria-labelledby="kt_tab_pane_2_4">
+                        @include('partial.table.analisis')
+                    </div>
+                </div>
             </div>
             <!--end::Container-->
         </div>
@@ -125,7 +129,7 @@
     {{-- modal Customer --}}
 
     @php
-        $userPermissions = $permission; // Mengambil daftar permission user        
+        $userPermissions = $permission; // Mengambil daftar permission user
     @endphp
     <div id="modal-data"></div>
     @include('partial.modal.produk')
@@ -139,6 +143,13 @@
     <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
     <script src="{{ asset('/assets/js/pages/crud/forms/widgets/bootstrap-datepicker.js?v=7.0.6') }}"></script>
     <script src="{{ asset('/assets/js/pages/features/charts/apexcharts.js?v=7.0.6') }} "></script>
+    <script src="{{ asset('assets/js/pages/features/miscellaneous/blockui.js?v=7.0.6') }} "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
+        integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css"
+        integrity="sha512-O03ntXoVqaGUTAeAmvQ2YSzkCvclZEcPQu1eqloPaHfJ5RuNGiS4l+3duaidD801P50J28EHyonCV06CUlTSag=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const ctx = document.getElementById('myChart');
@@ -193,7 +204,7 @@
         let tahunrekappiutang = {{ now()->format('Y') }};
 
         // =========================================================================================================================
-        $(document).ready(function() {                          
+        $(document).ready(function() {
             const permissionActions = {
                 'grafikpenjualan-list': [chartyear],
                 'grafikkategori-list': [chart_kategori],
@@ -203,17 +214,17 @@
                 'tabletopprinciple-list': [datatabletopPrinciple, datatableProductByPrinciple],
                 'datapengiriman-list': [datatablepesanan],
                 'datapenerimaan-list': [datatablepembelian],
-                'datahutang-list' : [datatablehutang],
-                'datapiutang-list' : [datatablepiutang],
-                'rekaphutang-list' :[datahutang],
-                'rekappiutang-list' :[datapiutang]
-                };
+                'datahutang-list': [datatablehutang],
+                'datapiutang-list': [datatablepiutang],
+                'rekaphutang-list': [datahutang],
+                'rekappiutang-list': [datapiutang]
+            };
 
-                Object.entries(permissionActions).forEach(([permission, actions]) => {
-                    if (hasPermission(permission)) {
-                        actions.forEach(action => action());
-                    }
-                });
+            Object.entries(permissionActions).forEach(([permission, actions]) => {
+                if (hasPermission(permission)) {
+                    actions.forEach(action => action());
+                }
+            });
 
             datatablepengumuman();
         })
@@ -221,7 +232,53 @@
 
         // ==================================================================== CHART UNTUK GRAFIK BAR PENJUALAN =======================================
         let options = {
-            type: 'bar', data: { labels: null, datasets: [{ label: 'Penjualan', data: null, pointStyle: 'circle', pointRadius: 10, pointHoverRadius: 15, }] }, options: { responsive: true, plugins: { title: { display: true, text: (ctx) => 'Data Dalam Persen Rupiah ', }, legend: { labels: { font: { size: 11 } } } }, scales: { y: { stacked: true, ticks: { font: { size: 12, } } }, x: { ticks: { font: { size: 12, } } } } }, interaction: { intersect: false, }
+            type: 'bar',
+            data: {
+                labels: null,
+                datasets: [{
+                    label: 'Penjualan',
+                    data: null,
+                    pointStyle: 'circle',
+                    pointRadius: 10,
+                    pointHoverRadius: 15,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: (ctx) => 'Data Dalam Persen Rupiah ',
+                    },
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 11
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        stacked: true,
+                        ticks: {
+                            font: {
+                                size: 12,
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 12,
+                            }
+                        }
+                    }
+                }
+            },
+            interaction: {
+                intersect: false,
+            }
         }
 
         // ==================================================================== CHART UNTUK GRAFIK BAR PENJUALAN =======================================
@@ -441,7 +498,53 @@
 
         //========================================================= CHART UNTUK FORECAST PRODUK  ===================================================== 
         let produkchart = {
-            type: 'line', data: { labels: null, datasets: [{ label: 'Penjualan per Produk', data: null, pointStyle: 'circle', pointRadius: 10, pointHoverRadius: 15, }] }, options: { responsive: true, plugins: { title: { display: true, text: (ctx) => 'Data Dalam Persen Rupiah ', }, legend: { labels: { font: { size: 11 } } } }, scales: { y: { stacked: true, ticks: { font: { size: 12, } } }, x: { ticks: { font: { size: 12, } } } } }, interaction: { intersect: false, }
+            type: 'line',
+            data: {
+                labels: null,
+                datasets: [{
+                    label: 'Penjualan per Produk',
+                    data: null,
+                    pointStyle: 'circle',
+                    pointRadius: 10,
+                    pointHoverRadius: 15,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: (ctx) => 'Data Dalam Persen Rupiah ',
+                    },
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 11
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        stacked: true,
+                        ticks: {
+                            font: {
+                                size: 12,
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 12,
+                            }
+                        }
+                    }
+                }
+            },
+            interaction: {
+                intersect: false,
+            }
         }
 
         function chartProduk() {
@@ -890,7 +993,7 @@
             $('.yajra-datatabletopprinciple').DataTable().ajax.reload(null, false);
         }
 
-        function filterbulantopprinciple() {            
+        function filterbulantopprinciple() {
             let e = document.getElementById("topprinciplebulan");
             topprinciplebulan = e.options[e.selectedIndex].value;
             $('#bulan_principle').val(topprinciplebulan);
@@ -975,9 +1078,9 @@
                 serverSide: true,
                 order: [],
                 ajax: {
-                    url: "{{ route('pengumuman.homedatatable') }}",                    
+                    url: "{{ route('pengumuman.homedatatable') }}",
                     type: "POST",
-                    data: function(params) {                        
+                    data: function(params) {
                         params._token = "{{ csrf_token() }}";
                         return params;
                     }
@@ -1021,7 +1124,7 @@
         }
 
         function showpengumuman(id) {
-             $.ajax({
+            $.ajax({
                 type: 'POST',
                 url: '{{ route('pengumuman.show') }}',
                 dataType: 'html',
@@ -1029,7 +1132,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 data: {
-                    'id': id,                    
+                    'id': id,
                     "_token": "{{ csrf_token() }}"
                 },
                 success: function(data) {
@@ -1043,28 +1146,33 @@
         }
 
         function initializeDataTable(selector, url, columns) {
-                return $(selector).DataTable({
-                    responsive: true,
-                    processing: true,
-                    serverSide: true,
-                    order: [],
-                    ajax: {
-                        url: url,
-                        type: "POST",
-                        data: function(params) {
-                            params._token = "{{ csrf_token() }}";
-                            return params;
-                        }
+            return $(selector).DataTable({
+                responsive: true,
+                processing: true,
+                serverSide: true,
+                order: [],
+                ajax: {
+                    url: url,
+                    type: "POST",
+                    data: function(params) {
+                        params._token = "{{ csrf_token() }}";
+                        return params;
+                    }
+                },
+                columns: columns,
+                columnDefs: [{
+                        responsivePriority: 1,
+                        targets: 0
                     },
-                    columns: columns,
-                    columnDefs: [
-                        { responsivePriority: 1, targets: 0 },
-                        { responsivePriority: 2, targets: -1 }
-                    ]
-                });
-         }
+                    {
+                        responsivePriority: 2,
+                        targets: -1
+                    }
+                ]
+            });
+        }
 
-         function renderActionButton(urlBase, data) {
+        function renderActionButton(urlBase, data) {
             return `<a href="${urlBase}/${data}/create" class="btn btn-success btn-sm">
                         <i class="flaticon2-check-mark"></i> Pilih
                     </a>`;
@@ -1081,69 +1189,188 @@
             return `<span class="badge ${badgeClass}">${data} Hari</span>`;
         }
 
-        function datatablepesanan() {            
-            initializeDataTable('.yajra-datatable-pengiriman', "{{ route('home.pengiriman') }}", [
-                { data: 'kode', name: 'kode' },
-                { data: 'tanggal', name: 'tanggal' },
-                { data: 'customer', name: 'customers.nama' },
-                { data: 'umur', searchable: false, render: renderAgeBadge },
-                { data: 'status', name: 'StatusSo.nama', searchable: false },
-                { data: 'keterangan_internal', name: 'keterangan_internal'},
-                { data: 'action', render: data => renderActionButton('penjualan/pengirimanbarang', data), className: "nowrap" }
+        function datatablepesanan() {
+            initializeDataTable('.yajra-datatable-pengiriman', "{{ route('home.pengiriman') }}", [{
+                    data: 'kode',
+                    name: 'kode'
+                },
+                {
+                    data: 'tanggal',
+                    name: 'tanggal'
+                },
+                {
+                    data: 'customer',
+                    name: 'customers.nama'
+                },
+                {
+                    data: 'umur',
+                    searchable: false,
+                    render: renderAgeBadge
+                },
+                {
+                    data: 'status',
+                    name: 'StatusSo.nama',
+                    searchable: false
+                },
+                {
+                    data: 'keterangan_internal',
+                    name: 'keterangan_internal'
+                },
+                {
+                    data: 'action',
+                    render: data => renderActionButton('penjualan/pengirimanbarang', data),
+                    className: "nowrap"
+                }
             ]);
         }
 
-        function datatablepembelian() {            
-            initializeDataTable('.yajra-datatable-pembelian', "{{ route('home.penerimaan') }}", [
-                { data: 'kode', name: 'kode' },
-                { data: 'tanggal', name: 'tanggal' },
-                { data: 'supplier', name: 'suppliers.nama' },
-                { data: 'umur', searchable: false, render: renderAgeBadge },
-                { data: 'status', name: 'statusPO.nama' },
-                { data: 'keterangan_internal', name: 'keterangan_internal' },
-                { data: 'action', render: data => renderActionButton('pembelian/penerimaanbarang', data), className: "nowrap" }
+        function datatablepembelian() {
+            initializeDataTable('.yajra-datatable-pembelian', "{{ route('home.penerimaan') }}", [{
+                    data: 'kode',
+                    name: 'kode'
+                },
+                {
+                    data: 'tanggal',
+                    name: 'tanggal'
+                },
+                {
+                    data: 'supplier',
+                    name: 'suppliers.nama'
+                },
+                {
+                    data: 'umur',
+                    searchable: false,
+                    render: renderAgeBadge
+                },
+                {
+                    data: 'status',
+                    name: 'statusPO.nama'
+                },
+                {
+                    data: 'keterangan_internal',
+                    name: 'keterangan_internal'
+                },
+                {
+                    data: 'action',
+                    render: data => renderActionButton('pembelian/penerimaanbarang', data),
+                    className: "nowrap"
+                }
             ]);
         }
 
         function datatablehutang() {
-            initializeDataTable('.yajra-datatable-hutang', "{{ route('home.hutang') }}", [
-                { data: 'tanggal_top',searchable: false, name: 'tanggal_top' },
-                { data: 'nama_supplier', name: 'suppliers.nama' },
-                { data: 'kode_faktur', name: 'FakturPO.kode' },
-                { data: 'no_faktur_supplier', name: 'FakturPO.no_faktur_supplier' },
-                { data: 'total',searchable: false, name: 'total' },
-                { data: 'dibayar',searchable: false, name: 'dibayar' },
-                { data: 'sisa',searchable: false, name: 'sisa' },                
-                { data: 'umur', searchable: false, render: renderAgeBadge },
-                { data: 'status', render : function(data){
-                    if (data == 1) {
-                        return '<span class="badge badge-info">Belum Jatuh Tempo</span>';
-                    }else{
-                        return '<span class="badge badge-danger">Sudah Jatuh Tempo</span>';
+            initializeDataTable('.yajra-datatable-hutang', "{{ route('home.hutang') }}", [{
+                    data: 'tanggal_top',
+                    searchable: false,
+                    name: 'tanggal_top'
+                },
+                {
+                    data: 'nama_supplier',
+                    name: 'suppliers.nama'
+                },
+                {
+                    data: 'kode_faktur',
+                    name: 'FakturPO.kode'
+                },
+                {
+                    data: 'no_faktur_supplier',
+                    name: 'FakturPO.no_faktur_supplier'
+                },
+                {
+                    data: 'total',
+                    searchable: false,
+                    name: 'total'
+                },
+                {
+                    data: 'dibayar',
+                    searchable: false,
+                    name: 'dibayar'
+                },
+                {
+                    data: 'sisa',
+                    searchable: false,
+                    name: 'sisa'
+                },
+                {
+                    data: 'umur',
+                    searchable: false,
+                    render: renderAgeBadge
+                },
+                {
+                    data: 'status',
+                    render: function(data) {
+                        if (data == 1) {
+                            return '<span class="badge badge-info">Belum Jatuh Tempo</span>';
+                        } else {
+                            return '<span class="badge badge-danger">Sudah Jatuh Tempo</span>';
+                        }
                     }
-                }},
-                { data: 'action', render: data => renderActionButton('pembayaran/pembayaranhutang', data), className: "nowrap" }
+                },
+                {
+                    data: 'action',
+                    render: data => renderActionButton('pembayaran/pembayaranhutang', data),
+                    className: "nowrap"
+                }
             ]);
         }
 
         function datatablepiutang() {
-            initializeDataTable('.yajra-datatable-piutang', "{{ route('home.piutang') }}", [
-                { data: 'tanggal_top',searchable: false, name: 'tanggal_top' },
-                { data: 'no_kpa', name: 'fakturpenjualan.no_kpa' },
-                { data: 'customer', name: 'customers.nama' },               
-                { data: 'total',searchable: false, name: 'total' },                
-                { data: 'dibayar',searchable: false, name: 'dibayar' },
-                { data: 'sisa',searchable: false, name: 'sisa' },                
-                { data: 'umur', searchable: false, render: renderAgeBadge },
-                { data: 'status', render : function(data){
-                    if (data == 1) {
-                        return '<span class="badge badge-info">Belum Jatuh Tempo</span>';
-                    }else{
-                        return '<span class="badge badge-danger">Sudah Jatuh Tempo</span>';
+            initializeDataTable('.yajra-datatable-piutang', "{{ route('home.piutang') }}", [{
+                    data: 'tanggal_top',
+                    searchable: false,
+                    render: function(data, type, row) {
+                        // row.id berisi id, row.tanggal_top berisi tanggal
+                        // Contoh: return tanggal dan id
+                        return `${data} <span class="btn btn-icon btn-outline-success btn-circle btn-sm" onclick=ubahtanggal(${row.id})><i class="flaticon-browser"></i></span>`;
                     }
-                }},                
-                { data: 'sales', name: 'sales' },
-                { data: 'action', render: data => renderActionButton('pembayaran/pembayaranpiutang', data), className: "nowrap" }
+                },
+                {
+                    data: 'no_kpa',
+                    name: 'fakturpenjualan.no_kpa'
+                },
+                {
+                    data: 'customer',
+                    name: 'customers.nama'
+                },
+                {
+                    data: 'total',
+                    searchable: false,
+                    name: 'total'
+                },
+                {
+                    data: 'dibayar',
+                    searchable: false,
+                    name: 'dibayar'
+                },
+                {
+                    data: 'sisa',
+                    searchable: false,
+                    name: 'sisa'
+                },
+                {
+                    data: 'umur',
+                    searchable: false,
+                    render: renderAgeBadge
+                },
+                {
+                    data: 'status',
+                    render: function(data) {
+                        if (data == 1) {
+                            return '<span class="badge badge-info">Belum Jatuh Tempo</span>';
+                        } else {
+                            return '<span class="badge badge-danger">Sudah Jatuh Tempo</span>';
+                        }
+                    }
+                },
+                {
+                    data: 'sales',
+                    name: 'sales'
+                },
+                {
+                    data: 'action',
+                    render: data => renderActionButton('pembayaran/pembayaranpiutang', data),
+                    className: "nowrap"
+                }
             ]);
         }
 
@@ -1160,7 +1387,7 @@
                     "_token": "{{ csrf_token() }}"
                 },
                 success: function(data) {
-                    let response = JSON.parse(data);                                                                                                   
+                    let response = JSON.parse(data);
                     $('#hutang-lunas').html(response.total_lunas);
                     $('#hutang-belum-lunas').html(response.total_belum_lunas);
                     $('#hutang-jatuh-tempo').html(response.total_jatuh_tempo);
@@ -1172,7 +1399,7 @@
                     $('#progress-hutang-lunas').css('width', response.persenlunas + '%');
                     $('#progress-hutang-belum-lunas').css('width', response.persenbelumlunas + '%');
                     $('#progress-jatuh-tempo').css('width', response.persenjatuhtempo + '%');
-                    $('#progress-belum-jatuh-tempo').css('width', response.persenbelumjatuhtempo + '%');                                        
+                    $('#progress-belum-jatuh-tempo').css('width', response.persenbelumjatuhtempo + '%');
                 },
                 error: function(data) {
                     console.log(data);
@@ -1180,7 +1407,7 @@
             });
         }
 
-       
+
 
         function datapiutang(params) {
             $.ajax({
@@ -1195,7 +1422,7 @@
                     "_token": "{{ csrf_token() }}"
                 },
                 success: function(data) {
-                    let response = JSON.parse(data);                                                                                                   
+                    let response = JSON.parse(data);
                     $('#piutang-lunas').html(response.total_lunas);
                     $('#piutang-belum-lunas').html(response.total_belum_lunas);
                     $('#piutang-jatuh-tempo').html(response.total_jatuh_tempo);
@@ -1208,25 +1435,84 @@
                     $('#progress-piutang-lunas').css('width', response.persenlunas + '%');
                     $('#progress-piutang-belum-lunas').css('width', response.persenbelumlunas + '%');
                     $('#progress-piutang-jatuh-tempo').css('width', response.persenjatuhtempo + '%');
-                    $('#progress-piutang-belum-jatuh-tempo').css('width', response.persenbelumjatuhtempo + '%');                                
+                    $('#progress-piutang-belum-jatuh-tempo').css('width', response.persenbelumjatuhtempo + '%');
                 },
                 error: function(data) {
                     console.log(data);
                 }
             });
         }
-        
+
         function filterhutang() {
             let e = document.getElementById("rekaphutang");
             tahunrekaphutang = e.options[e.selectedIndex].value;
             datahutang();
         }
 
-        function filterpiutang(){
+        function filterpiutang() {
             let e = document.getElementById("rekappiutang");
             tahunrekappiutang = e.options[e.selectedIndex].value;
             datapiutang();
-        }              
-        
+        }
+
+
+        function ubahtanggal(id) {
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('home.ubahtanggal') }}',
+                dataType: 'html',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                beforeSend: function() {
+                    KTApp.blockPage();
+                },
+                data: {
+                    'id': id,
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    $('#modal-data').html(data);
+                    $('#ubahtanggal').modal('show');
+                },
+                complete: function() {
+                    KTApp.unblock();
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            });
+        }
+
+        function simpantanggal(id) {
+            let tanggaljatuhtempo = $('#tanggaljatuhtempo').val();
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('home.simpantanggal') }}',                
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'id': id,
+                    'tanggaljatuhtempo': tanggaljatuhtempo,
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    $('.yajra-datatable-piutang').DataTable().ajax.reload(null, false);
+                    iziToast.success({
+                        title: 'Success',
+                        message: 'Data Berhasil Diubah',
+                        position: 'topRight',
+                    });
+                    $('#ubahtanggal').modal('hide');
+                    
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            });
+
+        }
     </script>
 @endpush

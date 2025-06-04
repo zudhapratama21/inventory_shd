@@ -59,10 +59,10 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Kunjungan Sales
-                                <a href="whatsapp://send?text=Assalamualaikum wr wb %0ABagaimana untuk hasil aktifitas {{$text}} pada {{ \Carbon\Carbon::parse($kunjungansales->tanggal)->format('d/F/Y') }} di {{ $kunjungansales->outlet ? $kunjungansales->outlet->nama : $kunjungansales->customer }} ?&app_absent=0&phone={{$kunjungansales->user->phone}}"
+                                <a href="whatsapp://send?text=Assalamualaikum wr wb %0ABagaimana untuk hasil aktifitas {{ $text }} pada {{ \Carbon\Carbon::parse($kunjungansales->tanggal)->format('d/F/Y') }} di {{ $kunjungansales->outlet ? $kunjungansales->outlet->nama : $kunjungansales->customer }} ?&app_absent=0&phone={{ $kunjungansales->user->phone }}"
                                     target="_blank" class="btn btn-light btn-hover-success btn-sm mr-3">
                                     <span class="badge badge-success badge-lg">Click to Wa !!</span>
-                                                                    
+
                                 </a>
                             </h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -95,6 +95,22 @@
                                     <label for="">Aktivitas</label>
                                     <textarea name="aktivitas" class="form-control" id="editor" cols="30" rows="5" readonly>{{ $kunjungansales->aktifitas }}</textarea>
                                 </div>
+
+                                <div class="form-group">
+                                    <label>Foto Kunjungan :</label>
+                                    <a href="#" data-toggle="modal" data-target="#fotokunjungan">
+                                        <img src="{{ asset('storage/kunjungan/' . $kunjungansales->image) }}"
+                                            class="img-fluid" alt="" style="max-height: 200px">
+                                    </a>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Foto TTD :</label>
+                                    <a href="#" data-toggle="modal" data-target="#fotottd">
+                                        <img src="{{ asset('ttd/' . $kunjungansales->ttd) }}" class="img-fluid"
+                                            alt="">
+                                    </a>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -106,3 +122,46 @@
 </div>
 
 <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6"') }}"></script>
+
+{{-- MODAL FOTO KUNJUNGAN --}}
+<!-- Modal -->
+<div class="modal fade" id="fotokunjungan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Foto Kunjungan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img src="{{ asset('storage/kunjungan/' . $kunjungansales->image) }}" class="img-fluid" alt="">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- END MODAL FOTO KUNJUNGAN --}}
+
+{{--  MODAL FOTO TTD --}}
+<div class="modal fade" id="fotottd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Foto TTD</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img src="{{ asset('ttd/' . $kunjungansales->ttd) }}" class="img-fluid" alt="" style="max-height 200px ">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- END MODAL FOTO TTD --}}
