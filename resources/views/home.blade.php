@@ -203,8 +203,10 @@
         let tahunrekaphutang = {{ now()->format('Y') }};
         let tahunrekappiutang = {{ now()->format('Y') }};
 
+        let tahunlabarugi = {{ now()->format('Y') }};
+
         // =========================================================================================================================
-        $(document).ready(function() {
+        $(document).ready(function() {            
             const permissionActions = {
                 'grafikpenjualan-list': [chartyear],
                 'grafikkategori-list': [chart_kategori],
@@ -217,7 +219,8 @@
                 'datahutang-list': [datatablehutang],
                 'datapiutang-list': [datatablepiutang],
                 'rekaphutang-list': [datahutang],
-                'rekappiutang-list': [datapiutang]
+                'rekappiutang-list': [datapiutang],
+                'rekaplabarugi-list' : [rekaplabarugi]
             };
 
             Object.entries(permissionActions).forEach(([permission, actions]) => {
@@ -1489,7 +1492,7 @@
             let tanggaljatuhtempo = $('#tanggaljatuhtempo').val();
             $.ajax({
                 type: 'POST',
-                url: '{{ route('home.simpantanggal') }}',                
+                url: '{{ route('home.simpantanggal') }}',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
@@ -1506,13 +1509,49 @@
                         position: 'topRight',
                     });
                     $('#ubahtanggal').modal('hide');
-                    
+
                 },
                 error: function(data) {
                     console.log(data);
                 }
             });
 
+        }
+
+        function rekaplabarugi() {
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('home.rekaplabarugi') }}',
+                dataType: 'html',
+                beforeSend: function() {
+                    KTApp.blockPage();
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'tahun': tahunlabarugi,
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    let response = JSON.parse(data);
+                    $('#laba_penjualan').html(response.grand_total_penjualan_bersih);
+                    $('#beban_operasional').html(response.grand_total_pengeluaran);
+                    $('#total_keuntungan').html(response.total_keuntungan);
+                },
+                complete: function() {
+                    KTApp.unblock();
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            });
+        }
+
+        function filtertahunlabarugi() {
+            let e = document.getElementById("tahunrekaplabarugi");
+            tahunlabarugi = e.options[e.selectedIndex].value;
+            rekaplabarugi();
         }
     </script>
 @endpush

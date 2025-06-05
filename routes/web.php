@@ -110,6 +110,8 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::post('/hutang', [HomeController::class, 'datatablehutang'])->name('home.hutang');
     Route::post('/piutang', [HomeController::class, 'datatablepiutang'])->name('home.piutang');
 
+    Route::post('/rekaplabarugi', [HomeController::class, 'totalbebanperusahaan'])->name('home.rekaplabarugi');
+
     // rekap hutang
     Route::post('/rekaphutang', [HomeController::class, 'rekaphutang'])->name('home.rekaphutang');
     Route::post('/rekappiutang', [HomeController::class, 'rekappiutang'])->name('home.rekappiutang');

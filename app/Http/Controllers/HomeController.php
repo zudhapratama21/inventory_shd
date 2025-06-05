@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\TopCustomerExport;
 use App\Exports\TopProductExport;
 use App\Models\Customer;
+use App\Models\FakturPenjualanDetail;
 use App\Models\HRD\Pengumuman;
 use App\Models\Hutang;
 use App\Models\Kategoripesanan;
@@ -1117,7 +1118,7 @@ class HomeController extends Controller
     public function rekappiutang(Request $request)
     {
         $piutangs = Piutang::get();
-        
+
         $jatuhTempo = $piutangs->filter(function ($piutang) {
             $tanggalTop = Carbon::parse($piutang->tanggal_top)->startOfDay();
             $hariIni = Carbon::now()->startOfDay();
@@ -1137,11 +1138,11 @@ class HomeController extends Controller
         });
 
         $belumLunas = $piutangs->filter(function ($piutang) use ($year) {
-            return $piutang->status == 1 && Carbon::parse($piutang->tanggal)->year == $year;    
+            return $piutang->status == 1 && Carbon::parse($piutang->tanggal)->year == $year;
         });
 
         $totalJatuhTempo = $jatuhTempo->sum('total') - $jatuhTempo->sum('dibayar');
-        
+
         $totalBelumJatuhTempo = $belumJatuhTempo->sum('total') - $belumJatuhTempo->sum('dibayar');
         $totalSudahLunas = $sudahLunas->sum('total') + $belumLunas->sum('dibayar');
         $totalBelumLunas = $belumLunas->sum('total') - $belumLunas->sum('dibayar');
@@ -1164,13 +1165,13 @@ class HomeController extends Controller
         ]);
     }
 
-    public function ubahtanggal (Request $request)
+    public function ubahtanggal(Request $request)
     {
-       $id = $request->id;
-       return view('partial.modal.ubahtanggal',compact('id'));
+        $id = $request->id;
+        return view('partial.modal.ubahtanggal', compact('id'));
     }
 
-    public function simpantanggal (Request $request)
+    public function simpantanggal(Request $request)
     {
         $id = $request->id;
         $tanggal = Carbon::parse($request->tanggaljatuhtempo)->format('Y-m-d');
@@ -1178,7 +1179,61 @@ class HomeController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Tanggal berhasil diubah'
-        ]);             
+        ]);
     }
-    
+
+
+    public function totalbebanperusahaan(Request $request)
+    {
+        // 1. Hitung total biaya operasional (pengeluaran)
+        $grand_total_pengeluaran = DB::table('biaya_operationals as bo')
+            ->join('karyawan as k', 'k.id', '=', 'bo.karyawan_id')
+            ->join('posisi as p', 'p.id', '=', 'k.posisi_id')
+            ->join('divisi as d', 'd.id', '=', 'p.divisi_id')
+            ->whereNull('bo.deleted_at')
+            ->when($request->tahun, function ($query) use ($request) {
+                $query->whereYear('bo.tanggal', $request->tahun);
+            })
+            ->sum('bo.nominal');
+
+        // 2. Hitung total bersih penjualan
+        $fakturpenjualan = FakturPenjualanDetail::with(['pengirimanbarangdetail.stokexpdetail', 'pengirimanbarangdetail.harganonexpireddetail'])
+            ->whereHas('fakturpenjualan', function ($q) use ($request) {
+                $q->whereYear('tanggal', '=', $request->tahun);
+            })
+            ->get();
+
+        $total_bersih_penjualan = 0;
+
+        foreach ($fakturpenjualan as $item) {
+            $details = $item->products->status_exp == 0
+                ? $item->pengirimanbarangdetail->harganonexpireddetail
+                : $item->pengirimanbarangdetail->stokexpdetail;
+
+            foreach ($details as $detail) {
+                $qty = $detail->qty;
+
+                $subtotal = $qty * $detail->harga_beli * -1;
+                $total_diskon = ($detail->diskon_persen_beli * $subtotal / 100) + $detail->diskon_rupiah_beli;
+                $hpp = ($subtotal - $total_diskon) * 1.11;
+
+                $totalJual = $qty * $item->hargajual * -1;
+                $subtotalPenjualan = $totalJual - ($totalJual * $item->diskon_persen / 100) - $item->diskon_rp;
+                $pph = $item->pph ? $subtotalPenjualan * $item->pph / 100 : 0;
+                $cn = ($subtotalPenjualan - $pph) * $item->cn_persen / 100;
+                $nett = $subtotalPenjualan - $cn - $pph;
+
+                $total_bersih_penjualan += ($nett - $hpp);
+            }
+        }
+
+        $totalkeuntungan = $total_bersih_penjualan - $grand_total_pengeluaran ;
+
+        // 3. Format dan kirim response
+        return response()->json([
+            'grand_total_pengeluaran' => 'Rp.' . number_format($grand_total_pengeluaran, 0, ',', '.'),
+            'grand_total_penjualan_bersih' => 'Rp.' . number_format($total_bersih_penjualan, 0, ',', '.'),
+            'total_keuntungan' => 'Rp.' . number_format($totalkeuntungan, 0, ',', '.')
+        ]);
+    }
 }
