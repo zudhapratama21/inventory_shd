@@ -5,7 +5,7 @@
                   <div class="card-body">
                       <div class="row">
                           <div class="col-md-6">
-                              <h3 class="fw-bold">Rekap Laba Rugi</h3>
+                              <h3 class="fw-bold">Laba/Rugi Perusahaan</h3>
                           </div>
                           <div class="col-md-3">
                           </div>
