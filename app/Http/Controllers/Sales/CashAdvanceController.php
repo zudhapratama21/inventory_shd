@@ -46,8 +46,11 @@ class CashAdvanceController extends Controller
 
     public function datatable()
     {
-        $data = CashAdvance::with('karyawan')->orderBy('id', 'desc')->get();
-        return DataTables::of($data)            
+        $data = CashAdvance::with(['karyawan','biayaoperational'])
+                ->orderBy('id', 'desc')
+                ->withSum('biayaoperational', 'nominal')
+                ->get();
+        return DataTables::of($data)
             ->editColumn('tanggal', function ($row) {
                 return Carbon::parse($row->tanggal)->format('d-m-Y');
             })
@@ -64,7 +67,12 @@ class CashAdvanceController extends Controller
             ->editColumn('status', function ($row) {
                 $mode = 2;
                 $status = $row->status;
-                return view('keuangan.cashadvance.action', compact('mode', 'status'));
+                $id = $row->id;
+                return view('keuangan.cashadvance.action', compact('mode', 'status','id'));
+            })
+            ->editColumn('pengembalian', function ($row) {
+                $pengembalian = $row->nominal - $row->biayaoperational_sum_nominal;
+                return 'Rp. ' . number_format($pengembalian, 0, ',', '.'); 
             })
             ->addColumn('action', function ($row) {
                 $mode = 3;
@@ -156,17 +164,11 @@ class CashAdvanceController extends Controller
                 $data->update([
                     'status' => 1,
                 ]);
-            } else if ($total > $data->nominal) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Biaya Operational sudah lebih dari Cash Advance',
-                ], 422);
             } else {
                 $data->update([
                     'status' => 0,
                 ]);
             }
-
             DB::commit();
             return response()->json([
                 'status' => true,
@@ -234,5 +236,14 @@ class CashAdvanceController extends Controller
                 'message' => 'Cash Advance not found.',
             ]);
         }
+    }
+
+    public function setstatus (Request $request)
+    {
+       CashAdvance::where('id',$request->id)->update([
+            'status' => 1
+       ]);
+
+       return response()->json('Data Berhasil Dirubah');
     }
 }

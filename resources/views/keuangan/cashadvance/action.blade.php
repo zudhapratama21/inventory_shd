@@ -11,6 +11,8 @@
           @else
               <span class="label label-inline label-light-success font-weight-bold">Lunas</span>
           @endif
+
+          <a class="ml-2" onclick="gantistatus({{$id}})"><i class="text-success flaticon2-check-mark"></i></a>
       @else
           <div class="btn-group">
               <button type="button" class="btn btn-sm btn-outline-info mr-2" onclick="reportcash({{ $id }})"><i

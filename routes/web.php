@@ -1363,6 +1363,8 @@ Route::middleware('has.role')->prefix('keuangan')->group(function () {
         Route::post('datatablecash', [CashAdvanceController::class, 'datatablecash'])->name('cashadvance.datatablecash');
         Route::post('inputcash', [CashAdvanceController::class, 'inputcash'])->name('cashadvance.inputcash');
         Route::post('deletereportcash', [CashAdvanceController::class, 'deletereportcash'])->name('cashadvance.deletereportcash');
+
+        Route::post('setstatus', [CashAdvanceController::class, 'setstatus'])->name('cashadvance.setstatus');
     });
 
      Route::prefix('analisis')->group(function () {

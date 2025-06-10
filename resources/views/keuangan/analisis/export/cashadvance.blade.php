@@ -8,9 +8,10 @@
             <th>Status</th>
             <th>Jenis Biaya</th>
             <th>Keterangan</th>
-            <th>Kredit</th>
             <th>Debit</th>
-            
+            <th>Kredit</th>
+            <th>Saldo</th>
+
         </tr>
     </thead>
     <tbody>
@@ -20,6 +21,11 @@
                 $biaya = $item->biayaoperational;
 
             @endphp
+
+            @php
+                $saldo = $item->nominal; // set saldo awal untuk setiap CashAdvance
+            @endphp
+            
             <tr>
                 <td>{{ $no++ }}</td>
                 <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') }}</td>
@@ -28,16 +34,20 @@
                 <td>
                     @if ($item->status == 1)
                         <span>Lunas</span>
-                    @else 
-                        <span>Belum Lunas</span>                        
+                    @else
+                        <span>Belum Lunas</span>
                     @endif
                 </td>
                 <td>{{ '' }}</td>
                 <td>{{ $item->keterangan }}</td>
-                <td>{{ number_format($item->nominal, 0, ',', '.') }}</td>
+                <td>{{ $item->nominal }}</td>
+                <td></td>
                 <td></td>
             </tr>
             @foreach ($biaya as $key => $b)
+                @php
+                    $saldo -= $b->nominal; // kurangi saldo secara bertahap
+                @endphp
                 <tr>
                     <td></td>
                     <td></td>
@@ -47,7 +57,8 @@
                     <td>{{ $b->subbiaya->nama ?? '' }}</td>
                     <td>{{ $b->keterangan }}</td>
                     <td></td>
-                    <td>{{ number_format($b->nominal, 0, ',', '.') }}</td>
+                    <td>{{ $b->nominal }}</td>
+                    <td>{{ $saldo }}</td>
                 </tr>
             @endforeach
         @endforeach

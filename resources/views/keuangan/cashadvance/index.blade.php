@@ -73,6 +73,7 @@
                                             <th>Nominal</th>
                                             <th>Keterangan</th>
                                             <th>Umur</th>
+                                            <th>Pengembalian</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
@@ -159,10 +160,6 @@
     <script type="text/javascript">
         $(function() {
             var table = $('.yajra-datatable').DataTable({
-                // responsive: true,
-                // processing: true,
-                // serverSide: true,
-                // autoWidth: false,
                 ajax: "{{ route('cashadvance.datatable') }}",
                 columns: [{
                         data: 'tanggal',
@@ -187,6 +184,10 @@
                     {
                         data: 'umur',
                         name: 'umur',
+                    },
+                    {
+                        data: 'pengembalian',
+                        name: 'pengembalian',
                     },
                     {
                         data: 'status',
@@ -569,7 +570,7 @@
                             id: id,
                             "_token": "{{ csrf_token() }}"
                         },
-                        success: function(data) {                            
+                        success: function(data) {
                             iziToast.success({
                                 title: 'Success',
                                 message: 'Data Berhasil Dihapus',
@@ -582,6 +583,33 @@
                         },
                         error: function(data) {
                             console.log(data);
+                        }
+                    });
+                }
+            });
+        }
+
+        function gantistatus(id) {
+            Swal.fire({
+                icon: "question",
+                title: "Mau mengubah status Cash Advance ini ?",
+                showCancelButton: true,
+                confirmButtonText: "Save",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ route('cashadvance.setstatus') }}',
+                        dataType: 'html',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {
+                            id: id,
+                            "_token": "{{ csrf_token() }}"
+                        },
+                        success: function(data) {
+                            $('.yajra-datatable').DataTable().ajax.reload(null, false);
                         }
                     });
                 }
