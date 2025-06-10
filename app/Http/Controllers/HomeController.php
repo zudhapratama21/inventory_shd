@@ -1229,14 +1229,14 @@ class HomeController extends Controller
             }
         }
 
-        $stokexpired = StokExp::where('qty', '>', 0)
-            ->select(DB::raw('SUM(qty * (harga_beli - (harga_beli * diskon_persen / 100))) as total'))
-            ->value('total'); // langsung ambil nilainya
+        // $stokexpired = StokExp::where('qty', '>', 0)
+        //     ->select(DB::raw('SUM(qty * (harga_beli - (harga_beli * diskon_persen / 100))) as total'))
+        //     ->value('total'); // langsung ambil nilainya
 
-        $stoknonexpired = HargaNonExpired::where('qty', '>', 0)
-            ->select(DB::raw('SUM(qty * (harga_beli - (harga_beli * diskon_persen / 100))) as total'))
-            ->value('total');
-        $total_stok = $stokexpired + $stoknonexpired;
+        // $stoknonexpired = HargaNonExpired::where('qty', '>', 0)
+        //     ->select(DB::raw('SUM(qty * (harga_beli - (harga_beli * diskon_persen / 100))) as total'))
+        //     ->value('total');
+        // $total_stok = $stokexpired + $stoknonexpired;
 
         $totalkeuntungan = $total_bersih_penjualan - $grand_total_pengeluaran;
 
