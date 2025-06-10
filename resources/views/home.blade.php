@@ -1538,6 +1538,7 @@
                     $('#laba_penjualan').html(response.grand_total_penjualan_bersih);
                     $('#beban_operasional').html(response.grand_total_pengeluaran);
                     $('#total_keuntungan').html(response.total_keuntungan);
+                    $('#beban_persediaan').html(response.total_stok);
                 },
                 complete: function() {
                     KTApp.unblock();

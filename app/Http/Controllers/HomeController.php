@@ -6,6 +6,7 @@ use App\Exports\TopCustomerExport;
 use App\Exports\TopProductExport;
 use App\Models\Customer;
 use App\Models\FakturPenjualanDetail;
+use App\Models\HargaNonExpired;
 use App\Models\HRD\Pengumuman;
 use App\Models\Hutang;
 use App\Models\Kategoripesanan;
@@ -15,6 +16,7 @@ use App\Models\PesananPenjualan;
 use App\Models\Piutang;
 use App\Models\Product;
 use App\Models\Sales;
+use App\Models\StokExp;
 use App\Models\Supplier;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -1227,13 +1229,23 @@ class HomeController extends Controller
             }
         }
 
-        $totalkeuntungan = $total_bersih_penjualan - $grand_total_pengeluaran ;
+        $stokexpired = StokExp::where('qty', '>', 0)
+            ->select(DB::raw('SUM(qty * (harga_beli - (harga_beli * diskon_persen / 100))) as total'))
+            ->value('total'); // langsung ambil nilainya
+
+        $stoknonexpired = HargaNonExpired::where('qty', '>', 0)
+            ->select(DB::raw('SUM(qty * (harga_beli - (harga_beli * diskon_persen / 100))) as total'))
+            ->value('total');
+        $total_stok = $stokexpired + $stoknonexpired;
+
+        $totalkeuntungan = $total_bersih_penjualan - $grand_total_pengeluaran;
 
         // 3. Format dan kirim response
         return response()->json([
             'grand_total_pengeluaran' => 'Rp.' . number_format($grand_total_pengeluaran, 0, ',', '.'),
             'grand_total_penjualan_bersih' => 'Rp.' . number_format($total_bersih_penjualan, 0, ',', '.'),
-            'total_keuntungan' => 'Rp.' . number_format($totalkeuntungan, 0, ',', '.')
+            'total_keuntungan' => 'Rp.' . number_format($totalkeuntungan, 0, ',', '.'),
+            'total_stok' => 'Rp.' . number_format($total_stok, 0, ',', '.')
         ]);
     }
 }

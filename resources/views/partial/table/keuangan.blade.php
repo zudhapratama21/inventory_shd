@@ -30,6 +30,11 @@
                           <h5>Beban Operasional</h5>
                           <h5 id="beban_operasional" class="text-danger">0</h5>
                       </div>
+
+                       {{-- <div class="d-flex justify-content-between mb-2">
+                          <h5>Beban Persediaan / Stok</h5>
+                          <h5 id="beban_persediaan" class="text-danger">0</h5>
+                      </div> --}}
                       <hr>
                       <div class="d-flex justify-content-between">
                           <h5 class="fw-bold">Total Keuntungan</h5>
