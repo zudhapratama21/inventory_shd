@@ -1055,6 +1055,8 @@ Route::middleware('has.role')->prefix('biaya')->group(function () {
         Route::get('/{biayaoperational}/edit', [BiayaOperationalController::class, 'edit'])->name('biayaoperational.edit');
         Route::put('/{biayaoperational}/edit', [BiayaOperationalController::class, 'update'])->name('biayaoperational.update');
         Route::post('/delete', [BiayaOperationalController::class, 'delete'])->name('biayaoperational.delete');
+
+        Route::post('/import', [BiayaOperationalController::class, 'import'])->name('biayaoperational.import');
     });
 
     Route::prefix('subjenisbiaya')->group(function () {

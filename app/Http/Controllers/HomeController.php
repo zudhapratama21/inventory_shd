@@ -1244,8 +1244,8 @@ class HomeController extends Controller
         return response()->json([
             'grand_total_pengeluaran' => 'Rp.' . number_format($grand_total_pengeluaran, 0, ',', '.'),
             'grand_total_penjualan_bersih' => 'Rp.' . number_format($total_bersih_penjualan, 0, ',', '.'),
-            'total_keuntungan' => 'Rp.' . number_format($totalkeuntungan, 0, ',', '.'),
-            'total_stok' => 'Rp.' . number_format($total_stok, 0, ',', '.')
+            'total_keuntungan' => 'Rp.' . number_format($totalkeuntungan, 0, ',', '.')
+            // 'total_stok' => 'Rp.' . number_format($total_stok, 0, ',', '.')
         ]);
     }
 }

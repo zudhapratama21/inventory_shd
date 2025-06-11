@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\BiayaOperational;
 
 use App\Http\Controllers\Controller;
+use App\Imports\BiayaOperationalImport;
 use App\Models\Bank;
 use App\Models\BiayaOperational;
 use App\Models\HRD\Karyawan;
@@ -14,6 +15,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class BiayaOperationalController extends Controller
@@ -162,6 +164,13 @@ class BiayaOperationalController extends Controller
             'status' => 'success',
             'message' => 'Data berhasil dihapus'
         ]);
+    }
+
+    public function import (Request $request)
+    {
+        Excel::import(new BiayaOperationalImport, $request->file('file_operational'));   
+
+        return back();
     }
     
 }

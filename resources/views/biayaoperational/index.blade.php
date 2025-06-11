@@ -52,9 +52,14 @@
                                     <h3 class="card-label">Data Biaya Operational</h3>
                                 </div>
                                 <div class="card-toolbar">
+                                    <button class="btn btn-sm btn-outline-primary mr-2" data-toggle="modal"
+                                        data-target="#modaldownload">
+                                        Import Data
+                                    </button>
                                     <!--begin::Button-->
                                     @can('biayaoperational-list')
-                                        <a href="{{ route('jenisbiaya.index') }}" class="btn btn-info font-weight-bolder mr-3">
+                                        <a href="{{ route('jenisbiaya.index') }}"
+                                            class="btn btn-sm btn-info font-weight-bolder mr-3">
                                             <i class="flaticon2-list-2"></i>
                                             Jenis Biaya
                                         </a>
@@ -62,7 +67,7 @@
 
                                     @can('biayaoperational-create')
                                         <a href="{{ route('biayaoperational.create') }}"
-                                            class="btn btn-primary font-weight-bolder">
+                                            class="btn btn-sm btn-primary font-weight-bolder">
                                             <i class="flaticon2-add"></i>
                                             Biaya Operational
                                         </a>
@@ -105,6 +110,33 @@
     </div>
     <!--end::Content-->
     <div id="modal-confirm-delete"></div>
+
+    <!-- Modal-->
+    <div class="modal fade" id="modaldownload" data-backdrop="static" tabindex="-1" role="dialog"
+        aria-labelledby="staticBackdrop" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Import Data</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('biayaoperational.import') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <input type="file" class="form-control" name="file_operational">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light-primary font-weight-bold"
+                        data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary font-weight-bold">Save changes</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 @push('script')
     <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6"') }}"></script>
@@ -206,7 +238,7 @@
                             "_token": "{{ csrf_token() }}"
                         },
 
-                        success: function(data) {                            
+                        success: function(data) {
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Data Berhasil Dihapus',
