@@ -177,7 +177,9 @@
                         data: 'action',
                         render: function(data) {
 
-                            return '<span class="btn btn-danger btn-sm ml-2" onclick="hapus(' +
+                            return '<span class="btn btn-info btn-sm" onclick="edit(' +
+                                data +
+                                ')"><i class="fas fa-edit"></i></span> <span class="btn btn-danger btn-sm ml-2" onclick="hapus(' +
                                 data + ')"><i class="fas fa-trash"></i></span>';
                         }
                     }
@@ -205,7 +207,7 @@
                 },
                 data: {
                     "nama": nama,
-                    "no_akun": no_akun,                    
+                    "no_akun": no_akun,
                     "keterangan": keterangan,
                     "jenisbiaya": jenisbiaya,
                     "_token": "{{ csrf_token() }}"
@@ -235,7 +237,7 @@
                             message: response.message,
                             position: 'topRight',
                         });
-                    }                
+                    }
                 },
                 complete: function() {
                     KTApp.unblock();
@@ -302,5 +304,95 @@
             });
         }
 
+
+        function edit(id) {
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('subjenisbiaya.edit') }}',
+                dataType: 'html',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                beforeSend: function() {
+                    KTApp.blockPage();
+                },
+                data: {
+                    "id": id,
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    $('#modal-setdata').html(data);
+                    $('#editdata').modal('show');
+                },
+                error: function(xhr) {
+                    const response = JSON.parse(xhr.responseText);
+                    if (xhr.status === 422 || xhr.status === 500) {
+                        // Error qty melebihi stok
+                        iziToast.error({
+                            title: 'error',
+                            message: response.message,
+                            position: 'topRight',
+                        });
+                    }
+                },
+                complete: function() {
+                    KTApp.unblock();
+                }
+            });
+        }
+
+        function update(id) {
+           var nama = document.getElementById('nama_biaya').value;
+            var no_akun = document.getElementById('no_biaya').value;
+            var keterangan = document.getElementById('keterangan_biaya').value;
+            var e = document.getElementById("jenis_biaya");
+            var jenisbiaya = e.options[e.selectedIndex].value;
+
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('subjenisbiaya.update') }}',
+                dataType: 'html',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                beforeSend: function() {
+                    KTApp.blockPage();
+                },
+                data: {
+                    "id" : id,
+                    "nama": nama,
+                    "no_akun": no_akun,
+                    "keterangan": keterangan,
+                    "jenisbiaya": jenisbiaya,
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    $('#editdata').modal('hide');
+                    iziToast.success({
+                        title: 'Success',
+                        message: 'Data Berhasil Ditambahkan',
+                        position: 'topRight',
+                    });
+
+                    $('.yajra-datatable').DataTable().ajax.reload(null, false);                    
+
+                },
+                error: function(xhr) {
+                    const response = JSON.parse(xhr.responseText);
+                    if (xhr.status === 422 || xhr.status === 500) {
+                        // Error qty melebihi stok
+                        iziToast.error({
+                            title: 'error',
+                            message: response.message,
+                            position: 'topRight',
+                        });
+                    }
+                },
+                complete: function() {
+                    KTApp.unblock();
+                }
+            });
+        }
     </script>
 @endpush

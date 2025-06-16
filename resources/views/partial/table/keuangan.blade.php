@@ -27,7 +27,7 @@
                           <h5 id="laba_penjualan" class="text-success">0</h5>
                       </div>
                       <div class="d-flex justify-content-between mb-2">
-                          <h5>Beban Operasional</h5>
+                          <h5>Beban Perusahaan</h5>
                           <h5 id="beban_operasional" class="text-danger">0</h5>
                       </div>
 

@@ -39,6 +39,10 @@ class AnalisisKeuanganController extends Controller
             $results->whereYear('bo.tanggal', $request->tahun);
         }
 
+        if ($request->jenisbiaya_id !== 'all') {
+            $results->where('bo.jenis_biaya_id', $request->jenisbiaya_id);
+        }
+
         $result = $results->get();
 
         $divisi[0] = null;
@@ -69,6 +73,7 @@ class AnalisisKeuanganController extends Controller
             ->where('deleted_at', null)
             ->groupBy('sb.nama')
             ->select(
+                'jb.nama as jenis_biaya',
                 'sb.nama as sub_biaya',
                 'sb.id as id',
                 DB::raw('SUM(bo.nominal) as total_biaya')
@@ -80,18 +85,26 @@ class AnalisisKeuanganController extends Controller
         }
 
         if ($request->divisi_id) {
-            $query->where('d.nama', $request->divisi_id);
+            $query->where('d.id', $request->divisi_id);
         }
 
         if ($request->karyawan_id !== 'all') {
             $query->where('k.id', $request->karyawan_id);
         }
+
+        if ($request->jenisbiaya_id !== 'all') {
+            $query->where('bo.jenis_biaya_id', $request->jenisbiaya_id);
+        }
+
         $results = $query->get();
 
 
 
         return DataTables::of($results)
             ->addIndexColumn()
+            ->editColumn('jenis_biaya', function ($row) {
+                return $row->jenis_biaya;
+            })
             ->editColumn('sub_biaya', function ($row) {
                 return $row->sub_biaya;
             })
@@ -126,22 +139,23 @@ class AnalisisKeuanganController extends Controller
                 'bo.nominal as total_biaya',
                 'bo.keterangan',
             )
-            ->orderByDesc('bo.nominal');
+            ->orderByDesc('bo.nominal')
+            ->where('bo.subjenis_biaya_id', $request->subbiaya_id);
 
         if ($request->tahun) {
             $query->whereYear('bo.tanggal', $request->tahun);
         }
 
         if ($request->divisi_id) {
-            $query->where('d.nama', $request->divisi_id);
+            $query->where('d.id', $request->divisi_id);
         }
 
         if ($request->karyawan_id !== 'all') {
             $query->where('k.id', $request->karyawan_id);
         }
 
-        if ($request->jenisbiaya_id) {
-            $query->where('bo.subjenis_biaya_id', $request->jenisbiaya_id);
+        if ($request->jenisbiaya_id !== 'all') {
+            $query->where('bo.jenis_biaya_id', $request->jenisbiaya_id);
         }
 
         $results = $query->get();
@@ -157,10 +171,10 @@ class AnalisisKeuanganController extends Controller
     public function download(Request $request)
     {
         $data = $request->all();
-        if ($request->jenis_laporan =='biaya_operational') {
+        if ($request->jenis_laporan == 'biaya_operational') {
             return Excel::download(new LaporanBiayaOperasional($data), 'laporanbiayaoperasional-.xlsx');
-        } else {            
+        } else {
             return Excel::download(new CashAdvanceExport($data), 'laporancashadvance-.xlsx');
-        }        
+        }
     }
 }

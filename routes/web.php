@@ -1064,6 +1064,9 @@ Route::middleware('has.role')->prefix('biaya')->group(function () {
         Route::post('/create', [SubBiayaController::class, 'store'])->name('subjenisbiaya.create');
         Route::post('/datatable', [SubBiayaController::class, 'datatable'])->name('subjenisbiaya.datatable');
         Route::post('/delete', [SubBiayaController::class, 'delete'])->name('subjenisbiaya.delete');
+
+        Route::post('/edit', [SubBiayaController::class, 'edit'])->name('subjenisbiaya.edit');
+        Route::post('/update', [SubBiayaController::class, 'update'])->name('subjenisbiaya.update');
     });
 });
 

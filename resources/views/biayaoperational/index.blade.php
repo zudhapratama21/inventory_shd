@@ -49,7 +49,7 @@
                                                 </g>
                                             </svg>
                                             <!--end::Svg Icon--></span> </span>
-                                    <h3 class="card-label">Data Biaya Operational</h3>
+                                    <h3 class="card-label">Data Biaya Pengeluaran</h3>
                                 </div>
                                 <div class="card-toolbar">
                                     <button class="btn btn-sm btn-outline-primary mr-2" data-toggle="modal"

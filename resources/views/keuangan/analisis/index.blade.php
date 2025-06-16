@@ -79,13 +79,26 @@
                                                 <div class="form-group">
                                                     <label for="">Tahun</label>
                                                     <select name="chart_year" class="form-control" id="grafik_tahun"
-                                                        onchange="filtertahungrafik()">
+                                                        onchange="filtertahungrafik('grafik_tahun')">
                                                         @php
                                                             $year = 2020;
                                                         @endphp
                                                         @foreach (range(date('Y'), $year) as $x)
                                                             <option value="{{ $x }}">{{ $x }}
                                                             </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="">Jenis Biaya</label>
+                                                    <select name="chart_year" class="form-control" id="kt_select2_4"
+                                                        onchange="filtertahungrafik('kt_select2_4')">
+                                                        <option value="all" selected>Semua</option>
+                                                        @foreach ($jenisbiaya as $item)
+                                                            <option value="{{ $item->id }}">{{ $item->nama }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -114,7 +127,7 @@
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <div class="row">
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label for="">Tahun</label>
                                                     <select name="chart_year" class="form-control" id="tahun"
@@ -130,7 +143,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label for="">Divisi</label>
                                                     <select name="chart_year" class="form-control" id="divisi_id"
@@ -144,13 +157,27 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label for="">Karyawan</label>
                                                     <select name="chart_year" class="form-control" id="kt_select2_1"
                                                         onchange="filterkategori('kt_select2_1')">
                                                         <option value="all" selected>Semua</option>
                                                         @foreach ($karyawan as $item)
+                                                            <option value="{{ $item->id }}">{{ $item->nama }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="">Jenis Biaya</label>
+                                                    <select name="chart_year" class="form-control" id="kt_select2_7"
+                                                        onchange="filterkategori('kt_select2_7')">
+                                                        <option value="all" selected>Semua</option>
+                                                        @foreach ($jenisbiaya as $item)
                                                             <option value="{{ $item->id }}">{{ $item->nama }}
                                                             </option>
                                                         @endforeach
@@ -164,6 +191,7 @@
                                                 <tr>
                                                     <th>No</th>
                                                     <th>Jenis Biaya</th>
+                                                    <th>Sub Jenis Biaya</th>
                                                     <th>Total Biaya</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -236,7 +264,8 @@
                                 @endforeach
 
                             </select>
-                            <p style="font-size:70%" class="text-danger">*Jika jenis laporan cash advance , jenis biaya tidak perlu di pilih.</p>
+                            <p style="font-size:70%" class="text-danger">*Jika jenis laporan cash advance , jenis biaya
+                                tidak perlu di pilih.</p>
                         </div>
 
                         <div class="form-group">
@@ -275,9 +304,12 @@
         let tahungrafik = {{ now()->format('Y') }};
         let karyawan_id = 'all';
         let divisi_id = null;
-        let jenisbiaya = null;
+        let subbiaya = null;
         let tahun_kategori = {{ now()->format('Y') }};
         let chart = null;
+        let jenisbiaya_id = 'all';
+
+        let jenisbiayagrafik = 'all';
 
         $(document).ready(function() {
             datatable();
@@ -348,6 +380,7 @@
                 },
                 data: {
                     'tahun': tahungrafik,
+                    'jenisbiaya_id': jenisbiayagrafik,
                     "_token": "{{ csrf_token() }}"
                 },
                 success: function(data) {
@@ -376,9 +409,14 @@
             $('#grandtotal').val(data);
         }
 
-        function filtertahungrafik() {
-            let e = document.getElementById("grafik_tahun");
-            tahungrafik = e.options[e.selectedIndex].value;
+        function filtertahungrafik(filter) {
+            if (filter == 'grafik_tahun') {
+                let e = document.getElementById(filter);
+                tahungrafik = e.options[e.selectedIndex].value;
+            } else {
+                let e = document.getElementById(filter);
+                jenisbiayagrafik = e.options[e.selectedIndex].value;
+            }
             grafikdivisi();
         }
 
@@ -394,6 +432,7 @@
                         params.tahun = tahun_kategori;
                         params.divisi_id = divisi_id;
                         params.karyawan_id = karyawan_id;
+                        params.jenisbiaya_id = jenisbiaya_id;
                         params._token = "{{ csrf_token() }}";
                         return params;
                     }
@@ -403,6 +442,10 @@
                         name: 'DT_RowIndex',
                         orderable: false,
                         searchable: false
+                    },
+                    {
+                        data: 'jenis_biaya',
+                        name: 'jenis_biaya'
                     },
                     {
                         data: 'sub_biaya',
@@ -430,20 +473,24 @@
         function filterkategori(tahunkategori) {
             if (tahunkategori == 'divisi_id') {
                 let e = document.getElementById(tahunkategori);
-                divisi_id = e.options[e.selectedIndex].value;
+                divisi_id = e.options[e.selectedIndex].value;                
             } else if (tahunkategori == 'kt_select2_1') {
                 let e = document.getElementById(tahunkategori);
                 karyawan_id = e.options[e.selectedIndex].value;
+            } else if (tahunkategori == 'kt_select2_7') {
+                let e = document.getElementById(tahunkategori);
+                jenisbiaya_id = e.options[e.selectedIndex].value;
             } else {
                 let e = document.getElementById(tahunkategori);
                 tahun_kategori = e.options[e.selectedIndex].value;
             }
             $('.yajra-datatable').DataTable().ajax.reload(null, false);
+            $('.yajra-datatable-cash').DataTable().ajax.reload(null, false);
         }
 
         function reportcash(id) {
             $('#analisis').modal('show');
-            jenisbiaya = id;
+            subbiaya = id;
             $('.yajra-datatable-cash').DataTable().ajax.reload(null, false);
         }
 
@@ -459,7 +506,8 @@
                         params.tahun = tahun_kategori;
                         params.divisi_id = divisi_id;
                         params.karyawan_id = karyawan_id;
-                        params.jenisbiaya_id = jenisbiaya;
+                        params.subbiaya_id = subbiaya;
+                        params.jenisbiaya_id = jenisbiaya_id;
                         params._token = "{{ csrf_token() }}";
                         return params;
                     }

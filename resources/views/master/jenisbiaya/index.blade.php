@@ -72,7 +72,7 @@
                                         Sub Jenis Biaya
                                     </a>
                                 @endcan
-
+                                
                                 @can('jenisbiaya-create')
                                     <a href="{{ route('jenisbiaya.create') }}"
                                         class="btn btn-primary font-weight-bolder">

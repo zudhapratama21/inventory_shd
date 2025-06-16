@@ -51,7 +51,7 @@
                                         </svg>
                                         <!--end::Svg Icon--></span>
                                 </span>
-                                <h3 class="card-label">Biaya Operational Update</h3>
+                                <h3 class="card-label">Biaya Update</h3>
                             </div>
 
                             <div class="card-toolbar">

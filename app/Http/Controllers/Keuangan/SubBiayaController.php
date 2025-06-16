@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\JenisBiaya;
 use App\Models\Keuangan\SubBiaya;
 use Illuminate\Http\Request;
+use PhpOffice\PhpSpreadsheet\Reader\Xls\RC4;
 use Yajra\DataTables\Facades\DataTables;
 
 class SubBiayaController extends Controller
@@ -34,19 +35,38 @@ class SubBiayaController extends Controller
 
   public function store(Request $request)
   {
-      SubBiaya::create([
-        'nama' => $request->nama,
-        'keterangan' => $request->keterangan,
-        'no_akun' => $request->no_akun,
-        'jenisbiaya_id' => $request->jenisbiaya
-      ]);
+    SubBiaya::create([
+      'nama' => $request->nama,
+      'keterangan' => $request->keterangan,
+      'no_akun' => $request->no_akun,
+      'jenisbiaya_id' => $request->jenisbiaya
+    ]);
 
-      return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan']);
+    return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan']);
   }
 
   public function delete(Request $request)
   {
-     SubBiaya::destroy($request->id);
-     return response()->json(['status' => 'success', 'message' => 'Data berhasil dihapus']);
+    SubBiaya::destroy($request->id);
+    return response()->json(['status' => 'success', 'message' => 'Data berhasil dihapus']);
+  }
+
+  public function edit(Request $request)
+  {
+    $subbiaya = SubBiaya::where('id', $request->id)->first();
+    $jenisbiaya = JenisBiaya::all();
+    return view('keuangan.subbiaya.modal', compact('subbiaya', 'jenisbiaya'));
+  }
+
+  public function update(Request $request)
+  {
+    SubBiaya::where('id', $request->id)->update([
+      'nama' => $request->nama,
+      'keterangan' => $request->keterangan,
+      'no_akun' => $request->no_akun,
+      'jenisbiaya_id' => $request->jenisbiaya
+    ]);
+
+    return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan']);
   }
 }
