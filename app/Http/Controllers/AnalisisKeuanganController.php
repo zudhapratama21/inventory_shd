@@ -71,7 +71,7 @@ class AnalisisKeuanganController extends Controller
             ->join('jenis_biayas as jb', 'jb.id', '=', 'bo.jenis_biaya_id')
             ->join('sub_biaya as sb', 'sb.id', '=', 'bo.subjenis_biaya_id')
             ->where('deleted_at', null)
-            ->groupBy('sb.nama')
+            ->groupBy('jb.nama')
             ->select(
                 'jb.nama as jenis_biaya',                
                 'jb.id as id',
