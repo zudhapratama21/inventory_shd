@@ -71,10 +71,11 @@ class AnalisisKeuanganController extends Controller
             ->join('jenis_biayas as jb', 'jb.id', '=', 'bo.jenis_biaya_id')
             ->join('sub_biaya as sb', 'sb.id', '=', 'bo.subjenis_biaya_id')
             ->where('deleted_at', null)
-            ->groupBy('jb.nama')
+            ->groupBy('sb.nama')
             ->select(
                 'jb.nama as jenis_biaya',                
-                'jb.id as id',
+                'sb.nama as sub_jenis_biaya',
+                'sb.id as id',
                 DB::raw('SUM(bo.nominal) as total_biaya')
             )
             ->orderByDesc(DB::raw('SUM(bo.nominal)'));
@@ -103,6 +104,9 @@ class AnalisisKeuanganController extends Controller
             ->addIndexColumn()
             ->editColumn('jenis_biaya', function ($row) {
                 return $row->jenis_biaya;
+            }) 
+              ->editColumn('sub_jenis_biaya', function ($row) {
+                return $row->sub_jenis_biaya;
             })          
             ->editColumn('total_biaya', function ($row) {
                 return 'Rp. ' . number_format($row->total_biaya, 0, ',', '.');
@@ -136,7 +140,7 @@ class AnalisisKeuanganController extends Controller
                 'bo.keterangan',
             )
             ->orderByDesc('bo.nominal')
-            ->where('bo.jenis_biaya_id', $request->subbiaya_id);
+            ->where('bo.subjenis_biaya_id', $request->subbiaya_id);
 
         if ($request->tahun) {
             $query->whereYear('bo.tanggal', $request->tahun);

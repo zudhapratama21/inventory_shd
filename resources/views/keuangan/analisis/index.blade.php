@@ -190,7 +190,8 @@
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
-                                                    <th>Jenis Biaya</th>                                                    
+                                                    <th>Jenis Biaya</th>    
+                                                    <th>Sub Jenis Biaya</th>                                                    
                                                     <th>Total Biaya</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -445,6 +446,10 @@
                     {
                         data: 'jenis_biaya',
                         name: 'jenis_biaya'
+                    },
+                    {
+                        data: 'sub_jenis_biaya',
+                        name: 'sub_jenis_biaya',
                     },                   
                     {
                         data: 'total_biaya',
