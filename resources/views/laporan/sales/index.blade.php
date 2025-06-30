@@ -79,6 +79,44 @@
                                                 </a>
                                             @endcan
                                     </form> --}}
+                                    <button class="btn btn-primary btn-sm" data-toggle="modal"
+                                        data-target="#exampleModal">Download Laporan</button>
+
+                                         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Download Laporan</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <i aria-hidden="true" class="ki ki-close"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="{{ route('laporansales.print') }}" method="POST">
+                                                        @csrf
+                                                        <div class="form-group">
+                                                            <label for="">Tanggal Awal</label>
+                                                            <input type="date" name="tanggal_mulai" class="form-control">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="">Tanggal Akhir</label>
+                                                            <input type="date" name="tanggal_selesai" class="form-control">
+                                                        </div>                                                     
+
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-light-primary font-weight-bold"
+                                                                data-dismiss="modal">Close</button>
+                                                            <button type="submitxx" class="btn btn-primary font-weight-bold">Save
+                                                                changes</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                               
+                                            </div>
+                                        </div>
+                                    </div>
 
                                     <!--end::Button-->
                                 </div>
@@ -106,7 +144,7 @@
                                                 onchange="filteroutlet()">
                                                 <option value="All">Semua</option>
                                                 @foreach ($outlet as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->nama   }}</option>
+                                                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
                                                 @endforeach
 
                                             </select>
@@ -350,7 +388,7 @@
                             start: fetchInfo.startStr, // Mengambil tanggal awal dari FullCalendar
                             end: fetchInfo.endStr, // Mengambil tanggal akhir dari FullCalendar
                             sales: saleschart,
-                            outlet:outlet
+                            outlet: outlet
                         },
                         beforeSend: function() {
                             KTApp.block('#kt_blockui_content', {

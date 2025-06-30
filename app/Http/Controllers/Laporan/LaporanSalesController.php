@@ -41,7 +41,7 @@ class LaporanSalesController extends Controller
     public function datatable(Request $request)
     {
         $sales =    DB::table('kunjungan_sales')
-            ->join('outlets', 'kunjungan_sales.outlet_id', '=', 'outlets.id')           
+            ->join('outlets', 'kunjungan_sales.outlet_id', '=', 'outlets.id')
             ->where('kunjungan_sales.deleted_at', '=', null)
             ->where('kunjungan_sales.outlet_id', '<>', null)
             ->when($request->tahun !== 'All', fn($query) => $query->whereYear('tanggal', $request->tahun))
@@ -137,62 +137,9 @@ class LaporanSalesController extends Controller
 
     public function print(Request $request)
     {
-        $start = '2025-02-27';
-        $end = '2025-03-26';
-
-        $sales = KunjunganSales::with(['user', 'outlet'])
-            ->whereBetween('tanggal', [$start, $end])            
-            ->get();
-
-        $absensi = collect();
-
-        $sales->groupBy('user_id')->each(function ($salesByUser, $userId) use (&$absensi) {
-            $userAbsensi = collect();
-            $userName = $salesByUser->first()->user->name ?? 'Unknown';
-        
-            $salesByUser->groupBy('tanggal')->each(function ($kunjungans, $tanggal) use (&$userAbsensi) {
-                // Lewati jika hari adalah Sabtu (6) atau Minggu (0)
-                if (Carbon::parse($tanggal)->isWeekend()) {
-                    return;
-                }
-        
-                // Cek jika ada kunjungan dengan className yang valid (bukan fc-event-primary fc-event-solid-danger)
-                $hadir = $kunjungans->first(function ($item) {
-                    $statusCount = PlanMarketing::where([
-                        'tanggal' => $item->tanggal,
-                        'user_id' => $item->user_id,
-                        'outlet_id' => $item->outlet_id,
-                    ])->exists() + RencanaKunjungan::where([
-                        'tanggal' => $item->tanggal,
-                        'user_id' => $item->user_id,
-                        'outlet_id' => $item->outlet_id,
-                    ])->exists();
-        
-                    $classNames = [
-                        0 => 'fc-event-primary fc-event-solid-danger',
-                        1 => 'fc-event-primary fc-event-solid-info',
-                        2 => 'fc-event-primary fc-event-solid-success',
-                    ];
-        
-                    $className = $classNames[$statusCount] ?? 'fc-event-primary fc-event-solid-danger';
-        
-                    return $className !== 'fc-event-primary fc-event-solid-danger';
-                });
-        
-                if ($hadir) {
-                    $userAbsensi->push($tanggal);
-                }
-            });
-        
-            $absensi->push([
-                'user' => $userName,
-                'total_hari_kerja' => $userAbsensi->count(),
-                'hari_kerja' => $userAbsensi->values()
-            ]);
-        });
-
-        // return response()->json($absensi);
-        dd($absensi);
+        $data = $request->all();
+        $now = Carbon::parse(now())->format('Y-m-d');
+        return Excel::download(new LaporanKunjunganSales($data), 'laporankunjungansales-' . $now . '.xlsx');
     }
 
     public function show($id)

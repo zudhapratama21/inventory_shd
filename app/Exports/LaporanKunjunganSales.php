@@ -43,13 +43,7 @@ class LaporanKunjunganSales implements FromView
             }
         }else{
              $biaya;
-        }
-
-        if ($this->data['sales'] !== 'all' ) {
-           $biaya->where('kj.user_id','=',$this->data['sales']);                    
-        }else{
-           $biaya;
-        }
+        }       
 
        $data= $biaya->select('kj.*','u.name as nama_sales')->get();
         
