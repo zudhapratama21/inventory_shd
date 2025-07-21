@@ -98,12 +98,21 @@
                                                         @csrf
                                                         <div class="form-group">
                                                             <label for="">Tanggal Awal</label>
-                                                            <input type="date" name="tanggal_mulai" class="form-control">
+                                                            <input type="date" name="tanggal_mulai" class="form-control" required>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="">Tanggal Akhir</label>
-                                                            <input type="date" name="tanggal_selesai" class="form-control">
-                                                        </div>                                                     
+                                                            <input type="date" name="tanggal_selesai" class="form-control" required>
+                                                        </div>     
+                                                        <div class="form-group">
+                                                            <label for="">Sales</label>
+                                                            <select name="sales_id" id="" class="form-control">
+                                                                <option value="all">Semua</option>
+                                                                @foreach ($sales as $item)
+                                                                    <option value="{{ $item->id }}">{{ $item->name }}</option>                                                                    
+                                                                @endforeach
+                                                            </select>
+                                                        </div>                                               
 
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-light-primary font-weight-bold"
@@ -504,3 +513,5 @@
         }
     </script>
 @endpush
+
+

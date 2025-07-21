@@ -51,7 +51,7 @@
                             <div class="card-body">    
                                 <div class="form-group">
                                     <label>Customer :</label>
-                                    <input type="text" name="customer" value="{{ $kunjungan->customer }}"
+                                    <input type="text" name="customer" value="{{ $kunjungan->outlet->nama }}"
                                         class="form-control" placeholder="Masukkan customer" readonly/>
                                    
                                 </div>
@@ -59,7 +59,7 @@
                                 <div class="form-group">
                                     <label>Aktivitas :</label>
                                     <textarea type="text" name="aktifitas" value=""
-                                    class="form-control" placeholder="Masukkan aktifitas"  id="" cols="30" rows="5" readonly>{{ $kunjungan->aktifitas }}</textarea>
+                                    class="form-control" placeholder="Masukkan aktifitas"  id="" cols="30" rows="5" readonly>{!! $kunjungan->aktifitas !!}</textarea>
                                    
                                   
                                 </div>

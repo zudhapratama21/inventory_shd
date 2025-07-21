@@ -132,7 +132,7 @@ class KunjunganSalesController extends Controller
     public function edit($id)
     {
         $title = 'Kunjungan Sales';
-        $kunjungan = KunjunganSales::where('id',$id)->first();
+        $kunjungan = KunjunganSales::with('outlet')->where('id',$id)->first();
         $outlet = Outlet::get();
         return view('kunjungansales.edit',compact('title','kunjungan','outlet'));
     }
