@@ -34,7 +34,7 @@ class BiayaOperationalController extends Controller
     {
         $title = "Biaya Operational";
 
-        $biayaoperational = BiayaOperational::with(['jenisbiaya','subbiaya','bank','karyawan'])->orderByDesc('id');        
+        $biayaoperational = BiayaOperational::with(['subbiaya.jenisbiaya','bank','karyawan'])->orderByDesc('id');        
 
         if (request()->ajax()) {
             return DataTables::of($biayaoperational)                
@@ -42,7 +42,7 @@ class BiayaOperationalController extends Controller
                     return $pb->tanggal ? with(new Carbon($pb->tanggal))->format('d/m/Y') : '';
                 })
                 ->editColumn('jenis_biaya', function (BiayaOperational $pb) {
-                    return $pb->jenisbiaya->nama;
+                    return $pb->subbiaya->jenisbiaya->nama;
                 })
                 ->editColumn('sub_biaya', function (BiayaOperational $pb) {
                     return $pb->subbiaya->nama;

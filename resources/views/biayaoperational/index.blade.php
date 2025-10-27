@@ -166,8 +166,8 @@
                         name: 'karyawan.nama'
                     },
                     {
-                        data: 'jenisbiaya.nama',
-                        name: 'jenisbiaya.nama'
+                        data: 'subbiaya.jenisbiaya.nama',
+                        name: 'subbiaya.jenisbiaya.nama'
                     },
                     {
                         data: 'subbiaya.nama',

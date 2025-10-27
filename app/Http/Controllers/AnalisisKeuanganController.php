@@ -73,7 +73,7 @@ class AnalisisKeuanganController extends Controller
             ->where('deleted_at', null)
             ->groupBy('sb.nama')
             ->select(
-                'jb.nama as jenis_biaya',                
+                'jb.nama as jenis_biaya',             
                 'sb.nama as sub_jenis_biaya',
                 'sb.id as id',
                 DB::raw('SUM(bo.nominal) as total_biaya')

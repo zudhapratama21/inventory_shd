@@ -16,20 +16,20 @@
             <th>No Pajak</th>
             <th>Komoditas</th>
             <th>Kategori Pesanan</th>
-            <th>Customer</th>    
-            <th>Kategori Customer</th>                                    
+            <th>Customer</th>
+            <th>Kategori Customer</th>
             <th>Diskon Rupiah Faktur</th>
             <th>Diskon Persen Faktur</th>
             <th>Subtotal Faktur</th>
             <th>Total Diskon Detail Faktur</th>
             <th>Total Diskon Header Faktur</th>
             <th>Total Faktur</th>
-            <th>Ongkir Faktur</th>  
-            <th>PPN Faktur</th>                                                                                          
-            <th>Grand Total Faktur</th>                    
-            <th>Nama Produk</th> 
-            <th>Kode Produk</th>  
-            <th>Merk</th> 
+            <th>Ongkir Faktur</th>
+            <th>PPN Faktur</th>
+            <th>Grand Total Faktur</th>
+            <th>Nama Produk</th>
+            <th>Kode Produk</th>
+            <th>Merk</th>
             <th>Supplier</th>
             <th>Qty</th>
             <th>Satuan</th>
@@ -40,71 +40,80 @@
             <th>Total Diskon Produk</th>
             <th>PPN(11%)</th>
             <th>Disc CN</th>
+            <th>PPH</th>
             <th>Ongkir Produk</th>
             <th>Total Produk</th>            
             <th>Harga Bersih</th>
             <th>Sales</th>
-            <th>Pembuat</th>                                        
-            <th>Keterangan</th>                                          
+            <th>Pembuat</th>
+            <th>Keterangan</th>
             <th>Keterangan Produk</th>
         </tr>
     </thead>
     <tbody>
         @php
-            $no=1;
+            $no = 1;
         @endphp
         @foreach ($penjualan as $item)
             <tr>
-                <td>{{$no++}}</td>
-                <th>{{$item->id}}</th>
-                <th>{{$item->id_product}}</th>
-                <th>{{$item->status_exp}}</th>
-                <th>{{$item->id_pengiriman}}</th>
+                <td>{{ $no++ }}</td>
+                <th>{{ $item->id }}</th>
+                <th>{{ $item->id_product }}</th>
+                <th>{{ $item->status_exp }}</th>
+                <th>{{ $item->id_pengiriman }}</th>
                 <td>{{ date('d/m/Y', strtotime($item->tanggal)) }}</td>
                 <td>{{ date('m', strtotime($item->tanggal)) }}</td>
                 <td>{{ date('Y', strtotime($item->tanggal)) }}</td>
-                <td>{{$item->kode}}</td>
-                <td>{{$item->no_kpa}}</td>
-                <td>{{$item->kode_SP}}</td>
-                <td>{{$item->kode_SJ}}</td>
-                <td>{{$item->no_seri_pajak ? $item->no_seri_pajak : ''}} - {{ $item->no_pajak ? $item->no_pajak : ''}}</td>
-                <td>{{$item->nama_komoditas}}</td>
-                <td>{{$item->nama_kategori_pesanan}}</td>
-                <td>{{$item->nama_customer}}</td>
-                <td>{{$item->nama_kategori_customer}}</td>
-                <td>{{$item->diskon_rupiah}}</td>
-                <td>{{$item->diskon_persen}}</td>
-                <td>{{$item->subtotal}}</td>
-                <td>{{$item->total_diskon_detail}}</td>
-                <td>{{$item->total_diskon_header}}</td>
-                <td>{{$item->total}}</td>       
-                <td>{{$item->ongkir}}</td>  
-                <td>{{$item->ppn}}</td>                                                   
-                <td>{{$item->grandtotal}}</td>                  
-                <td>{{$item->nama_produk}}</td>
-                <td>{{$item->kode_produk}}</td>
-                <td>{{$item->nama_merk}}</td>
-                <td>{{$item->nama_supplier}}</td>
-                <td>{{$item->qty_det}}</td>
-                <td>{{$item->satuan_det}}</td>
-                <td>{{$item->dikson_persen_det}}</td>
-                <td>{{$item->diskon_rp_det}}</td>
-                <td>{{$item->hargajual_det}}</td>
-                <td>{{$item->subtotal_det}}</td>
-                <td>{{$item->total_diskon_det}}</td>
-                <td>{{11/100 * $item->total_det}}</td>
-                <td>{{$item->cn_total ? $item->cn_total : 0 }}</td>
-                <td>{{$item->ongkir_det}}</td>
-                <td>{{$item->total_det + $item->ongkir_det  + (11/100 *  ($item->total_det + $item->ongkir_det))}}</td>                
-                <td>{{$item->total_det - ($item->cn_total ? $item->cn_total : 0)}}</td>
-                <td>{{$item->nama_sales}}</td>
-                <td>{{$item->nama_pembuat}}</td>
-                <td>{{$item->keterangan}}</td>                                            
-                <td>{{$item->keterangan_det}}</td>
+                <td>{{ $item->kode }}</td>
+                <td>{{ $item->no_kpa }}</td>
+                <td>{{ $item->kode_SP }}</td>
+                <td>{{ $item->kode_SJ }}</td>
+                <td>{{ $item->no_seri_pajak ? $item->no_seri_pajak : '' }} -
+                    {{ $item->no_pajak ? $item->no_pajak : '' }}</td>
+                <td>{{ $item->nama_komoditas }}</td>
+                <td>{{ $item->nama_kategori_pesanan }}</td>
+                <td>{{ $item->nama_customer }}</td>
+                <td>{{ $item->nama_kategori_customer }}</td>
+                <td>{{ $item->diskon_rupiah }}</td>
+                <td>{{ $item->diskon_persen }}</td>
+                <td>{{ $item->subtotal }}</td>
+                <td>{{ $item->total_diskon_detail }}</td>
+                <td>{{ $item->total_diskon_header }}</td>
+                <td>{{ $item->total }}</td>
+                <td>{{ $item->ongkir }}</td>
+                <td>{{ $item->ppn }}</td>
+                <td>{{ $item->grandtotal }}</td>
+                <td>{{ $item->nama_produk }}</td>
+                <td>{{ $item->kode_produk }}</td>
+                <td>{{ $item->nama_merk }}</td>
+                <td>{{ $item->nama_supplier }}</td>
+                <td>{{ $item->qty_det }}</td>
+                <td>{{ $item->satuan_det }}</td>
+                <td>{{ $item->dikson_persen_det }}</td>
+                <td>{{ $item->diskon_rp_det }}</td>
+                <td>{{ $item->hargajual_det }}</td>
+                <td>{{ $item->subtotal_det }}</td>
+                <td>{{ $item->total_diskon_det }}</td>
+                <td>{{ (11 / 100) * $item->total_det }}</td>
+                <td>{{ $item->cn_total ? $item->cn_total : 0 }}</td>
+                @if ($item->total_pph)
+                    <td>{{ $item->total_pph }}</td>
+                @else
+                    <td>0</td>
+                @endif
+                <td>{{ $item->ongkir_det }}</td>
+                <td>{{ $item->total_det + $item->ongkir_det + (11 / 100) * ($item->total_det + $item->ongkir_det) }}
+                </td>
+                <td>{{ $item->total_det - ($item->cn_total ? $item->cn_total : 0) - ($item->total_pph ? $item->total_pph : 0) }}
+                </td>
+                <td>{{ $item->nama_sales }}</td>
+                <td>{{ $item->nama_pembuat }}</td>
+                <td>{{ $item->keterangan }}</td>
+                <td>{{ $item->keterangan_det }}</td>
             </tr>
         @endforeach
 
-        
-       
+
+
     </tbody>
 </table>
