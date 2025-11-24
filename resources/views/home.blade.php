@@ -135,6 +135,7 @@
     @include('partial.modal.produk')
     @include('partial.modal.customer')
     @include('partial.modal.principle')
+    @include('partial.modal.historyproduk')
 @endsection
 
 @push('script')
@@ -206,13 +207,13 @@
         let tahunlabarugi = {{ now()->format('Y') }};
 
         // =========================================================================================================================
-        $(document).ready(function() {            
+        $(document).ready(function() {
             const permissionActions = {
                 'grafikpenjualan-list': [chartyear],
                 'grafikkategori-list': [chart_kategori],
                 'grafikproduk-list': [chartProduk],
                 'tabletopproduk-list': [datatable, datatableCustomer],
-                'tabletopcustomer-list': [datatabletopcustomer, datatablelistproduct],
+                'tabletopcustomer-list': [datatabletopcustomer, datatablelistproduct, datatableHistoryProduct],
                 'tabletopprinciple-list': [datatabletopPrinciple, datatableProductByPrinciple],
                 'datapengiriman-list': [datatablepesanan],
                 'datapenerimaan-list': [datatablepembelian],
@@ -220,7 +221,7 @@
                 'datapiutang-list': [datatablepiutang],
                 'rekaphutang-list': [datahutang],
                 'rekappiutang-list': [datapiutang],
-                'rekaplabarugi-list' : [rekaplabarugi]
+                'rekaplabarugi-list': [rekaplabarugi]
             };
 
             Object.entries(permissionActions).forEach(([permission, actions]) => {
@@ -852,6 +853,12 @@
             $('.yajra-datatabletopproduct').DataTable().ajax.reload(null, false);
         }
 
+        function showHistoryProduct(id) {
+            $('#historyproduk').modal('show');
+            customer_id = id;
+            $('.yajra-datatablehistoryproduct').DataTable().ajax.reload(null, false);
+        }
+
         function datatablelistproduct() {
             var tablelistproduct = $('.yajra-datatabletopproduct').DataTable({
                 responsive: true,
@@ -889,6 +896,99 @@
                         data: 'total',
                         name: 'total'
                     },
+                ],
+                columnDefs: [{
+                        responsivePriority: 1,
+                        targets: 0
+                    },
+                    {
+                        responsivePriority: 2,
+                        targets: -1
+                    },
+                ],
+            });
+        }
+
+        function datatableHistoryProduct() {
+            var tablelistproduct = $('.yajra-datatablehistoryproduct').DataTable({
+                responsive: true,
+                processing: true,
+                serverSide: true,
+                order: [],
+                ajax: {
+                    url: "{{ route('datatable.historyOrder') }}",
+                    type: "POST",
+                    data: function(params) {
+                        params.year = topcustomeryear,
+                            params.bulan = topcustomerbulan,
+                            params.customer = customer_id,
+                            params.kategori = topcustomerkategori,
+                            params.sales = salescustomer,
+                            params._token = "{{ csrf_token() }}";
+                        return params;
+                    }
+                },
+                columns: [
+                    //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},                
+                    {
+                        data: 'nama',
+                        name: 'nama'
+                    },
+                    {
+                        data: 'jan',
+                        name: 'jan'
+                    },
+                    {
+                        data: 'feb',
+                        name: 'feb'
+                    },
+                    {
+                        data: 'mar',
+                        name: 'mar'
+                    },
+                    {
+                        data: 'apr',
+                        name: 'apr'
+                    },
+                    {
+                        data: 'mei',
+                        name: 'mei'
+                    },
+                    {
+                        data: 'jun',
+                        name: 'jun'
+                    },
+                    {
+                        data: 'jul',
+                        name: 'jul'
+                    },
+                    {
+                        data: 'agst',
+                        name: 'agst',
+                    },
+                    {
+                        data: 'sep',
+                        name: 'sep'
+                    },
+                    {
+                        data: 'okt',
+                        name: 'okt'
+                    },
+                    {
+                        data: 'nov',
+                        name: 'nov'
+                    },
+                    {
+                        data: 'des',
+                        name: 'des'
+                    },
+                    {
+                        data: 'total_qty',
+                        name: 'total_qty',
+                        render: function(data, type, row) {
+                            return `<span class="badge bg-info text-white">${data}</span>`;
+                        }
+                    }
                 ],
                 columnDefs: [{
                         responsivePriority: 1,

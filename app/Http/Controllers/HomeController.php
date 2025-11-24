@@ -703,6 +703,102 @@ class HomeController extends Controller
             ->make(true);
     }
 
+    public function historyOrder(Request $request)
+    {
+        $results = DB::table('faktur_penjualans as fp')
+            ->join('faktur_penjualan_details as fdp', 'fdp.faktur_penjualan_id', '=', 'fp.id')
+            ->join('pesanan_penjualans as pp', 'fp.pesanan_penjualan_id', '=', 'pp.id')
+            ->join('products as p', 'fdp.product_id', '=', 'p.id')
+            ->join('merks as m', 'm.id', '=', 'p.merk_id')
+            ->join('suppliers as s', 's.id', '=', 'm.supplier_id')
+            ->where('fp.deleted_at', '=', null)
+            ->orderBy('fp.tanggal');
+
+        if ($request->year) {
+            $res = $results->whereYear('fp.tanggal', $request->year);
+        } else {
+            $res = $results;
+        }
+
+        if ($request->bulan !== 'All') {
+            $bulan = $res->whereMonth('fp.tanggal', $request->bulan)
+                ->groupBy(DB::raw("DATE_FORMAT(fp.tanggal, '%m-%Y')"));
+        } else {
+            $bulan = $res;
+        }
+
+        if ($request->kategori !== 'All') {
+            $kategori = $bulan->where('pp.kategoripesanan_id', $request->kategori);
+        } else {
+            $kategori = $bulan;
+        }
+
+        if ($request->sales !== 'All') {
+            $sales = $kategori->where('pp.sales_id', $request->sales);
+        } else {
+            $sales = $kategori;
+        }
+
+        $hasil = $sales
+            ->where('fp.customer_id', $request->customer)
+            ->groupBy('fdp.product_id', DB::raw("DATE_FORMAT(fp.tanggal, '%m')"))
+            ->select(
+                'p.nama',
+                'p.id',
+                'p.kode',
+                'm.nama as nama_merk',
+                DB::raw("DATE_FORMAT(fp.tanggal, '%m') as bulan"),
+                DB::raw("sum(fdp.qty) as qty")
+            )
+            ->get();
+
+        $pivot = [];
+
+        foreach ($hasil as $row) {
+
+            $pid = $row->id;
+
+            if (!isset($pivot[$pid])) {
+                $pivot[$pid] = [
+                    'id' => $row->id,
+                    'nama' => $row->nama,
+                    'kode' => $row->kode,
+                    'nama_merk' => $row->nama_merk,
+                    'total_qty' => 0,
+                    'bulan' => array_fill(1, 12, 0), // Jan – Des
+                ];
+            }
+
+            $bulanKe = intval($row->bulan);
+
+            $pivot[$pid]['bulan'][$bulanKe] += $row->qty;
+            $pivot[$pid]['total_qty'] += $row->qty;
+        }
+
+        $data = array_values($pivot);
+        usort($data, function ($a, $b) {
+            return $b['total_qty'] <=> $a['total_qty']; // terbesar ke kecil
+        });        
+
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->addColumn('jan', fn($d) => $d['bulan'][1])
+            ->addColumn('feb', fn($d) => $d['bulan'][2])
+            ->addColumn('mar', fn($d) => $d['bulan'][3])
+            ->addColumn('apr', fn($d) => $d['bulan'][4])
+            ->addColumn('mei', fn($d) => $d['bulan'][5])
+            ->addColumn('jun', fn($d) => $d['bulan'][6])
+            ->addColumn('jul', fn($d) => $d['bulan'][7])
+            ->addColumn('agst', fn($d) => $d['bulan'][8])
+            ->addColumn('sep', fn($d) => $d['bulan'][9])
+            ->addColumn('okt', fn($d) => $d['bulan'][10])
+            ->addColumn('nov', fn($d) => $d['bulan'][11])
+            ->addColumn('des', fn($d) => $d['bulan'][12])
+            ->addColumn('total_qty', fn($d) => $d['total_qty'])
+
+            ->make(true);
+    }
+
     public function exportTopProduk(Request $request)
     {
         $data = $request->all();

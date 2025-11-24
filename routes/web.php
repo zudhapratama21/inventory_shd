@@ -95,6 +95,7 @@ Route::middleware('auth', 'verified')->group(function () {
     // list top customer
     Route::post('/datatabletopcustomer', [HomeController::class, 'datatableTopCustomer'])->name('datatable.topCustomer');
     Route::post('/datatabletopcustomerproduct', [HomeController::class, 'listProduct'])->name('datatable.topCustomerProduct');
+    Route::post('/datatablehistoryorder', [HomeController::class, 'historyOrder'])->name('datatable.historyOrder');
 
 
     Route::post('/exportTopProduct', [HomeController::class, 'exportTopProduk'])->name('home.exporttopproduct');

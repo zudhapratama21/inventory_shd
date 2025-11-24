@@ -56,7 +56,7 @@
         @endphp
         @foreach ($penjualan as $item)
             <tr>
-                <td>{{ $no++ }}</td>
+                <td>{{ $no++ }}</td>        
                 <th>{{ $item->id }}</th>
                 <th>{{ $item->id_product }}</th>
                 <th>{{ $item->status_exp }}</th>
