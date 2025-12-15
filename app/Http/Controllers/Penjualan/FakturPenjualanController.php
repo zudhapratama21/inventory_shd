@@ -667,11 +667,6 @@ class FakturPenjualanController extends Controller
             'cn_total' => $data['cn_total']
         ]);
 
-        $totalCN = FakturPenjualanDetail::where('faktur_penjualan_id', $fakturpenjualandetail->faktur_penjualan_id)->sum('cn_total');
-        FakturPenjualan::where('id', $fakturpenjualandetail->faktur_penjualan_id)->update([
-            'total_cn' => $totalCN,
-        ]);
-
         return back();
     }
 
@@ -700,8 +695,6 @@ class FakturPenjualanController extends Controller
         FakturPenjualan::where('id', $fakturpenjualandetail->faktur_penjualan_id)->update([
             'total_cn' => $totalCN
         ]);
-
-
 
         return back();
     }
@@ -830,20 +823,27 @@ class FakturPenjualanController extends Controller
 
 
     public function syncronisasi()
-    {
+    {        
 
-        // $fakturpenjualandetail = FakturPenjualanDetail::with('fakturpenjualan.customers')->get();
-        // foreach ($fakturpenjualandetail as $value) {
-        //     if ($value->fakturpenjualan->customers->kategori_id == 13 || $value->fakturpenjualan->customers->kategori_id == 17) {
-        //         if ($value->total > 2000000) {
-        //             $value->update([
-        //                 'pph' => 1.5,
-        //                 'total_pph' => 1.5 * $value->total / 100
-        //             ]);
-        //         }
-        //     }
-        // }
-        // return back();
+        
+        $fakturpenjualan = FakturPenjualan::where('total_cn',0)->orWhere('total_cn',null)->get();        
+        // dd($fakturpenjualan);
+        foreach ($fakturpenjualan as $value) {
+            $totalCN = FakturPenjualanDetail::where('faktur_penjualan_id', $value->id)->sum('cn_total');
+            if ($totalCN > 0) {
+                $value->update([
+                    'total_cn' => $totalCN
+                ]);                
+            }else{
+                $value->update([
+                    'total_cn' => null
+                ]);
+            }
+            // $value->update([
+            //     'total_cn' => $totalCN
+            // ]);
+        }
+        return back();
 
         //dapatkan semua data pesanan penjualan yang status_so_id 4 
         // lalu looping semuanya jika ditemukan ada di faktur penjualan maka ubah statusnya menjadi 5
@@ -858,14 +858,13 @@ class FakturPenjualanController extends Controller
         //     }
         // }
 
-        $piutang = Piutang::with('fakturpenjualan')->get();
-        foreach ($piutang as $item) {
-            $item->update([
-                'tanggal' => $item->fakturpenjualan->tanggal
-            ]);
-        }
-
-        return back();
+        // $piutang = Piutang::with('fakturpenjualan')->get();
+        // foreach ($piutang as $item) {
+        //     $item->update([
+        //         'tanggal' => $item->fakturpenjualan->tanggal
+        //     ]);
+        // }
+        
     }
 
     public function syncronisasi2($id)
@@ -931,7 +930,7 @@ class FakturPenjualanController extends Controller
             'foto_bukti' => $nameFile,
             'no_resi' => $request->no_resi,
             'status_tanggaltop' => $request->top_status
-        ]);      
+        ]);
 
         return back();
     }
@@ -963,7 +962,7 @@ class FakturPenjualanController extends Controller
             'foto_bukti' => $nameFile,
             'no_resi' => $request->no_resi,
             'status_tanggaltop' => $request->top_status
-        ]);     
+        ]);
 
         return back();
     }
@@ -1064,6 +1063,10 @@ class FakturPenjualanController extends Controller
             'cn_total' => $totalcn
         ]);
 
+        FakturPenjualan::where('id', $fakturpenjualandetail->faktur_penjualan_id)->update([
+            'total_cn' => $totalcn
+        ]);
+        
         return response()->json([
             'status' => 'success',
             'message' => 'Data berhasil disimpan'
@@ -1083,7 +1086,7 @@ class FakturPenjualanController extends Controller
     }
 
     public function inputterimaberkas(Request $request, $id)
-    {        
+    {
         $img = $request->file('foto_bukti_berkas');
         $nameFile = null;
         $tanggal = Carbon::parse($request->tanggal_terima)->format('Y-m-d');
@@ -1116,8 +1119,8 @@ class FakturPenjualanController extends Controller
     }
 
 
-    public function editterimaberkas (Request $request, $id)
-    {        
+    public function editterimaberkas(Request $request, $id)
+    {
         $img = $request->file('foto_bukti_berkas');
 
         $tanggal = Carbon::parse($request->tanggal_terima)->format('Y-m-d');
@@ -1136,7 +1139,7 @@ class FakturPenjualanController extends Controller
             $nameFile = Storage::putFileAs('bukti_tandaterima_berkas', $img, $name);
             $nameFile = $name;
         }
-        
+
         $tandaterima = $fakturpenjualan->update([
             'status_tanggaltop' => $request->top_status,
             'tanggal_terima_berkas' => $tanggal,
@@ -1144,7 +1147,7 @@ class FakturPenjualanController extends Controller
             'foto_bukti_berkas' => $nameFile,
             'no_resi_berkas' => $request->no_resi_berkas,
         ]);
-        
+
 
         if ($request->top_status == 'ya') {
             $piutang = Piutang::where('faktur_penjualan_id', $id)->with('SO')->first();
@@ -1155,5 +1158,5 @@ class FakturPenjualanController extends Controller
         }
 
         return back();
-    }    
+    }
 }

@@ -42,15 +42,8 @@ class CanvassingPengembalianController extends Controller
         $konversi = CanvassingPengembalian::with(['customer', 'canvassing'])->orderByDesc('id');
 
         if (request()->ajax()) {
-            return Datatables::of($konversi)
-                ->addIndexColumn()
-                ->addColumn('tanggal', function (CanvassingPengembalian $pb) {
-                    return $pb->tanggal;
-                })
-                ->addColumn('kode', function (CanvassingPengembalian $pb) {
-                    return $pb->kode;
-                })
-                ->addColumn('customer', function (CanvassingPengembalian $pb) {
+            return Datatables::of($konversi)                            
+                ->editColumn('customer', function (CanvassingPengembalian $pb) {
                     return $pb->customer->nama;
                 })
                 ->editColumn('status', function (CanvassingPengembalian $pb) {
@@ -79,14 +72,8 @@ class CanvassingPengembalianController extends Controller
 
         if (request()->ajax()) {
             return Datatables::of($konversi)
-                ->addIndexColumn()
-                ->addColumn('tanggal', function (CanvassingPesanan $pb) {
-                    return $pb->tanggal;
-                })
-                ->addColumn('kode', function (CanvassingPesanan $pb) {
-                    return $pb->kode;
-                })
-                ->addColumn('customer', function (CanvassingPesanan $pb) {
+                ->addIndexColumn()              
+                ->editColumn('customer', function (CanvassingPesanan $pb) {
                     return $pb->customer->nama;
                 })
                 ->addColumn('action', function ($row) {
@@ -215,8 +202,7 @@ class CanvassingPengembalianController extends Controller
         $customer = Customer::where('id', $canvassing->customer_id)->first();
         DB::beginTransaction();
 
-        try {
-            // 0. save di canvassing pengembalian
+        try {            
             $kode = $this->getKodeTransaksi('canvassing_pengembalians', 'CVB');
             $canvaspengembalian = CanvassingPengembalian::create([
                 'kode' => $kode,

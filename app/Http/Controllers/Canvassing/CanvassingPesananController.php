@@ -34,18 +34,11 @@ class CanvassingPesananController extends Controller
         $canvassing = CanvassingPesanan::with('customer')->orderByDesc('id');
 
         if (request()->ajax()) {
-            return Datatables::of($canvassing)
-                ->addIndexColumn()
-                ->addColumn('tanggal', function (CanvassingPesanan $pb) {
-                    return $pb->tanggal;
-                })
-                ->addColumn('kode', function (CanvassingPesanan $pb) {
-                    return $pb->kode;
-                })
-                ->addColumn('customer', function (CanvassingPesanan $pb) {
+            return Datatables::of($canvassing)                              
+                ->editColumn('customer', function (CanvassingPesanan $pb) {
                     return $pb->customer->nama;
                 })
-                ->addColumn('status', function (CanvassingPesanan $pb) {
+                ->editColumn('status', function (CanvassingPesanan $pb) {
                     $status = $pb->status;
                     return view('canvassing.canvassing.partial._status', compact('status'));
                 })
