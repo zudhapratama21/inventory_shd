@@ -29,7 +29,7 @@ class PembayaranHutangController extends Controller
     public function index()
     {
         $title = "Pembayaran Hutang";
-        $pembayaranhutang = PembayaranHutang::with(['suppliers',  'hutangs', 'banks', 'FakturPO.PO'])->orderBy('id','desc');
+        $pembayaranhutang = PembayaranHutang::with(['suppliers',  'hutangs', 'banks', 'FakturPO.PO'])->orderBy('id', 'desc');
 
         if (request()->ajax()) {
             return Datatables::of($pembayaranhutang)
@@ -39,13 +39,13 @@ class PembayaranHutangController extends Controller
                 })
                 ->addColumn('faktur_po', function (PembayaranHutang $ph) {
                     return $ph->FakturPO->kode;
-                }) 
+                })
                 ->addColumn('no_faktur_supplier', function (PembayaranHutang $ph) {
                     return $ph->FakturPO->no_faktur_supplier;
-                }) 
+                })
                 ->addColumn('no_so', function (PembayaranHutang $ph) {
                     return $ph->FakturPO->PO->no_so;
-                })                
+                })
                 ->addColumn('banks', function (PembayaranHutang $ph) {
                     return $ph->banks->nama;
                 })
@@ -73,14 +73,9 @@ class PembayaranHutangController extends Controller
     public function listhutang()
     {
         $title = "Daftar Hutang";
-                    $hutangs =  Hutang::where('status', '=', '1')
-                    ->with(['suppliers' => function ($query){
-                        $query->select('id','nama');
-                    },'FakturPO' => function($query){
-                        $query->with('PO');
-                    }])                    
-                    ->orderBy('id','desc')
-                    ->get();
+        $hutangs =  Hutang::where('status', '=', '1')
+            ->with(['suppliers:id,nama', 'FakturPO.PO'])
+            ->orderBy('hutangs.id', 'desc');
 
         if (request()->ajax()) {
             return Datatables::of($hutangs)
@@ -88,14 +83,25 @@ class PembayaranHutangController extends Controller
                 ->addColumn('nama_supplier', function (Hutang $pb) {
                     return $pb->suppliers->nama;
                 })
-                ->addColumn('kode_faktur', function (Hutang $pb) {
-                    return $pb->FakturPO->kode;
+                ->filterColumn('kode', function ($query, $keyword) {
+                    $query->whereHas('FakturPO', function ($q) use ($keyword) {
+                        $q->where('kode', 'like', "%{$keyword}%");
+                    });
                 })
-                ->addColumn('no_so', function (Hutang $pb) {
-                    return $pb->FakturPO->PO->no_so;
+                ->addColumn(
+                    'no_so',
+                    fn($pb) =>
+                    optional(optional($pb->FakturPO)->PO)->no_so ?? '-'
+                )
+                ->filterColumn('no_so', function ($query, $keyword) {
+                    $query->whereHas('FakturPO.PO', function ($q) use ($keyword) {
+                        $q->where('no_so', 'like', "%{$keyword}%");
+                    });
                 })
-                ->addColumn('no_faktur_supplier', function (Hutang $pb) {
-                    return $pb->FakturPO->no_faktur_supplier;
+                ->filterColumn('no_faktur_supplier', function ($query, $keyword) {
+                    $query->whereHas('FakturPO', function ($q) use ($keyword) {
+                        $q->where('no_faktur_supplier', 'like', "%{$keyword}%");
+                    });
                 })
                 ->editColumn('tanggal', function (Hutang $pb) {
                     return $pb->tanggal ? with(new Carbon($pb->tanggal))->format('d-m-Y') : '';
@@ -106,7 +112,7 @@ class PembayaranHutangController extends Controller
                 ->editColumn('dibayar', function (Hutang $pb) {
                     return $pb->dibayar ? with(number_format($pb->dibayar, 0, ',', '.')) : '0';
                 })
-                ->editColumn('sisa', function (Hutang $pb) {
+                ->addColumn('sisa', function (Hutang $pb) {
                     $sisa = $pb->total - $pb->dibayar;
                     return $sisa ? with(number_format($sisa, 0, ',', '.')) : '0';
                 })
@@ -127,7 +133,7 @@ class PembayaranHutangController extends Controller
     public function create(Hutang $hutang)
     {
 
-        
+
         $title = "Faktur Pembelian";
         $pembayaranhutang = new PembayaranHutang;
         $banks = Bank::get();
@@ -153,11 +159,11 @@ class PembayaranHutangController extends Controller
         $sisa           = $total_hutang - $dibayar;
 
         $nominal = str_replace('.', '', $request->nominal) * 1;
-        $dibayar_baru = $dibayar + $nominal;  
-        
+        $dibayar_baru = $dibayar + $nominal;
+
         $toleransi = $total_hutang - $dibayar_baru;
 
-      
+
 
         if ($toleransi >= -500 && $toleransi <= 500) {
             $status = '2';
@@ -166,9 +172,9 @@ class PembayaranHutangController extends Controller
         }
 
         if ($toleransi < -500) {
-            return back()->with('error','Nominal tidak boleh melebihi sisa hutang');
+            return back()->with('error', 'Nominal tidak boleh melebihi sisa hutang');
         }
-        
+
 
         //insert pembayaran
         $datas['tanggal'] = $tanggal;
@@ -187,7 +193,7 @@ class PembayaranHutangController extends Controller
         $datahutang->nominal_toleransi = $toleransi;
         $datahutang->save();
 
-        $faktur = FakturPembelian::where('id',$hutang->faktur_pembelian_id)->first();
+        $faktur = FakturPembelian::where('id', $hutang->faktur_pembelian_id)->first();
 
         if ($status == '2') {
             LogToleransi::create([

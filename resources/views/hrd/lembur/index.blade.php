@@ -53,8 +53,12 @@
                                 </div>
                                 <div class="card-toolbar">
 
+                                    <button class="btn btn-outline-info btn-sm mr-2" data-toggle="modal"
+                                        data-target="#tambah"><i class="fas fa-download"></i> Import</button>
+
                                     @can('lembur-create')
-                                        <a href="{{ route('lembur.create') }}" class="btn btn-primary font-weight-bolder ">
+                                        <a href="{{ route('lembur.create') }}"
+                                            class="btn btn-primary font-weight-bolder btn-sm ">
                                             <i class="flaticon2-add"></i>
                                             Lembur
                                         </a>
@@ -93,6 +97,36 @@
     <!--end::Content-->
     <div id="modal-confirm-delete"></div>
     <div id="modal-show-detail"></div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="tambah" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Import Lembur</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('lembur.import') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group">
+                            <label for="">Import</label>
+                            <input type="file" class="form-control" name="file">
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
 @endsection
 @push('script')
     <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6') }}"></script>

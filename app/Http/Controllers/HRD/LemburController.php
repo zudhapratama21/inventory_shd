@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\HRD;
 
 use App\Http\Controllers\Controller;
+use App\Imports\LemburImport;
 use App\Models\HRD\Karyawan;
 use App\Models\HRD\Lembur;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class LemburController extends Controller
@@ -95,7 +97,7 @@ class LemburController extends Controller
 
     public function update(Request $request, $id)
     {
-        $lembur = Lembur::where('id',$id)->first();
+        $lembur = Lembur::where('id', $id)->first();
         // cek gaji pokok karyawan
         $karyawan = Karyawan::where('id', $request->karyawan_id)->first();
 
@@ -204,5 +206,12 @@ class LemburController extends Controller
 
         $totalLembur = $gajiLembur1 + $gajiLembur2;
         return $totalLembur;
+    }
+
+    public function import(Request $request)
+    {
+        $file = $request->file;        
+        Excel::import(new LemburImport, $file);
+        return back();
     }
 }

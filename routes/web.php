@@ -1277,6 +1277,8 @@ Route::middleware('has.role')->prefix('hrd')->group(function () {
         Route::PUT('{id}/update', [LemburController::class, 'update'])->name('lembur.update');
 
         Route::post('/delete', [LemburController::class, 'delete'])->name('lembur.delete');
+
+        Route::post('/import', [LemburController::class, 'import'])->name('lembur.import');
     });
 
     Route::prefix('cuti')->group(function () {
