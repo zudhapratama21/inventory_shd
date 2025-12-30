@@ -696,8 +696,7 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
 Route::middleware('has.role')->prefix('pembayaran')->group(function () {
     Route::prefix('pembayaranhutang')->group(function () {
         Route::get('', [PembayaranHutangController::class, 'index'])->name('pembayaranhutang.index');
-        Route::get('listhutang', [PembayaranHutangController::class, 'listhutang'])->name('pembayaranhutang.listhutang');
-        Route::get('{hutang}/create', [PembayaranHutangController::class, 'create'])->name('pembayaranhutang.create');
+        Route::get('listhutang', [PembayaranHutangController::class, 'listhutang'])->name('pembayaranhutang.listhutang');    
         Route::get('{hutang}/create', [PembayaranHutangController::class, 'create'])->name('pembayaranhutang.create');
         Route::post('{hutang}/create', [PembayaranHutangController::class, 'store']);
         Route::post('show', [PembayaranHutangController::class, 'show'])->name('pembayaranhutang.show');

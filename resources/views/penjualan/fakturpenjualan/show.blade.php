@@ -33,7 +33,7 @@
                                                 class="font-weight-bold font-italic text-primary font-size-h3">{{ $fakturpenjualan->kode }}</span>
                                         </span>
                                     </div>
-                                </div>
+                                </div>                                                            
                                 <div class="border-bottom w-100"></div>
                                 <div class="d-flex justify-content-between pt-6">
                                     <div class="d-flex flex-column flex-root">

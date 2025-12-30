@@ -73,35 +73,48 @@ class PembayaranHutangController extends Controller
     public function listhutang()
     {
         $title = "Daftar Hutang";
-        $hutangs =  Hutang::where('status', '=', '1')
-            ->with(['suppliers:id,nama', 'FakturPO.PO'])
+        $hutangs = Hutang::query()
+            ->leftJoin('suppliers', 'suppliers.id', '=', 'hutangs.supplier_id')
+            ->leftJoin('faktur_pembelians as fp', 'fp.id', '=', 'hutangs.faktur_pembelian_id')
+            ->leftJoin('pesanan_pembelians as  pp', 'pp.id', '=', 'hutangs.pesanan_pembelian_id')
+            ->where('hutangs.status', 1)
+            ->select([
+                'hutangs.*',
+                'suppliers.nama as nama_supplier',
+                'fp.kode',
+                'fp.no_faktur_supplier',
+                'pp.no_so'
+            ])
             ->orderBy('hutangs.id', 'desc');
 
         if (request()->ajax()) {
             return Datatables::of($hutangs)
                 ->addIndexColumn()
                 ->addColumn('nama_supplier', function (Hutang $pb) {
-                    return $pb->suppliers->nama;
+                    return $pb->nama_supplier;
                 })
+                ->addColumn('kode', function (Hutang $pb) {
+                    return $pb->kode;
+                })
+                ->addColumn('no_so', function (Hutang $pb) {
+                    return $pb->no_so;
+                })
+                ->addColumn('no_faktur_supplier', function (Hutang $pb) {
+                    return $pb->no_faktur_supplier;
+                })
+                ->filterColumn('nama_supplier', function ($query, $keyword) {
+                    $query->where('suppliers.nama', 'like', "%{$keyword}%");
+                })
+
                 ->filterColumn('kode', function ($query, $keyword) {
-                    $query->whereHas('FakturPO', function ($q) use ($keyword) {
-                        $q->where('kode', 'like', "%{$keyword}%");
-                    });
+                    $query->where('fp.kode', 'like', "%{$keyword}%");
                 })
-                ->addColumn(
-                    'no_so',
-                    fn($pb) =>
-                    optional(optional($pb->FakturPO)->PO)->no_so ?? '-'
-                )
-                ->filterColumn('no_so', function ($query, $keyword) {
-                    $query->whereHas('FakturPO.PO', function ($q) use ($keyword) {
-                        $q->where('no_so', 'like', "%{$keyword}%");
-                    });
-                })
+
                 ->filterColumn('no_faktur_supplier', function ($query, $keyword) {
-                    $query->whereHas('FakturPO', function ($q) use ($keyword) {
-                        $q->where('no_faktur_supplier', 'like', "%{$keyword}%");
-                    });
+                    $query->where('fp.no_faktur_supplier', 'like', "%{$keyword}%");
+                })
+                ->filterColumn('no_so', function ($query, $keyword) {
+                    $query->where('pp.no_so', 'like', "%{$keyword}%");
                 })
                 ->editColumn('tanggal', function (Hutang $pb) {
                     return $pb->tanggal ? with(new Carbon($pb->tanggal))->format('d-m-Y') : '';
@@ -132,8 +145,6 @@ class PembayaranHutangController extends Controller
     }
     public function create(Hutang $hutang)
     {
-
-
         $title = "Faktur Pembelian";
         $pembayaranhutang = new PembayaranHutang;
         $banks = Bank::get();

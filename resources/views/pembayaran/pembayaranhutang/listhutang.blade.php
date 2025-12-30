@@ -115,7 +115,7 @@
                     //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},]
                     {
                         data: 'kode',
-                        name: 'FakturPO.kode'
+                        name: 'kode'
                     },
                     {
                         data: 'no_so',
@@ -131,7 +131,7 @@
                     },
                     {
                         data: 'nama_supplier',
-                        name: 'suppliers.nama'
+                        name: 'nama_supplier'
                     },
                     {
                         data: 'total',

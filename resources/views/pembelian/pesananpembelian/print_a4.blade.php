@@ -2,9 +2,6 @@
 <html>
 
 <head>
-    {{-- <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> --}}
 
     <style type="text/css">
         .tabel {
@@ -104,7 +101,6 @@
                                 </td>
                             </tr>
                             <tr style="">
-                                {{-- <td style="font-size: 75%; border:none; width:10%;">KODE</td> --}}
                                 <td style="font-size: 60%; border:none; width:3%;text-align:left">NO</td>
                                 <td style="font-size: 60%; border:none; width:7%;text-align:left">KEBUTUHAN</td>
                                 <td style="font-size: 60%; border:none; width:24%;text-align:left">NAMA BARANG</td>
@@ -197,12 +193,12 @@
                                     </b></td>
                             </tr>
                             {{-- <tr>
-                            <td style='font-size: 70%; width: 75%;'><b>Biaya Pengiriman</b></td>
-                            <td style='font-size: 70%; width: 5%;'><b>: Rp.</b></td>
-                            <td style='font-size: 70%; text-align:right'><b>
-                                    {{ number_format(floor($pesananpembelian->ongkir), 0, ',', '.') }}
-                                </b></td>
-                        </tr> --}}
+                                <td style='font-size: 70%; width: 75%;'><b>Biaya Pengiriman</b></td>
+                                <td style='font-size: 70%; width: 5%;'><b>: Rp.</b></td>
+                                <td style='font-size: 70%; text-align:right'><b>
+                                        {{ number_format(floor($pesananpembelian->ongkir), 0, ',', '.') }}
+                                    </b></td>
+                            </tr> --}}
                             <tr>
                                 <td style='font-size: 70%; width: 25%;'><b>Jumlah Yang Harus Dibayar</b></td>
                                 <td style='font-size: 70%; width: 5%;'><b>: Rp.</b></td>
@@ -242,7 +238,7 @@
 
                                 <td style='font-size: 70%; text-align:center; vertical-align:top'>Sidoarjo,
                                     {{ $pesananpembelian->tanggal->format("d
-                                                                                                                                                                                                                    F Y") }}
+                                                                                                                                                                                                                                                        F Y") }}
 
                                     <br /><br /> <br /><br /> <br /> <br />
                                     <u>HEPPY WAHYU PURNOMO</u> <br />
@@ -272,9 +268,6 @@
         @if ($totalPage != $i)
             <div style="page-break-after: always;"></div>
         @endif
-
-
-
     @endfor
 
 </body>

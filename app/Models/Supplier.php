@@ -81,7 +81,7 @@ class Supplier extends Model
 
     public function hutangs()
     {
-        return $this->hasMany(Hutang::class, 'supplier_id','id');
+        return $this->hasMany(Hutang::class, 'supplier_id');
     }
 
    

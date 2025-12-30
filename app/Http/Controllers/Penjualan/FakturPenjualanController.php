@@ -623,7 +623,7 @@ class FakturPenjualanController extends Controller
             'fakturpenjualan' => $fakturpenjualan,
             'fakturpenjualandetails' => $fakturpenjualandetails
         ];
-        $pdf = PDF::loadView('penjualan.fakturpenjualan.print_a4_koma', $data)->setPaper('a4', 'potrait');;
+        $pdf = PDF::loadView('penjualan.fakturpenjualan.print_a4_koma', $data)->setPaper('a4', 'portrait');
         return $pdf->download($fakturpenjualan->no_kpa . '-' . $fakturpenjualan->kode . '.pdf');
 
         // return view('penjualan.fakturpenjualan.print_a4', [
