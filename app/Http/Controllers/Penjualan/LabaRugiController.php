@@ -73,7 +73,7 @@ class LabaRugiController extends Controller
                         'diskon_beli_persen' => $nonexpired->diskon_persen_beli,
                         'diskon_beli_rupiah' => $nonexpired->diskon_rupiah_beli,
                         'total_diskon_beli' => $total_diskon,
-                        'ppn_beli' => ($subtotal - $total_diskon) * 11/100,
+                        'ppn_beli' => ($subtotalPenjualan - $total_diskon) * 11/100,
                         'hpp' => $hpp,
                         'laba_kotor' =>  $nett - $hpp
                     );
@@ -117,7 +117,7 @@ class LabaRugiController extends Controller
                         'diskon_beli_persen' => $expired->diskon_persen_beli,
                         'diskon_beli_rupiah' => $expired->diskon_rupiah_beli,
                         'total_diskon_beli' => $total_diskon_expired,
-                        'ppn_beli' => ($subtotal - $total_diskon) * 11/100,
+                        'ppn_beli' => ($subtotalPenjualanExpired - $total_diskon) * 11/100,
                         'hpp' => $hpp_expired,
                         'laba_kotor' =>  $nettExpired - $hpp_expired
                     );
