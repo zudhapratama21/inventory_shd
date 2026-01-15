@@ -823,48 +823,87 @@ class FakturPenjualanController extends Controller
 
 
     public function syncronisasi()
-    {        
+    {
 
-        
-        $fakturpenjualan = FakturPenjualan::where('total_cn',0)->orWhere('total_cn',null)->get();        
-        // dd($fakturpenjualan);
-        foreach ($fakturpenjualan as $value) {
-            $totalCN = FakturPenjualanDetail::where('faktur_penjualan_id', $value->id)->sum('cn_total');
-            if ($totalCN > 0) {
-                $value->update([
-                    'total_cn' => $totalCN
-                ]);                
-            }else{
-                $value->update([
-                    'total_cn' => null
-                ]);
-            }
-            // $value->update([
-            //     'total_cn' => $totalCN
-            // ]);
-        }
-        return back();
 
-        //dapatkan semua data pesanan penjualan yang status_so_id 4 
-        // lalu looping semuanya jika ditemukan ada di faktur penjualan maka ubah statusnya menjadi 5
-
-        // $pesanan = PesananPenjualan::where('status_so_id',4)->get();
-        // foreach ($pesanan as $value) {
-        //     $fakturpenjualan = FakturPenjualan::where('pesanan_penjualan_id',$value->id)->first();
-        //     if ($fakturpenjualan) {
+        // $fakturpenjualan = FakturPenjualan::where('total_cn',0)->orWhere('total_cn',null)->get();        
+        // // dd($fakturpenjualan);
+        // foreach ($fakturpenjualan as $value) {
+        //     $totalCN = FakturPenjualanDetail::where('faktur_penjualan_id', $value->id)->sum('cn_total');
+        //     if ($totalCN > 0) {
         //         $value->update([
-        //             'status_so_id' => 5
+        //             'total_cn' => $totalCN
+        //         ]);                
+        //     }else{
+        //         $value->update([
+        //             'total_cn' => null
         //         ]);
         //     }
+        //     // $value->update([
+        //     //     'total_cn' => $totalCN
+        //     // ]);
         // }
+        // return back();
 
-        // $piutang = Piutang::with('fakturpenjualan')->get();
-        // foreach ($piutang as $item) {
-        //     $item->update([
-        //         'tanggal' => $item->fakturpenjualan->tanggal
-        //     ]);
-        // }
+        // cari penjualan detil dari 2 rumah sakit id 675 dan 773
+        // cari produk yang id nya 1723 , 2046 dan 2351
+        // ubah harga non expired detil nya menjadi 0 jika hargajual di faktur penjualan detil nya 0
+
+
+
+        $fakturpenjualandetail = FakturPenjualanDetail::whereHas('fakturpenjualan', function ($q) {
+            $q->where('customer_id',  672)
+                ->orWhere('customer_id',  773)
+                ->whereYear('tanggal', 2025);
+        })->where('product_id', 1723)->orWhere('product_id', 2046)->orWhere('product_id', 2351)->get();
         
+        // dd($fakturpenjualandetail[30]);
+
+        foreach ($fakturpenjualandetail as $key) {
+            if ($key->product_id  == 1723) {
+                HargaNonExpiredDetail::where('id_sj_detail', $key->pengiriman_barang_detail_id)->update([
+                    'harga_beli' => 487300,
+                    'diskon_persen_beli' => 25
+                ]);                  
+                  
+            }
+
+            if ($key->product_id  == 2046) {
+                HargaNonExpiredDetail::where('id_sj_detail', $key->pengiriman_barang_detail_id)->update([
+                    'harga_beli' => 460900,
+                    'diskon_persen_beli' => 25
+                ]);
+            }
+
+            if ($key->product_id  == 2351) {
+                HargaNonExpiredDetail::where('id_sj_detail', $key->pengiriman_barang_detail_id)->update([
+                    'harga_beli' => 487300,
+                    'diskon_persen_beli' => 25
+                ]);
+            }
+        }
+
+
+         $fakturpenjualandetail2 = FakturPenjualanDetail::whereHas('fakturpenjualan', function ($q) {
+            $q->where('customer_id',  672)
+                ->orWhere('customer_id',  773)
+                ->whereYear('tanggal', 2025);
+        })->get();
+
+        foreach ($fakturpenjualandetail2 as $key) {
+            if ($key->hargajual  == 0) {
+                HargaNonExpiredDetail::where('id_sj_detail', $key->pengiriman_barang_detail_id)->update([
+                    'qty' => 0
+                ]);
+
+                StokExpDetail::where('id_sj_detail', $key->pengiriman_barang_detail_id)->update([
+                    'qty' => 0
+                ]);
+            }
+        }
+    
+
+        return back();
     }
 
     public function syncronisasi2($id)
@@ -1066,7 +1105,7 @@ class FakturPenjualanController extends Controller
         FakturPenjualan::where('id', $fakturpenjualandetail->faktur_penjualan_id)->update([
             'total_cn' => $totalcn
         ]);
-        
+
         return response()->json([
             'status' => 'success',
             'message' => 'Data berhasil disimpan'

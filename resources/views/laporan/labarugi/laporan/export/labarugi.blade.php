@@ -23,6 +23,7 @@
             <th>Diskon Beli (%)</th>
             <th>Diskon Beli (Rp.)</th>
             <th>Total Diskon Beli</th>
+            <th>PPN (11%)</th>
             <th>HPP</th>
             <th>Laba Kotor</th>
             <th>Sales</th>
@@ -53,6 +54,7 @@
                 <td>{{ $item['diskon_beli_persen'] }}</td>
                 <td>{{ $item['diskon_beli_rupiah'] }}</td>
                 <td>{{ $item['total_diskon_beli'] }}</td>
+                <td>{{ $item['ppn_beli'] }}</td>
                 <td>{{ $item['hpp'] }}</td>
                 <td>{{ $item['laba_kotor'] }}</td>
                 <td>{{ $item['sales'] }}</td>

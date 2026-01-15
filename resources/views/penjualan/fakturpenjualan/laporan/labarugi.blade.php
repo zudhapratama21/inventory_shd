@@ -60,6 +60,7 @@
                                     <th>Diskon Beli (%)</th>
                                     <th>Diskon Beli (Rp.)</th>
                                     <th>Total Diskon Beli</th>
+                                    <th>PPN (11%)</th>
                                     <th>HPP</th>
                                     <th>Laba Kotor</th>
                                 </tr>
@@ -81,6 +82,7 @@
                                         <td>{{ number_format($item['diskon_beli_persen'], 2, ',', '.') }}</td>
                                         <td>{{ number_format($item['diskon_beli_rupiah'], 2, ',', '.') }}</td>
                                         <td>{{ number_format($item['total_diskon_beli'], 2, ',', '.') }}</td>
+                                        <td>{{ number_format($item['ppn_beli'], 2, ',', '.') }}</td>
                                         <td>{{ number_format($item['hpp'], 2, ',', '.') }}</td>
                                         <td>{{ number_format($item['laba_kotor'], 2, ',', '.') }}</td>
                                     </tr>
