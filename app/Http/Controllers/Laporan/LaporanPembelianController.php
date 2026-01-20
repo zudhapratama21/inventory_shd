@@ -101,11 +101,13 @@ class LaporanPembelianController extends Controller
 
         }
         
-        $filter = $customerfilter->select('fp.*','pb.kode as kode_SJ','pp.kode as kode_SP','s.nama as nama_supplier','u.name as nama_pembuat')->get();                                        
+        $filter = $customerfilter->select('fp.*','pb.kode as kode_SJ','pp.no_so as no_pesanan','pp.kode as kode_SP','pp.no_so as no_pesanan','s.nama as nama_supplier','u.name as nama_pembuat')->get();                                        
                 
         if (count($filter) <= 0) {
             return redirect()->back()->with('status_danger', 'Data tidak ditemukan');
-        }        
+        }     
+        
+        dd($filter[0]);
 
         return view('laporan.pembelian.laporanpembelian.filterPembelianResult',[
             'pembelian' => $filter,

@@ -6,6 +6,7 @@
             <th>Kode Faktur</th>
             <th>Kode PO</th>
             <th>Kode PB</th>
+            <th>Kode BSB</th>
             <th>Supplier</th>   
             <th>Nama Produk</th>  
             <th>Kode Produk</th>    
@@ -43,7 +44,8 @@
                 <td>{{ date('d/m/Y', strtotime($item->tanggal)) }}</td>
                 <td>{{$item->kode}}</td>
                 <td>{{$item->kode_SP}}</td>
-                <td>{{$item->kode_SJ}}</td>                                            
+                <td>{{$item->kode_SJ}}</td>   
+                <td>{{$item->no_pesanan}}</td>   
                 <td>{{$item->nama_supplier}}</td>
                 <td>{{$item->nama_produk}}</td>
                 <td>{{$item->kode_produk}}</td>

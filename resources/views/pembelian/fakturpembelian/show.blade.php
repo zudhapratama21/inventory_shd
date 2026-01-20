@@ -54,21 +54,7 @@
                                     <span class="font-weight-bolder mb-2">No Faktur Supplier</span>
                                     <span class="opacity-70">{{ $fakturpembelian->no_faktur_supplier }}</span>
                                 </div>
-                            </div>
-                            {{-- <div class="d-flex justify-content-between pt-6">
-                                <div class="d-flex flex-column flex-root">
-                                    <span class="font-weight-bolder mb-2">KOMODITAS</span>
-                                    <span class="opacity-70">{{ $fakturpembelian->komoditas->nama }}</span>
-                                </div>
-                                <div class="d-flex flex-column flex-root">
-                                    <span class="font-weight-bolder mb-2">TOP</span>
-                                    <span class="opacity-70">{{ $fakturpembelian->top }} Hari</span>
-                                </div>
-                                <div class="d-flex flex-column flex-root">
-                                    <span class="font-weight-bolder mb-2">SP CUSTOMER</span>
-                                    <span class="opacity-70">{{ $fakturpembelian->no_so }} </span>
-                                </div>
-                            </div> --}}
+                            </div>                        
                         </div>
                     </div>
                     <!-- end: Invoice header-->

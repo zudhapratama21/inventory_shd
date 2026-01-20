@@ -55,16 +55,7 @@
                             <div class="d-flex align-items-center">
                                 <a href="#" class="btn btn-primary mr-2" data-toggle="modal" data-target="#modalexport">
                                 <i class="flaticon-technology"></i>                                  
-                                Export to Excel</a>
-                                
-
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">                                    
-                                    <i class="flaticon-folder-3"></i>                                  
-                                    Import Product
-                                  </button>
-
-                                  <a href="{{ route('product.syncronisasi') }}" class="btn btn-danger ml-2">Syncronisasi</a>
-                                
+                                Export to Excel</a>                                                                                          
                             </div>
                                                     
                             <div >
