@@ -105,9 +105,7 @@ class LaporanPembelianController extends Controller
                 
         if (count($filter) <= 0) {
             return redirect()->back()->with('status_danger', 'Data tidak ditemukan');
-        }     
-        
-        dd($filter[0]);
+        }             
 
         return view('laporan.pembelian.laporanpembelian.filterPembelianResult',[
             'pembelian' => $filter,
