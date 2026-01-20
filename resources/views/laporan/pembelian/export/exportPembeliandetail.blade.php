@@ -7,6 +7,7 @@
             <th>Kode PO</th>
             <th>Kode PB</th>
             <th>Kode BSB</th>
+            <th>No Faktur Supplier</th>   
             <th>Supplier</th>   
             <th>Nama Produk</th>  
             <th>Kode Produk</th>    
@@ -46,6 +47,7 @@
                 <td>{{$item->kode_SP}}</td>
                 <td>{{$item->kode_SJ}}</td>   
                 <td>{{$item->no_pesanan}}</td>   
+                <td>{{$item->no_faktur_supplier}}</td>
                 <td>{{$item->nama_supplier}}</td>
                 <td>{{$item->nama_produk}}</td>
                 <td>{{$item->kode_produk}}</td>
