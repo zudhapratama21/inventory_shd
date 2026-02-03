@@ -1,6 +1,7 @@
 @extends('layouts.auth')
 
 @section('body')
+
 <div class="d-flex flex-column flex-root">
     <!--begin::Login-->
     <div class="login login-4 login-signin-on d-flex flex-row-fluid" id="kt_login">
