@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Laravolt\Indonesia\Models\City;
 use App\Http\Controllers\Controller;
 use App\Imports\NewProductImport;
+use App\Models\InventoryTransaction;
 use App\Models\PesananPembelianDetail;
 use App\Models\Productsubcategory;
 use App\Models\TempProduct;
@@ -107,20 +108,7 @@ class ProductController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'nama' => ['required', 'max:255'],
-            'productcategory_id' => ['required'],
-            'productsubcategory_id' => ['required'],
-            'merk_id' => ['required'],
-            'satuan' => ['required'],
-            'hargajual' => ['required', 'numeric'],
-            'hargabeli' => ['required', ' numeric'],
-            'diskon_persen' => ['numeric', 'between:0,99.99'],
-            'diskon_rp' => ['numeric'],
-            'status' => ['required'],
-            'status_exp' => ['required'],
-        ]);
+    {       
 
         $tglIjinEdar = $request->exp_ijinedar;
         if ($tglIjinEdar <> null) {
@@ -128,14 +116,25 @@ class ProductController extends Controller
         }
 
         $datas = $request->all();
+
         $datas['kode'] = $this->getKodeData("products", "P");
-        $datas['exp_ijinedar'] = $tglIjinEdar;
-        $datas['stok'] = '0';
+        $datas['exp_ijinedar'] = $tglIjinEdar;        
         $datas['hpp'] = $request->hargabeli;
 
-        //dd($datas);
+        $product = Product::create($datas)->id;        
 
-        Product::create($datas);
+        InventoryTransaction::create([
+            'tanggal' => now()->format('Y-m-d'),
+            'product_id' => $product,
+            'qty' => $request->stok,
+            'stok' => $request->stok,
+            'hpp' => 0,
+            'jenis' => 'OB',
+            'jenis_id' => null,
+            'customer' => null,
+            'supplier' => null
+        ]);
+
         return redirect()->route('product.index')->with('status', 'Product baru berhasil ditambahkan !');
     }
 

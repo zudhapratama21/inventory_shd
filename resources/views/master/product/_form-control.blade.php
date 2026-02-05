@@ -182,7 +182,7 @@
     <div class="form-group row">
         <div class="col-lg-3">
             <label>Harga Jual *:</label>
-            <input type="text" id="hargajual" name="hargajual"
+            <input type="number" id="hargajual" name="hargajual"
                 value="{{ old('hargajual') ?? $product->hargajual }}"
                 class="form-control @error('hargajual') is-invalid @enderror"
                 placeholder="Masukkan Harga Jual Product" />
@@ -192,7 +192,7 @@
         </div>
         <div class="col-lg-3">
             <label>Harga Beli *:</label>
-            <input type="text" id="hargabeli" name="hargabeli"
+            <input type="number" id="hargabeli" name="hargabeli"
                 value="{{ old('hargabeli') ?? $product->hargabeli }}"
                 class="form-control @error('hargabeli') is-invalid @enderror"
                 placeholder="Masukkan Harga Beli Product" />
@@ -202,7 +202,7 @@
         </div>
         <div class="col-lg-3">
             <label>Diskon (%) :</label>
-            <input type="text" name="diskon_persen"
+            <input type="number" name="diskon_persen"
                 class="form-control @error('diskon_persen') is-invalid @enderror"
                 value="{{ $product->diskon_persen ?? 0 }}" />
             @error('diskon_persen')
@@ -212,13 +212,20 @@
 
         <div class="col-lg-3">
             <label>Diskon (Rp.) :</label>
-            <input type="text" class="form-control @error('diskon_rp') is-invalid @enderror" name="diskon_rp"
+            <input type="number" class="form-control @error('diskon_rp') is-invalid @enderror" name="diskon_rp"
                 value="{{ $product->diskon_rp ?? 0 }}" />
             @error('diskon_rp')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
 
+    </div>
+
+    <div class="form-group row">
+       <div class="col-lg-3">
+            <label>Stok Awal</label>
+            <input type="number" class="form-control" name="stok" value="{{ $product->stok ?? 0 }}" />           
+        </div>
     </div>
     <div class="separator separator-dashed my-5"></div>
     <div class="form-group">
@@ -243,8 +250,7 @@
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
-    <div class="separator separator-dashed my-5"></div>
-    @if ($status !== 1)
+    <div class="separator separator-dashed my-5"></div>    
         <div class="form-group">
             <label>Ada Expired? * :</label>
 
@@ -268,8 +274,7 @@
             @error('status_exp')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
-        </div>
-    @endif
+        </div>    
 
     <div class="separator separator-dashed my-5"></div>
     <div class="form-group">

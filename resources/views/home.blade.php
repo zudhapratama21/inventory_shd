@@ -1,130 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="content  d-flex flex-column flex-column-fluid" id="kt_content">
-        <!--begin::Subheader-->
-        <div class="subheader py-2 py-lg-12  subheader-transparent " id="kt_subheader">
-            <div class=" container  d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
-                <!--begin::Info-->
-                <div class="d-flex align-items-center flex-wrap mr-1">
-                    <!--begin::Heading-->
-                    <div class="d-flex">
-
-
-                        <div class="card card-custom gutter-b">
-                            <div class="card-body">
-                                <ul class="nav nav-tabs nav-bold nav-tabs-line">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" data-toggle="tab" href="#kt_tab_pane_1_4">
-                                            <span class="nav-icon"><i class="flaticon2-chat-1"></i></span>
-                                            <span class="nav-text">Pekerjaan</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#kt_tab_pane_2_4">
-                                            <span class="nav-icon"><i class="flaticon2-drop"></i></span>
-                                            <span class="nav-text">Analisis</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <!--end::Breadcrumb-->
-                    </div>
-                    <!--end::Heading-->
-                </div>
-            </div>
+    <div class="d-flex flex-column-fluid">
+        <div class="container">
+            @include('partial.table.analisis')
         </div>
-        <!--end::Subheader-->
-
-        <!--begin::Entry-->
-        <div class="d-flex flex-column-fluid">
-            <div class="container ">
-                <div class="tab-content">
-                    <div class="tab-pane fade show active" id="kt_tab_pane_1_4" role="tabpanel"
-                        aria-labelledby="kt_tab_pane_1_4">
-                        <div class="row">
-                            <div class="col-lg-12">
-
-                                <div class="card card-custom gutter-b">
-                                    <div class="card-header">
-                                        <div class="card-title">
-                                            <h3 class="card-label">
-                                                Laman Pengumuman
-                                            </h3>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <!--begin::Accordion-->
-                                        <div class="accordion  accordion-toggle-arrow" id="accordionExample4">
-                                            <div class="card">
-                                                <div class="card-header" id="headingOne4">
-                                                    <div class="card-title" data-toggle="collapse"
-                                                        data-target="#collapseOne4">
-                                                        <i class="flaticon2-layers-1"></i> Pengumuman Terbaru
-                                                    </div>
-                                                </div>
-                                                <div id="collapseOne4" class="collapse show"
-                                                    data-parent="#accordionExample4">
-                                                    <div class="card-body">
-                                                        <h3>{{ $pengumuman->subject }}</h3>
-                                                        <p>Dibuat Oleh : {{ $pengumuman->pembuat->name }} || dibuat pada :
-                                                            {{ \Carbon\Carbon::parse($pengumuman->updated_at)->format('d F Y') }}
-                                                        </p>
-                                                        <hr>
-                                                        <p>
-                                                            {!! $pengumuman->description !!}
-                                                        </p>
-                                                        <a href="{{ asset('storage/pengumuman/' . $pengumuman->file) }}"
-                                                            class="btn btn-primary btn-sm" download><i
-                                                                class="fas fa-download"></i>Download File</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card">
-                                                <div class="card-header" id="headingTwo4">
-                                                    <div class="card-title collapsed" data-toggle="collapse"
-                                                        data-target="#collapseTwo4">
-                                                        <i class="flaticon2-copy"></i> Pengumuman yang lain
-                                                    </div>
-                                                </div>
-                                                <div id="collapseTwo4" class="collapse" data-parent="#accordionExample4">
-                                                    <div class="card-body">
-                                                        <table
-                                                            class="table table-separate table-head-custom table-checkable table  yajra-datatable-pengumuman collapsed ">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Tanggal</th>
-                                                                    <th>Topic</th>
-                                                                    <th>Subject</th>
-                                                                    <th>Download File</th>
-                                                                    <th>Action</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        @include('partial.table.keuangan')
-                    </div>
-
-                    <div class="tab-pane fade " id="kt_tab_pane_2_4" role="tabpanel" aria-labelledby="kt_tab_pane_2_4">
-                        @include('partial.table.analisis')
-                    </div>
-                </div>
-            </div>
-            <!--end::Container-->
-        </div>
-        <!--end::Entry-->
     </div>
+
+
 
     {{-- modal Customer --}}
 
@@ -181,7 +64,7 @@
         let bulan = 'All';
         let dataBulan = null;
         let chart = null;
-        let produk = {{ $produk[0]->id }};
+        // let produk = {{ $produk }};
         let product_id = null;
         let customer_id = null;
         let supplier_id = null;
@@ -551,61 +434,61 @@
             }
         }
 
-        function chartProduk() {
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('chart.produk') }}',
-                dataType: 'html',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: {
-                    'year': year,
-                    'produk': produk,
-                    "_token": "{{ csrf_token() }}"
-                },
-                success: function(data) {
-                    res = JSON.parse("[" + data + "]");
-                    dataStok = res[0].stok;
-                    dataBulan = res[0].bulan;
-                    produkchart.data.labels = dataBulan;
-                    produkchart.data.datasets[0].data = dataStok;
-                    grafikProduk = new Chart(produk_chart, produkchart);
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        }
+        // function chartProduk() {
+        //     $.ajax({
+        //         type: 'POST',
+        //         url: '{{ route('chart.produk') }}',
+        //         dataType: 'html',
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //         },
+        //         data: {
+        //             'year': year,
+        //             'produk': produk,
+        //             "_token": "{{ csrf_token() }}"
+        //         },
+        //         success: function(data) {
+        //             res = JSON.parse("[" + data + "]");
+        //             dataStok = res[0].stok;
+        //             dataBulan = res[0].bulan;
+        //             produkchart.data.labels = dataBulan;
+        //             produkchart.data.datasets[0].data = dataStok;
+        //             grafikProduk = new Chart(produk_chart, produkchart);
+        //         },
+        //         error: function(data) {
+        //             console.log(data);
+        //         }
+        //     });
+        // }
 
-        function chartProdukUpdate() {
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('chart.produk') }}',
-                dataType: 'html',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: {
-                    'year': year,
-                    'produk': produk,
-                    "_token": "{{ csrf_token() }}"
-                },
-                success: function(data) {
-                    res = JSON.parse("[" + data + "]");
-                    dataStok = res[0].stok;
-                    dataBulan = res[0].bulan;
-                    produkchart.data.labels = dataBulan;
-                    produkchart.data.datasets[0].data = dataStok;
-                    grafikProduk.destroy();
-                    grafikProduk = new Chart(produk_chart, produkchart);
-                    grafikProduk.update();
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        }
+        // function chartProdukUpdate() {
+        //     $.ajax({
+        //         type: 'POST',
+        //         url: '{{ route('chart.produk') }}',
+        //         dataType: 'html',
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //         },
+        //         data: {
+        //             'year': year,
+        //             'produk': produk,
+        //             "_token": "{{ csrf_token() }}"
+        //         },
+        //         success: function(data) {
+        //             res = JSON.parse("[" + data + "]");
+        //             dataStok = res[0].stok;
+        //             dataBulan = res[0].bulan;
+        //             produkchart.data.labels = dataBulan;
+        //             produkchart.data.datasets[0].data = dataStok;
+        //             grafikProduk.destroy();
+        //             grafikProduk = new Chart(produk_chart, produkchart);
+        //             grafikProduk.update();
+        //         },
+        //         error: function(data) {
+        //             console.log(data);
+        //         }
+        //     });
+        // }
 
         function filteryearproduk() {
             let e = document.getElementById("grafikproduk_tahun");
@@ -613,11 +496,11 @@
             chartProdukUpdate();
         }
 
-        function filterProduk() {
-            let e = document.getElementById("kt_select2_3");
-            produk = e.options[e.selectedIndex].value;
-            chartProdukUpdate();
-        }
+        // function filterProduk() {
+        //     let e = document.getElementById("kt_select2_3");
+        //     produk = e.options[e.selectedIndex].value;
+        //     chartProdukUpdate();
+        // }
 
         //========================================================= END OF  CHART UNTUK FORECAST PRODUK  ===================================================== 
 

@@ -67,7 +67,7 @@
                                         </a>
                                     @endcan
 
-                                    <button type="button" class="ml-2 btn btn-primary" data-toggle="modal"
+                                    {{-- <button type="button" class="ml-2 btn btn-primary" data-toggle="modal"
                                         data-target="#modalimport">
                                         <i class="flaticon-folder-3"></i>
                                         Import Merk
@@ -76,7 +76,7 @@
                                     <a href="{{ route('merk.export') }}" class="ml-2 btn btn-primary">
                                         <i class="flaticon-folder-3"></i>
                                         Export Merk
-                                    </a>
+                                    </a> --}}
 
 
                                     <!--end::Button-->

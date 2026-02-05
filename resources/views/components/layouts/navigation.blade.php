@@ -96,46 +96,10 @@
                 <!--begin::Dropdown-->
                 <div class="dropdown-menu p-0 m-0 dropdown-menu-right dropdown-menu-anim-up dropdown-menu-lg p-0">
                     <!--begin::Header-->
-                    <div class="d-flex align-items-center p-8 rounded-top">
-                        <!--begin::Symbol-->
-                        <div class="symbol symbol-md bg-light-primary mr-3 flex-shrink-0">
-                            @if(Auth::user()->avatar == "")
-                            <img src="{{ asset('assets/media/users/blank.png') }}" alt="" />
-                            @else
-                            <img src="{{ asset('storage/'.Auth::user()->avatar) }}" alt="" />
-                            @endif
-                        </div>
-                        <!--end::Symbol-->
-
-                        <!--begin::Text-->
+                    <div class="d-flex align-items-center p-8 rounded-top">                       
                         <div class="text-dark m-0 flex-grow-1 mr-3 font-size-h5">{{ Auth::user()->name }}</div>
-
-                        <!--end::Text-->
-                    </div>
-                    <div class="separator separator-solid"></div>
-                    <!--end::Header-->
-
-                    <!--begin::Nav-->
-                    <div class="navi navi-spacer-x-0 pt-5">
-                        <!--begin::Item-->
-                        <a href="/profile/edit" class="navi-item px-8">
-                            <div class="navi-link">
-                                <div class="navi-icon mr-2">
-                                    <i class="flaticon2-calendar-3 text-success"></i>
-                                </div>
-                                <div class="navi-text">
-                                    <div class="font-weight-bold">
-                                        My Profile
-                                    </div>
-                                    <div class="text-muted">
-                                        Account settings and more
-                                        <span
-                                            class="label label-light-danger label-inline font-weight-bold">update</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        <!--end::Item-->
+                    </div>                                       
+                    <div class="navi navi-spacer-x-0 pt-5">                      
 
                         <!--begin::Footer-->
                         <div class="navi-separator mt-3"></div>

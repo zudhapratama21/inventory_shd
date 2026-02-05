@@ -55,7 +55,7 @@
     <div id="kt_header_mobile" class="header-mobile ">
         <!--begin::Logo-->
         <a href="/">
-            <img alt="Logo" src="{{ asset('logo_bsb_2.png') }}" class="logo-default max-h-30px" />
+            <img alt="Logo" src="{{ asset('logo_shd.png') }}" class="logo-default max-h-30px" />
         </a>
         <!--end::Logo-->
 
@@ -101,7 +101,7 @@
                     <div class=" container  d-flex flex-column flex-md-row align-items-center justify-content-between">
                         <!--begin::Copyright-->
                         <div class="text-dark order-2 order-md-1">
-                            <span class="text-muted font-weight-bold mr-2">2021 &copy; PT BRILIAN SUKSES BERKAH</span>
+                            <span class="text-muted font-weight-bold mr-2">2026 &copy; PT Syahid Husada Dewata</span>
                             <a href="http://keenthemes.com/metronic" target="_blank"
                                 class="text-dark-75 text-hover-primary"></a>
                         </div>
@@ -124,7 +124,7 @@
         <!--end::Page-->
     </div>
     <!--end::Main-->
-    @include('layouts.notification')
+    {{-- @include('layouts.notification') --}}
 
     <!--begin::Global Config(global config for global JS scripts)-->
     <script>
