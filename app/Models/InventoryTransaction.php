@@ -18,7 +18,8 @@ class InventoryTransaction extends Model
         'jenis',
         'jenis_id',
         'customer',
-        'supplier'
+        'supplier',
+        'keterangan'
     ];
     protected $dates = ['tanggal'];
 

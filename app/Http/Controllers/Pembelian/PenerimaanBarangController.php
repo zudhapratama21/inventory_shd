@@ -138,7 +138,11 @@ class PenerimaanBarangController extends Controller
                 return $pb->products->kode;
             })
             ->editColumn('satuan', function ($pb) {
-                return $pb->products->satuan;
+                if ($pb->beda_satuan == 'on') {
+                    return $pb->satuan_konversi;
+                }else{
+                    return $pb->products->satuan;
+                }                
             })
             ->editColumn('stok', function ($pb) {
                 return $pb->products->stok;
@@ -176,7 +180,7 @@ class PenerimaanBarangController extends Controller
                 return $pb->products->kode;
             })
             ->editColumn('satuan', function ($pb) {
-                return $pb->products->satuan;
+                return $pb->satuan;
             })
             ->editColumn('stok', function ($pb) {
                 return $pb->products->stok;
@@ -219,7 +223,12 @@ class PenerimaanBarangController extends Controller
                         $datas['qty'] = $request->qty;
                         $datas['qty_sisa'] = $detailPO->qty_sisa;
                         $datas['qty_pesanan'] = $detailPO->qty;
-                        $datas['satuan'] =  $detailPO->satuan;
+                        if ($detailPO->beda_satuan == 'on') {
+                            $datas['satuan'] =  $detailPO->satuan_konversi;    
+                        }else{
+                            $datas['satuan'] =  $detailPO->satuan;
+                        }
+                        
                         $datas['keterangan'] = $request->keterangan;
                         $datas['user_id'] = Auth::user()->id;
                         TempPb::create($datas);
@@ -305,8 +314,7 @@ class PenerimaanBarangController extends Controller
             //isi detail
             $test = "";
             foreach ($dataTemp as $a) {
-
-                /////// calkulasi HPP  ///////
+                                
                 $detailPesanan = PesananPembelianDetail::find($a->pesanan_pembelian_detail_id);
                 $hargabeli = $detailPesanan->hargabeli;
                 $diskon_persen = $detailPesanan->diskon_persen;
@@ -324,10 +332,7 @@ class PenerimaanBarangController extends Controller
                 $stok_lama = $product->stok;
                 $hpp_lama = $product->hpp;
                 $nilai_lama = $stok_lama * $hpp_lama;
-                $status_exp = $product->status_exp;
-
-                // status exp = 1 artinya ada expirednya 
-                // status exp detil = 1 berarti exp sudah terinput atau tidak perlu ada exp nya 
+                $status_exp = $product->status_exp;            
 
                 if ($status_exp == 1) {
                     $status_exp_detil = 0;
@@ -336,7 +341,13 @@ class PenerimaanBarangController extends Controller
                 }
 
                 $nilai_terima = $a->qty * $hargabeli_fix;
-                $stok_baru = $stok_lama + $a->qty;
+
+                  // hitung stok baru dengan beda satuan 
+                if ($detailPesanan->beda_satuan == 'on') {
+                    $stok_baru = $stok_lama + ( $a->qty * $detailPesanan->qty_konversi);
+                }else{
+                    $stok_baru = $stok_lama + $a->qty;    
+                }                
                 $nilai_baru = $nilai_lama + $nilai_terima;
                 $hpp_baru = ROUND(($nilai_baru / $stok_baru), 2);
                 $product->stok = $stok_baru;
@@ -355,60 +366,15 @@ class PenerimaanBarangController extends Controller
                 $detail->qty = $a->qty;
                 $detail->qty_sisa = $a->qty_sisa;
                 $detail->qty_pesanan = $a->qty_pesanan;
-                $detail->satuan = $a->satuan;
+                $detail->satuan = $detailPesanan->satuan;
                 $detail->keterangan = $a->keterangan;
                 $detail->status_exp = $status_exp_detil;
-                $detail->save();
 
-
-                // ============= UNTUK INPUT HARGA NON EXPIRED DETAIL  ===============================
-
-                if ($status_exp_detil == 1) {
-
-                    $hargaNonExpired = HargaNonExpired::where('product_id', $product_id)
-                        ->where('harga_beli', $hargabeli)
-                        ->where('supplier_id', $supplier_id)
-                        ->where('diskon_persen', $diskon_persen)
-                        ->where('diskon_rupiah', $diskon_rp)
-                        ->first();
-
-                    if ($hargaNonExpired) {
-                        $qtynonexpired =  $hargaNonExpired->qty + $a->qty;
-                        $hargaNonExpired->update([
-                            'qty' => $qtynonexpired,
-                            'penerimaanbarang_id' => $id_pb,
-                            'tanggal' => $tanggal
-                        ]);
-
-                        $idexpired = $hargaNonExpired->id;
-                    } else {
-                        $harganonExpired =  HargaNonExpired::create([
-                            'product_id' => $product_id,
-                            'qty' => $a->qty,
-                            'harga_beli' => $hargabeli,
-                            'ppn' => $detailPesanan->ppn,
-                            'diskon_persen' => $diskon_persen,
-                            'diskon_rupiah' => $diskon_rp,
-                            'tanggal_transaksi' => $tanggal,
-                            'supplier_id' => $supplier_id,
-                            'penerimaanbarang_id' => $id_pb
-                        ]);
-
-                        $idexpired = $harganonExpired->id;
-                    }
-
-                    HargaNonExpiredDetail::create([
-                        'tanggal' => $tanggal,
-                        'harganonexpired_id' => $idexpired,
-                        'product_id' => $product_id,
-                        'qty' => $a->qty,
-                        'id_pb' => $id_pb,
-                        'id_pb_detail' => $detail->id,
-                        'harga_beli' => $hargabeli,
-                        'diskon_persen_beli' => $diskon_persen,
-                        'diskon_rupiah_beli' => $diskon_rp
-                    ]);
-                }
+                $detail->beda_satuan = $detailPesanan->beda_satuan;
+                $detail->satuan_konversi = $detailPesanan->satuan_konversi;
+                $detail->qty_konversi = $detailPesanan->qty_konversi;
+                
+                $detail->save();                
 
                 //######### start add INV TRANS ############
                 $inventoryTrans = new InventoryTransaction;
@@ -420,6 +386,9 @@ class PenerimaanBarangController extends Controller
                 $inventoryTrans->jenis = "PB";
                 $inventoryTrans->jenis_id = $kode;
                 $inventoryTrans->supplier = $supplier->nama;
+                if ($detailPesanan->beda_satuan == 'on') {
+                    $inventoryTrans->keterangan = "Penerimaan dengan beda satuan .[ Pembelian produk dengan " . $detailPesanan->satuan_konversi . "dengan satuan produk asli adalah " .  $detailPesanan->satuan . " ]";
+                }
 
                 $inventoryTrans->save();
                 //######### end add INV TRANS ############
@@ -470,7 +439,12 @@ class PenerimaanBarangController extends Controller
                 return $pb->products->kode;
             })
             ->editColumn('satuan', function ($pb) {
-                return $pb->products->satuan;
+                if ($pb->beda_satuan == 'on') {
+                    return $pb->satuan_konversi;
+                }else{
+                    return $pb->satuan;
+                }
+                
             })
             ->editColumn('qty', function ($pb) {
                 $sisa = $pb->qty;
@@ -524,8 +498,7 @@ class PenerimaanBarangController extends Controller
                 $tanggal = Carbon::parse($request->tanggal)->format('Y-m-d');
             }
 
-            $qty = $request->qty;
-            if ($qty < 1) {
+            if ($request->qty < 1) {
                 DB::rollBack();
                 return response()->json([
                     'status' => 'error',
@@ -538,11 +511,13 @@ class PenerimaanBarangController extends Controller
             $penerimaanbarang_id = $penerimaanbarangdetail->penerimaan_barang_id;
             $qty_diterima = $penerimaanbarangdetail->qty;
 
-
-            // get harga dari pesanan pembelian
-            $pesananpembelian = PesananPembelianDetail::with('pesananpembelian')->where('id', $penerimaanbarangdetail->pesanan_pembelian_detail_id)->first();
-            // dd($pesananpembelian);
-
+            if ($penerimaanbarangdetail->beda_satuan == 'on') {
+                $qty = $request->qty * $penerimaanbarangdetail->qty_konversi;
+                $qty_diterima = $penerimaanbarangdetail->qty * $penerimaanbarangdetail->qty_konversi;
+            }else{
+                $qty = $request->qty;    
+            }
+    
             //get jumlah qty di exp data
             $totalQtyExp = StokExpDetail::where('id_pb_detail', '=', $penerimaanbarangdetail_id)->sum('qty');
             $qtyExpNow = $totalQtyExp + $qty;
@@ -552,56 +527,36 @@ class PenerimaanBarangController extends Controller
 
                 $mainStokExp = StokExp::where('tanggal', '=', $tanggal)
                     ->where('product_id', '=', $product_id)
-                    ->where('lot', $lot)
-                    ->where('harga_beli', $pesananpembelian->hargabeli)
-                    ->where('diskon_persen', $pesananpembelian->diskon_persen)
-                    ->where('diskon_rupiah', $pesananpembelian->diskon_rp)
-                    ->where('supplier_id', $pesananpembelian->pesananpembelian->supplier_id)
+                    ->where('lot', $lot)                    
                     ->first();
-
-
-                // dd($mainStokExp);
+                $stokExpDetail = new StokExpDetail;
 
                 if ($mainStokExp) {
                     $id_stokExp = $mainStokExp->id;
                     $mainStokExp->qty += $qty;
-                    $mainStokExp->save();
-
-                    //insert detail
-                    $stokExpDetail = new StokExpDetail;
+                    $mainStokExp->save();                    
+                    
                     $stokExpDetail->tanggal = $tanggal;
                     $stokExpDetail->stok_exp_id = $id_stokExp;
                     $stokExpDetail->product_id = $product_id;
                     $stokExpDetail->qty = $qty;
                     $stokExpDetail->id_pb = $penerimaanbarang_id;
-                    $stokExpDetail->id_pb_detail = $penerimaanbarangdetail_id;
-                    $stokExpDetail->harga_beli = $pesananpembelian->hargabeli;
-                    $stokExpDetail->diskon_persen_beli = $pesananpembelian->diskon_persen;
-                    $stokExpDetail->diskon_rupiah_beli = $pesananpembelian->diskon_rp;
+                    $stokExpDetail->id_pb_detail = $penerimaanbarangdetail_id;                  
                     $stokExpDetail->save();
                 } else {
                     //tidak ada data, harus insert stok
                     $datas['tanggal'] = $tanggal;
                     $datas['product_id'] = $product_id;
                     $datas['qty'] = $qty;
-                    $datas['lot'] = $lot;
-                    $datas['harga_beli'] = $pesananpembelian->hargabeli;
-                    $datas['diskon_persen'] = $pesananpembelian->diskon_persen;
-                    $datas['diskon_rupiah'] = $pesananpembelian->diskon_rp;
-                    $datas['supplier_id'] = $pesananpembelian->pesananpembelian->supplier_id;
+                    $datas['lot'] = $lot;                
                     $id_stokExp = StokExp::create($datas)->id;
 
-                    //insert detail;
-                    $stokExpDetail = new StokExpDetail;
                     $stokExpDetail->tanggal = $tanggal;
                     $stokExpDetail->stok_exp_id = $id_stokExp;
                     $stokExpDetail->product_id = $product_id;
                     $stokExpDetail->qty = $qty;
                     $stokExpDetail->id_pb = $penerimaanbarang_id;
-                    $stokExpDetail->id_pb_detail = $penerimaanbarangdetail_id;
-                    $stokExpDetail->harga_beli = $pesananpembelian->hargabeli;
-                    $stokExpDetail->diskon_persen_beli = $pesananpembelian->diskon_persen;
-                    $stokExpDetail->diskon_rupiah_beli = $pesananpembelian->diskon_rp;
+                    $stokExpDetail->id_pb_detail = $penerimaanbarangdetail_id;                 
                     $stokExpDetail->save();
                 }
 
@@ -720,40 +675,24 @@ class PenerimaanBarangController extends Controller
                     DB::rollBack();
                     return response()->json([
                         'status' => 'error',
-                        'message' => 'Data tidak bisa dihapus karena sudah dibuat surat jalan . hapus surat jalan terlebih dahulu'
+                        'message' => 'Data tidak bisa dihapus karena produk sudah dibuat surat jalan [proses penjualan]  . hapus surat jalan terlebih dahulu'
                     ], 422);
                 }
                 $hpp = $product->hpp;
-                $product->stok = $stok - $a->qty;
+
+                // setting stok untuk produk yang beda satuan 
+                $stokPembelian = 0;
+                if ($a->beda_satuan == 'on') {
+                    $stokPembelian = $a->qty * $a->qty_konversi;
+                }else{
+                    $stokPembelian = $a->qty;
+                }
+            
+                $product->stok = $stok - $stokPembelian;
                 $product->save();
 
-                $pesananPembelianDetail = PesananPembelianDetail::where('id', $a->pesanan_pembelian_detail_id)->first();
-                $pesananpembelian = PesananPembelian::where('id', $pesananPembelianDetail->pesanan_pembelian_id)->first();
-                $harganonexpired = HargaNonExpired::where('harga_beli', $pesananPembelianDetail->hargabeli)
-                    ->where('product_id', $pesananPembelianDetail->product_id)
-                    ->where('diskon_persen', $pesananPembelianDetail->diskon_persen)
-                    ->where('diskon_rupiah', $pesananPembelianDetail->diskon_rp)
-                    ->where('supplier_id', $pesananpembelian->supplier_id)
-                    ->first();
-                $typeproduct = Product::where('id', $pesananPembelianDetail->product_id)->first();
-
-                if ($harganonexpired) {
-                    if ($harganonexpired->qty < $a->qty) {
-                        DB::rollBack();
-                        return response()->json([
-                            'status' => 'error',
-                            'message' => 'Data tidak bisa dihapus karena sudah dibuat surat jalan . hapus surat jalan terlebih dahulu'
-                        ], 422);
-                    } else {
-                        $stokNonExpired = $harganonexpired->qty - $a->qty;
-                        $harganonexpired->update([
-                            'qty' => $stokNonExpired
-                        ]);
-                    }
-                }
-
-                $pesanan_pembelian_detail_id = $a->pesanan_pembelian_detail_id;
-                $stok_baru = $stok - $a->qty;
+                $pesananPembelianDetail = PesananPembelianDetail::where('id', $a->pesanan_pembelian_detail_id)->first();                
+                $stok_baru = $stok - $stokPembelian;
 
                 //######### start add INV TRANS ############
                 $inventoryTrans = new InventoryTransaction;
@@ -765,14 +704,15 @@ class PenerimaanBarangController extends Controller
                 $inventoryTrans->jenis = "PB (DEL)";
                 $inventoryTrans->jenis_id = $penerimaanbarang_kode;
                 $inventoryTrans->supplier =  $supplier->nama;
+                 if ($a->beda_satuan == 'on') {
+                    $inventoryTrans->keterangan = "Penerimaan dengan beda satuan .[ Pembelian produk dengan " . $pesananPembelianDetail->satuan_konversi . "dengan satuan produk asli adalah " .  $pesananPembelianDetail->satuan . " ]";
+                }
                 $inventoryTrans->save();
                 //######### end add INV TRANS ############
 
                 //############# start update Qty Sisa PO #############
-                $detailPOupdate = new PesananPembelianDetail;
-                $detailPOupdate = PesananPembelianDetail::find($a->pesanan_pembelian_detail_id);
-                $detailPOupdate->qty_sisa +=  $a->qty;
-                $detailPOupdate->save();
+                $pesananPembelianDetail->qty_sisa +=  $a->qty;
+                $pesananPembelianDetail->save();
                 //############# end update Qty Sisa PO #############
             }
 

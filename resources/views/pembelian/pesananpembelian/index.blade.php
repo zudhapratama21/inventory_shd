@@ -76,27 +76,13 @@
                                     <!--end::Button-->
                                 </div>
                             </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="">Product</label>
-                                            <select name="chart_year" class="form-control" id="kt_select2_4"
-                                                onchange="filterproduct()">
-                                                <option value="All" selected>Semua</option>
-                                                @foreach ($product as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="card-body">                                
                                 <!--begin: Datatable-->
                                 <table class="table yajra-datatable collapsed ">
                                     <thead class="datatable-head">
                                         <tr>
                                             <th>Kode</th>
-                                            <th>No KPA</th>
+                                            <th>No Surat</th>
                                             <th>Tanggal</th>
                                             <th>Supplier</th>
                                             <th>Status</th>
@@ -274,13 +260,6 @@
                     console.log(data);
                 }
             });
-        }
-
-        function filterproduct() {
-            let e = document.getElementById("kt_select2_4");
-            product_id = e.options[e.selectedIndex].value;            
-            $('.yajra-datatable').DataTable().ajax.reload(null, false);
-            
-        }
+        }      
     </script>
 @endpush

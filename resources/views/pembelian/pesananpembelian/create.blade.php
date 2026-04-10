@@ -237,7 +237,6 @@
 
                     ],
                 });
-
             });
 
             function htmlDecode(data) {
@@ -248,6 +247,31 @@
 
             function caribarang() {
                 $('#caribarang').modal('show');
+
+            }
+
+            function satuanFunction() {
+                $('#beda_satuan').on('change', function() {
+                    if ($(this).is(':checked')) {
+                        $(this).val('on');
+
+                        // aktifkan input
+                        $('#satuan_konversi').prop('disabled', false);
+                        $('#qty_konversi').prop('disabled', false);
+
+                    } else {
+                        $(this).val('off');
+
+                        // disable lagi
+                        $('#satuan_konversi').prop('disabled', true);
+                        $('#qty_konversi').prop('disabled', true);
+
+                        // reset nilai (optional tapi disarankan)
+                        $('#qty_konversi').val(0);
+                        $('#satuan_konversi').prop('selectedIndex', 0);
+
+                    }
+                });
 
             }
 
@@ -324,6 +348,12 @@
                 var keterangan = document.getElementById('keterangan').value;
                 var ppn = document.getElementById('ppnprice').value;
 
+                var beda_satuan = document.getElementById('beda_satuan').value;
+                var satuan_konversi = document.getElementById('satuan_konversi').value;
+                var qty_konversi = document.getElementById('qty_konversi').value;
+
+
+
 
                 //alert(product_id);
                 $.ajax({
@@ -349,6 +379,9 @@
                         "ongkir": ongkir,
                         "keterangan": keterangan,
                         'ppn': ppn,
+                        "beda_satuan": beda_satuan,
+                        "satuan_konversi": satuan_konversi,
+                        'qty_konversi': qty_konversi,
                         "_token": "{{ csrf_token() }}"
                     },
 
@@ -376,6 +409,10 @@
                 var keterangan = document.getElementById('keterangan').value;
                 var ppn = document.getElementById('ppnprice').value;
 
+                var beda_satuan = document.getElementById('beda_satuan').value;
+                var satuan_konversi = document.getElementById('satuan_konversi').value;
+                var qty_konversi = document.getElementById('qty_konversi').value;
+
                 $.ajax({
                     type: 'POST',
                     url: '{{ route('pesananpembelian.updatebarang') }}',
@@ -400,6 +437,9 @@
                         "ongkir": ongkir,
                         "keterangan": keterangan,
                         "ppn": ppn,
+                        "beda_satuan": beda_satuan,
+                        "satuan_konversi": satuan_konversi,
+                        'qty_konversi': qty_konversi,
                         "_token": "{{ csrf_token() }}"
                     },
 

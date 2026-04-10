@@ -24,6 +24,9 @@ class TempFakturpos extends Model
         'ongkir',
         'keterangan',
         'user_id',
+        'beda_satuan',
+        'qty_konversi',
+        'satuan_konversi'
     ];
 
     public function products()

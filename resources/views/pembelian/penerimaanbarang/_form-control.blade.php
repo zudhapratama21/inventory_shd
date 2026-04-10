@@ -26,10 +26,10 @@
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-lg-1 col-form-label text-right">No. PO:</label>
+        <label class="col-lg-1 col-form-label text-right">No. Surat:</label>
         <div class="col-lg-4">
             <input type="text" name="supplier" id="supplier" readonly="readonly" class="form-control"
-                value="{{ $pesananpembelian->kode }}" />
+                value="{{ $pesananpembelian->no_so }}" />
         </div>
         <label class="col-lg-2 col-form-label text-right">SJ Supplier:</label>
         <div class="col-lg-4">

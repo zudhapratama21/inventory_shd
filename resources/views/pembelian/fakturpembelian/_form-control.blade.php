@@ -84,7 +84,13 @@
                         <tr>
                             <td>{{ $item->products->kode }}</td>
                             <td>{{ $item->products->nama }}</td>
-                            <td>{{ $item->satuan }}</td>
+                            <td>
+                                @if ($item->beda_satuan == 'on')
+                                    {{ $item->satuan_konversi }}</td>
+                                @else
+                                    {{ $item->satuan }}</td>    
+                                @endif
+                                
                             <td>{{ $item->qty }}</td>
                             <td>{{ number_format($item->hargabeli, 2, ',', '.') }}</td>
                             <td>{{ number_format($item->ongkir, 2, ',', '.') }}</td>

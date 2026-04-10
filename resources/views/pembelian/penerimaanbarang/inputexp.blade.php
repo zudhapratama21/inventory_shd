@@ -137,7 +137,7 @@
                 {
                     data: 'satuan',
                     searchable: false,
-                    name: 'products.satuan'
+                    name: 'satuan'
                 },
                 {
                     data: 'qty',

@@ -23,7 +23,10 @@ class PenerimaanBarangDetail extends Model
         'qty_pesanan',
         'satuan',
         'keterangan',
-        'status_exp'
+        'status_exp',
+        'beda_satuan',
+        'satuan_konversi',
+        'qty_konversi'
     ];
 
     protected $dates = ['tanggal'];

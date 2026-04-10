@@ -46,7 +46,9 @@
                             <label class="col-lg-2 col-form-label">Satuan </label>
                             <div class="col-lg-10">
                                 <input type="text" class="form-control form-control-solid" readonly="readonly"
-                                    id="satuan" name="satuan" value="{{ $product->satuan }}" />
+                                    id="satuan" name="satuan" value="@if ($product->beda_satuan == 'on'){{$product->satuan_konversi}}
+                                    @else{{$product->satuan}}
+                                    @endif" />
                             </div>
                         </div>
 

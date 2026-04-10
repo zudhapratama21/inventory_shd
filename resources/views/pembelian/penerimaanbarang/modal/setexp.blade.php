@@ -6,9 +6,15 @@
                 <div class="col-lg-4">
                     <div class="card">
                         <div class="modal-header">
-                            <h5>Input Expired</h5>
+                            <h5>Input Expired</h5> <br>                                                    
                         </div>
-                        <div class="modal-body">                           
+                        <div class="modal-body">       
+                             @if ($penerimaanbarangdet->beda_satuan == 'on')
+                               <div class="alert alert-secondary" role="alert">
+                                    <p>Catatan : Produk mengalami pembelian <b>beda satuan</b> . Satuan asli produk adalah <b>{{$penerimaanbarangdet->satuan}}</b> 
+                                    , terjadi pembelian dengan satuan <b>{{$penerimaanbarangdet->satuan_konversi}}</b> dengan nilai konversi persatuan <b>{{$penerimaanbarangdet->qty_konversi}}</b> pcs </p>    
+                               </div> 
+                            @endif                    
                                 <form action="">
                                     <div class="form-group">
                                         <label for="">Tanggal Exp</label>

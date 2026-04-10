@@ -7,7 +7,7 @@
 
     </div>
     <div class="form-group">
-        <label>No. KPA :</label>
+        <label>No. Surat :</label>
         <input type="text" name="no_faktur" readonly="readonly" value="{{ $hutang->PO->no_so }}"
             class="form-control form-control-solid" />
 

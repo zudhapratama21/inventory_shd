@@ -30,6 +30,9 @@ class PesananPembelianDetail extends Model
         'keterangan',
         'ppn',
         'hargabeli_ppn',
+        'beda_satuan',
+        'satuan_konversi',
+        'qty_konversi'
     ];
 
     protected $dates = ['tanggal'];

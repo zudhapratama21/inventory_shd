@@ -20,6 +20,7 @@ class PesananPembelian extends Model
         'kategoripesanan_id',
         'komoditas_id',
         'no_so',
+        'no_urut',
         'top',
         'status_po_id',
         'keterangan',
@@ -33,8 +34,8 @@ class PesananPembelian extends Model
         'ppn',
         'grandtotal',
         'no_so_customer',
-        'keterangan_internal'
-    ];
+        'keterangan_internal',       
+    ];  
     protected $dates = ['tanggal'];
 
     public function suppliers()

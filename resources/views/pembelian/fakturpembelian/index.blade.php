@@ -63,15 +63,7 @@
                                             <!--end::Svg Icon--></span> </span>
                                     <h3 class="card-label">Data Faktur Pembelian</h3>
                                 </div>
-                                <div class="card-toolbar">
-
-
-                                    <a href="{{ route('fakturpembelian.syncronisasi') }}"
-                                        class="btn btn-danger font-weight-bolder mr-2 ">                                        
-                                        Syncronisasi
-                                    </a>
-                                    <!--begin::Button-->
-
+                                <div class="card-toolbar">                                                                    
                                     @can('fakturpembelian-create')
                                         <a href="{{ route('fakturpembelian.listpb') }}"
                                             class="btn btn-primary font-weight-bolder ">
@@ -90,9 +82,8 @@
                                         <tr>
                                             <th>Kode</th>
                                             <th>No. Penerimaan</th>
-                                            <th>Tanggal</th>
-                                            <th>No. Surat Pesanan</th>
-                                            <th>No KPA</th>
+                                            <th>Tanggal</th>                                            
+                                            <th>No Perusahaan</th>
                                             <th>No Faktur Supplier</th>
                                             <th>Supplier</th>
                                             <th style="width: 15%">Action</th>
@@ -146,11 +137,7 @@
                     {
                         data: 'tanggal',
                         name: 'tanggal'
-                    },
-                    {
-                        data: 'kode_po',
-                        name: 'po.kode'
-                    },
+                    },                   
                     {
                         data: 'no_so',
                         name: 'po.no_so'

@@ -64,7 +64,7 @@
                                     <thead class="datatable-head">
                                         <tr>
                                             <th>Faktur No.</th>
-                                            <th>No KPA</th>
+                                            <th>No Surat</th>
                                             <th>No Faktur Supplier</th>
                                             <th>Tanggal</th>
                                             <th>Supplier</th>

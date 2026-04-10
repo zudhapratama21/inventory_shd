@@ -81,10 +81,10 @@
             <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
-        <label class="col-lg-2 col-form-label text-right">No. KPA :</label>
+        <label class="col-lg-2 col-form-label text-right">No. Surat :</label>
         <div class="col-lg-4">
-            <input type="text" id="no_so" name="no_so" class="form-control"
-                placeholder="No. Surat Pesanan Penjualan (Jika Ada)" />
+            <input type="text" id="no_so" name="no_so" class="form-control" />
+            <p style="font-size: 80%" class="text-danger">*Jika tidak diisi akan terisi otomatis</p>
         </div>
     </div>
 

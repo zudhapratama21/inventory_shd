@@ -65,18 +65,55 @@
                                                 value="{{ $product->satuan }}" />
                                         </div>
                                     </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-lg-2 col-form-label">Beda Satuan ?</label>
+                                        <div class="col-3">
+                                            <span class="switch switch-outline switch-icon switch-success">
+                                                <label>
+                                                    <input type="checkbox" name="select" id="beda_satuan"
+                                                        onclick="satuanFunction()" value="off" />
+                                                    <span></span>
+                                                </label>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-lg-2 col-form-label">Satuan Konversi</label>
+                                        <div class="col-lg-4">
+                                            <select name="satuan" class="form-control" id="satuan_konversi" disabled>
+                                                @foreach ($satuan as $item)
+                                                    <option value="{{ $item->nama }}">{{ $item->nama }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <label class="col-lg-2 col-form-label">Qty Konversi</label>
+                                        <div class="col-lg-4">
+                                            <input type="text" class="form-control" id="qty_konversi"
+                                                name="qty_konversi" value="0" disabled />
+                                            <p class="text-danger" style="font-size: 65%">(*) Qty akan di kali dengan
+                                                qty konversi</p>
+                                        </div>
+                                    </div>
+
                                     <div class="form-group row">
                                         <label class="col-lg-2 col-form-label">Harga</label>
                                         <div class="col-lg-10">
-                                            <input type="text" class="form-control" id="hargabeli" name="hargabeli"
-                                                value="{{ $product->hargabeli }}" />
+                                            <input type="text" class="form-control" id="hargabeli"
+                                                name="hargabeli" value="{{ $product->hargabeli }}" />
                                         </div>
                                     </div>
+
+
                                     <div class="form-group row">
-                                        <label class="col-lg-2 col-form-label">PPN (%) * (KHUSUS E-KATALOG)</label>
+                                        <label class="col-lg-2 col-form-label">PPN (%)</label>
                                         <div class="col-lg-10">
-                                            <input type="number" class="form-control" id="ppnprice" name="ppnprice"
-                                                value="0" />
+                                            <input type="number" class="form-control" id="ppnprice"
+                                                name="ppnprice" value="0" />
+                                            <p class="text-danger" style="font-size: 60%">(*) Untuk Harga Kena Pajak
+                                                Isi Pajak / PPn</p>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -206,7 +243,7 @@
                                             class="form-control form-control-solid" name="nama" id="nama"
                                             value="{{ $product_name }}" />
                                         <input type="hidden" id="product_id" name="product_id"
-                                            value="{{ $item->product_id }}" >
+                                            value="{{ $item->product_id }}">
                                         <input type="hidden" id="id" name="id"
                                             value="{{ $item->id }}">
                                     </div>
@@ -215,7 +252,8 @@
                                     <label class="col-lg-2 col-form-label">Qty</label>
                                     <div class="col-lg-2">
                                         <input type="number" class="form-control" id="qty" name="qty"
-                                            value="{{ $item->qty }}" {{ $status ? ($status > 2 ? 'disabled' : '') : '' }}/>
+                                            value="{{ $item->qty }}"
+                                            {{ $status ? ($status > 2 ? 'disabled' : '') : '' }} />
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -226,6 +264,47 @@
                                             value="{{ $item->satuan }}" />
                                     </div>
                                 </div>
+
+                                <div class="form-group row">
+                                    <label class="col-lg-2 col-form-label">Ubah Satuan ?</label>
+                                    <div class="col-3">
+                                        <span class="switch switch-outline switch-icon switch-success">
+                                            <label>
+                                                <input type="checkbox" name="select" id="beda_satuan"
+                                                    onclick="satuanFunction()"                                                    
+                                                    value="{{$item->beda_satuan}}" />
+                                                <span></span>
+                                            </label>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-lg-2 col-form-label">Satuan Konversi</label>
+                                    <div class="col-lg-4">
+                                        <select name="satuan" class="form-control" id="satuan_konversi" disabled>
+                                            @foreach ($satuan as $data)
+                                               @if ($data->nama == $item->satuan_konversi)
+                                                    <option value="{{ $data->nama }}" selected>{{ $data->nama }}</option>   
+                                               @else
+                                                   <option value="{{ $data->nama }}">{{ $data->nama }}</option>   
+                                               @endif                                                
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <label class="col-lg-2 col-form-label">Qty Konversi</label>
+                                    <div class="col-lg-4">
+                                        <input type="text" class="form-control" id="qty_konversi"
+                                            name="qty_konversi" value="{{$item->qty_konversi}}" disabled />
+                                        <p class="text-danger" style="font-size: 65%">(*) Qty akan di kali dengan qty
+                                            konversi</p>
+                                    </div>
+                                </div>
+
+
+
+
                                 <div class="form-group row">
                                     <label class="col-lg-2 col-form-label">Harga</label>
                                     <div class="col-lg-10">
@@ -287,3 +366,5 @@
         </div>
 @endif
 <!-- Modal-->
+
+
