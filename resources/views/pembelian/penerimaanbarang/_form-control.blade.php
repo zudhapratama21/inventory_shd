@@ -47,9 +47,8 @@
                         <tr>
                             <th>Kode barang</th>
                             <th>Nama Barang</th>
-                            <th>Satuan</th>
-                            <th>Stok</th>
-                            <th>Qty Terima</th>
+                            <th>Satuan</th>                            
+                            <th>Qty Pembelian</th>
                             <th>Qty Sisa</th>  
                             <th>Status</th>                                               
                             <th>Action</th>

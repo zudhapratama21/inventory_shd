@@ -69,7 +69,8 @@ class LaporanPembelianController extends Controller
         $penjualan = DB::table('faktur_pembelians as fp')        
                     ->join('penerimaan_barangs as pb','fp.penerimaan_barang_id','=','pb.id')
                     ->join('pesanan_pembelians as pp','fp.pesanan_pembelian_id','=','pp.id')
-                    ->join('users as u','fp.created_by','=','u.id');
+                    ->join('users as u','fp.created_by','=','u.id')
+                    ->where('fp.deleted_at',null);
                            
         if ($data['tgl1']) {            
             if (!$data['tgl2']) {
@@ -132,7 +133,8 @@ class LaporanPembelianController extends Controller
                     ->join('penerimaan_barangs as pb','fp.penerimaan_barang_id','=','pb.id')
                     ->join('pesanan_pembelians as pp','fp.pesanan_pembelian_id','=','pp.id')
                     ->join('faktur_pembelian_details as fpb','fpb.faktur_pembelian_id','=','fp.id')
-                    ->join('users as u','fp.created_by','=','u.id');
+                    ->join('users as u','fp.created_by','=','u.id')
+                    ->where('fp.deleted_at',null);
 
 
 

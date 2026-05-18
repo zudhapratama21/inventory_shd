@@ -2,7 +2,7 @@
     <div class="d-flex flex-nowrap">
        @if ($status_penerimaan == 1)
             @if ($status_exp == 0 )
-                <span class="badge badge-danger">Belum Input Expired</span>    
+                <span class="badge badge-danger">Belum Input Expired / Lot</span>    
             @else
                 <span class="badge badge-primary">Belum Difaktur</span>
             @endif

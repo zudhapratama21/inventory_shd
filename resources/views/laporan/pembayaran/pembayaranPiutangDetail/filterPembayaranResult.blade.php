@@ -87,10 +87,8 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Tanggal</th>
-                                        <th>Customer</th>
-                                        <th>Kode SO</th>
-                                        <th>Kode SJ</th>
-                                        <th>Kode Faktur</th>
+                                        <th>Customer</th>                                                                                
+                                        <th>No Perusahaan</th>
                                         <th>DPP</th>                                        
                                         <th>PPN</th>
                                         <th>Total</th>                                        
@@ -111,10 +109,8 @@
                                         <tr>
                                             <td>{{$no++}}</td>
                                             <td>{{ date('d F Y', strtotime($item->tanggal)) }}</td>
-                                            <td>{{$item->nama_customer}}</td>
-                                            <td>{{$item->kode_pp}}</td>
-                                            <td>{{$item->kode_pb}}</td>
-                                            <td>{{$item->kode_fp}}</td>                                            
+                                            <td>{{$item->nama_customer}}</td>                                            
+                                            <td>{{$item->no_perusahaan}}</td>                                            
                                             <td>{{number_format($item->dpp, 2, ',', '.')}}</td>
                                             <td>{{number_format($item->ppn, 2, ',', '.')}}</td>
                                             <td>{{number_format($item->total, 2, ',', '.')}}</td>

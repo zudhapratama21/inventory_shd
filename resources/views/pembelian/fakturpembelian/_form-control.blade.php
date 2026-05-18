@@ -10,18 +10,19 @@
         <label class="col-lg-2 col-form-label text-right">Tanggal:</label>
         <div class="col-lg-4">
             <div class="input-group date">
-                @if($fakturpembelian->tanggal <> null)
+                @if ($fakturpembelian->tanggal != null)
                     <input type="text" class="form-control form-control-solid" name="tanggal" readonly
-                        value="{{ $fakturpembelian->tanggal->format("d-m-Y") }}" id="tgl1" />
-                    @else
-                    <input type="text" class="form-control" name="tanggal" readonly value="{{ $tglNow }}" id="tgl1" />
-                    @endif
+                        value="{{ $fakturpembelian->tanggal->format('d-m-Y') }}" id="tgl1" />
+                @else
+                    <input type="text" class="form-control" name="tanggal" readonly value="{{ $tglNow }}"
+                        id="tgl1" />
+                @endif
 
-                    <div class="input-group-append">
-                        <span class="input-group-text">
-                            <i class="la la-calendar"></i>
-                        </span>
-                    </div>
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i class="la la-calendar"></i>
+                    </span>
+                </div>
             </div>
         </div>
     </div>
@@ -31,7 +32,7 @@
             <input type="text" class="form-control form-control-solid" name="pesanan_pembelian" readonly
                 value="{{ $penerimaanbarang->po->kode }}" id="pesanan_pembelian" />
             @error('pesanan_pembelian')
-            <div class="invalid-feedback">{{ $message }}</div>
+                <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
         <label class="col-lg-2 col-form-label text-right">Penerimaan Barang:</label>
@@ -39,22 +40,36 @@
             <input type="text" class="form-control form-control-solid" name="penerimaan_barang" readonly
                 value="{{ $penerimaanbarang->kode }}" id="penerimaan_barang" />
             @error('penerimaan_barang')
-            <div class="invalid-feedback">{{ $message }}</div>
+                <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
     </div>
 
     <div class="form-group row">
-        <label class="col-lg-1 col-form-label text-right"></label>
+        <label class="col-lg-1 col-form-label text-right">Tanggal Jatuh Tempo:</label>
         <div class="col-lg-4">
-            
+            <div class="input-group date">
+                @if ($fakturpembelian->tanggal != null)
+                    <input type="text" class="form-control form-control-solid" name="jatuhtempo" readonly
+                        value="{{ $fakturpembelian->tanggal->format('d-m-Y') }}" id="tgl2" />
+                @else
+                    <input type="text" class="form-control" name="jatuhtempo" readonly value="{{ $tglNow }}"
+                        id="tgl2" />
+                @endif
+
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i class="la la-calendar"></i>
+                    </span>
+                </div>
+            </div>
         </div>
         <label class="col-lg-2 col-form-label text-right">No Faktur Supplier :</label>
         <div class="col-lg-4">
-            <input type="text" class="form-control" name="no_faktur_supplier" 
-                 id="penerimaan_barang" placeholder="No Faktur Supplier"/>
+            <input type="text" class="form-control" name="no_faktur_supplier" id="penerimaan_barang"
+                placeholder="No Faktur Supplier" />
             @error('no_faktur_supplier')
-            <div class="invalid-feedback">{{ $message }}</div>
+                <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
     </div>
@@ -81,24 +96,25 @@
                     </thead>
                     <tbody>
                         @foreach ($FBdetails as $item)
-                        <tr>
-                            <td>{{ $item->products->kode }}</td>
-                            <td>{{ $item->products->nama }}</td>
-                            <td>
-                                @if ($item->beda_satuan == 'on')
-                                    {{ $item->satuan_konversi }}</td>
-                                @else
-                                    {{ $item->satuan }}</td>    
-                                @endif
-                                
-                            <td>{{ $item->qty }}</td>
-                            <td>{{ number_format($item->hargabeli, 2, ',', '.') }}</td>
-                            <td>{{ number_format($item->ongkir, 2, ',', '.') }}</td>
-                            <td>{{ $item->diskon_persen }}</td>
-                            <td>{{ $item->diskon_rp }}</td>
-                            <td>{{ number_format($item->subtotal, 2, ',', '.') }}</td>
-                            <td>{{ number_format($item->total_diskon, 2, ',', '.') }}</td>
-                            <td>{{ number_format($item->total, 2, ',', '.') }}</td>
+                            <tr>
+                                <td>{{ $item->products->kode }}</td>
+                                <td>{{ $item->products->nama }}</td>
+                                <td>
+                                    @if ($item->beda_satuan == 'on')
+                                        {{ $item->satuan_konversi }}
+                                </td>
+                            @else
+                                {{ $item->satuan }}</td>
+                        @endif
+
+                        <td>{{ $item->qty }}</td>
+                        <td>{{ number_format($item->hargabeli, 2, ',', '.') }}</td>
+                        <td>{{ number_format($item->ongkir, 2, ',', '.') }}</td>
+                        <td>{{ $item->diskon_persen }}</td>
+                        <td>{{ $item->diskon_rp }}</td>
+                        <td>{{ number_format($item->subtotal, 2, ',', '.') }}</td>
+                        <td>{{ number_format($item->total_diskon, 2, ',', '.') }}</td>
+                        <td>{{ number_format($item->total, 2, ',', '.') }}</td>
 
                         </tr>
                         @endforeach
@@ -125,7 +141,7 @@
                     <div class="col-lg-5 mb-2">
                         <div id="div_subtotal">
                             <input type="text" id="subtotal" class="form-control text-right" name="subtotal"
-                                readonly="readonly" value="{{ number_format($subtotal_header, 2, ',', '.')  }}">
+                                readonly="readonly" value="{{ number_format($subtotal_header, 2, ',', '.') }}">
 
                         </div>
                     </div>
@@ -136,7 +152,7 @@
                         <div class="input-group">
 
                             <input type="text" class="form-control text-right" id="diskon" name="diskon"
-                                value="{{ number_format($total_diskon_header, 2, ',', '.')  }}" readonly="readonly">
+                                value="{{ number_format($total_diskon_header, 2, ',', '.') }}" readonly="readonly">
 
                         </div>
 
@@ -146,15 +162,16 @@
                     <label class="col-lg-7 col-form-label text-right">Total :</label>
                     <div class="col-lg-5 mb-2">
                         <input type="text" id="total" readonly="readonly"
-                            value="{{ number_format($total_header, 2, ',', '.')  }}" name="total"
+                            value="{{ number_format($total_header, 2, ',', '.') }}" name="total"
                             class="form-control text-right">
                     </div>
                 </div>
                 <div class="row">
                     <label class="col-lg-7 col-form-label text-right">Ongkir :</label>
                     <div class="col-lg-5 mb-2">
-                        <input type="text" id="ongkirheader" value="{{ number_format($ongkir_header, 2, ',', '.')  }}"
-                            readonly="readonly" name="ongkirheader" class="form-control text-right">
+                        <input type="text" id="ongkirheader"
+                            value="{{ number_format($ongkir_header, 2, ',', '.') }}" readonly="readonly"
+                            name="ongkirheader" class="form-control text-right">
                     </div>
                 </div>
 
@@ -164,30 +181,17 @@
                         <div class="input-group">
 
                             <input type="text" class="form-control text-right" id="ppn" name="ppn"
-                                value="{{ number_format($ppn_header, 2, ',', '.')  }}" readonly="readonly">
+                                value="{{ number_format($ppn_header, 2, ',', '.') }}" readonly="readonly">
                         </div>
                     </div>
                 </div>
 
                 <div class="row">
-                    <label class="col-lg-7 col-form-label text-right">Biaya lain-lain (Rp) :</label>
-                    <div class="col-lg-5 mb-2">
-                        <div class="input-group">
-                            <a href="javascript:editbiaya();" class="btn  btn-icon btn-primary mr-1">
-                                <i class="flaticon-edit"></i>
-                            </a>
-                            <input type="text" class="form-control text-right" id="biaya" name="biaya" value="0"
-                                readonly="readonly">
-                        </div>
-                    </div>
-                </div>                 
-               
-                <div class="row">
                     <label class="col-lg-7 col-form-label text-right">Grand Total :</label>
                     <div class="col-lg-5">
                         <input type="text" id="grandtotal" readonly="readonly" name="grandtotal"
                             class="form-control text-right"
-                            value="{{ number_format($grandtotal_header, 2, ',', '.')  }}">
+                            value="{{ number_format($grandtotal_header, 2, ',', '.') }}">
                     </div>
                 </div>
             </div>

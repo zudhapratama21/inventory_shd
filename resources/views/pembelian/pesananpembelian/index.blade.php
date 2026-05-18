@@ -76,7 +76,7 @@
                                     <!--end::Button-->
                                 </div>
                             </div>
-                            <div class="card-body">                                
+                            <div class="card-body">
                                 <!--begin: Datatable-->
                                 <table class="table yajra-datatable collapsed ">
                                     <thead class="datatable-head">
@@ -86,7 +86,6 @@
                                             <th>Tanggal</th>
                                             <th>Supplier</th>
                                             <th>Status</th>
-                                            <th>Ket Internal</th>
                                             <th style="width: 15%">Action</th>
                                         </tr>
                                     </thead>
@@ -111,10 +110,7 @@
 @push('script')
     <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6') }}"></script>
     <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
-    <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
-
-
-
+    <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>    
 
     <script type="text/javascript">
         let product_id = 'All';
@@ -173,11 +169,6 @@
                             }
                         }
                     },
-                    {
-                        data: 'keterangan_internal',
-                        name: 'keterangan_internal'
-                    },
-
                     {
                         data: 'action',
                         render: function(data) {
@@ -260,6 +251,6 @@
                     console.log(data);
                 }
             });
-        }      
+        }
     </script>
 @endpush

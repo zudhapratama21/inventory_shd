@@ -16,7 +16,6 @@
                             <tr>                                
                                 <th>Nama Produk</th>
                                 <th>Merk</th>
-                                <th>Qty</th>
                                 <th>Total Penjualan</th>
                             </tr>
                         </thead>

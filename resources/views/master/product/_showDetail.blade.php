@@ -1,8 +1,6 @@
 <!-- Modal-->
-
-<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable" role="document">
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Detail Produk</h5>
@@ -10,7 +8,7 @@
                     <i aria-hidden="true" class="ki ki-close"></i>
                 </button>
             </div>
-            <div class="modal-body" style="height: 400px;">
+            <div class="modal-body" style="height:700px;">
 
 
                 <table class="table">
@@ -20,6 +18,12 @@
                             <th scope="row">Kode</th>
                             <td>:</td>
                             <td>{{ $product->kode }}</td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">Kode Item Gudang</th>
+                            <td>:</td>
+                            <td>{{ $product->kode_item }}</td>
                         </tr>
                         <tr>
                             <th scope="row">Nama</th>
@@ -44,27 +48,37 @@
                         <tr>
                             <th scope="row">Harga Jual</th>
                             <td>:</td>
-                            <td>{{ "Rp. " . number_format($product->hargajual, 0, ',', '.') }}</td>
+                            <td>{{ 'Rp. ' . number_format($product->hargajual, 0, ',', '.') }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Diskon (%) Jual</th>
+                            <td>:</td>
+                            <td>{{ $product->diskon_persen }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Diskon (Rp) Jual</th>
+                            <td>:</td>
+                            <td>{{ $product->diskon_rp }}</td>
                         </tr>
                         <tr>
                             <th scope="row">Harga Beli</th>
                             <td>:</td>
-                            <td>{{ "Rp. " . number_format($product->hargabeli, 0, ',', '.') }}</td>
+                            <td>{{ 'Rp. ' . number_format($product->hargabeli, 0, ',', '.') }}</td>
                         </tr>
                         <tr>
-                            <th scope="row">Diskon (%)</th>
+                            <th scope="row">Diskon (%) Beli</th>
                             <td>:</td>
-                            <td>{{ $product->diskon_persen}}</td>
+                            <td>{{ $product->diskon_persen_beli }}</td>
                         </tr>
                         <tr>
-                            <th scope="row">Diskon (Rp)</th>
+                            <th scope="row">Diskon (Rp) Beli</th>
                             <td>:</td>
-                            <td>{{$product->diskon_rp}}</td>
+                            <td>{{ $product->diskon_rp_beli }}</td>
                         </tr>
                         <tr>
                             <th scope="row">HPP</th>
                             <td>:</td>
-                            <td>{{ "Rp. " . number_format($product->hpp, 0, ',', '.') }}</td>
+                            <td>{{ 'Rp. ' . number_format($product->hpp, 0, ',', '.') }}</td>
                         </tr>
                         <tr>
                             <th scope="row">Stok</th>
@@ -122,10 +136,11 @@
                         <tr>
                             <th scope="row">Tgl. Exp. Ijin Edar</th>
                             <td>:</td>
-                            <td> @if($product->exp_ijinedar <> null)
-                                    {{ $product->exp_ijinedar->format("d-m-Y") }}
-
-                                    @endif</td>
+                            <td>
+                                @if ($product->exp_ijinedar != null)
+                                    {{ $product->exp_ijinedar->format('d-m-Y') }}
+                                @endif
+                            </td>
                         </tr>
                         <tr>
                             <th scope="row">Status</th>
@@ -143,7 +158,8 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-light-primary font-weight-bold"
+                    data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

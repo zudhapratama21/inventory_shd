@@ -38,7 +38,7 @@
                 </svg>
                 <!--end::Svg Icon--></span> </a>
         @endcan
-        @if ($podetail > 0 || $penerimaanbarang > 0 || $pengirimanbarang > 0 || $pesananPenjualan > 0)
+        @if ($podetail > 0 || $penerimaanbarang > 0 || $pengirimanbarang > 0)
         <a type="button"  class="btn btn-icon btn-light btn-hover-primary btn-sm" data-toggle="modal" data-target="#notifDelete">
             <span class="svg-icon svg-icon-md svg-icon-primary">
                 <!--begin::Svg Icon | path:assets/media/svg/icons/General/Trash.svg--><svg

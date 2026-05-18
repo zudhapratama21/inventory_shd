@@ -1,269 +1,234 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 
 <head>
-    <style type="text/css">
-        .tabel {
+    <meta charset="UTF-8">
+    <title>Surat Jalan</title>
+
+    <style>
+        @page {
+            size: A5 landscape;
+            margin: 0;
+        }
+
+        .page-frame {
+            border: 1px solid #000;
+        }
+
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 11px;
+            color: #000;
+        }
+
+        html,
+        body {
+            margin: 1px;
+            padding: 0;
+        }
+
+
+        table {
+            width: 100%;
             border-collapse: collapse;
         }
 
-        .tabel td,
-        th,
-        tr {
-            border: 1px solid black;
+        .border {
+            border: 1px solid #000;
+            padding: 0px 20px 0px 20px;
         }
 
-        @media print {
-            .tabpage {
-                page-break-after: always
-            }
+        .border th,
+        .border td {
+            border: 1px solid #000;
+            padding: 2px;
+            vertical-align: top;
+
         }
 
-        .fsSubmitButton {
-            padding: 10px 15px 11px !important;
-            font-size: 18px !important;
-            background-color: #57d6c7;
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-bold {
             font-weight: bold;
-            text-shadow: 1px 1px #57D6C7;
-            color: #ffffff;
-            border-radius: 5px;
-            -moz-border-radius: 5px;
-            -webkit-border-radius: 5px;
-            border: 1px solid #57D6C7;
-            cursor: pointer;
-            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-            -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-            -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .capt {
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .mt-10 {
+            margin-top: 10px;
+        }
+
+        .mt-20 {
+            margin-top: 20px;
+        }
+
+        .no-border td {
+            border: none;
+            padding: 10px;
+        }
+
+        .signature {
+            height: 70px;
+        }
+
+        .bordertop {
+            border-top: 1px solid #000;
+            border-bottom: 1px solid #000;
+        }
+
+        .border-top-none {
+            border-top: none;
+            border-bottom: none;
+        }
+
+        .item-group {
+            border-bottom: none !important;
+            border-top: none !important;
+
         }
     </style>
-    <script language="JavaScript">
-        var gAutoPrint = true; // Tells whether to automatically call the print function
-            
-            function printSpecial()
-            {
-                    if (document.getElementById != null)
-                {
-                var html = '<HTML>\n<HEAD>\n';
-            
-                if (document.getElementsByTagName != null)
-                {
-                    var headTags = document.getElementsByTagName("head");
-                    if (headTags.length > 0)
-                    html += headTags[0].innerHTML;
-                }
-            
-                html += '\n</HE>\n<BODY onload="Child.close();" >\n';
-            
-                var printReadyElem = document.getElementById("printReady");
-            
-                if (printReadyElem != null)
-                {
-                    html += printReadyElem.innerHTML;
-                }
-                    else
-                {
-                alert("Could not find the printReady function");
-                return;
-            }
-            
-            html += '\n</BO>\n</HT>';
-            
-            var printWin = window.open("","printSpecial");
-            //childWindows = printWin;
-            printWin.document.open();
-            printWin.document.write(html);
-           
-            
-            if (gAutoPrint)
-                printWin.print();
-                 printWin.close();
-               // window.onfocus=function(){ window.close();}
-            }
-            else
-                {
-                    alert("The print ready feature is only available if you are using an browser. Please update your browswer.");
-                }
-            }
-
-    </script>
 </head>
 
-<body style="font-family: sans-serif; margin-top:-15px;">
-    <div id="printReady">
-       
-        @for ($i = 1; $i <= $totalPage; $i++) 
-        <table border="0" width="100%">
+<body>
+    <div class="page-frame">
+        <table class="no-border">
             <tr>
-                <td width="20%" style="font-size: 70%; vertical-align: top;">
-                    <h3>PT BRILIAN SUKSES BERKAH</h3>
-                    <p>Juanda Regency Blok H-06, JL. Raya Bypass Juanda NO.11, Pabean-Sedati, Sidoarjo , Kode Pos 61253.
-                    </p>
-                </td>
-                <td width="25%" style="font-size: 75%; vertical-align: top; text-align: center;">
-                    <center><b></b></center>
-                    <center><b>
-
-                        </b></center>
-                </td>
-                <td width="20%" style="vertical-align: top; text-align: left; font-family: sans-serif">
-                    <table >
-                        <tr style="padding:0px;">
-                            <td style="padding:0px;font-size: 70%; " colspan="3"><br />Sidoarjo, {{
-                                $pengirimanbarang->tanggal->format("d
-                                F Y")
-                                }}</td>                            
-                        </tr>
-                        <tr style="padding:0px;">
-                            <td style="padding:0px;font-size: 70%; ">KEPADA :</td>
-                            <td style="padding:0px;font-size: 70%; "></td>
-                            <td style="padding:0px;font-size: 70%; ">
-
+                <td width="60%" style="vertical-align: top;">
+                    <table>
+                        <tr>
+                            <td>
+                                <span style="font-size:15px"><b>PT SYAHID HUSADA DEWATA</b></span>
+                                <br>
+                                <span style="font-size:12px"><u>Jl. Padang Indah II/16 Denpasar</u></span>
                             </td>
                         </tr>
-                        <tr style="padding:0px;">
-                            <td style="padding:0px;font-size: 70%; " colspan="3">{{ $pengirimanbarang->customers->nama
-                                }}</td>
-
+                        <tr>
+                            <td></td>
                         </tr>
-                        <tr style="padding:0px;">
-                            <td style="padding:0px;font-size: 70%; " colspan="3">{{ $pengirimanbarang->customers->alamat
-                                }}, Blok {{ $pengirimanbarang->customers->blok
-                                }}, No. {{ $pengirimanbarang->customers->nomor
-                                }}, {{ $pengirimanbarang->customers->namakota->name
-                                }}</td>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="font-size: 15px"><b>SURAT JALAN</b></span> <br>
+                                Kami kirimkan barang-barang tersebut dibawah ini :
+                            </td>
                         </tr>
                     </table>
-                </td>               
-            </tr>
-            <tr>
-                <td width="20%" style="font-size: 70%; vertical-align: top;">
-                    Surat Jalan : {{ $pengirimanbarang->kode }}
                 </td>
-                <td width="25%" style="font-size: 75%; vertical-align: top; text-align: center;">
-                    <center><b></b></center>
-                    <center><b>
-                    </b></center>
-                </td>
-                <td width="20%" style="font-size: 70%; vertical-align: top;">
-                    SO Cust. : {{ $pengirimanbarang->SO->no_so }}
-                </td>               
-            </tr>
-            
-
-            <tr>
-                <td width="20%" style="font-size: 70%; vertical-align: top;">
-                </td>
-                <td width="25%" style="font-size: 75%; vertical-align: top; text-align: center;">
-                    <center><b></b></center>
-                    <center><b>
-                    </b></center>
-                </td>
-                <td width="20%" style="font-size: 70%; vertical-align: top;">
-                    Tanggal SO Cust. : {{  $pengirimanbarangdetails[0]->pesananpenjualan->tanggal_pesanan_customer ? \Carbon\Carbon::parse($pengirimanbarangdetails[0]->pesananpenjualan->tanggal_pesanan_customer)->format('d/m/Y') :'-' }}
-                </td>               
-            </tr>
-
-        </table>          
-           
-            <div style="height:200px;">
-                <table width="100%" >
-                    <tr>
-                        <td colspan="5">
-                            <hr style="margin-bottom: 0px; margin-top: 0px; border-width: 0.3px 0px 0px;">
-                        </td>
-                    </tr>
-                    <tr style="">
-                        <td style="font-size: 70%; width:3%;">NO</td>
-                        <td style="font-size: 70%; width:57%">BARANG</td>
-                        <td style="font-size: 70%; width:10%">SATUAN</td>
-                        <td style="font-size: 70%; width:10%">QTY</td>
-                        <td style="font-size: 70%; width:20%">KET.</td>
-                    </tr>
-                    <tr>
-                        <td colspan="5">
-                            <hr style="margin-bottom: 0px; margin-top: 0px; border-width: 0.3px 0px 0px;">
-                        </td>
-                    </tr>
-                    @php
-                    $n=1;
-                    $j=1;
-                    @endphp
-                    @foreach ($pengirimanbarangdetails as $a)
-                    @if ($n > ($i - 1) * $perBaris && $n <= $i * $perBaris) <tr class="" style="vertical-align: top">
-                        <td style="font-size: 70%;" class="text-left">{{ $j }}.</td>
-                        <td style="font-size: 70%;" class="text-left">{{ $a->products->nama }}</td>
-                        <td style="font-size: 70%;" class="text-left">{{ $a->satuan }}</td>
-                        <td style="font-size: 70%;" class="text-left">{{ $a->qty }}</td>
-                        <td style="font-size: 60%;" class="text-left">{{ $a->keterangan }} ED: @foreach ($listExp as $x)
-                            @if ($a->product_id == $x->product_id) {{ $x->tanggal->format("m/y") }}({{ $x->qty * -1 }})-{{$x->stockExp->lot}} 
-                            @endif
-                            @endforeach
-                        </td>
+                <td width="40%" style="vertical-align: top;">
+                    <table>
+                        <tr>
+                            <td>Denpasar, {{ \Carbon\Carbon::parse($pengirimanbarang->tanggal)->format('d F Y') }}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Kepada Yth <br>
+                                <b>{{ $pengirimanbarang->customers->nama }}</b><br>
+                                {{ $pengirimanbarang->customers->alamat }} <br>
+                                {{ ucfirst($pengirimanbarang->customers->prov->name) }}
+                            </td>
 
                         </tr>
+                    </table>
+                </td>
+            </tr>
 
-                        @endif
-                        @php
-                        $n++;
-                        $j++;
-                        @endphp
-                        @endforeach
-                </table>
-            </div>
-            <hr style="margin-bottom: 0px; margin-top: 0px; border-width: 0.3px 0px 0px;">
-            <font style="font-size: 70%; ">KETERANGAN :
-                {{ $pengirimanbarang->keterangan }}
-            </font>
-            <br />
-            <table width="100%">
-                <tr>
-                    <td>
-                        <table class="tabelxx">
-                            <tr>
-                                <td style="font-size: 70%;  text-align: center; "> HORMAT KAMI </td>
-                                <td style="font-size: 70%; text-align: center;"> GUDANG </td>
-                                <td style="font-size: 70%;text-align: center;"> EKSPEDISI </td>
-                                <td style="font-size: 70%; text-align: center;"> PENERIMA </td>
+        </table>
 
-                            </tr>
-                            <tr>
-                                <td style="font-size: 75%; vertical-align: top; text-align: center; ">
-                                    <br /><br />( . . . . . . . . . . . . . . . . )
-                                </td>
-                                <td style="font-size: 75%; vertical-align: top; text-align: center;">
-                                    <br /><br />
-                                    ( . . . . . . . . . . . . . . . . )
+        <div>
+            <table class="border" style="height: 200px">
+                <thead>
+                    <tr class="text-center">
+                        <th width="10%">Banyaknya</th>
+                        <th width="45%">Nama Barang</th>
+                        <th width="15%">Exp Date</th>
+                        <th width="30%">Keterangan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($listExp as $item)
+                        <tr>
+                            <td class="text-center item-group">{{ $item->qty * -1 }} @if ($item->pengirimandetail->beda_satuan == 'on')
+                                    {{ strtolower($item->pengirimandetail->satuan_konversi) }}
+                                @else
+                                    {{ strtolower($item->pengirimandetail->satuan) }}
+                                @endif
+                            </td>
+                            <td class="item-group">
+                                {{ $item->products->nama }}
+                            </td>
+                            <td class="text-center item-group">
+                                @if ($item->products->status_exp == 0)
+                                    <span>-</span>
+                                @else
+                                    {{ \Carbon\Carbon::parse($item->stockExp->exp_date)->format('M-Y') }}
+                                @endif
 
+                            </td>
+                            <td class="item-group">Lot : {{ $item->stockExp->lot }}</td>
+                        </tr>
+                    @endforeach
 
-                                </td>
-                                <td style="font-size: 75%; vertical-align: top; text-align: center;">
-                                    <br /><br />( . . . . . . . . . . . . . . . . )
-                                </td>
-                                <td style="font-size: 75%; vertical-align: top; text-align: center;">
-                                    <br /><br />( . . . . . . . . . . . . . . . . )
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                    <td style="font-size: 70%; vertical-align: bottom; text-align: left;">
-                        Hal :
-                        {{ $i }} /
-                        {{ $totalPage }}<br />
-                        User : {{ $pengirimanbarang->creator->name }}
-                    </td>
-                </tr>
+                    @for ($i = 1; $i <= 12 - $list; $i++)
+                        <tr>
+                            <td class="text-center item-group">&nbsp;</td>
+                            <td class="item-group"></td>
+                            <td class="text-center item-group"></td>
+                            <td class="item-group"></td>
+                        </tr>
+                    @endfor
+                </tbody>
             </table>
+        </div>
 
-            @if ($totalPage != $i)
-                <div style="page-break-after: always;"></div>
-                @endif
-                @endfor
 
+        <!-- TANDA TANGAN -->
+        <table class="mt-10 no-border text-center">
+            <tr>
+                <td width="33%" style="text-center">Penerima</td>
+                <td width="34%"></td>
+                <td width="33%">Hormat Kami,</td>
+            </tr>
+            <tr>
+                <td height="35px"></td>
+                <td></td>
+                <td>
+                </td>
+            </tr>
+
+            <tr>
+                <td>(_________________________)</td>
+                <td></td>
+                <td>
+                    <b><u>M. Taufik Krisdianto</u></b><br>
+                    Direktur
+                </td>
+            </tr>
+        </table>
+        <br>
     </div>
-
 </body>
 
 </html>
-
-
-

@@ -73,8 +73,8 @@
                                     <tr>
                                         <th>Tanggal</th>
                                         <th>Customer</th>
-                                        <th>Faktur</th>
-                                        <th>No KPA</th>
+                                        <th>Kode</th>
+                                        <th>No Perusahaan</th>
                                         <th>Akun Bank</th>
                                         <th>Nominal</th>
                                         <th>Keterangan</th>
@@ -121,7 +121,7 @@
                   {data: 'tanggal', name: 'tanggal'},
                   {data: 'customers', name: 'customers.nama'},
                   {data: 'kode', name: 'fakturpenjualan.kode'},
-                  {data: 'no_kpa', name: 'fakturpenjualan.no_kpa'},
+                  {data: 'no_perusahaan', name: 'fakturpenjualan.no_perusahaan'},
                   {data: 'banks', name: 'banks.nama'},
                   {data: 'nominal', name: 'nominal'},
                   {data: 'keterangan', name: 'keterangan'},

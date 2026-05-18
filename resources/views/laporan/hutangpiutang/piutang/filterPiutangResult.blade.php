@@ -90,8 +90,7 @@
                                         <th>Tanggal</th>
                                         <th>Tanggal TOP</th>
                                         <th>Customer</th>
-                                        <th>Kode SO</th>
-                                        <th>Kode SJ</th>
+                                        <th>Kode Perusahaan</th>                                        
                                         <th>Kode Faktur</th>
                                         <th>DPP</th>                                        
                                         <th>PPN</th>
@@ -112,9 +111,8 @@
                                             <td>{{$no++}}</td>
                                             <td>{{$item->tanggal ? date('d/m/Y', strtotime($item->tanggal))  : 'tidak ada' }}</td>
                                             <td>{{$item->tanggal_top ? date('d/m/Y', strtotime($item->tanggal_top))  : 'tidak ada' }}</td>
-                                            <td>{{$item->nama_customer}}</td>
-                                            <td>{{$item->kode_pp}}</td>
-                                            <td>{{$item->kode_pb}}</td>
+                                            <td>{{$item->nama_customer}}</td>                                            
+                                            <td>{{   $item->no_perusahaan}}</td>
                                             <td>{{$item->kode_fp}}</td>                                            
                                             <td>{{number_format($item->dpp, 2, ',', '.')}}</td>
                                             <td>{{number_format($item->ppn, 2, ',', '.')}}</td>

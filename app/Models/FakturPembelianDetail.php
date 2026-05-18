@@ -13,7 +13,6 @@ class FakturPembelianDetail extends Model
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
-
    
     public function fakturpembelian()
     {

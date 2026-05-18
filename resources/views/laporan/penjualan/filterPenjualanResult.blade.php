@@ -80,26 +80,21 @@
                         </div>
                         <div class="card-body">
                             <!--begin: Datatable-->
-                            <table class="table table-separate table-head-custom table-checkable" id="kt_datatable1">
+                            <table  class="table table-separate table-head-custom table-checkable" id="kt_datatable1">
                                 <thead>
                                     <tr>
                                         <th>#</th>
                                         <th>Tanggal</th>
-                                        <th>Kode Faktur</th>
-                                        <th>Kode SO</th>
-                                        <th>Kode SJ</th>
-                                        <th>No Pajak</th>
-                                        <th>No KPA</th>
-                                        <th>Customer</th>                                        
-                                        <th>Diskon Rupiah</th>
-                                        <th>Diskon Persen</th>
+                                        <th>Kode Faktur</th>                                                                                
+                                        <th>No Perusahaan</th>
+                                        <th>Customer</th>                                                                                
                                         <th>Subtotal</th>
-                                        <th>Total Diskon Detail</th>
-                                        <th>Total Diskon Header</th>
-                                        <th>Total</th>
-                                        <th>Grand Total</th>
+                                        <th>Total Diskon</th>                                        
+                                        <th>Total</th>                                        
                                         <th>PPN</th>
-                                        <th>Ongkir</th>                                        
+                                        <th>Ongkir</th>       
+                                        <th>Materai</th>                                        
+                                        <th>Grand Total</th>
                                         <th>Sales</th>
                                         <th>Pembuat</th>
                                         <th>Keterangan</th>                                        
@@ -113,21 +108,16 @@
                                         <tr>
                                             <td>{{$no++}}</td>
                                             <td>{{ date('d F Y', strtotime($item->tanggal)) }}</td>
-                                            <td>{{$item->kode}}</td>
-                                            <td>{{$item->kode_SP}}</td>
-                                            <td>{{$item->kode_SJ}}</td>
-                                            <td>{{$item->no_pajak}}</td>
-                                            <td>{{$item->no_kpa}}</td>
-                                            <td>{{$item->nama_customer}}</td>
-                                            <td>{{$item->diskon_rupiah}}</td>
-                                            <td>{{$item->diskon_persen}}</td>
+                                            <td>{{$item->kode}}</td>                                            
+                                            <td>{{$item->no_perusahaan}}</td>
+                                            <td>{{$item->nama_customer}}</td>                                            
                                             <td>{{$item->subtotal}}</td>
-                                            <td>{{$item->total_diskon_detail}}</td>
-                                            <td>{{$item->total_diskon_header}}</td>
-                                            <td>{{$item->total}}</td>                                            
-                                            <td>{{$item->grandtotal}}</td>  
+                                            <td>{{$item->total_diskon}}</td>                                            
+                                            <td>{{$item->total}}</td>                                                                                        
                                             <td>{{$item->ppn}}</td>
                                             <td>{{$item->ongkir}}</td>
+                                            <td>{{$item->materai}}</td>
+                                            <td>{{$item->grandtotal}}</td>  
                                             <td>{{$item->nama_sales}}</td>
                                             <td>{{$item->nama_pembuat}}</td>
                                             <td>{{$item->keterangan}}</td>                                            
@@ -151,8 +141,13 @@
 <div id="modal-show-detail"></div>
 @endsection
 @push('script')
-<script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6"') }}"></script>
+<script src="{{ asset('assets/js/pages/widgets.js?v=7.0.6"') }}"></script>
+<script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6') }}"></script>
 <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
 <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
+<script src="{{ asset('/assets/js/pages/crud/datatables/basic/paginations.js') }}"></script>
+
+<script src="{{ asset('/assets/js/pages/crud/datatables/basic/scrollable.js?v=7.0.6') }} "></script>
+
 
 @endpush

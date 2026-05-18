@@ -19,109 +19,52 @@ class LaporanPiutangExport implements FromView
 
     public function view(): View
     {
-        $totalpiutang = 0;
-
-        $title = 'Laporan Pembayaran Hutang';
-
+        // tanggal
         $tgl1 = Carbon::parse($this->data['tgl1'])->format('Y-m-d');
-        $tgl2 = Carbon::parse($this->data['tgl2'])->format('Y-m-d');
+        $tgl2 = Carbon::parse($this->data['tgl2'])->format('Y-m-d');    
 
-        $pembayaran = DB::table('piutangs as p')
-            ->join('pesanan_penjualans as pp', 'p.pesanan_penjualan_id', '=', 'pp.id')
-            ->join('pengiriman_barangs as pb', 'p.pengiriman_barang_id', '=', 'pb.id')
+        // base query
+        $query = DB::table('piutangs as p')            
             ->join('faktur_penjualans as fp', 'p.faktur_penjualan_id', '=', 'fp.id')
-            ->join('customers as c', 'p.customer_id', '=', 'c.id');
+            ->join('customers as c', 'p.customer_id', '=', 'c.id')
+            ->join('sales as s', 'fp.sales_id', '=', 's.id')            
+            ->whereBetween('fp.tanggal', [$tgl1, $tgl2]);
 
+        // 🔥 filter customer
+        $query->when($this->data['customer'] !== 'all', function ($q) {
+            $q->where('c.id', $this->data['customer']);
+        });
 
-        if ($this->data['tgl1']) {
-            if (!$this->data['tgl2']) {
-                $tanggalFilter = $pembayaran->where('fp.tanggal', '>=', $tgl1);
-            } else {
-                $tanggalFilter = $pembayaran->where('fp.tanggal', '>=', $tgl1)
-                    ->where('fp.tanggal', '<=', $tgl2);
-            }
-        } elseif ($this->data['tgl2']) {
-            if (!$this->data['tgl1']) {
-                $tanggalFilter = $pembayaran->where('fp.tanggal', '<=', $tgl2);
-            } else {
-                $tanggalFilter = $pembayaran->where('fp.tanggal', '>=', $tgl1)
-                    ->where('fp.tanggal', '<=', $tgl2);
-            }
-        } else {
-            $tanggalFilter = $pembayaran;
-        }
+        // 🔥 filter no faktur
+        $query->when(!empty($this->data['no_faktur']), function ($q) {
+            $q->where('fp.no_perusahaan', $this->data['no_faktur']);
+        });
 
-        if ($this->data['customer'] == 'all') {
+        // 🔥 filter sales
+        $query->when($this->data['sales'] !== 'all', function ($q) {
+            $q->where('pp.sales_id', $this->data['sales']);
+        });
 
-            $customerfilter = $tanggalFilter;
+        // 🔥 filter status
+        $query->when($this->data['status'] !== 'all', function ($q) {
+            $q->where('p.status', $this->data['status']);
+        });
 
-            if ($this->data['no_faktur'] <> null) {
-                $filter =  $customerfilter->where('fb.kode', '=', $this->data['no_faktur']);
-
-                if ($this->data['sales'] == 'all') {
-                    $salesfilter = $filter->join('sales as s', 'pp.sales_id', '=', 's.id');
-                } else {
-                    $salesfilter = $filter->join('sales as s', 'pp.sales_id', '=', 's.id')
-                        ->where('pp.sales_id', '=', $this->data['sales']);
-                }
-            } else {
-                $filter =  $customerfilter;
-
-                if ($this->data['sales'] == 'all') {
-                    $salesfilter = $filter->join('sales as s', 'pp.sales_id', '=', 's.id');
-                } else {
-                    $salesfilter = $filter->join('sales as s', 'pp.sales_id', '=', 's.id')
-                        ->where('pp.sales_id', '=', $this->data['sales']);
-                }
-            }
-        } else {
-            $customerfilter = $pembayaran->where('c.id', '=', $this->data['customer']);
-
-            if ($this->data['no_faktur'] <> null) {
-                $filter =  $customerfilter->where('fb.kode', '=', $this->data['no_faktur']);
-
-                if ($this->data['sales'] == 'all') {
-                    $salesfilter = $filter->join('sales as s', 'pp.sales_id', '=', 's.id');
-                } else {
-                    $salesfilter = $filter->join('sales as s', 'pp.sales_id', '=', 's.id')
-                        ->where('pp.sales_id', '=', $this->data['sales']);
-                }
-            } else {
-                $filter =  $customerfilter;
-
-                if ($this->data['sales'] == 'all') {
-                    $salesfilter = $filter->join('sales as s', 'pp.sales_id', '=', 's.id');
-                } else {
-                    $salesfilter = $filter->join('sales as s', 'pp.sales_id', '=', 's.id')
-                        ->where('pp.sales_id', '=', $this->data['sales']);
-                }
-            }
-        }
-
-
-        $statusFilter = $salesfilter->where('status', '=', $this->data['status']);
-
-        $datafilter = $statusFilter->select(
-            'c.nama as nama_customer',
-            'pp.kode as kode_pp',
-            'pb.kode as kode_pb',
+        // 🔥 ambil data
+        $datafilter = $query->select(
+            'c.nama as nama_customer',            
             'fp.kode as kode_fp',
-            'fp.no_kpa as no_kpa',
+            'fp.no_perusahaan',
             'fp.tanggal as tanggal_faktur',
-            'p.*',
-            's.nama as nama_sales',            
+            's.nama as nama_sales',
+            'p.*'
         )
             ->orderBy('c.nama')
-            ->get();
+            ->get();       
 
-        // dd($datafilter);
-        foreach ($datafilter as $key) {
-            $totalpiutang = $totalpiutang + $key->total - $key->dibayar;
-        }
-
+        // 🔥 return view
         return view('laporan.hutangpiutang.export.piutang', [
-            'hutang' => $datafilter,
-            'totalpiutang' => $totalpiutang
+            'hutang' => $datafilter            
         ]);
     }
 }

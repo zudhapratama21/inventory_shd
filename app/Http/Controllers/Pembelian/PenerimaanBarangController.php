@@ -13,8 +13,6 @@ use App\Models\PenerimaanBarang;
 use App\Models\PesananPembelian;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
-use App\Models\HargaNonExpired;
-use App\Models\HargaNonExpiredDetail;
 use App\Models\InventoryTransaction;
 use Illuminate\Support\Facades\Auth;
 use App\Models\PenerimaanBarangDetail;
@@ -23,8 +21,6 @@ use App\Models\Supplier;
 use Barryvdh\DomPDF\Facade as PDF;
 use Exception;
 use Illuminate\Support\Facades\DB;
-
-use function PHPUnit\Framework\isEmpty;
 
 class PenerimaanBarangController extends Controller
 {
@@ -331,15 +327,9 @@ class PenerimaanBarangController extends Controller
                 $product = Product::find($a->product_id);
                 $stok_lama = $product->stok;
                 $hpp_lama = $product->hpp;
-                $nilai_lama = $stok_lama * $hpp_lama;
-                $status_exp = $product->status_exp;            
-
-                if ($status_exp == 1) {
-                    $status_exp_detil = 0;
-                } else {
-                    $status_exp_detil = 1;
-                }
-
+                $nilai_lama = $stok_lama * $hpp_lama;            
+                $status_exp_detil = 0;          
+            
                 $nilai_terima = $a->qty * $hargabeli_fix;
 
                   // hitung stok baru dengan beda satuan 
@@ -797,4 +787,24 @@ class PenerimaanBarangController extends Controller
         $pdf = PDF::loadView('pembelian.penerimaanbarang.print_a5', $data)->setPaper('a5', 'landscape');;
         return $pdf->download($penerimaanbarang->kode . '.pdf');
     }
+
+    public function edit ($id)
+    {
+        $title = 'Penerimaan Barang Edit';
+        $penerimaanbarang = PenerimaanBarang::where('id',$id)->with('PenerimaanBarangDetails.products','suppliers','PO')->first();
+        return view('pembelian.penerimaanbarang.edit',compact('penerimaanbarang','title'));        
+    }
+
+    public function update (Request $request , $id)
+    {        
+       $penerimaanbarang = PenerimaanBarang::where('id',$id)->update([
+            'tanggal' => Carbon::parse($request->tanggal)->format('Y-m-d'),
+            'sj_supplier' => $request->sj_supplier,
+            'keterangan' => $request->keterangan
+       ]);
+
+       return redirect()->route('penerimaanbarang.index')->with('status', 'Penerimaan barang berhasil diupdate !');
+    }
+
+
 }

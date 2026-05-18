@@ -16,56 +16,34 @@ class FakturPenjualan extends Model
     protected $fillable = [
         'kode',
         'tanggal',
-        'customer_id',
-        'pesanan_penjualan_id',
-        'pengiriman_barang_id',
-        'status_fakturso_id',
+        'tanggal_jatuh_tempo',
+        'customer_id',  
+        'no_urut',
+        'no_perusahaan',        
+        'sales_id',
+        'komoditas_id',
+        'kategoripesanan_id',
+        'no_sp_customer',
+        'tanggal_sp_customer',       
         'keterangan',
-        'subtotal',
-        'diskon_rupiah',
-        'diskon_persen',
-        'total_diskon_header',
-        'total_diskon_detail',
+        'subtotal',        
+        'total_diskon',
         'total',
         'ongkir',
         'ppn',
-        'grandtotal',
-        'no_kpa',
-        'pajak_id',
+        'grandtotal',           
+        'cn',
         'total_cn',
-        'biaya_lain',
-        'no_seri_pajak',
-        'no_pajak',
+        'materai',
         'tanggal_diterima',
         'status_diterima',
         'foto_bukti',
-        'no_resi',
-        'status_tanggaltop',
-        'tanggal_terima_berkas',
-        'status_berkas',
-        'foto_bukti_berkas',
-        'no_resi_berkas',
-    ];
-
-    protected $dates = ['tanggal'];
+        'no_resi',        
+    ];    
 
     public function customers()
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
-    }
-
-    public function StatusFJ()
-    {
-        return $this->belongsTo(StatusFaktursos::class, 'status_fakturso_id', 'id');
-    }
-
-    public function SO()
-    {
-        return $this->belongsTo(PesananPenjualan::class, 'pesanan_penjualan_id', 'id');
-    }
-    public function SJ()
-    {
-        return $this->belongsTo(PengirimanBarang::class, 'pengiriman_barang_id', 'id');
     }
 
     public function creator()
@@ -78,18 +56,10 @@ class FakturPenjualan extends Model
         return $this->belongsTo(User::class, 'updated_by', 'id');
     }
 
-
     public function fakturpenjualandetail()
     {
         return $this->hasMany(FakturPenjualanDetail::class, 'faktur_penjualan_id');
     }
-
-
-    public function nopajak()
-    {
-        return $this->belongsTo(NoFakturPajak::class, 'pajak_id', 'id');
-    }
-
 
     public function piutang()
     {

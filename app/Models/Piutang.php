@@ -12,9 +12,7 @@ class Piutang extends Model
     
     protected $fillable = [
         'tanggal',
-        'customer_id',
-        'pesanan_penjualan_id',
-        'pengiriman_barang_id',
+        'customer_id',                
         'faktur_penjualan_id',
         'dpp',
         'ppn',
@@ -35,13 +33,5 @@ class Piutang extends Model
     public function fakturpenjualan()
     {
         return $this->belongsTo(FakturPenjualan::class, 'faktur_penjualan_id', 'id');
-    }
-    public function SO()
-    {
-        return $this->belongsTo(PesananPenjualan::class, 'pesanan_penjualan_id', 'id');
-    }
-    public function SJ()
-    {
-        return $this->belongsTo(PengirimanBarang::class, 'pengiriman_barang_id', 'id');
-    }
+    }   
 }

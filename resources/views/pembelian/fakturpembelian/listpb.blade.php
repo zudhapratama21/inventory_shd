@@ -77,7 +77,7 @@
                                 <thead class="datatable-head">
                                     <tr>
                                         <th>Kode Penerimaan</th>
-                                        <th>No KPA</th>
+                                        <th>No Perusahaan</th>
                                         <th>Tanggal Penerimaan</th>
                                         <th>Supplier</th>
                                         <th>Status</th>

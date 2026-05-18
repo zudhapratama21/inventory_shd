@@ -15,8 +15,7 @@ class PengirimanBarang extends Model
 
     protected $fillable = [
         'kode',
-        'tanggal',
-        'pesanan_penjualan_id',
+        'tanggal',        
         'customer_id',
         'status_sj_id',
         'status_exp',
@@ -33,16 +32,6 @@ class PengirimanBarang extends Model
     public function StatusSJ()
     {
         return $this->belongsTo(StatusSj::class, 'status_sj_id', 'id');
-    }
-
-    public function SO()
-    {
-        return $this->belongsTo(PesananPenjualan::class, 'pesanan_penjualan_id', 'id');
-    }
-
-    public function FakturSO()
-    {
-        return $this->hasMany(FakturPenjualan::class, 'pengiriman_barang_id');
     }
 
     public function PengirimanBarangDetails()

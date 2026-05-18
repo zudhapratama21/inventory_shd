@@ -27,13 +27,13 @@
                                         </a>
                                         <!--end::Logo-->
                                         <span class=" d-flex flex-column align-items-md-end opacity-70">
-                                            <span>{{ $fakturpenjualan->tanggal->format('d F Y') }}</span>
+                                            <span>{{ \Carbon\Carbon::parse($fakturpenjualan->tanggal)->format('d F Y') }}</span>
                                             <span>{{ $fakturpenjualan->creator->name }}</span>
                                             <span
                                                 class="font-weight-bold font-italic text-primary font-size-h3">{{ $fakturpenjualan->kode }}</span>
                                         </span>
                                     </div>
-                                </div>                                                            
+                                </div>
                                 <div class="border-bottom w-100"></div>
                                 <div class="d-flex justify-content-between pt-6">
                                     <div class="d-flex flex-column flex-root">
@@ -50,34 +50,19 @@
                                         <span class="font-weight-bolder mb-2">ALAMAT</span>
                                         <span class="opacity-70">{{ $fakturpenjualan->customers->alamat }}</span>
                                     </div>
-
-                                    <div class="d-flex flex-column flex-root">
-                                        <span class="font-weight-bolder mb-2">PENGIRIMAN BARANG</span>
-                                        <span class="opacity-70">{{ $fakturpenjualan->SJ->kode }}</span>
-                                    </div>
-                                    <div class="d-flex flex-column flex-root">
-                                        <span class="font-weight-bolder mb-2">SURAT PESANAN</span>
-                                        <span class="opacity-70">{{ $fakturpenjualan->SO->kode }}</span>
-                                    </div>
                                 </div>
                                 <div class="d-flex justify-content-between pt-6">
                                     <div class="d-flex flex-column flex-root">
-                                        <span class="font-weight-bolder mb-2">No. Invoice KPA</span>
-                                        <span class="opacity-70">{{ $fakturpenjualan->no_kpa }}</span>
+                                        <span class="font-weight-bolder mb-2">No. Perusahaan</span>
+                                        <span class="opacity-70">{{ $fakturpenjualan->no_perusahaan }}</span>
                                     </div>
                                     <div class="d-flex flex-column flex-root">
-                                        <span class="font-weight-bolder mb-2">No. Faktur Pajak</span>
-                                        <span
-                                            class="opacity-70">{{ $fakturpenjualan->nopajak && $fakturpenjualan->no_seri_pajak ? $fakturpenjualan->no_seri_pajak . '-' . $fakturpenjualan->no_pajak : '-' }}</span>
-                                    </div>
-                                    <div class="d-flex flex-column flex-root">
-                                        <span class="font-weight-bolder mb-2">SO Customer</span>
-                                        <span class="opacity-70">{{ $fakturpenjualan->SO->no_so }}</span>
+                                        <span class="font-weight-bolder mb-2">SP Customer</span>
+                                        <span class="opacity-70">{{ $fakturpenjualan->no_sp_customer }}</span>
                                     </div>
                                     <div class="d-flex flex-column flex-root">
                                         <span class="font-weight-bolder mb-2">Tanggal SO Customer</span>
-                                        <span
-                                            class="opacity-70">{{ $fakturpenjualan->SO->tanggal_pesanan_customer ? \Carbon\Carbon::parse($fakturpenjualan->SO->tanggal_pesanan_customer)->format('d F Y') : '-' }}</span>
+                                        <span class="opacity-70">{{ $fakturpenjualan->tanggal_sp_customer }}</span>
                                     </div>
                                     <div class="d-flex flex-column flex-root">
                                         <span class="font-weight-bolder mb-2"></span>
@@ -93,8 +78,6 @@
                         <!-- begin: Invoice body-->
                         <div class="row justify-content-center py-8 px-8 py-md-10 px-md-0">
                             <div class="col-md-9">
-                                <a href="{{ route('fakturpenjualan.syncronisasi2', ['id' => $fakturpenjualan->id]) }}"
-                                    class="btn btn-primary btn-sm"><i class="flaticon2-reload-1"></i> Atur Qty</a>
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead>
@@ -115,7 +98,6 @@
                                                 </th>
                                                 <th class="text-left font-weight-bold text-muted text-uppercase">Total
                                                     Disc.</th>
-                                                <th class="text-left font-weight-bold text-muted text-uppercase">CN (%)</th>
                                                 <th class="text-left font-weight-bold text-muted text-uppercase">Total</th>
                                             </tr>
                                         </thead>
@@ -124,7 +106,14 @@
                                                 <tr class="font-weight-boldest">
                                                     <td class="pl-0 pt-7">{{ $a->products->kode }}</td>
                                                     <td class="text-left pt-7">{{ $a->products->nama }}</td>
-                                                    <td class="text-left pt-7">{{ $a->satuan }}</td>
+                                                    <td class="text-left pt-7">
+                                                        @if ($a->beda_satuan == 'on')
+                                                            {{ $a->satuan_konversi }}
+                                                        @else
+                                                            {{ $a->satuan }}
+                                                        @endif
+
+                                                    </td>
                                                     <td class=" pt-7 text-left">{{ $a->qty }}</td>
                                                     <td class=" pt-7 text-left">
                                                         {{ number_format($a->hargajual, 2, ',', '.') }}
@@ -136,8 +125,6 @@
                                                     </td>
                                                     <td class=" pt-7 text-left">
                                                         {{ number_format($a->total_diskon, 2, ',', '.') }}</td>
-                                                    <td class=" pr-0 pt-7 text-left">
-                                                        {{ $a->cn_persen ? $a->cn_persen : 0 }}%</td>
                                                     <td class="text-danger pr-0 pt-7 text-left">
                                                         {{ number_format($a->total, 2, ',', '.') }}</td>
 
@@ -158,11 +145,11 @@
                                         <thead>
                                             <tr>
                                                 <th class="font-weight-bold text-muted  text-uppercase">SUBTOTAL</th>
-                                                <th class="font-weight-bold text-muted  text-uppercase">DISKON TAMBAHAN</th>
+                                                <th class="font-weight-bold text-muted  text-uppercase">Total Diskon</th>
                                                 <th class="font-weight-bold text-muted  text-uppercase">TOTAL</th>
                                                 <th class="font-weight-bold text-muted  text-uppercase">PPN</th>
                                                 <th class="font-weight-bold text-muted  text-uppercase">ONGKIR</th>
-                                                <th class="font-weight-bold text-muted  text-uppercase">BIAYA LAIN-LAIN</th>
+                                                <th class="font-weight-bold text-muted  text-uppercase">Materai</th>
 
                                                 <th class="font-weight-bold text-muted  text-uppercase">GRANDTOTAL</th>
 
@@ -171,39 +158,18 @@
                                         <tbody>
                                             <tr class="font-weight-bolder">
                                                 <td>{{ number_format($fakturpenjualan->subtotal, 2, ',', '.') }}</td>
-                                                <td>{{ number_format($fakturpenjualan->total_diskon_header, 2, ',', '.') }}
+                                                <td>{{ number_format($fakturpenjualan->total_diskon, 2, ',', '.') }}
                                                 </td>
                                                 <td>{{ number_format($fakturpenjualan->total, 2, ',', '.') }}</td>
                                                 <td>{{ number_format($fakturpenjualan->ppn, 2, ',', '.') }}</td>
                                                 <td>{{ number_format($fakturpenjualan->ongkir, 2, ',', '.') }}</td>
-                                                <td>{{ number_format($fakturpenjualan->biaya_lain, 2, ',', '.') }}</td>
+                                                <td>{{ number_format($fakturpenjualan->materai, 2, ',', '.') }}</td>
                                                 <td class="text-danger font-size-h5 font-weight-boldest">
                                                     {{ number_format($fakturpenjualan->grandtotal, 2, ',', '.') }}</td>
                                             </tr>
                                         </tbody>
 
                                     </table>
-
-                                    @can('fakturpenjulan-edit')
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th class="font-weight-bold text-muted  text-uppercase">JUMLAH CN</th>
-                                                    <th class="font-weight-bold text-muted  text-uppercase">Saldo Harga Bersih
-                                                    </th>
-                                                </tr>
-                                                <tr>
-                                                    <td>{{ $fakturpenjualan->total_cn ? number_format($fakturpenjualan->total_cn, 0, ',', '.') : '0' }}
-                                                    </td>
-
-                                                    <td>
-                                                        {{ number_format($fakturpenjualan->grandtotal - $fakturpenjualan->total_cn, 0, ',', '.') }}
-                                                    </td>
-                                                </tr>
-                                        </table>
-                                    @endcan
-
-
                                     <br />
                                     <h4>Keterangan :</h4>
                                     <p>{{ $fakturpenjualan->keterangan }} </p>
@@ -259,7 +225,7 @@
                         </div>
                         <!-- end: Invoice footer-->
                         <!-- begin: Invoice action-->
-                        <div class="row justify-content-center py-8 px-8 py-md-10 px-md-0">
+                        <div class="row justify-content-center mb-15">
 
                             <div class="col-md-9">
                                 <div class="d-flex justify-content-between">
@@ -270,18 +236,18 @@
                                                 Download</button>
 
                                             <div class="dropdown-menu">
-                                                <a href="{{ route('fakturpenjualan.print_a4_koma', $fakturpenjualan) }}"
-                                                    class="btn btn-primary mr-2" target="_blank">
-                                                    <i class="flaticon2-print font-weight-bold"></i> Download & Print Koma
-                                                </a>
+                                                <button type="button" class="btn btn-primary mr-2" data-toggle="modal"
+                                                    data-target="#printa4">
+                                                    <i class="flaticon2-print font-weight-bold"></i> Faktur A4
+                                                </button>
 
-                                                <a href="{{ route('fakturpenjualan.print_a4', $fakturpenjualan) }}"
-                                                    class="btn btn-primary mr-2" target="_blank">
-                                                    <i class="flaticon2-print font-weight-bold"></i> Download & Print Tanpa
-                                                    Koma
-                                                </a>
+                                                  <button type="button" class="btn btn-primary mr-2" data-toggle="modal"
+                                                    data-target="#printa5">
+                                                  <i class="flaticon2-print font-weight-bold"></i> Faktur A5
+                                                </button>                                          
                                             </div>
                                         @endcan
+
                                         @can('fakturpenjualan-delete')
                                             <a href="{{ route('fakturpenjualan.kwitansi', $fakturpenjualan) }}"
                                                 class="btn btn-success " target="_blank">
@@ -289,41 +255,14 @@
                                             </a>
                                         @endcan
 
-                                        @can('fakturpenjualan-delete')
-                                            <a href="{{ route('fakturpenjualan.editCN', $fakturpenjualan) }}"
-                                                class="btn btn-warning ml-4">
-                                                <i class="flaticon2-print font-weight-bold"></i> CN
-                                            </a>
-                                        @endcan
 
                                         @can('fakturpenjualan-delete')
-                                            <a href="{{ route('fakturpenjualan.biayalain.index', ['fakturpenjualan' => $fakturpenjualan->id]) }}"
-                                                class="btn btn-info ml-4">
-                                                <i class="fas fa-cash-register"></i> Biaya Lain - Lain
-                                            </a>
-                                        @endcan
-
-                                        @can('fakturpenjualan-delete')
-                                            <button type="button" class="btn btn-danger ml-4" data-toggle="modal"
-                                                data-target="#exampleModalLong">
+                                            <button type="button" class="btn btn-primary ml-4" data-toggle="modal"
+                                                data-target="#modaltandaterima">
                                                 <i class="flaticon-tool "></i> Tanda Terima
                                             </button>
                                         @endcan
 
-                                        @can('fakturpenjualan-delete')
-                                              <button type="button" class="btn btn-success ml-4" data-toggle="modal"
-                                                data-target="#tandaterimaberkas">
-                                                <i class="flaticon-email "></i> Tanda Terima Berkas
-                                            </button>
-                                        @endcan
-
-
-                                        @can('labarugi-list')
-                                            <a href="{{ route('fakturpenjualan.labarugi.show', ['fakturpenjualan' => $fakturpenjualan->id]) }}"
-                                                class="btn btn-primary ml-4">
-                                                <i class="fas fa-paper-plane"></i> Laba / Rugi
-                                            </a>
-                                        @endcan
                                     </div>
 
                                     <a class="btn btn-danger font-weight-bold"
@@ -347,7 +286,7 @@
 
 
     {{-- MODAL TANDA TERIMA --}}
-    <div class="modal fade" id="exampleModalLong" data-backdrop="static" tabindex="-1" role="dialog"
+    <div class="modal fade" id="modaltandaterima" data-backdrop="static" tabindex="-1" role="dialog"
         aria-labelledby="staticBackdrop" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -437,116 +376,8 @@
         </div>
     </div>
     {{-- END MODAL  --}}
-
-      {{-- MODAL TANDA TERIMA --}}
-    <div class="modal fade" id="tandaterimaberkas" data-backdrop="static" tabindex="-1" role="dialog"
-        aria-labelledby="staticBackdrop" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Tanda Terima Berkas</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <i aria-hidden="true" class="ki ki-close"></i>
-                    </button>
-                </div>
-                @if ($fakturpenjualan->status_berkas !== null)
-                    <div class="modal-body">
-                        <form action="{{ route('fakturpenjualan.editterimaberkas', ['id' => $fakturpenjualan->id]) }}"
-                            method="POST" enctype="multipart/form-data">
-                            @csrf
-                            @method('PUT')
-                            <div class="form-group">
-                                <label for="">Tanggal Diterima Berkas</label>
-                                <input type="date" class="form-control"
-                                    value="{{ $fakturpenjualan->tanggal_terima_berkas }}" name="tanggal_terima_berkas">
-                            </div>
-                            <div class="form-group">
-                                <label for="">No Resi</label>
-                                <input type="text" class="form-control" value="{{ $fakturpenjualan->no_resi_berkas }}"
-                                    name="no_resi_berkas">
-                            </div>
-                            <div class="form-group">
-                                <label for="">Foto Bukti</label> <br>
-                                <img src="{{ asset('storage/bukti_tandaterima_berkas/' . $fakturpenjualan->foto_bukti_berkas) }}"
-                                    alt="" width="30%" style="margin-bottom:10px">
-                                <a href="{{ asset('storage/bukti_tandaterima_berkas/' . $fakturpenjualan->foto_bukti_berkas) }}"
-                                    class="btn btn-primary btn-sm" download><i class="fas fa-download"></i></a>
-                                <input type="file" class="form-control" name="foto_bukti_berkas">
-                            </div>
-                            <div class="form-group">
-                                <label for="">Status</label>
-                                <select name="status_berkas" id="" class="form-control">
-                                    <option value="{{ $fakturpenjualan->status_berkas }}" selected>
-                                        {{ ucfirst($fakturpenjualan->status_berkas) }}</option>
-                                    <option value="terima">Terima</option>
-                                    <option value="belum terima">Belum Diterima</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="">Apakah Jatuh Tempo terhitung dari tanggal tanda terima ? </label>
-                                <select name="top_status" class="form-control" id="">
-                                    <option value="{{ $fakturpenjualan->status_tanggaltop }}" selected>
-                                        {{ ucfirst($fakturpenjualan->status_tanggaltop) }}</option>
-                                    <option value="ya">Ya</option>
-                                    <option value="tidak">Tidak</option>
-                                </select>
-
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-light-primary font-weight-bold"
-                                    data-dismiss="modal">Close</button>
-                                <button type="input" class="btn btn-primary font-weight-bold">Save changes</button>
-                            </div>
-                        </form>
-                    </div>
-                @else
-                    <div class="modal-body">
-                          <form action="{{ route('fakturpenjualan.inputterimaberkas', ['id' => $fakturpenjualan->id])}}"
-                            method="POST" enctype="multipart/form-data">
-                            @csrf                            
-                            <div class="form-group">
-                                <label for="">Tanggal Diterima Berkas</label>
-                                <input type="date" class="form-control" name="tanggal_terima_berkas">
-                            </div>
-                            <div class="form-group">
-                                <label for="">No Resi</label>
-                                <input type="text" class="form-control" name="no_resi_berkas">
-                            </div>
-                            <div class="form-group">
-                                <label for="">Foto Bukti</label> <br>                                
-                                <input type="file" class="form-control" name="foto_bukti_berkas">
-                            </div>
-                            <div class="form-group">
-                                <label for="">Status</label>
-                                <select name="status_diterima" id="" class="form-control">                                                                          
-                                    <option value="terima">Terima</option>
-                                    <option value="belum terima">Belum Diterima</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="">Apakah Jatuh Tempo terhitung dari tanggal tanda terima ? </label>
-                                <select name="top_status" class="form-control" id="">                                    
-                                    <option value="ya">Ya</option>
-                                    <option value="tidak">Tidak</option>
-                                </select>
-
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-light-primary font-weight-bold"
-                                    data-dismiss="modal">Close</button>
-                                <button type="input" class="btn btn-primary font-weight-bold">Save changes</button>
-                            </div>
-                        </form>
-                    </div>
-                @endif
-
-
-            </div>
-        </div>
-    </div>
-    {{-- END MODAL  --}}
+    @include('penjualan.fakturpenjualan.modal.printa4')
+    @include('penjualan.fakturpenjualan.modal.printa5')
 @endsection
 @push('script')
     <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6"') }}"></script>

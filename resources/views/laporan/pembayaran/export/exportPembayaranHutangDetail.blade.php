@@ -4,13 +4,10 @@
             <th>No</th>
             <th>Tanggal Hutang</th>
             <th>Tanggal Pembayaran</th>
-            <th>No KPA</th>
+            <th>No Perusahaan</th>
             <th>No SO Supplier</th>
             <th>No Faktur Supplier</th>
-            <th>Supplier</th>
-            <th>Kode SO</th>
-            <th>Kode SJ</th>
-            <th>Kode Faktur</th>
+            <th>Supplier</th>          
             <th>DPP</th>                                        
             <th>PPN</th>
             <th>Total</th>                                        
@@ -33,10 +30,7 @@
                 <td>{{$item->no_so}}</td>
                 <td>{{$item->no_so_customer}}</td>
                 <td>{{$item->no_faktur_supplier}}</td>
-                <td>{{$item->nama_supplier}}</td>
-                <td>{{$item->kode_pp}}</td>
-                <td>{{$item->kode_pb}}</td>
-                <td>{{$item->kode_fp}}</td>                                            
+                <td>{{$item->nama_supplier}}</td>                
                 <td>{{$item->dpp}}</td>
                 <td>{{$item->ppn}}</td>
                 <td>{{$item->total}}</td>

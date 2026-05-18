@@ -58,18 +58,49 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <table>
-                                    <tr>
-                                        <th>Produk</th>
-                                        <td>:</td>
-                                        <td>{{ $pengirimandet->products->nama }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Qty Dikirim</th>
-                                        <td>:</td>
-                                        <td>{{ $pengirimandet->qty }}</td>
-                                    </tr>
-                                </table>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <table>
+                                            <tr>
+                                                <th>Produk</th>
+                                                <td> : </td>
+                                                <td>{{ $pengirimandet->products->nama }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Qty Dikirim</th>
+                                                <td>: </td>
+                                                <td>{{ $pengirimandet->qty }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Status</th>
+                                                <td>: </td>
+                                                <td>
+                                                    @if ($pengirimandet->products->status_exp  ==  1)
+                                                        <span class="label label-success label-inline">Expired</span>
+                                                    @else
+                                                        <span class="label label-warning label-inline">Not Expired</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        @if ($pengirimandet->beda_satuan == 'on')
+                                            <div class="alert alert-primary" role="alert">
+                                                <p>Catatan : Produk mengalami penjualan <b>beda satuan</b> . Satuan asli
+                                                    produk adalah <b>{{ $pengirimandet->satuan }}</b>
+                                                    , terjadi penjualan dengan satuan
+                                                    <b>{{ $pengirimandet->satuan_konversi }}</b> dengan nilai konversi
+                                                    persatuan <b>{{ $pengirimandet->qty_konversi }}</b> pcs
+                                                </p>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+
+
+
                             </div>
                         </div>
 
@@ -91,13 +122,9 @@
                                 <table class="table yajra-datatable-dataproduk collapsed ">
                                     <thead class="datatable-head">
                                         <tr>
-                                            <th>Tanggal Exp</th>
-                                            <th>Supplier</th>
-                                            <th>Harga Beli</th>
-                                            <th>Diskon Beli (Rp.)</th>
-                                            <th>Diskon Beli (%)</th>
+                                            <th>Tanggal</th>
                                             <th>Lot</th>
-                                            <th>Qty</th>
+                                            <th>Qty Stok</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
@@ -127,11 +154,7 @@
                                 <table class="table yajra-datatable-dataprodukirim collapsed ">
                                     <thead class="datatable-head">
                                         <tr>
-                                            <th>Tanggal Exp</th>
-                                            <th>Supplier</th>
-                                            <th>Harga Beli</th>
-                                            <th>Diskon Beli (Rp.)</th>
-                                            <th>Diskon Beli (%)</th>
+                                            <th>Tanggal</th>
                                             <th>Lot</th>
                                             <th>Qty</th>
                                             <th>Action</th>
@@ -217,26 +240,6 @@
                         data: 'tanggal',
                         searchable: false,
                         name: 'tanggal'
-                    },
-                    {
-                        data: 'supplier',
-                        searchable: false,
-                        name: 'supplier'
-                    },
-                    {
-                        data: 'harga_beli',
-                        searchable: false,
-                        name: 'harga_beli'
-                    },
-                    {
-                        data: 'diskon_persen',
-                        searchable: false,
-                        name: 'diskon_persen'
-                    },
-                    {
-                        data: 'diskon_rupiah',
-                        searchable: false,
-                        name: 'diskon_rupiah'
                     },
                     {
                         data: 'lot',
@@ -366,26 +369,6 @@
                         name: 'tanggal'
                     },
                     {
-                        data: 'supplier',
-                        searchable: false,
-                        name: 'supplier'
-                    },
-                    {
-                        data: 'harga_beli',
-                        searchable: false,
-                        name: 'harga_beli'
-                    },
-                    {
-                        data: 'diskon_persen_beli',
-                        searchable: false,
-                        name: 'diskon_persen_beli'
-                    },
-                    {
-                        data: 'diskon_rupiah_beli',
-                        searchable: false,
-                        name: 'diskon_rupiah_beli'
-                    },
-                    {
                         data: 'lot',
                         searchable: false,
                         name: 'lot'
@@ -396,12 +379,12 @@
                         name: 'qty'
                     },
                     {
-                      data: 'action', 
-                      render: function(data){
-                          return htmlDecode(data);
-                      },
-                      className:"nowrap",
-                  },
+                        data: 'action',
+                        render: function(data) {
+                            return htmlDecode(data);
+                        },
+                        className: "nowrap",
+                    },
                 ]);
         }
 
@@ -449,26 +432,29 @@
             });
         }
 
-        function htmlDecode(data){
+        function htmlDecode(data) {
             var txt = document.createElement('textarea');
-            txt.innerHTML=data;
+            txt.innerHTML = data;
             return txt.value;
         }
 
-        function editExp(id){
+        function editExp(id) {
             $.ajax({
                 type: 'POST',
                 url: '{{ route('pengirimanbarang.editexp') }}',
                 dataType: 'html',
-                headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 data: {
-                    id:id,
-                    status:status, 
-                    "_token": "{{ csrf_token() }}"},
+                    id: id,
+                    status: status,
+                    "_token": "{{ csrf_token() }}"
+                },
                 beforeSend: function() {
                     KTApp.blockPage();
                 },
-                success: function(data){
+                success: function(data) {
                     $('#modal-setbarang').html(data);
                     $('#formexp').modal('show');
                 },
@@ -495,7 +481,7 @@
                 complete: function() {
                     KTApp.unblock();
                 }
-            });            
+            });
         }
 
         function submitexp(data_id) {

@@ -1,266 +1,421 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 
 <head>
+    <meta charset="UTF-8">
+    <title>Faktur Penjualan</title>
 
-    <style type="text/css">
-        .tabel {
+    <style>
+        @page {
+            size: A5 landscape;
+            margin: 0;
+        }
+
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 11px;
+            color: #000;
+        }
+
+        html,
+        body {
+            margin: 0px;
+            padding: 0;
+        }
+
+
+        table {
+            width: 100%;
             border-collapse: collapse;
         }
 
-        .tabel td,
-        th,
-        tr {
-            border: 1px solid black;
+        .border {
+            border: 1px solid #000;
         }
 
-        @media print {
-            .tabpage {
-                page-break-after: always
-            }
+        .border th,
+        .border td {
+            border: 1px solid #000;
+            padding: 2px;
+            vertical-align: top;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-bold {
+            font-weight: bold;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .capt {
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .mt-10 {
+            margin-top: 10px;
+        }
+
+        .mt-20 {
+            margin-top: 20px;
+        }
+
+        .no-border td {
+            border: none;
+            padding: 1px;
+        }
+
+        .signature {
+            height: 70px;
+        }
+
+        .bordertop {
+            border-top: 1px solid #000;
+            border-bottom: 1px solid #000;
+        }
+
+        .border-top-none {
+            border-top: none;
+            border-bottom: none;
+        }
+
+        .item-group {
+            border-bottom: none !important;
+            border-top: none !important;
+
+        }
+
+        .page-frame {
+            border: 1px solid #000;
+            padding: 2px;
         }
     </style>
 </head>
 
-<body style="font-family: sans-serif;">
+<body>
 
-    @for ($i = 1; $i <= $totalPage; $i++)
-        <table width=" 100%" style="margin-top: 0px;">
+    <div class="page-frame">
+
+
+        <table class="border">
             <tr>
-                <td colspan="4" style=" border-bottom: 1px solid black;">FAKTUR PENJUALAN</td>
-                <td colspan="2" style=" border-bottom: 1px solid black; text-align:right">No. Faktur :
-                    {{ $fakturpenjualan->no_kpa }}</td>
-            </tr>
-            <tr>
-                <td colspan="6" style="text-align: center; border-bottom: 1px solid black;">
-                    <h1 style="margin-top: 2px; margin-bottom: 4px;">PT BRILIAN SUKSES BERKAH</h1>
-                    <h5 style="margin-top: 0px; margin-bottom: 3px;">Juanda Regency Blok H-06, JL. Raya Bypass Juanda
-                        NO.11, Pabean-Sedati, Sidoarjo , Kode Pos 61253</h5>
-                    <h5 style="margin-top: 0px;margin-bottom: 2px;">IDAK : 13102201284910012 | NPWP :
-                        61.097.970.0-643.000</h5>
+                <td width="48%">
+                    <table class="no-border">
+                        <tr>
+                            <td width="50%" class="text-left">
+                                <b>Faktur Penjualan</b>
+                            </td>
+                            <td width="50%" class="text-right">
+                                No Faktur : {{ $fakturpenjualan->no_perusahaan }}
+                            </td>
+                        </tr>
+                    </table>
+
+                </td>
+                <td width="52%">
+                    <table class="no-border">
+                        <tr>
+                            <td width="50%" class="text-left">
+                                Tanggal : {{ \Carbon\Carbon::parse($fakturpenjualan->tanggal)->format('d/m/Y') }}
+                            </td>
+                            <td width="50%" class="text-right">
+                                Jatuh Tempo :
+                                {{ \Carbon\Carbon::parse($fakturpenjualan->tanggal_jatuh_tempo)->format('d/m/Y') }}
+                            </td>
+                        </tr>
+                    </table>
                 </td>
 
+
             </tr>
             <tr>
-                <td colspan="6" style="border-bottom: 1px solid black;">
-                    <table border="0" width="100%">
+                <td>
+                    <b>PT. SYAHID HUSADA DEWATA</b><br>
+                    Jl. Padang Indah II/16 Denpasar<br>
+                    NPWP : 002.152.666.0-901.000
+                </td>
+                <td>
+                    <table class="no-border">
                         <tr>
-                            <td style="font-size: 80%;" colspan="3">PEMBELI BKP</td>
+                            <td width="100%"><b>PEMBELI / PENERIMA JASA :</b><br></td>
+                        </tr>
+                    </table>
+                    <table class="no-border">
+
+                        <tr>
+                            <td width="8%">Nama</td>
+                            <td width="2%">:</td>
+                            <td width="90%">{{ $fakturpenjualan->customers->nama }}</td>
+                        </tr>
+
+                        <tr>
+                            <td width="8%">Alamat</td>
+                            <td width="2%">:</td>
+                            <td width="90%">{{ $fakturpenjualan->customers->alamat }}</td>
+                        </tr>
+
+                        <tr>
+                            <td width="8%">NPWP</td>
+                            <td width="2%">:</td>
+                            <td width="90%">{{ $fakturpenjualan->customers->npwp }}</td>
+                        </tr>
+
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <table class="border">
+            <thead>
+                <tr class="text-center bold">
+                    <th width="6%">Qty</th>
+                    <th width="7%">Kode</th>
+                    <th width="34%">Nama Barang</th>
+                    <th width="10%">EXP</th>
+                    <th width="12%">SN / LOT</th>
+                    <th width="10%">Harga</th>
+                    <td width="5%"><b>Disc</b></td>
+                    <th width="14%">Jumlah</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <?php
+                $no = 0;
+                ?>
+
+                @foreach ($fakturpenjualandetails as $item)
+                    <?php
+                    if ($item->products->merks) {
+                        $merks = $item->products->merks->nama;
+                    } else {
+                        $merks = '';
+                    }
+                    ?>
+                    @if ($item->pengirimanbarang_id != null)
+                        @foreach ($item->pengirimanbarangdetail->stokexpdetail as $exp)
+                            {{ $no++ }}
+                            <tr>
+                                <td class="text-left item-group">{{ $exp->qty * -1 }} {{ $item->satuan }}</td>
+                                <td class="item-group">{{ $item->products->kode_item }}</td>
+                                <td class="item-group">
+                                    {{ $merks }} {{ $item->products->nama }}<br>
+                                    {{ $item->products->no_ijinedar }}
+                                </td>
+                                <td class="text-center item-group">
+                                    @if ($item->products->status_exp == 1)
+                                        {{ \Carbon\Carbon::parse($exp->stockExp->tanggal)->format('F Y') }}    
+                                    @else
+                                        <span>----</span>
+                                    @endif
+                                    
+                                </td>
+                                <td class="text-center item-group">{{ $exp->stockExp->lot }}</td>
+                                <td class="item-group">
+                                    <table width="100%" class="no-border">
+                                        <tr>
+                                            <td style="width: 30%" class="text-left">Rp.</td>
+                                            <td style="width: 50%" class="text-right">
+                                                {{ number_format($item->hargajual, 0, ',', '.') }}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td class="text-center item-group">
+                                    {{ number_format($item->diskon_persen, 0, ',', '.') }} %</td>
+                                <td class="item-group">
+                                    <table width="100%" class="no-border">
+                                        <tr>
+                                            <td style="width: 30%" class="text-left">Rp.</td>
+                                            <td style="width: 50%" class="text-right">
+                                                {{ number_format($item->hargajual * ($exp->qty * -1), 0, ',', '.') }}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @else
+                        {{ $no++ }}
+                        <tr>
+                            <td class="text-left item-group">{{ $item->qty }} {{ $item->satuan }}</td>
+                            <td class="item-group">{{ $item->products->kode_item }}</td>
+                            <td class="item-group">
+                                {{ $merks }} {{ $item->products->nama }}<br>
+                                {{ $item->products->no_ijinedar }}
+                            </td>
+                            <td class="text-center item-group">-----</td>
+                            <td class="text-center item-group">-----</td>
+                            <td class="item-group">
+                                <table width="100%" class="no-border">
+                                    <tr>
+                                        <td style="width: 30%" class="text-left">Rp.</td>
+                                        <td style="width: 50%" class="text-right">
+                                            {{ number_format($item->hargajual, 0, ',', '.') }}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td class="text-center item-group"> {{ number_format($item->diskon_persen, 0, ',', '.') }}
+                                %</td>
+                            <td class="item-group">
+                                <table width="100%" class="no-border">
+                                    <tr>
+                                        <td style="width: 30%" class="text-left">Rp.</td>
+                                        <td style="width: 50%" class="text-right">
+                                            {{ number_format($item->hargajual * $item->qty, 0, ',', '.') }}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    @endif
+                @endforeach
+
+
+                <!-- baris kosong tapi tetap ada BORDER -->
+                @for ($i = 1; $i < 7 - $no; $i++)
+                    <tr>
+                        <td class="text-center item-group">&nbsp;</td>
+                        <td class="item-group"></td>
+                        <td class="item-group">
+                            <br>
+                        </td>
+                        <td class="text-center item-group"></td>
+                        <td class="item-group"></td>
+                        <td class="text-right item-group"></td>
+                        <td class="item-group"></td>
+                        <td class="text-right item-group"></td>
+                    </tr>
+                @endfor
+
+            </tbody>
+        </table>
+
+        <table class="border">
+            <tr>
+
+                <td width="58.15%">
+                    <table class="no-border">
+                        <tr>
+                            <b>Terbilang :</b><br>
+                        </tr>
+                        <td height="20px" style="font-size:10px">
+                            {{ $tertulis }} Rupiah
+                        </td>
+                    </table>
+
+                    <table class="no-border">
+                        <tr>
+                            <b>Keterangan :</b><br>
+                        </tr>
+                        <td height="30px">
+                            {{ $fakturpenjualan->keterangan }}
+                        </td>
+                    </table>
+
+                </td>
+                <td width="41.85%">
+                    <table class="no-border">
+                        <tr>
+                            <td width="66%">Jumlah</td>
+                            <td width="14%" class="text-left">:Rp. </td>
+                            <td width="20%" class="text-right">
+                                {{ number_format($fakturpenjualan->subtotal, 0, ',', '.') }}
+                            </td>
                         </tr>
                         <tr>
-                            <td style="font-size: 75%; width:10%">Nama</td>
-                            <td style="font-size: 75%; width:5%">:</td>
-                            <td style="font-size: 75%;">{{ $fakturpenjualan->customers->nama }}</td>
+                            <td width="66%">Discount</td>
+                            <td width="14%" class="text-left">:Rp. </td>
+                            <td width="20%" class="text-right">
+                                {{ number_format($fakturpenjualan->total_diskon, 0, ',', '.') }}</td>
                         </tr>
                         <tr>
-                            <td style="font-size: 75%;width:10%">Alamat</td>
-                            <td style="font-size: 75%; width:5%">:</td>
-                            <td style="font-size: 75%;">{{ $fakturpenjualan->customers->alamat }}, Blok
-                                {{ $fakturpenjualan->customers->blok }}, No. {{ $fakturpenjualan->customers->nomor }},
-                                {{ $fakturpenjualan->customers->namakota->name }}</td>
+                            <td width="66%">DPP (11/12 X Subtotal)</td>
+                            <td width="14%" class="text-left">:Rp. </td>
+                            <td width="20%" class="text-right">
+                                {{ number_format(($fakturpenjualan->subtotal * 11) / 12, 0, ',', '.') }}</td>
                         </tr>
                         <tr>
-                            <td style="font-size: 75%;width:10%">NPWP</td>
-                            <td style="font-size: 75%; width:5%"> :</td>
-                            <td style="font-size: 75%;">{{ $fakturpenjualan->customers->npwp }}</td>
+                            <td width="66%">PPN 12%</td>
+                            <td width="14%" class="text-left">:Rp. </td>
+                            <td width="20%" class="text-right">
+                                {{ number_format($fakturpenjualan->ppn, 0, ',', '.') }}</td>
+                        </tr>
+                        <tr>
+                            <td width="66%">Materai</td>
+                            <td width="14%" class="text-left">:Rp. </td>
+                            <td width="20%" class="text-right">
+                                {{ number_format($fakturpenjualan->materai, 0, ',', '.') }}</td>
+                        </tr>
+                        <tr class="bold">
+                            <td width="66%"><b>Jumlah yang harus dibayar</b></td>
+                            <td width="14%" class="text-left">:Rp. </td>
+                            <td width="20%" class="text-right">
+                                {{ number_format($fakturpenjualan->grandtotal, 0, ',', '.') }}</td>
                         </tr>
                     </table>
                 </td>
             </tr>
-            <tr>
-                <td colspan="6" style="vertical-align: top; ">
-                    <div class="isi" style="height: 400px;">
-                        <table border="0" class="xyz" style="width:100%; ">
-                            <tr>
-                                <td colspan="7">
-                                    <hr style="margin-bottom: 0px; margin-top: 0px; border-width: 1px 0px 0px;">
-                                </td>
-                            </tr>
-                            <tr style="">
-                                <td style="font-size: 65%; border:none; width:3%">NO</td>
-                                <td style="font-size: 65%; border:none; width:7%;">KWANTUM</td>
-                                <td style="font-size: 65%; border:none;">NAMA BARANG</td>
-                                <td style="font-size: 65%; border:none; width:10%;text-align:right">HARGA</td>
-                                <td style="font-size: 65%; border:none; width:15%;text-align:right">SUBTOTAL</td>
-                                <td style="font-size: 65%; border:none; width:10%;text-align:right">DISKON</td>
-                                <td style=" font-size: 65%; border:none; width:15%;text-align:right">JUMLAH</td>
-                            </tr>
-                            <tr>
-                                <td colspan="7">
-                                    <hr style="margin-bottom: 0px; margin-top: 0px; border-width: 0.3px 0px 0px;">
-                                </td>
-                            </tr>
-
-                            @php
-                                $n = 1;
-                                $j = 1;
-                            @endphp
-                            @foreach ($fakturpenjualandetails as $a)
-                                @if ($n > ($i - 1) * $perBaris && $n <= $i * $perBaris)
-                                    <tr class="" style="vertical-align:top">
-                                        <td style="font-size: 62%;">{{ $j }}.</td>
-                                        <td style="font-size: 62%; ">{{ $a->qty }} {{ $a->satuan }}</td>
-                                        <td
-                                            style="font-size: 67%;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-                                            {{ $a->products->nama }}</td>
-                                        <td style="font-size: 62%; text-align:right;">
-                                            {{ number_format($a->hargajual, 2, ',', '.') }}</td>
-                                        <td style="font-size: 62%; text-align:right;">
-                                            {{ number_format($a->subtotal, 2, ',', '.') }}</td>
-                                        <td style="font-size: 62%; text-align:right;">
-                                            {{ number_format($a->total_diskon, 2, ',', '.') }}
-                                        </td>
-                                        <td style="font-size: 62%; text-align:right;">
-                                            {{ number_format($a->total, 2, ',', '.') }}
-                                        </td>
-                                    </tr>
-                                @endif
-                                @php
-                                    $n++;
-                                    $j++;
-                                @endphp
-                            @endforeach
-                        </table>
-                    </div>
-                </td>
-            </tr>
-
         </table>
-        <br /><br />
 
-
-        <hr style="margin-bottom: 0px; margin-top: 0px; border-width: 1px 0px 0px;">
-        <table width="100%">
+        <table class="no-border">
             <tr>
-                @if ($i == $totalPage)
-                    <td style="text-align: right">
-                        <table width="100%">
-                            <tr>
-                                <td style='font-size: 70%; width: 75%; line-height:90%'><b>Total Jumlah</b></td>
-                                <td style='font-size: 70%; width: 5%;'><b>: Rp.</b></td>
-                                <td style='font-size: 70%; line-height:90%; text-align:right'><b>
-                                        {{ number_format($fakturpenjualan->subtotal, 2, ',', '.') }}
-                                    </b></td>
-                            </tr>
-                            <tr>
-                                <td style='font-size: 70%; width: 75%; line-height:90%'><b>Potongan Harga</b></td>
-                                <td style='font-size: 70%; width: 5%;'><b>: Rp.</b></td>
-                                <td style='font-size: 70%; line-height:90%; text-align:right'><b>
-                                        {{ number_format($fakturpenjualan->total_diskon_header, 2, ',', '.') }}
-                                    </b></td>
-                            </tr>
-                            <tr>
-                                <td style='font-size: 70%; width: 75%; line-height:90%'><b>Dasar Pengenaan Pajak</b>
-                                </td>
-                                <td style='font-size: 70%; width: 5%;'><b>: Rp.</b></td>
-                                <td style='font-size: 70%; line-height:90%; text-align:right'><b>
-                                        {{ number_format($fakturpenjualan->total, 2, ',', '.') }}
-                                    </b></td>
-                            </tr>
-                            <tr>
-                                <td style='font-size: 70%; width: 75%;'><b>PPN</b></td>
-                                <td style='font-size: 70%; width: 5%;'><b>: Rp.</b></td>
-                                <td style='font-size: 70%; text-align:right'><b>
-                                        {{ number_format($fakturpenjualan->ppn, 2, ',', '.') }}
-                                    </b></td>
-                            </tr>
-                            <tr>
-                                <td style='font-size: 70%; width: 75%;'><b>Biaya Pengiriman</b></td>
-                                <td style='font-size: 70%; width: 5%;'><b>: Rp.</b></td>
-                                <td style='font-size: 70%; text-align:right'><b>
-                                        {{ number_format($fakturpenjualan->ongkir, 2, ',', '.') }}
-                                    </b></td>
-                            </tr>
-                            <tr>
-                                <td style='font-size: 70%; width: 75%;'><b>Biaya Lain-Lain</b></td>
-                                <td style='font-size: 70%; width: 5%;'><b>: Rp.</b></td>
-                                <td style='font-size: 70%; text-align:right'><b>
-                                        {{ number_format($fakturpenjualan->biaya_lain, 2, ',', '.') }}
-                                    </b></td>
-                            </tr>
-                            <tr>
-                                <td style='font-size: 70%; width: 25%;'><b>Jumlah Yang Harus Dibayar</b></td>
-                                <td style='font-size: 70%; width: 5%;'><b>: Rp.</b></td>
-                                <td style='font-size: 70%; text-align:right'><b>
-                                        {{ number_format($fakturpenjualan->grandtotal, 2, ',', '.') }}
-                                    </b></td>
-                            </tr>
-                        </table>
-
-
-                    </td>
-                @else
-                    <td style="text-align: right;page-break-after:always;">
-                        <table width="100%">
-                            <tr>
-                                <td style='font-size: 70%; width: 25%;text-align:center'><i>( HALAMAN SELANJUTNYA )</i>
-                                </td>
-                            </tr>
-                        </table>
-
-                    </td>
-                @endif
-
-
-            </tr>
-        </table>
-        <hr style="margin-bottom: 0px; margin-top: 0px; border-width: 1px 0px 0px;">
-        <table>
-            <tr>
-                <td style="font-size: 60%;">SO Cust. :
-                    {{ $fakturpenjualan->SO->no_so ? $fakturpenjualan->SO->no_so : '-' }}</td>
-                <td></td>
-                <td></td>
-                <td style="font-size: 60%;">Tanggal SO Cust. :
-                    {{ $fakturpenjualan->SO->tanggal_pesanan_customer ? \Carbon\Carbon::parse($fakturpenjualan->SO->tanggal_pesanan_customer)->format('d/m/Y') : '-' }}
+                <td width="58.15%" style="font-size:10px">
+                    PO Customer : {{ $fakturpenjualan->no_sp_customer }}
                 </td>
-            </tr>
-        </table>        
-        <table width="100%">
-            <tr>
-                <td style='font-size: 70%; width: 15%; line-height:90%; vertical-align:top'>PENERIMA,
-
-                    <br /><br /> <br /><br /> <br /> <br />
-                    <u>(...............................)</u> <br />
-                    <br />
-                    <i>Hal. :
-                        {{ $i }}/{{ $totalPage }}<br />
-                        User : {{ $fakturpenjualan->creator->name }}</i>
-                </td>
-                <td style='font-size: 70%; width: 55%; line-height:90%; vertical-align:top'><b>KETERANGAN :
-                        <br />{{ $fakturpenjualan->keterangan }}</b>
-                    <br /> <br /><br /> <br /> <br /><br /><br /> <br /><br /> <br /> <br />
-                </td>
-
-                <td style='font-size: 70%; text-align:center; vertical-align:top'>Sidoarjo,
-                    {{ $fakturpenjualan->tanggal->format("d
-                                        F Y") }}
-
-                    <br /><br /> <br /><br /> <br /> <br />
-                    <u>HEPPY WAHYU PURNOMO</u> <br />
-                    Direktur
+                <td width="41.85%" style="font-size:10px">Tanggal PO Customer. :
+                    {{ $fakturpenjualan->tanggal_sp_customer }}
                 </td>
             </tr>
         </table>
-        <div style="border: 0.5px solid black;width: 100%;line-height:90%">
-            <p style="font-size:55%;text-align:center"><b> Pembayaran dapat ditransfer ke Rek : <b>Bank BCA No.675 222
-                        2289
-                    </b> , <b>Bank JATIM No. 066 1292 229</b> a/n PT.BRILIAN SUKSES BERKAH</b></p>
+
+        <table class="no-border text-center" style="margin-top:30px">
+            <tr>
+                <td>Penerima</td>
+                <td>Penanggung Jawab Teknis</td>
+                <td>Hormat Kami</td>
+            </tr>
+            <tr>
+                <td height="70px"></td>
+                <td>
+                    <img src="{{ public_path('ttd/ttdpjt.png') }}" alt="" height="70px">
+                </td>
+                <td>
+                </td>
+            </tr>
+
+            <tr class="bold">
+                <td>(_______________________)</td>
+                <td>( Febrian Nurrohman )</td>
+                <td> <u>M. Taufik Krisdianto</u><br><span class="small">Direktur</span></td>
+            </tr>
+        </table>
+
+        <div style="border: 0.5px solid black;width: 100%;line-height:90%;margin-bottom:12.2px">
+            <p style="font-size:90%;text-align:center"><b> Pembayaran dapat ditransfer ke Rek : <b>{{ $bank->nama }}
+                        No. {{ $bank->nomor }}
+                    </b> a/n PT Syahid Husada Dewata </b></p>
         </div>
+    </div>
 
-
-
-        @if ($totalPage != $i)
-            <div style="page-break-after: always;"></div>
-        @endif
-
-
-
-    @endfor
 
 </body>
 
 </html>
-
-
-

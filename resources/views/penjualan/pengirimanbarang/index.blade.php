@@ -66,7 +66,7 @@
                                     <!--begin::Button-->
 
                                     @can('pengirimanbarang-create')
-                                        <a href="{{ route('pengirimanbarang.listso') }}"
+                                        <a href="{{ route('pengirimanbarang.create') }}"
                                             class="btn btn-primary font-weight-bolder ">
                                             <i class="flaticon2-add"></i>
                                             Pengiriman Barang
@@ -87,8 +87,7 @@
                                     <thead class="datatable-head">
                                         <tr>
                                             <th>Kode</th>
-                                            <th>Tanggal</th>
-                                            <th>No. Surat Pesanan</th>
+                                            <th>Tanggal</th>                                            
                                             <th>Customer</th>
                                             <th>Status</th>
                                             <th style="width: 15%">Action</th>
@@ -145,19 +144,25 @@
                     {
                         data: 'tanggal',
                         name: 'tanggal'
-                    },
-                    {
-                        data: 'kode_so',
-                        name: 'so.kode'
-                    },
+                    },                   
                     {
                         data: 'customer',
                         name: 'customers.nama'
-                    },
+                    },   
                     {
                         data: 'status',
-                        name: 'statusSJ.nama'
-                    },
+                        render: function(data) {
+                            if (data == 1) {
+                                return '<span class="label label-danger label-pill label-inline mr-2">Belum Input Expired / Lot</span>';
+                            } else if (data == 2) {
+                                return '<span class="label label-warning label-pill label-inline mr-2">Menunggu di Faktur</span>';
+                            } else if (data == 3) {
+                                return '<span class="label label-primary label-pill label-inline mr-2">Terfaktur Sebagian</span>';
+                            } else if (data == 4) {
+                                return '<span class="label label-success label-pill label-inline mr-2">Terfaktur Semua</span>';
+                            }
+                        },                        
+                    },                   
                     {
                         data: 'action',
                         render: function(data) {
@@ -165,25 +170,7 @@
                         },
                         className: "nowrap",
                     },
-                ],
-                columnDefs: [
-
-                    {
-                        responsivePriority: 3,
-                        targets: 2,
-
-                    },
-                    {
-                        responsivePriority: 10001,
-                        targets: 4
-                    },
-                    {
-                        responsivePriority: 2,
-                        targets: -1
-                    },
-
-
-                ],
+                ]            
             });
         }
 

@@ -43,16 +43,7 @@
                                 <div class="d-flex flex-column flex-root">
                                     <span class="font-weight-bolder mb-2">NO.</span>
                                     <span class="opacity-70">{{ $pengirimanbarang->kode }}</span>
-                                </div>
-                                <div class="d-flex flex-column flex-root">
-                                    <span class="font-weight-bolder mb-2">SO NO.</span>
-                                    <span class="opacity-70">{{ $pengirimanbarang->SO->kode }}</span>
-                                </div>
-                                <div class="d-flex flex-column flex-root">
-                                    <span class="font-weight-bolder mb-2">SO CUSTOMER</span>
-                                    <span class="opacity-70">{{ $pengirimanbarang->SO->no_so }}</span>
-                                </div>
-
+                                </div>                              
                             </div>
 
                         </div>
@@ -87,12 +78,15 @@
                                         <tr class="font-weight-boldest">
                                             <td class="pl-0 pt-7">{{ $a->products->kode }}</td>
                                             <td class="text-left pt-7">{{ $a->products->nama }}</td>
-                                            <td class="text-left pt-7">{{ $a->satuan }}</td>
+                                            @if ($a->beda_satuan == 'on')
+                                                <td class="text-left pt-7">{{ $a->satuan_konversi }}</td>
+                                            @else
+                                                <td class="text-left pt-7">{{ $a->satuan }}</td>
+                                            @endif                                            
                                             <td class=" pt-7 text-left">{{ $a->qty_pesanan }}</td>
                                             <td class=" pt-7 text-left">{{ $a->qty_sisa }}</td>
                                             <td class=" pt-7 text-left">{{ $a->qty }}</td>
                                             <td class=" pt-7 text-left">{{ $a->keterangan }}</td>
-
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -105,13 +99,14 @@
                     <!-- begin: Invoice footer-->
                     <div class="row justify-content-center bg-gray-100 py-8 px-8 py-md-10 px-md-0">
                         <div class="col-md-9">
-                            <h3>List Expired Date</h3>
+                            <h3>List Expired Date & Lot</h3>
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead>
                                         <tr>
                                             <th class="font-weight-bold text-muted  text-uppercase">PRODUK</th>
                                             <th class="font-weight-bold text-muted  text-uppercase">EXPIRED DATE</th>
+                                            <th class="font-weight-bold text-muted  text-uppercase">Lot</th>
                                             <th class="font-weight-bold text-muted  text-uppercase">QTY</th>
 
                                         </tr>
@@ -120,10 +115,16 @@
                                         @foreach($listExp as $x)
                                         <tr class="font-weight-boldest">
                                             <td class="pl-0 pt-7">{{ $x->products->nama }}</td>
-                                            <td class="text-left pt-7">{{ $x->tanggal->format("d F Y") }}</td>
-                                            <td class="text-left pt-7">{{ $x->qty * (-1) }}</td>
-
-
+                                            <td class="text-left pt-7">
+                                                @if ($x->products->status_exp == 1)
+                                                    {{ $x->tanggal->format("d F Y") }}    
+                                                @else
+                                                     -
+                                                @endif
+                                                
+                                            </td>
+                                            <td class="text-left pt-7">{{ $x->stockExp->lot }}</td>
+                                            <td class="text-left pt-7">{{ $x->qty * (-1) }}</td>                                        
                                         </tr>
                                         @endforeach
 

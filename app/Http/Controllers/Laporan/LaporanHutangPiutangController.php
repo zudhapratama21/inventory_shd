@@ -17,7 +17,7 @@ class LaporanHutangPiutangController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:laporanhutang-list');        
+        $this->middleware('permission:laporanhutang-list');
     }
 
     public function index()
@@ -29,11 +29,11 @@ class LaporanHutangPiutangController extends Controller
     public function hutang()
     {
         $title = "Laporan  Hutang";
-        $supplier = Supplier::with('namakota')->select('id','nama','kota')->get();
+        $supplier = Supplier::with('namakota')->select('id', 'nama', 'kota')->get();
 
         // dd($supplier[0]);
-        return view('laporan.hutangpiutang.hutang.filterHutang',[
-            'supplier' =>$supplier,
+        return view('laporan.hutangpiutang.hutang.filterHutang', [
+            'supplier' => $supplier,
             'title' => $title
         ]);
     }
@@ -41,10 +41,10 @@ class LaporanHutangPiutangController extends Controller
     public function piutang()
     {
         $title = "Laporan Piutang";
-        $customer = Customer::with('namakota')->select('id','nama','kota')->get();
-        $sales = Sales::select('id','nama')->get();
+        $customer = Customer::with('namakota')->select('id', 'nama', 'kota')->get();
+        $sales = Sales::select('id', 'nama')->get();
 
-        return view('laporan.hutangpiutang.piutang.filterPiutang',[
+        return view('laporan.hutangpiutang.piutang.filterPiutang', [
             'customer' => $customer,
             'sales' => $sales,
             'title' => $title
@@ -54,192 +54,122 @@ class LaporanHutangPiutangController extends Controller
     public function filterHutang(Request $request)
     {
         $title = 'Laporan Hutang';
-        $data = $request->all();        
-
-        
+        $data = $request->all();
         $tgl1 = Carbon::parse($data['tgl1'])->format('Y-m-d');
-        $tgl2 = Carbon::parse($data['tgl2'])->format('Y-m-d');                
+        $tgl2 = Carbon::parse($data['tgl2'])->format('Y-m-d');
 
-        $pembayaran = DB::table('hutangs as h')
-                    ->join('pesanan_pembelians as pp','h.pesanan_pembelian_id','=','pp.id')                    
-                    ->join('penerimaan_barangs as pb','h.penerimaan_barang_id','=','pb.id');               
-                    
+        // base query
+        $query = DB::table('hutangs as h')
+            ->join('pesanan_pembelians as pp', 'h.pesanan_pembelian_id', '=', 'pp.id')
+            ->join('penerimaan_barangs as pb', 'h.penerimaan_barang_id', '=', 'pb.id')
+            ->join('suppliers as s', 'h.supplier_id', '=', 's.id')
+            ->join('faktur_pembelians as fb', 'h.faktur_pembelian_id', '=', 'fb.id')
+            ->whereBetween('h.tanggal_top', [$tgl1, $tgl2]);
 
-        
-        if ($data['tgl1']) {            
-            if (!$data['tgl2']) {
-                $tanggalFilter=$pembayaran->where('h.tanggal_top','>=',$tgl1);
-                                
-            }else{
-                $tanggalFilter=$pembayaran->where('h.tanggal_top','>=',$tgl1)
-                                ->where('h.tanggal_top','<=',$tgl2);
-            }
-        }elseif($data['tgl2']){
-            if (!$data['tgl1']) {
-                $tanggalFilter=$pembayaran->where('h.tanggal_top','<=',$tgl2);
-            }else{
-                $tanggalFilter=$pembayaran->where('h.tanggal_top','>=',$tgl1)
-                                ->where('h.tanggal_top','<=',$tgl2);
-            }
-        }else{
-            $tanggalFilter = $pembayaran;
-        }
-                    
-        
-        if ($request->supplier == 'all') {  
+        // 🔥 filter supplier
+        $query->when($request->supplier !== 'all', function ($q) use ($request) {
+            $q->where('s.id', $request->supplier);
+        });
 
-            $customerfilter = $tanggalFilter->join('suppliers as s','h.supplier_id','=','s.id');
+        // 🔥 filter no faktur
+        $query->when(!empty($request->no_faktur), function ($q) use ($request) {
+            $q->where('fb.kode', $request->no_faktur);
+        });
 
-            if ($request->no_faktur <> null) {                
-                $filter =  $customerfilter->join('faktur_pembelians as fb','h.faktur_pembelian_id','=','fb.id')
-                                            ->where('fb.kode','=',$request->no_faktur);
-            }else{                
-                $filter =  $customerfilter->join('faktur_pembelians as fb','h.faktur_pembelian_id','=','fb.id');
-                                          
-            }
+        // 🔥 filter status
+        $query->when($data['status'] !== 'all', function ($q) use ($data) {
+            $q->where('h.status', $data['status']);
+        });
 
-        }else{
-            $customerfilter = $pembayaran->join('suppliers as s','h.supplier_id','=','s.id')
-                                         ->where('s.id','=',$request->supplier);
+        // 🔥 ambil data
+        $datafilter = $query->select(
+            's.nama as nama_supplier',
+            'pp.kode as kode_pp',
+            'pb.kode as kode_pb',
+            'fb.kode as kode_fp',
+            'h.*'
+        )->get();
 
-            if ($request->no_faktur <> null) {
-                $filter =  $customerfilter->join('faktur_pembelians as fb','h.faktur_pembelian_id','=','fb.id')
-                                        ->where('fb.kode','=',$request->no_faktur); 
-            }else{
-                $filter =  $customerfilter->join('faktur_pembelians as fb','h.faktur_pembelian_id','=','fb.id');                                          
-            }
-
+        // 🔥 validasi
+        if ($datafilter->isEmpty()) {
+            return redirect()->back()->with('status_danger', 'Data tidak ditemukan');
         }
 
-        $statusFilter = $filter->where('h.status','=',$data['status']);
-
-        $datafilter = $statusFilter->select('s.nama as nama_supplier','pp.kode as kode_pp','pb.kode as kode_pb','fb.kode as kode_fp'
-                                ,'h.*')->get();
-
-        
-        
-
-        if (count($datafilter) <= 0) {
-                return redirect()->back()->with('status_danger', 'Data tidak ditemukan');
-        }
-
-        return view('laporan.hutangpiutang.hutang.filterHutangResult',[
+        // 🔥 return view
+        return view('laporan.hutangpiutang.hutang.filterHutangResult', [
             'title' => $title,
             'hutang' => $datafilter,
-            'form' => $data
+            'form'   => $data
         ]);
-
     }
 
     public function exportHutang(Request $request)
     {
-        $data = $request->all();        
+        $data = $request->all();
         $now = Carbon::parse(now())->format('Y-m-d');
-        return Excel::download(new LaporanHutangExport($data), 'laporanhutang-'.$now.'.xlsx');
+        return Excel::download(new LaporanHutangExport($data), 'laporanhutang-' . $now . '.xlsx');
     }
 
     public function filterPiutang(Request $request)
     {
         $title = 'Laporan Piutang';
-        $data = $request->all();        
-        
+        $data = $request->all();
+
         $tgl1 = Carbon::parse($data['tgl1'])->format('Y-m-d');
-        $tgl2 = Carbon::parse($data['tgl2'])->format('Y-m-d');                
+        $tgl2 = Carbon::parse($data['tgl2'])->format('Y-m-d');
 
-        $pembayaran = DB::table('piutangs as p')
-                    ->join('pesanan_penjualans as pp','p.pesanan_penjualan_id','=','pp.id')                    
-                    ->join('pengiriman_barangs as pb','p.pengiriman_barang_id','=','pb.id');                                    
-                    
+        // tanggal
+        $tgl1 = Carbon::parse($data['tgl1'])->format('Y-m-d');
+        $tgl2 = Carbon::parse($data['tgl2'])->format('Y-m-d');
 
-        if ($data['tgl1']) {            
-            if (!$data['tgl2']) {
-                $tanggalFilter=$pembayaran->where('p.tanggal_top','>=',$tgl1);
-                                
-            }else{
-                $tanggalFilter=$pembayaran->where('p.tanggal_top','>=',$tgl1)
-                                ->where('p.tanggal_top','<=',$tgl2);
-            }
-        }elseif($data['tgl2']){
-            if (!$data['tgl1']) {
-                $tanggalFilter=$pembayaran->where('p.tanggal_top','<=',$tgl2);
-            }else{
-                $tanggalFilter=$pembayaran->where('p.tanggal_top','>=',$tgl1)
-                                ->where('p.tanggal_top','<=',$tgl2);
-            }
-        }else{
-            $tanggalFilter = $pembayaran;
-        }
-        
+        // base query
+        $query = DB::table('piutangs as p')                        
+            ->join('customers as c', 'p.customer_id', '=', 'c.id')
+            ->join('faktur_penjualans as fp', 'p.faktur_penjualan_id', '=', 'fp.id')
+            ->join('sales as s', 'fp.sales_id', '=', 's.id')
 
-        if ($data['customer'] == 'all') {  
+            // filter tanggal
+            ->whereBetween('p.tanggal_top', [$tgl1, $tgl2]);
 
-            $customerfilter = $tanggalFilter->join('customers as c','p.customer_id','=','c.id');
+        // 🔥 filter customer
+        $query->when($data['customer'] !== 'all', function ($q) use ($data) {
+            $q->where('c.id', $data['customer']);
+        });
 
-            if ($data['no_faktur'] <> null) {                
-                $filter =  $customerfilter->join('faktur_penjualans as fp','p.faktur_penjualan_id','=','fp.id')
-                                            ->where('fb.kode','=',$data['no_faktur']);
+        // 🔥 filter no faktur
+        $query->when(!empty($data['no_faktur']), function ($q) use ($data) {
+            $q->where('fp.kode', $data['no_faktur']);
+        });
 
-                    if ($data['sales'] == 'all') {
-                        $salesfilter = $filter->join('sales as s','pp.sales_id','=','s.id');                
-                                        
-                    }else{
-                        $salesfilter = $filter->join('sales as s','pp.sales_id','=','s.id')
-                                        ->where('pp.sales_id','=',$data['sales']);                
-                    }
-                                    
-            }else{                
-                $filter =  $customerfilter->join('faktur_penjualans as fp','p.faktur_penjualan_id','=','fp.id');
+        // 🔥 filter sales
+        $query->when($data['sales'] !== 'all', function ($q) use ($data) {
+            $q->where('pp.sales_id', $data['sales']);
+        });
 
-                if ($data['sales'] == 'all') {
-                    $salesfilter = $filter->join('sales as s','pp.sales_id','=','s.id');                
-                                    
-                }else{
-                    $salesfilter = $filter->join('sales as s','pp.sales_id','=','s.id')
-                                    ->where('pp.sales_id','=',$data['sales']);                
-                }
-                                          
-            }
-        }else{
-            $customerfilter = $pembayaran->join('customers as c','p.customer_id','=','c.id')
-                                         ->where('c.id','=',$data['customer']);
+        // 🔥 filter status
+        $query->when($data['status'] !== 'all', function ($q) use ($data) {
+            $q->where('p.status', $data['status']);
+        });
 
-            if ($data['no_faktur'] <> null) {
-                $filter =  $customerfilter->join('faktur_penjualans as fp','p.faktur_penjualan_id','=','fp.id')
-                                        ->where('fb.kode','=',$data['no_faktur']); 
+        // 🔥 ambil data
+        $datafilter = $query->select(
+            'c.nama as nama_customer',                        
+            'fp.kode as kode_fp',
+            'fp.no_perusahaan',
+            's.nama as nama_sales',
+            'p.*'
+        )->get();
 
-                    if ($data['sales'] == 'all') {
-                        $salesfilter = $filter->join('sales as s','pp.sales_id','=','s.id');                
-                                        
-                    }else{
-                        $salesfilter = $filter->join('sales as s','pp.sales_id','=','s.id')
-                                        ->where('pp.sales_id','=',$data['sales']);                
-                    }
-            }else{
-                $filter =  $customerfilter->join('faktur_penjualans as fp','p.faktur_penjualan_id','=','fp.id');
-
-                        if ($data['sales'] == 'all') {
-                            $salesfilter = $filter->join('sales as s','pp.sales_id','=','s.id');                
-                                            
-                        }else{
-                            $salesfilter = $filter->join('sales as s','pp.sales_id','=','s.id')
-                                            ->where('pp.sales_id','=',$data['sales']);                
-                        }
-                                                
-            }
+        // 🔥 validasi data kosong
+        if ($datafilter->isEmpty()) {
+            return redirect()->back()->with(
+                'status_danger',
+                'Data tidak ditemukan atau belum melakukan pembayaran'
+            );
         }
 
-
-        $statusFilter = $salesfilter->where('p.status','=',$data['status']);
-
-        $datafilter = $statusFilter->select('c.nama as nama_customer','pp.kode as kode_pp','pb.kode as kode_pb','fp.kode as kode_fp','p.*','s.nama as nama_sales')->get();
-        
-
-        if (count($datafilter) <= 0) {
-                return redirect()->back()->with('status_danger', 'Data tidak ditemukan atau belum melakukan pembayaran');
-        }
-        
-
-        return view('laporan.hutangpiutang.piutang.filterPiutangResult',[
+        // 🔥 return view
+        return view('laporan.hutangpiutang.piutang.filterPiutangResult', [
             'title' => $title,
             'hutang' => $datafilter,
             'form' => $data
@@ -248,9 +178,8 @@ class LaporanHutangPiutangController extends Controller
 
     public function exportPiutang(Request $request)
     {
-        $data = $request->all();        
+        $data = $request->all();
         $now = Carbon::parse(now())->format('Y-m-d');
-        return Excel::download(new LaporanPiutangExport($data), 'laporanpiutang-'.$now.'.xlsx');
+        return Excel::download(new LaporanPiutangExport($data), 'laporanpiutang-' . $now . '.xlsx');
     }
-
 }

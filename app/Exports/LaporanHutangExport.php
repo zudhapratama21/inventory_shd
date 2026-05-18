@@ -18,79 +18,54 @@ class LaporanHutangExport implements FromView
     }
 
     public function view(): View
-    { 
+    {
         $totalhutang = 0;
-        $title = 'Laporan Pembayaran Hutang';                            
-        
+        $title = 'Laporan Pembayaran Hutang';
+
+        // tanggal
         $tgl1 = Carbon::parse($this->data['tgl1'])->format('Y-m-d');
-        $tgl2 = Carbon::parse($this->data['tgl2'])->format('Y-m-d');                
+        $tgl2 = Carbon::parse($this->data['tgl2'])->format('Y-m-d');            
 
-        $pembayaran = DB::table('hutangs as h')
-                    ->join('pesanan_pembelians as pp','h.pesanan_pembelian_id','=','pp.id')                    
-                    ->join('penerimaan_barangs as pb','h.penerimaan_barang_id','=','pb.id');               
-                
-        
-        if ($this->data['tgl1']) {            
-            if (!$this->data['tgl2']) {
-                $tanggalFilter=$pembayaran->where('h.tanggal','>=',$tgl1);
-                                
-            }else{
-                $tanggalFilter=$pembayaran->where('h.tanggal','>=',$tgl1)
-                                ->where('h.tanggal','<=',$tgl2);
-            }
-        }elseif($this->data['tgl2']){
-            if (!$this->data['tgl1']) {
-                $tanggalFilter=$pembayaran->where('h.tanggal','<=',$tgl2);
-            }else{
-                $tanggalFilter=$pembayaran->where('h.tanggal','>=',$tgl1)
-                                ->where('h.tanggal','<=',$tgl2);
-            }
-        }else{
-            $tanggalFilter = $pembayaran;
-        }
-                                    
-        if ($this->data['supplier'] == 'all') {  
+        // base query
+        $query = DB::table('hutangs as h')
+            ->join('pesanan_pembelians as pp', 'h.pesanan_pembelian_id', '=', 'pp.id')
+            ->join('penerimaan_barangs as pb', 'h.penerimaan_barang_id', '=', 'pb.id')
+            ->join('suppliers as s', 'h.supplier_id', '=', 's.id')
+            ->join('faktur_pembelians as fb', 'h.faktur_pembelian_id', '=', 'fb.id')
 
-            $customerfilter = $tanggalFilter->join('suppliers as s','h.supplier_id','=','s.id');
+            // filter tanggal
+            ->whereBetween('h.tanggal_top', [$tgl1, $tgl2]);
 
-            if ($this->data['no_faktur'] <> null) {                
-                $filter =  $customerfilter->join('faktur_pembelians as fb','h.faktur_pembelian_id','=','fb.id')
-                                            ->where('fb.kode','=',$this->data['no_faktur']);
-            }else{                
-                $filter =  $customerfilter->join('faktur_pembelians as fb','h.faktur_pembelian_id','=','fb.id');
-                                          
-            }
+        // 🔥 filter supplier
+        $query->when($this->data['supplier'] !== 'all', function ($q) {
+            $q->where('s.id', $this->data['supplier']);
+        });
 
-        }else{
-            $customerfilter = $pembayaran->join('suppliers as s','h.supplier_id','=','s.id')
-                                         ->where('s.id','=',$this->data['supplier']);
+        // 🔥 filter no faktur
+        $query->when(!empty($this->data['no_faktur']), function ($q) {
+            $q->where('fb.kode', $this->data['no_faktur']);
+        });
 
-            if ($this->data['no_faktur'] <> null) {
-                $filter =  $customerfilter->join('faktur_pembelians as fb','h.faktur_pembelian_id','=','fb.id')
-                                        ->where('fb.kode','=',$this->data['no_faktur']); 
-            }else{
-                $filter =  $customerfilter->join('faktur_pembelians as fb','h.faktur_pembelian_id','=','fb.id');                                          
-            }
+        // 🔥 filter status
+        $query->when($this->data['status'] !== 'all', function ($q) {
+            $q->where('h.status', $this->data['status']);
+        });
 
-        }
+        // 🔥 ambil data
+        $datafilter = $query->select(
+            's.nama as nama_supplier',
+            'pp.kode as kode_pp',
+            'pb.kode as kode_pb',
+            'fb.kode as kode_fp',
+            'fb.no_faktur_supplier',
+            'pp.no_so_customer',
+            'pp.no_so',
+            'h.*'
+        )->get();      
 
-        $statusFilter = $filter->where('status','=',$this->data['status']);
-
-        $datafilter = $statusFilter->select('s.nama as nama_supplier','pp.kode as kode_pp','pb.kode as kode_pb','fb.kode as kode_fp'
-                                            ,'fb.no_faktur_supplier','pp.no_so_customer','pp.no_so','h.*')->get();
-
-        foreach ($datafilter as $key ) {
-            $totalhutang = $totalhutang + $key->total - $key->dibayar;
-        }        
-                
-
-        return view('laporan.hutangpiutang.export.hutang',[
+        return view('laporan.hutangpiutang.export.hutang', [
             'title' => $title,
-            'hutang' => $datafilter ,
-            'totalhutang' => $totalhutang
+            'hutang' => $datafilter,
         ]);
-        
     }
-
-
 }

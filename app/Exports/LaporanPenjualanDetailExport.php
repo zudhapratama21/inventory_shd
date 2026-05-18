@@ -28,19 +28,16 @@ class LaporanPenjualanDetailExport implements FromView
                    
         $tgl1 = Carbon::parse($this->data['tgl1'])->format('Y-m-d');
         $tgl2 = Carbon::parse($this->data['tgl2'])->format('Y-m-d');                
-        $penjualan = DB::table('faktur_penjualans as fp')
-                    ->join('pengiriman_barangs as pb','fp.pengiriman_barang_id','=','pb.id')
+        $penjualan = DB::table('faktur_penjualans as fp')                    
                     ->join('faktur_penjualan_details as fpb','fpb.faktur_penjualan_id','=','fp.id')
-                    ->join('users as u','fp.created_by','=','u.id')
-                    ->join('pesanan_penjualans as pp','fp.pesanan_penjualan_id','=','pp.id')
-                    ->join('sales as s','pp.sales_id','=','s.id')
-                    ->join('kategoripesanans as kp','pp.kategoripesanan_id','=','kp.id')
-                    ->join('komoditas as km','pp.komoditas_id','=','km.id')
+                    ->join('users as u','fp.created_by','=','u.id')                    
+                    ->join('sales as s','fp.sales_id','=','s.id')
+                    ->join('kategoripesanans as kp','fp.kategoripesanan_id','=','kp.id')
+                    ->join('komoditas as km','fp.komoditas_id','=','km.id')
                     ->join('customers as cs','fp.customer_id','=','cs.id')
                     ->join('customer_categories as cc','cs.kategori_id','=','cc.id')
                     ->join('products as p','p.id','=','fpb.product_id')
-                    ->join('merks as m','p.merk_id','=','m.id')
-                    ->join('suppliers as su','su.id','=','m.supplier_id')
+                    ->join('merks as m','p.merk_id','=','m.id')                    
                     ->where('fp.deleted_at',null);
                     
                         
@@ -73,15 +70,15 @@ class LaporanPenjualanDetailExport implements FromView
                 if ($this->data['sales'] == 'all') {
                           $salesfilter = $customerfilter;                                          
                 }else{
-                          $salesfilter = $customerfilter->where('pp.sales_id','=',$this->data['sales']);                
+                          $salesfilter = $customerfilter->where('fp.sales_id','=',$this->data['sales']);                
                 }
                 
                 if ($this->data['kategori_pesanan'] !== 'all') {
-                        $salesfilter->where('pp.kategoripesanan_id',$this->data['kategori_pesanan']);               
+                        $salesfilter->where('fp.kategoripesanan_id',$this->data['kategori_pesanan']);               
                 }
         
                 if ($this->data['komoditas'] !== 'all') {
-                    $salesfilter->where('pp.komoditas_id',$this->data['komoditas']);
+                    $salesfilter->where('fp.komoditas_id',$this->data['komoditas']);
                 }
 
                 if ($this->data['kategori_customer'] !== 'all') {
@@ -105,38 +102,18 @@ class LaporanPenjualanDetailExport implements FromView
                 ->orderBy('fp.tanggal','desc')
                 ->orderBy('fpb.id','asc')
                 ->orderBy('fp.kode','desc')                
-                ->select('fp.*','pb.id as id_pengiriman','p.id as id_product','fpb.qty as qty_det','fpb.satuan as satuan_det','fpb.hargajual as hargajual_det'
-                ,'fpb.diskon_persen as dikson_persen_det','fpb.diskon_rp as diskon_rp_det','fpb.subtotal as subtotal_det'
-                ,'fpb.total as total_det','fpb.total_diskon as total_diskon_det','fpb.ongkir as ongkir_det','fpb.keterangan as keterangan_det','fpb.cn_persen as cn_persen',
-                'fpb.cn_total as cn_total','fpb.total_pph as total_pph'
-                ,'pb.kode as kode_SJ','pp.kode as kode_SP'
+                ->select('fp.*','fpb.qty as qty_det','fpb.satuan as satuan_det','fpb.hargajual as hargajual_det'
+                ,'fpb.diskon_persen as diskon_persen_det','fpb.diskon_rp as diskon_rp_det','fpb.subtotal as subtotal_det'
+                ,'fpb.total as total_det','fpb.total_diskon as total_diskon_det','fpb.keterangan as keterangan_det'                
                 ,'s.nama as nama_sales','u.name as nama_pembuat'
                 ,'cs.nama as nama_customer','p.nama as nama_produk'
                 ,'m.nama as nama_merk','p.kode as kode_produk'
-                ,'km.nama as nama_komoditas','kp.nama as nama_kategori_pesanan','cc.nama as nama_kategori_customer','p.status_exp as status_exp','su.nama as nama_supplier'
-                )->get();     
-
-
+                ,'km.nama as nama_komoditas','kp.nama as nama_kategori_pesanan','cc.nama as nama_kategori_customer'
+                )->get();
+                       
                 
-                foreach ($filter as $key ) {
-                    $totHargaJual += $key->hargajual_det;
-                    $totCN += $key->cn_total;
-                    $totDiskon+=$key->total_diskon_det;
-                    $totTotal += $key->total_det;
-                    $totSubtotal += $key->subtotal_det;
-                }                           
-
-                $totHargaBersih = $totTotal  -  $totCN;
-                                            
-        // dd($filter);
             return view('laporan.penjualan.export.exportpenjualandetail',[
-                'penjualan' => $filter,      
-                'totHargaJual' => $totHargaJual,
-                'totCN' => $totCN,
-                'totDiskon' => $totDiskon,
-                'totTotal' => $totTotal,
-                'totHargaBersih' => $totHargaBersih,
-                'totSubtotal' => $totSubtotal
+                'penjualan' => $filter             
             ]);            
         
     }

@@ -37,7 +37,7 @@
                 <!--end::Svg Icon--></span>
         </a>
         @can('penerimaanbarang-edit')
-        {{-- <a href="{{ $editUrl }}" class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3">
+        <a href="{{ $editUrl }}" class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3">
         <span class="svg-icon svg-icon-md svg-icon-primary">
             <!--begin::Svg Icon | path:assets/media/svg/icons/Communication/Write.svg--><svg
                 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
@@ -53,7 +53,7 @@
                         fill="#000000" fill-rule="nonzero" opacity="0.3" />
                 </g>
             </svg>
-            <!--end::Svg Icon--></span> </a> --}}
+            <!--end::Svg Icon--></span> </a>
         @endcan
         @can('penerimaanbarang-delete')
         <a href="javascript:show_confirm({{ $id }})" class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3">

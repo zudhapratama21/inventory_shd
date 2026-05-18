@@ -8,8 +8,27 @@ use Illuminate\Database\Eloquent\Model;
 class FakturPenjualanDetail extends Model
 {
     use HasFactory;
-
-    protected $guarded = ['id']; 
+        
+    protected $table = 'faktur_penjualan_details';
+    protected $fillable = [
+        'faktur_penjualan_id',
+        'product_id',
+        'pengirimanbarang_id',
+        'pengiriman_barang_detail_id',
+        'qty',
+        'ppn',
+        'hargajual',
+        'diskon_persen',
+        'diskon_rp',
+        'subtotal',
+        'total_diskon',
+        'total',
+        'keterangan',
+        'beda_satuan',
+        'satuan',
+        'satuan_konversi',
+        'qty_konversi',        
+    ];
 
     public function products()
     {

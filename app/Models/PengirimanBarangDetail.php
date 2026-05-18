@@ -15,16 +15,16 @@ class PengirimanBarangDetail extends Model
 
     protected $fillable = [
         'tanggal',
-        'pengiriman_barang_id',
-        'pesanan_penjualan_id',
-        'pesanan_penjualan_detail_id',
+        'pengiriman_barang_id',        
         'product_id',
         'qty',
-        'qty_sisa',
-        'qty_pesanan',
+        'qty_sisa',        
         'satuan',
         'keterangan',
-        'status_exp'
+        'status_exp',   
+        'beda_satuan',
+        'satuan_konversi',
+        'qty_konversi',
     ];
     public function products()
     {
@@ -35,29 +35,16 @@ class PengirimanBarangDetail extends Model
     {
         return $this->belongsTo(PengirimanBarang::class, 'pengiriman_barang_id', 'id');
     }
-
-    
-    public function pesananpenjualan()
-    {
-        return $this->belongsTo(PesananPenjualan::class, 'pesanan_penjualan_id', 'id');
-    }
-
-    
+     
     public function faktupenjualandetail()
     {
-        return $this->hasOne(FakturPenjualanDetail::class, 'pengiriman_barang_detail_id');
+        return $this->hasMany(FakturPenjualanDetail::class, 'pengiriman_barang_detail_id');
     }
 
-   
-   
     public function stokexpdetail()
     {
         return $this->hasMany(StokExpDetail::class, 'id_sj_detail');
     }
 
-  
-    public function harganonexpireddetail()
-    {
-        return $this->hasMany(HargaNonExpiredDetail::class, 'id_sj_detail');
-    }
+
 }

@@ -174,19 +174,6 @@ class PembayaranHutangController extends Controller
 
         $toleransi = $total_hutang - $dibayar_baru;
 
-
-
-        if ($toleransi >= -500 && $toleransi <= 500) {
-            $status = '2';
-        } else {
-            $status = '1';
-        }
-
-        if ($toleransi < -500) {
-            return back()->with('error', 'Nominal tidak boleh melebihi sisa hutang');
-        }
-
-
         //insert pembayaran
         $datas['tanggal'] = $tanggal;
         $datas['supplier_id'] = $hutang->supplier_id;
@@ -199,21 +186,12 @@ class PembayaranHutangController extends Controller
 
         //update Hutang
         $datahutang = Hutang::find($hutang->id);
-        $datahutang->status = $status;
+        $datahutang->status = $request->status;
         $datahutang->dibayar = $dibayar_baru;
         $datahutang->nominal_toleransi = $toleransi;
         $datahutang->save();
 
         $faktur = FakturPembelian::where('id', $hutang->faktur_pembelian_id)->first();
-
-        if ($status == '2') {
-            LogToleransi::create([
-                'tanggal' => $tanggal,
-                'rupiah' => $toleransi,
-                'jenis' => 'Hutang',
-                'jenis_id' => $faktur->kode,
-            ]);
-        }
 
 
         return redirect()->route('pembayaranhutang.index')->with('status', 'Pembayaran Hutang Berhasil Dibuat !');

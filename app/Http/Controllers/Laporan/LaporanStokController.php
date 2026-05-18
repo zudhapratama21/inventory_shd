@@ -79,19 +79,19 @@ class LaporanStokController extends Controller
         if ($product->status_exp == 1) {
             $stokExp = StokExp::where('product_id', '=', $product->id)
                 ->where('qty', '<>', '0')->get();
-        }else{
+        } else {
             $stokExp = HargaNonExpired::where('product_id', '=', $product->id)
                 ->where('qty', '<>', '0')->get();
         }
 
-        $status = $product->status_exp;        
-        
-        return view('laporan.stok.detailstok', compact('title', 'product', 'supplier','stokExp','status'));
+        $status = $product->status_exp;
+
+        return view('laporan.stok.detailstok', compact('title', 'product', 'supplier', 'stokExp', 'status'));
     }
 
     public function detailexp($id, $status)
     {
-        $title = "Laporan Stok";                
+        $title = "Laporan Stok";
         if ($status == 1) {
             $stokexp = StokExpDetail::with('products')->where('id', '=', $id)->first();
             $product = $stokexp->products;
@@ -112,7 +112,7 @@ class LaporanStokController extends Controller
                 ->whereNull('deleted_at')
                 ->orderBy('tanggal', 'desc')
                 ->get();
-        }        
+        }
 
 
         return view('laporan.stok.detailexp', compact('title',  'product', 'stokExpDetail'));
@@ -120,21 +120,15 @@ class LaporanStokController extends Controller
 
     public function listexp(Request $request)
     {
-        if ($request->status == 1) {
-            $stok = StokExp::with('supplier')->where('product_id', '=', $request->id)
-                ->where('qty', '<>', '0')->get();
-        } else {
-            $stok = HargaNonExpired::with('supplier')->where('product_id', '=', $request->id)
-                ->where('qty', '<>', '0')->get();
-        }
+
+        $stok = StokExp::where('product_id', '=', $request->id)
+            ->where('qty', '<>', '0')->get();
+
 
         return Datatables::of($stok)
             ->addIndexColumn()
             ->editColumn('tanggal', function ($pb) {
                 return $pb->tanggal ? with(new Carbon($pb->tanggal))->format('d-m-Y') : 'Non Expired';
-            })
-            ->editColumn('supplier', function ($pb) {
-                return $pb->supplier ? $pb->supplier->nama : '-';
             })
             ->editColumn('lot', function ($pb) {
                 return $pb->lot ? $pb->lot : 'Non Expired';
@@ -163,25 +157,13 @@ class LaporanStokController extends Controller
     }
 
     public function simpanexp(Request $request)
-    {        
+    {
         try {
-            if ($request->status == 1) {
-                $stok = StokExp::where('id', '=', $request->stok_id)->update([
-                    'lot' => $request->lot,
-                    'qty' => $request->qty,
-                    'harga_beli' => $request->harga_beli,
-                    'diskon_persen' => $request->diskon_persen,
-                    'diskon_rupiah' => $request->diskon_rupiah,
-                    'tanggal' => Carbon::parse($request->tanggal)->format('Y-m-d'),
-                ]);
-            } else {
-                $stok = HargaNonExpired::where('id', '=', $request->stok_id)->update([
-                    'qty' => $request->qty,
-                    'harga_beli' => $request->harga_beli,
-                    'diskon_persen' => $request->diskon_persen,
-                    'diskon_rupiah' => $request->diskon_rupiah,
-                ]);
-            }
+            $stok = StokExp::where('id', '=', $request->stok_id)->update([
+                'lot' => $request->lot,
+                'qty' => $request->qty,
+                'tanggal' => Carbon::parse($request->tanggal)->format('Y-m-d'),
+            ]);
             DB::commit();
             return response()->json([
                 'status' => 'success',
@@ -200,28 +182,12 @@ class LaporanStokController extends Controller
     {
         DB::beginTransaction();
         try {
-            if ($request->status == 1) {
-                $stok = StokExp::create([
-                    'product_id' => $request->id,
-                    'supplier_id' => $request->supplier,
-                    'qty' => $request->qty,
-                    'lot' => $request->lot,
-                    'harga_beli' => $request->harga_beli,
-                    'diskon_persen' => $request->diskon_persen,
-                    'diskon_rupiah' => $request->diskon_rupiah,
-                    'tanggal' => Carbon::parse($request->tanggal)->format('Y-m-d'),
-                ]);
-            } else {
-                $stok = HargaNonExpired::create([
-                    'product_id' => $request->id,
-                    'qty' => $request->qty,
-                    'harga_beli' => $request->harga_beli,
-                    'diskon_persen' => $request->diskon_persen,
-                    'diskon_rupiah' => $request->diskon_rupiah,
-                    'tanggal_transaksi' => Carbon::parse($request->tanggal)->format('Y-m-d'),
-                    'supplier_id' => $request->supplier,
-                ]);
-            }
+            $stok = StokExp::create([
+                'product_id' => $request->id,                
+                'qty' => $request->qty,
+                'lot' => $request->lot,                
+                'tanggal' => Carbon::parse($request->tanggal)->format('Y-m-d'),
+            ]);
             DB::commit();
             return response()->json([
                 'status' => 'success',
@@ -234,10 +200,9 @@ class LaporanStokController extends Controller
                 'message' => 'Terjadi kesalahan: ' . $th->getMessage()
             ], 500);
         }
-       
     }
 
-    public function hapusexp (Request $request)
+    public function hapusexp(Request $request)
     {
         DB::beginTransaction();
         try {

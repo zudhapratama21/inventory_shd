@@ -79,13 +79,13 @@
 
                                     <div class="form-group">
                                         <label>Tgl Awal :</label>
-                                        <input type="text" class="form-control" name="tgl1" readonly value=""
+                                        <input type="text" class="form-control" name="tgl1"  value="{{ \Carbon\Carbon::now()->format('d-m-Y') }}"
                                             id="tgl1" required/>
                                     </div>
 
                                     <div class=" form-group">
                                         <label>Tanggal Akhir :</label>
-                                        <input type="text" class="form-control" name="tgl2" readonly value=""
+                                        <input type="text" class="form-control" name="tgl2"  value="{{ \Carbon\Carbon::now()->format('d-m-Y') }}"
                                             id="tgl2" required/>
 
                                     </div>     
@@ -119,7 +119,8 @@
                                     <div class="form-group">
                                         <label for="">Status</label>
                                         <select name="status" id="kt_select2_3" class="form-control">
-                                            <option value="1" selected>Belum Lunas</option>
+                                            <option value="all" >Semua</option>
+                                            <option value="1" >Belum Lunas</option>
                                             <option value="2">Lunas</option>
                                         </select>
                                     </div>

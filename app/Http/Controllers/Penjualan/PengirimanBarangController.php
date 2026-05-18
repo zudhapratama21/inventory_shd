@@ -17,15 +17,20 @@ use App\Models\PesananPenjualan;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\FakturPenjualanDetail;
 use App\Models\HargaNonExpired;
 use App\Models\HargaNonExpiredDetail;
 use App\Models\InventoryTransaction;
+use App\Models\PenerimaanBarangDetail;
 use Illuminate\Support\Facades\Auth;
 use App\Models\PengirimanBarangDetail;
 use App\Models\PesananPenjualanDetail;
+use App\Models\Satuan;
 use Exception;
+use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Svg\Tag\Rect;
 
 class PengirimanBarangController extends Controller
 {
@@ -40,13 +45,8 @@ class PengirimanBarangController extends Controller
 
     public function index()
     {
-
-
         $title = "Pengiriman Barang";
-        $pengirimanbarang = PengirimanBarang::with(['customers',  'statusSJ', 'so'])
-            ->with(['PengirimanBarangDetails' =>  function ($query) {
-                $query->where('status_exp', 0);
-            }])->orderByDesc('id');
+        $pengirimanbarang = PengirimanBarang::with(['customers'])->orderByDesc('id');
 
         if (request()->ajax()) {
             return Datatables::of($pengirimanbarang)
@@ -54,17 +54,15 @@ class PengirimanBarangController extends Controller
                 ->addColumn('customer', function (PengirimanBarang $sj) {
                     return $sj->customers->nama;
                 })
-                ->addColumn('kode_so', function (PengirimanBarang $sj) {
-                    return $sj->so->kode;
-                })
-                ->addColumn('status', function (PengirimanBarang $sj) {
-                    $status_pengiriman = $sj->status_sj_id;
-                    $dataSj = $sj;
-                    return view('penjualan.pengirimanbarang.partial._status', compact('status_pengiriman', 'dataSj'));
-                })
                 ->editColumn('tanggal', function (PengirimanBarang $sj) {
                     return $sj->tanggal ? with(new Carbon($sj->tanggal))->format('d-m-Y') : '';
                 })
+                 ->editColumn('tanggal', function (PengirimanBarang $sj) {
+                    return $sj->tanggal ? with(new Carbon($sj->tanggal))->format('d-m-Y') : '';
+                })
+                 ->editColumn('status', function (PengirimanBarang $sj) {
+                    return $sj->status_sj_id;
+                })              
                 ->addColumn('action', function ($row) {
                     $editUrl = route('pengirimanbarang.edit', ['pengirimanbarang' => $row->id]);
                     $expUrl = route('pengirimanbarang.inputexp', ['pengirimanbarang' => $row->id]);
@@ -76,50 +74,284 @@ class PengirimanBarangController extends Controller
                 ->make(true);
         }
 
-
         return view('penjualan.pengirimanbarang.index', compact('title'));
     }
 
-    public function listso()
+    public function listbarang()
     {
-        $title = "Daftar Pesanan Penjualan";
-        $pesananpenjualans = PesananPenjualan::with('customers', 'statusSO')
-            ->where('status_so_id', '<=', '3')
-            ->where('status_so_id', '<>', '1')
-            ->get();
-
-        if (request()->ajax()) {
-            return Datatables::of($pesananpenjualans)
-                ->addIndexColumn()
-                ->addColumn('customer', function (PesananPenjualan $so) {
-                    return $so->customers->nama;
-                })
-                ->addColumn('status', function (PesananPenjualan $so) {
-                    return $so->statusSO->nama;
-                })
-                ->editColumn('tanggal', function (PesananPenjualan $so) {
-                    return $so->tanggal ? with(new Carbon($so->tanggal))->format('d-m-Y') : '';
-                })
-                ->addColumn('action', function ($row) {
-                    $pilihUrl = route('pengirimanbarang.create', ['pesananpenjualan' => $row->id]);
-                    $id = $row->id;
-                    return view('penjualan.pengirimanbarang._pilihAction', compact('pilihUrl', 'id'));
-                })
-                ->make(true);
-        }
-
-        //dd($pesananpenjualan);
-        return view('penjualan.pengirimanbarang.listso', compact('title', 'pesananpenjualans'));
+        $product = Product::with('merks')->where('status','Aktif')->get();
+        return Datatables::of($product)
+            ->addIndexColumn()
+            ->editColumn('nama', function ($pb) {
+                return $pb->nama;
+            })
+            ->editColumn('kode', function ($pb) {
+                return $pb->kode;
+            })
+            ->editColumn('merk', function ($pb) {
+                return $pb->merks->nama;
+            })
+            ->editColumn('satuan', function ($pb) {
+                return $pb->satuan;
+            })
+            ->editColumn('stok', function ($pb) {
+                return $pb->stok;
+            })
+            ->addColumn('action', function ($pb) {
+                if ($pb->stok > 0) {
+                    return '<button type="button" class="btn btn-sm btn-outline-primary" onclick="pilihbarang(' . $pb->id . ')">
+                    Pilih
+                </button>';
+                } else {
+                    return '<span class="text-danger">Stok Habis</span>';
+                }
+            })
+            ->make(true);
     }
 
-    public function create(PesananPenjualan $pesananpenjualan)
+    public function setbarang(Request $request)
+    {
+        $product = Product::where('id', '=', $request->id)->first();
+        $satuan = Satuan::get();
+        return view('penjualan.pengirimanbarang.modal._setbarang', compact('product', 'satuan'));
+    }
+
+
+    public function inputbarang(Request $request)
+    {
+        $productId = $request->product_id;
+        $product = Product::where('id', $productId)->first();
+        $namaSession = 'PB' . Auth::user()->id;
+        $items = session()->get($namaSession, []);
+
+        // cek stok 
+        if ($request->beda_satuan == 'on') {
+            $qtyTerpilih = $request->qty * $request->qty_konversi;
+            if ($product->stok < $qtyTerpilih) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Qty Melebihi Stok'
+                ], 422);
+            }
+        } else {
+            if ($product->stok < $request->qty) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Qty Melebihi Stok'
+                ], 422);
+            }
+        }
+
+        if (isset($items[$productId])) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Produk Telah Terpilih'
+            ], 422);
+        } else {
+            $items[$productId] = [
+                'product_id'     => $productId,
+                'qty'            => $request->qty,
+                'satuan'         => $request->satuan,
+                'beda_satuan'    => $request->beda_satuan,
+                'satuan_konversi' => $request->satuan_konversi,
+                'qty_konversi'     => $request->qty_konversi,
+                'keterangan'     => $request->keterangan,
+            ];
+        }
+
+        session()->put($namaSession, $items);
+
+        return response()->json([
+            'status' => 'success',
+            'data'   => $items
+        ]);
+    }
+
+    public function databarang()
+    {
+        $namaSession = 'PB' . Auth::user()->id;
+
+        $items = session($namaSession, []);
+
+        $data = [];
+
+        if (!empty($items)) {
+            foreach ($items as $value) {
+
+                // amanin kalau key tidak ada
+                $productId = $value['product_id'] ?? null;
+
+                if (!$productId) {
+                    continue; // skip kalau tidak ada product_id
+                }
+
+                $product = Product::select('nama')->where('id', $productId)->first();
+
+                if ($value['beda_satuan'] == 'on') {
+                    $satuan = $value['satuan_konversi'];
+                } else {
+                    $satuan = $value['satuan'];
+                }
+
+                $data[] = [
+                    'id'              => $productId,
+                    'nama'            => optional($product)->nama,
+                    'qty'             => $value['qty'] ?? 0,
+                    'satuan'          => $satuan,
+                    'beda_satuan'     => $value['beda_satuan'] ?? null,
+                    'satuan_konversi' => $value['satuan_konversi'] ?? null,
+                    'qty_konversi'     => $value['qty_konversi'],
+                    'keterangan'     => $value['keterangan'],
+                ];
+            }
+        }
+
+        return Datatables::of($data)
+            ->addIndexColumn()
+            ->addColumn('action', function ($pb) {
+                return '<button type="button" class="btn btn-danger btn-sm " onclick="hapusbarang(' . $pb['id'] . ')">Hapus</button>';
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+    }
+
+    public function hapusItem(Request $request)
+    {
+        $productId = $request->id;
+        $namaSession = 'PB' . Auth::user()->id;
+
+        // ambil session lama
+        $items = session()->get($namaSession, []);
+
+        // hapus item berdasarkan product_id
+        unset($items[$productId]);
+
+        // simpan kembali ke session
+        session()->put($namaSession, $items);
+
+        return response()->json([
+            'status' => 'success',
+            'data'   => $items
+        ]);
+    }
+
+    public function create()
     {
         $title = "Pengiriman Barang";
-        //delete temp
-        $deletedTempDetil = TempSj::where('user_id', '=', Auth::user()->id)->delete();
-        $deletedTempDetil = TempSj::where('created_at', '<', Carbon::today())->delete();
+        $customer = Customer::get();
+        $now = Carbon::parse(now())->format('d-m-Y');
 
-        return view('penjualan.pengirimanbarang.create', compact('title', 'pesananpenjualan'));
+        return view('penjualan.pengirimanbarang.create', compact('title', 'customer', 'now'));
+    }
+
+    public function storePB(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $tanggal = Carbon::parse($request->tanggal)->format('Y-m-d');
+            $namaSession = 'PB' . Auth::user()->id;
+
+            // simpan dulu pengirimanbarang dan dapatkan id nya 
+            // simpan barang yang ada di session dan simpan juga di inventory transaction 
+            // cek status exp nya apakah ada yang expired .. kalau tidak ada maka semua di kasih 1 dan status sj berubah jadi 2  
+            // status sj => 1 => belum input expired , 2 => menunggu di faktur , 3 => terfaktur sebagian , 4 => sudah terfaktur
+
+            $pengirimanbarang = PengirimanBarang::create([
+                'kode' => $this->getKodeTransaksi("pengiriman_barangs", "SJ"),
+                'tanggal' => $tanggal,
+                'customer_id' => $request->customer,
+                'status_sj_id' => 1,
+                'status_exp' => 0,
+                'keterangan' => $request->keterangan
+            ]);
+
+            $customer = Customer::where('id', $request->customer)->select('nama')->first();
+
+            $items = session($namaSession, []);
+
+            if (count($items) < 1) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Item Kosong !!'
+                ], 422);
+            }
+
+            foreach ($items as $item) {
+                $product = Product::where('id', $item['product_id'])->select('status_exp', 'stok')->first();            
+
+                PengirimanBarangDetail::create([
+                    'tanggal' => $tanggal,
+                    'pengiriman_barang_id' => $pengirimanbarang->id,
+                    'product_id' => $item['product_id'],
+                    'qty' => $item['qty'],
+                    'qty_sisa' => $item['qty'],
+                    'satuan' => $item['satuan'],
+                    'beda_satuan'     => $item['beda_satuan'] ?? null,
+                    'satuan_konversi' => $item['satuan_konversi'] ?? null,
+                    'qty_konversi'      => $item['qty_konversi'] ?? 0,
+                    'keterangan'      => $item['keterangan'] ?? 0,
+                    'status_exp'      => 0
+                ]);
+                $qty = $item['qty'];
+                $ket = '-';
+                if ($item['beda_satuan'] == 'on') {
+                    $qty = ($item['qty'] * $item['qty_konversi']);
+                    $ket = "Pengiriman dengan beda satuan .[ Penjualan produk dengan satuan " . $item['satuan_konversi'] . " dengan satuan produk asli adalah " .  $item['satuan'] . " ]";
+                }
+                $stokProduk = $product->stok - $qty;
+
+                Product::where('id', $item['product_id'])->update([
+                    'stok' => $stokProduk
+                ]);
+
+                // simpan di inventory transaction        
+                $invtransaction = InventoryTransaction::create([
+                    'tanggal' => $tanggal,
+                    'product_id' => $item['product_id'],
+                    'qty' => (0 - $qty),
+                    'stok' => $stokProduk,
+                    'hpp' => 0,
+                    'jenis' => 'SJ',
+                    'jenis_id' => $pengirimanbarang->kode,
+                    'customer' => $customer->nama,
+                    'keterangan' => $ket
+                ]);
+            }
+
+            // cek status exp di pengiriman barang
+            $cekExp = PengirimanBarangDetail::where('pengiriman_barang_id', $pengirimanbarang->id)->where('status_exp', 0)->first();
+            if (!$cekExp) {
+                $pengirimanbarang->update([
+                    'status_exp' => 1,
+                    'status_sj_id' => 2
+                ]);
+            }
+
+            session()->forget($namaSession);
+
+            DB::commit();
+
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data Berhasil Disimpan'
+            ]);
+        } catch (Exception $th) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan: ' . $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function show(PengirimanBarang $pengirimanbarang)
+    {
+        $title = "pengiriman Barang Detail";
+        $pengirimanbarangdetails = PengirimanBarangDetail::with('products')
+            ->where('pengiriman_barang_id', '=', $pengirimanbarang->id)->get();
+        $listExp = StokExpDetail::where('id_sj', '=', $pengirimanbarang->id)->get();
+        return view('penjualan.pengirimanbarang.show', compact('title', 'listExp', 'pengirimanbarang', 'pengirimanbarangdetails'));
     }
 
     public function datatablebarang(Request $request)
@@ -159,12 +391,6 @@ class PengirimanBarangController extends Controller
             ->make(true);
     }
 
-    public function setbarang(Request $request)
-    {
-        $product = PesananPenjualanDetail::with('products')->where('id', '=', $request->id)->first();
-        return view('penjualan.pengirimanbarang._setbarang', compact('product'));
-    }
-
     public function daftarbarang(Request $request)
     {
         $tempsj = TempSj::with(['products'])->where('user_id', '=', Auth::user()->id);
@@ -184,6 +410,8 @@ class PengirimanBarangController extends Controller
             })
             ->make(true);
     }
+
+
 
     public function inputtempsj(Request $request)
     {
@@ -410,128 +638,58 @@ class PengirimanBarangController extends Controller
 
     public function daftarProduk(Request $request)
     {
-        if ($request->status == 1) {
-            $stok = StokExp::with(['stokExpDetail' => function($query) use($request) {
-                $query->where('id_sj_detail', $request->pengirimandet);
-            }, 'products', 'supplier'])->where('product_id', $request->product_id)->where('qty', '>', '0');
+        $stok = StokExp::with(['stokExpDetail' => function ($query) use ($request) {
+            $query->where('id_sj_detail', $request->pengirimandet);
+        }, 'products', 'supplier'])->where('product_id', $request->product_id)->where('qty', '>', '0');
 
-            return Datatables::of($stok)
-                ->addIndexColumn()
-                ->editColumn('tanggal', function ($pb) {
-                    return Carbon::parse($pb->tanggal)->format('d-m-Y');
-                })
-                ->editColumn('qty', function ($pb) {
-                    return $pb->qty;
-                })
-                ->editColumn('supplier', function ($pb) {
-                    return $pb->supplier ? $pb->supplier->nama : '-';
-                })
-                ->editColumn('harga_beli', function ($pb) {
-                    return number_format($pb->harga_beli, 0, ',', '.');
-                })
-                ->editColumn('status', function ($pb) {
-                    if (count($pb->stokExpDetail) > 0) {
-                        return 1;
-                    }else{
-                        return 0;
-                    }                    
-                })
-                ->addColumn('action', function ($pb) {                    
-                    return $pb->id;
-                })
-                ->make(true);
-        } else {
-            $stok = HargaNonExpired::with(['harganonexpireddetail' => function($query) use($request) {
-                $query->where('id_sj_detail', $request->pengirimandet);
-            }, 'product', 'supplier'])->where('product_id', $request->product_id)->where('qty', '>', '0');
-            return Datatables::of($stok)
-                ->addIndexColumn()
-                ->editColumn('tanggal', function ($pb) {
-                    return 'Non Exp';
-                })
-                ->editColumn('qty', function ($pb) {
-                    return $pb->qty;
-                })
-                ->editColumn('lot', function ($pb) {
-                    return 'Non Exp';
-                })
-                ->editColumn('supplier', function ($pb) {
-                    return $pb->supplier ? $pb->supplier->nama : '-';
-                })
-                ->editColumn('harga_beli', function ($pb) {
-                    return number_format($pb->harga_beli, 0, ',', '.');
-                })
-                ->editColumn('status', function ($pb) {
-                    return $pb->harganonexpireddetail ? 1 : 0;
-                })
-                ->addColumn('action', function ($pb) {
-                    return $pb->id;
-                })
-                ->make(true);
-        }
+        return Datatables::of($stok)
+            ->addIndexColumn()
+            ->editColumn('tanggal', function ($pb) {
+                return Carbon::parse($pb->tanggal)->format('d-m-Y');
+            })
+            ->editColumn('qty', function ($pb) {
+                return $pb->qty;
+            })
+            ->editColumn('status', function ($pb) {
+                if (count($pb->stokExpDetail) > 0) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            })
+            ->addColumn('action', function ($pb) {
+                return $pb->id;
+            })
+            ->make(true);
     }
 
     public function daftarProdukKirim(Request $request)
     {
-        if ($request->status == 1) {
-            $stok = StokExpDetail::with(['stockExp.supplier', 'products'])->where('id_sj_detail', $request->pengirimandet);            
-            return Datatables::of($stok)
-                ->addIndexColumn()
-                ->editColumn('tanggal', function ($pb) {
-                    return Carbon::parse($pb->tanggal)->format('d-m-Y');
-                })
-                ->editColumn('qty', function ($pb) {
-                    return $pb->qty * -1;
-                })
-                ->editColumn('lot', function ($pb) {
-                    return $pb->stockExp->lot;
-                })
-                ->editColumn('supplier', function ($pb) {
-                    return $pb->stockExp->supplier ? $pb->stockExp->supplier->nama : '-';
-                })
-                ->editColumn('harga_beli', function ($pb) {
-                    return number_format($pb->harga_beli, 0, ',', '.');
-                })
-                ->addColumn('action', function ($pb) {
-                    $id = $pb->id;
-                    return view('penjualan.pengirimanbarang.partial.actionbarang', compact('id'));
-                })
-                ->make(true);
-        } else {
-            $stok = HargaNonExpiredDetail::with(['harganonexpired.supplier', 'product'])->where('id_sj_detail', $request->pengirimandet);
-            // dd($stok);
-            return Datatables::of($stok)
-                ->addIndexColumn()
-                ->editColumn('tanggal', function ($pb) {
-                    return 'Non Exp';
-                })
-                ->editColumn('qty', function ($pb) {
-                    return $pb->qty * -1;
-                })
-                ->editColumn('lot', function ($pb) {
-                    return 'Non Exp';
-                })
-                ->editColumn('supplier', function ($pb) {
-                    return $pb->harganonexpired->supplier ? $pb->harganonexpired->supplier->nama : '-';
-                })
-                ->editColumn('harga_beli', function ($pb) {
-                    return number_format($pb->harga_beli, 0, ',', '.');
-                })
-                ->addColumn('action', function ($pb) {
-                    $id = $pb->id;
-                    return view('penjualan.pengirimanbarang.partial.actionbarang', compact('id'));
-                })
-                ->make(true);
-        }
+        $stok = StokExpDetail::with(['stockExp.supplier', 'products'])->where('id_sj_detail', $request->pengirimandet);
+        return Datatables::of($stok)
+            ->addIndexColumn()
+            ->editColumn('tanggal', function ($pb) {
+                return Carbon::parse($pb->tanggal)->format('d-m-Y');
+            })
+            ->editColumn('qty', function ($pb) {
+                return $pb->qty * -1;
+            })
+            ->editColumn('lot', function ($pb) {
+                return $pb->stockExp->lot;
+            })
+            ->editColumn('supplier', function ($pb) {
+                return $pb->stockExp->supplier ? $pb->stockExp->supplier->nama : '-';
+            })
+            ->addColumn('action', function ($pb) {
+                $id = $pb->id;
+                return view('penjualan.pengirimanbarang.partial.actionbarang', compact('id'));
+            })
+            ->make(true);
     }
 
     public function formBarang(Request $request)
     {
-        if ($request->status == 1) {
-            $stok = StokExp::where('id', $request->id)->first();
-        } else {
-            $stok = HargaNonExpired::where('id', $request->id)->first();
-        }
+        $stok = StokExp::where('id', $request->id)->first();
         return view('penjualan.pengirimanbarang.modal.formbarang', compact('stok'));
     }
 
@@ -549,83 +707,45 @@ class PengirimanBarangController extends Controller
             }
 
             $pengirimandet = PengirimanBarangDetail::where('id', $request->pengirimandet)->first();
-            if ($request->status == 1) {
-                $stokdet = StokExpDetail::where('id_sj_detail', $request->pengirimandet)->sum('qty') * -1;
-                $stok = StokExp::where('id', $request->stok_id)->first();
-                if ($stok->qty < $qty) {
-                    DB::rollBack();
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'Qty tidak boleh melebihi stok'
-                    ], 422);
-                }
-                $total = $stokdet + $qty;
-                if ($qty > $pengirimandet->qty || $total > $pengirimandet->qty) {
-                    DB::rollBack();
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'Qty tidak boleh melebihi stok yang di kirim'
-                    ], 422);
-                }
+            // $stokdet = StokExpDetail::where('id_sj_detail', $request->pengirimandet)->sum('qty') * -1;
+            $stok = StokExp::where('id', $request->stok_id)->first();
 
-                $stokbaru = $stok->qty - $qty;
-                $stok->update([
-                    'qty' => $stokbaru
-                ]);
+            
 
-                //insert detail
-                StokExpDetail::create([
-                    'tanggal' => $stok->tanggal,
-                    'stok_exp_id' => $stok->id,
-                    'product_id' => $pengirimandet->product_id,
-                    'qty' => $qty * -1,
-                    'id_sj' => $pengirimandet->pengiriman_barang_id,
-                    'id_sj_detail' => $pengirimandet->id,
-                    'harga_beli' => $stok->harga_beli,
-                    'diskon_persen_beli' => $stok->diskon_persen,
-                    'diskon_rupiah_beli' => $stok->diskon_rupiah,
-                ]);
-            } else {
-                $stokdet = HargaNonExpiredDetail::where('id_sj_detail', $request->pengirimandet)->sum('qty') * -1;
-                $stok = HargaNonExpired::where('id', $request->stok_id)->first();
-                if ($stok->qty < $qty) {
-                    DB::rollBack();
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'Qty tidak boleh melebihi stok'
-                    ], 422);
-                }
-
-                $total = $stokdet + $qty;                
-                if ($qty > $pengirimandet->qty || $total > $pengirimandet->qty) {
-                    DB::rollBack();
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'Qty tidak boleh melebihi stok yang di kirim'
-                    ], 422);
-                }
-
-             
-
-                $stokbaru = $stok->qty - $qty;
-                $stok->update([
-                    'qty' => $stokbaru
-                ]);
-
-                HargaNonExpiredDetail::create([
-                    'tanggal' => now()->format('Y-m-d'),
-                    'harganonexpired_id' => $stok->id,
-                    'product_id' => $pengirimandet->product_id,
-                    'qty' => $qty * -1,
-                    'id_sj' => $pengirimandet->pengiriman_barang_id,
-                    'id_sj_detail' => $pengirimandet->id,
-                    'harga_beli' => $stok->harga_beli,
-                    'diskon_persen_beli' => $stok->diskon_persen,
-                    'diskon_rupiah_beli' => $stok->diskon_rupiah,
-                ]);
+            // cek qty kirim jika beda satuan 
+            if ($pengirimandet->beda_satuan == 'on') {
+                $qty = $qty * $pengirimandet->qty_konversi;
             }
 
-            $this->updateStatuData($pengirimandet->id,$request->status,$pengirimandet->qty,$pengirimandet->pengiriman_barang_id);
+            if ($stok->qty < $qty || $qty > $pengirimandet->qty_sisa) {
+                DB::rollBack();
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Qty tidak boleh melebihi stok atau qty pengiriman'
+                ], 422);
+            }
+
+            // $total = $stokdet + $qty;        
+            $stokbaru = $stok->qty - $qty;
+            $stok->update([
+                'qty' => $stokbaru
+            ]);
+
+
+            //insert detail
+            StokExpDetail::create([
+                'tanggal' => $stok->tanggal,
+                'stok_exp_id' => $stok->id,
+                'product_id' => $pengirimandet->product_id,
+                'qty' => $qty * -1,
+                'id_sj' => $pengirimandet->pengiriman_barang_id,
+                'id_sj_detail' => $pengirimandet->id,
+                'harga_beli' => $stok->harga_beli,
+                'diskon_persen_beli' => $stok->diskon_persen,
+                'diskon_rupiah_beli' => $stok->diskon_rupiah,
+            ]);
+
+            $this->updateStatuData($pengirimandet->id, $request->status, $pengirimandet->qty, $pengirimandet->pengiriman_barang_id);
             DB::commit();
             return response()->json([
                 'status' => 'success',
@@ -643,25 +763,18 @@ class PengirimanBarangController extends Controller
 
     public function hapusbarang(Request $request)
     {
+        DB::beginTransaction();
         try {
-            $pengirimandet = PengirimanBarangDetail::where('id', $request->pengirimandet)->first();
-            if ($request->status == 1) {
-                $stokdet = StokExpDetail::where('id', $request->id)->first();
-                $stok = StokExp::where('id', $stokdet->stok_exp_id)->first();
-                $qtytot = $stok->qty + ($stokdet->qty * -1);
-                $stok->update([
-                    'qty' => $qtytot
-                ]);
-                $stokdet->delete();
-            } else {
-                $stokdet = HargaNonExpiredDetail::where('id', $request->id)->first();
-                $stok = HargaNonExpired::where('id', $stokdet->harganonexpired_id)->first();
-                $qtytot = $stok->qty + ($stokdet->qty * -1);
-                $stok->update([
-                    'qty' => $qtytot
-                ]);
-                HargaNonExpiredDetail::destroy($request->id);
-            }
+            $pengirimandet = PengirimanBarangDetail::where('id', $request->pengirimandet)->first();            
+            $stokdet = StokExpDetail::where('id', $request->id)->first();
+            $stok = StokExp::where('id', $stokdet->stok_exp_id)->first();
+            $qtytot = $stok->qty + ($stokdet->qty * -1);
+            $stok->update([
+                'qty' => $qtytot
+            ]);
+            $stokdet->delete();
+
+            
 
             $this->updateStatuData($pengirimandet->id, $request->status, $pengirimandet->qty, $pengirimandet->pengiriman_barang_id);
             DB::commit();
@@ -678,146 +791,43 @@ class PengirimanBarangController extends Controller
         }
     }
 
-    public function editexp (Request $request)
+    public function editexp(Request $request)
     {
-        
-       if ($request->status == 1) {
-           $stok = StokExpDetail::where('id',$request->id)->first();
-       }else{
-            $stok = HargaNonExpiredDetail::where('id',$request->id)->first();
-       }
 
-       return view('penjualan.pengirimanbarang.modal.formexp',compact('stok'));
+        if ($request->status == 1) {
+            $stok = StokExpDetail::where('id', $request->id)->first();
+        } else {
+            $stok = HargaNonExpiredDetail::where('id', $request->id)->first();
+        }
+
+        return view('penjualan.pengirimanbarang.modal.formexp', compact('stok'));
     }
 
-    public function submitexp (Request $request)
-    {    
-      DB::beginTransaction();       
-       try {
+    public function submitexp(Request $request)
+    {
+        DB::beginTransaction();
+        try {
             if ($request->harga_beli == 0) {
                 DB::rollBack();
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Harga beli tidak boleh 0'
                 ], 422);
-            }        
+            }
             if ($request->status == 1) {
-              $stok = StokExpDetail::where('id',$request->id)->update([
+                $stok = StokExpDetail::where('id', $request->id)->update([
                     'harga_beli' => $request->harga_beli,
                     'diskon_persen_beli' => $request->diskon_persen,
                     'diskon_rupiah_beli' => $request->diskon_rupiah
-              ]);  
-            }else{
-                $stok = HargaNonExpiredDetail::where('id',$request->id)->update([
-                    'harga_beli' => $request->harga_beli,
-                    'diskon_persen_beli' => $request->diskon_persen,
-                    'diskon_rupiah_beli' => $request->diskon_rupiah
-              ]);  
-            }
-
-            DB::commit();
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Data Berhasil Disimpan'
-            ]);
-       } catch (Exception $th) {
-            DB::rollBack();
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Terjadi kesalahan: ' . $th->getMessage()
-            ], 500);
-       }
-    }
-
-    public function destroy(Request $request)
-    {    
-        DB::beginTransaction();
-        try {
-            $tglNow = Carbon::now()->format('Y-m-d');
-            $id = $request->id;
-            $pengirimanbarang = PengirimanBarang::with('FakturSO')->where('id',$id)->first();
-            // dd($pengirimanbarang);
-            $customer = Customer::findOrFail($pengirimanbarang->customer_id);
-    
-            $pengirimanbarang_kode = $pengirimanbarang->kode;
-            $pesanan_penjualan_id = $pengirimanbarang->pesanan_penjualan_id;
-
-            if (count($pengirimanbarang->FakturSo) > 0) {
-                DB::rollBack();
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Tidak bisa menghapus Surat Jalan , Surat Jalan sudah terfaktur'
-                ], 422);
-            }
-            //validasi :
-            $jmlExp = StokExpDetail::where('id_sj', '=', $id)->count();            
-    
-            // cek produk non expired 
-            $jmlnonexp = HargaNonExpiredDetail::where('id_sj', '=', $id)->count();
-    
-            if ($jmlExp > 0 || $jmlnonexp > 0) {
-                DB::rollBack();
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'Tidak bisa menghapus Surat Jalan , hapus terlebih dahulu data kirim'
-                    ], 422);
-            }               
-    
-            $detailSJ = PengirimanBarangDetail::where('pengiriman_barang_id', '=', $id)->get();
-            foreach ($detailSJ as $a) {
-                //update stok                
-                $product = Product::find($a->product_id);
-                $stok = $product->stok;
-                $hpp = $product->hpp;
-                $product->stok = $stok + $a->qty;
-                $product->save();
-    
-                $pesanan_penjualan_detail_id = $a->pesanan_penjualan_detail_id;
-                $stok_baru = $stok + $a->qty;
-    
-                //input inv trans
-                //######### start add INV TRANS ############
-                $inventoryTrans = new InventoryTransaction;
-                $inventoryTrans->tanggal = $tglNow;
-                $inventoryTrans->product_id = $a->product_id;
-                $inventoryTrans->qty = $a->qty;
-                $inventoryTrans->stok = $stok_baru;
-                $inventoryTrans->hpp = $hpp;
-                $inventoryTrans->jenis = "SJ (DEL)";
-                $inventoryTrans->jenis_id = $pengirimanbarang_kode;
-                $inventoryTrans->customer = $customer->nama;
-    
-                $inventoryTrans->save();
-                //######### end add INV TRANS ############
-    
-                //############# start update Qty Sisa SO #############
-                $detailSOupdate = new PesananPenjualanDetail;
-                $detailSOupdate = PesananPenjualanDetail::find($a->pesanan_penjualan_detail_id);
-                $detailSOupdate->qty_sisa +=  $a->qty;
-                $detailSOupdate->save();
-                //############# end update Qty Sisa SO #############
-    
-            }
-
-            $pengirimanbarang->deleted_by = Auth::user()->id;
-            $pengirimanbarang->save();
-            PengirimanBarang::destroy($request->id);
-    
-            $detailSJ->each->delete();
-    
-            //############# start update status PO #############
-            $jmlSJinSO = PengirimanBarang::where('pesanan_penjualan_id', '=', $pesanan_penjualan_id)->count();
-    
-            if ($jmlSJinSO > 0) {
-                $status = "3";
+                ]);
             } else {
-                $status = "2";
+                $stok = HargaNonExpiredDetail::where('id', $request->id)->update([
+                    'harga_beli' => $request->harga_beli,
+                    'diskon_persen_beli' => $request->diskon_persen,
+                    'diskon_rupiah_beli' => $request->diskon_rupiah
+                ]);
             }
-            $SOmain = PesananPenjualan::find($pesanan_penjualan_id);
-            $SOmain->status_so_id = $status;
-            $SOmain->save();
-            //############# end update status PO #############
-            
+
             DB::commit();
             return response()->json([
                 'status' => 'success',
@@ -830,34 +840,108 @@ class PengirimanBarangController extends Controller
                 'message' => 'Terjadi kesalahan: ' . $th->getMessage()
             ], 500);
         }
-      
     }
 
-    public function show(PengirimanBarang $pengirimanbarang)
+    public function destroy(Request $request)
     {
-        $title = "pengiriman Barang Detail";
-        $pengirimanbarangdetails = PengirimanBarangDetail::with('products')
-            ->where('pengiriman_barang_id', '=', $pengirimanbarang->id)->get();
-        $listExp = StokExpDetail::where('id_sj', '=', $pengirimanbarang->id)->get();
-        return view('penjualan.pengirimanbarang.show', compact('title', 'listExp', 'pengirimanbarang', 'pengirimanbarangdetails'));
+
+        DB::beginTransaction();
+        try {
+            $tglNow = Carbon::now()->format('Y-m-d');
+            $id = $request->id;
+            $pengirimanbarang = PengirimanBarang::where('id', $id)->first();
+            $fakturdet = FakturPenjualanDetail::where('pengirimanbarang_id',$id)->first();
+            
+
+            $customer = Customer::findOrFail($pengirimanbarang->customer_id);
+
+            $pengirimanbarang_kode = $pengirimanbarang->kode;
+
+            if ($fakturdet) {
+                DB::rollBack();
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Tidak bisa menghapus Surat Jalan , Surat Jalan sudah terfaktur , Hapus faktur terlebih dahulu'
+                ], 422);
+            }
+            //validasi :
+            $jmlExp = StokExpDetail::where('id_sj', '=', $id)->count();
+
+            if ($jmlExp > 0) {
+                DB::rollBack();
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Tidak bisa menghapus Surat Jalan , hapus terlebih dahulu data expired date / lot di surat jalan ini'
+                ], 422);
+            }
+
+            $detailSJ = PengirimanBarangDetail::where('pengiriman_barang_id', '=', $id)->get();
+            foreach ($detailSJ as $a) {
+                //update stok  dan cek jenis beda satuanya
+                $qty = $a->qty;
+                if ($a->beda_satuan == 'on') {
+                    $qty = $a->qty * $a->qty_konversi;
+                }
+
+
+                $product = Product::find($a->product_id);
+                $stok = $product->stok;
+                $hpp = $product->hpp;
+                $product->stok = $stok + $qty;
+                $product->save();
+                $stok_baru = $stok + $qty;
+
+                //input inv trans
+                //######### start add INV TRANS ############
+                $inventoryTrans = new InventoryTransaction;
+                $inventoryTrans->tanggal = $tglNow;
+                $inventoryTrans->product_id = $a->product_id;
+                $inventoryTrans->qty = $qty;
+                $inventoryTrans->stok = $stok_baru;
+                $inventoryTrans->hpp = $hpp;
+                $inventoryTrans->jenis = "SJ (DEL)";
+                $inventoryTrans->jenis_id = $pengirimanbarang_kode;
+                $inventoryTrans->customer = $customer->nama;
+
+                $inventoryTrans->save();
+                //######### end add INV TRANS ############               
+            }
+
+            $pengirimanbarang->deleted_by = Auth::user()->id;
+            $pengirimanbarang->save();
+            PengirimanBarang::destroy($request->id);
+
+            $detailSJ->each->delete();
+
+            DB::commit();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data Berhasil Disimpan'
+            ]);
+        } catch (Exception $th) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan: ' . $th->getMessage()
+            ], 500);
+        }
     }
 
     public function print_a5(PengirimanBarang $pengirimanbarang)
     {
 
         $title = "Print Surat Jalan";
-        $pengirimanbarangdetails = PengirimanBarangDetail::with(['products', 'pesananpenjualan'])
+        $pengirimanbarangdetails = PengirimanBarangDetail::with(['products'])
             ->where('pengiriman_barang_id', '=', $pengirimanbarang->id)->get();
 
         // dd($pengirimanbarangdetails);
-        $jmlBaris  = $pengirimanbarangdetails->count();
-        $perBaris = 7;
-        $totalPage = ceil($jmlBaris / $perBaris);
-        $listExp = StokExpDetail::with('stockExp')->where('id_sj', '=', $pengirimanbarang->id)->get();
+        $jmlBaris  = $pengirimanbarangdetails->count();        
+        // $totalPage = ceil($jmlBaris / $perBaris);
+        $listExp = StokExpDetail::with('products','stockExp','pengirimandetail')->where('id_sj', '=', $pengirimanbarang->id)->get();        
+        $hitunglist = count($listExp);                
         //dd($listExp);
-        $data = [
-            'totalPage' => $totalPage,
-            'perBaris' => $perBaris,
+        $data = [            
+            'list' => $hitunglist,
             'date' => date('m/d/Y'),
             'listExp' => $listExp,
             'pengirimanbarang' => $pengirimanbarang,
@@ -877,7 +961,7 @@ class PengirimanBarangController extends Controller
         $title = "pengiriman Barang Detail";
         $pengirimanbarangdetails = PengirimanBarangDetail::with('products')
             ->where('pengiriman_barang_id', '=', $pengirimanbarang->id)->get();
-        $listExp = StokExpDetail::where('id_sj', '=', $pengirimanbarang->id)->get();
+        $listExp = StokExpDetail::where('id_sj', '=', $pengirimanbarang->id)->with('stockExp')->get();
 
         return view('penjualan.pengirimanbarang.show', compact('title', 'listExp', 'pengirimanbarang', 'pengirimanbarangdetails'));
     }
@@ -890,31 +974,73 @@ class PengirimanBarangController extends Controller
 
     public function updateStatuData($pengirimandet, $status, $qty, $pengiriman)
     {
-        $statusexp = 0;
-        if ($status == 1) {
-            $stokdet = StokExpDetail::where('id_sj_detail', $pengirimandet)->sum('qty') * -1;
-        } else {
-            $stokdet = HargaNonExpiredDetail::where('id_sj_detail', $pengirimandet)->sum('qty') * -1;
+        $pengirimanbarangdet = PengirimanBarangDetail::where('id', $pengirimandet)->first();
+        $stokdet = $pengirimanbarangdet->qty;
+        if ($pengirimanbarangdet->beda_satuan == 'on') {
+            $stokdet = $pengirimanbarangdet->qty_konversi * $pengirimanbarangdet->qty;
         }
 
-        if ($stokdet == $qty) {
+        $stokexp = StokExpDetail::where('id_sj_detail', $pengirimandet)->sum('qty') * -1;
+        $statusexp = 0;
+
+        if ($stokexp == $stokdet) {
             $statusexp = 1;
         }
-        PengirimanBarangDetail::where('id', $pengirimandet)->update([
+
+        $pengirimanbarangdet->update([
             'status_exp' => $statusexp
         ]);
 
-        $pengiriman = PengirimanBarangDetail::where('pengiriman_barang_id', $pengiriman)->where('status_exp', 1)->first();
-        if (!$pengiriman) {
+        $pengirimandetail = PengirimanBarangDetail::where('pengiriman_barang_id', $pengiriman)->where('status_exp', 1)->first();
+        
+        if (!$pengirimandetail) {
             PengirimanBarang::where('id', $pengiriman)->update([
-                'status_sj_id' => 2,
-                'status_exp' => 2
+                'status_sj_id' => 1,
+                'status_exp' => 0
             ]);
-        }else{
+        } else {
             PengirimanBarang::where('id', $pengiriman)->update([
                 'status_sj_id' => 2,
                 'status_exp' => 1
             ]);
+        }
+    }
+
+
+    public function edit ($id)
+    {
+        $title = "Edit Pengiriman Barang";
+        $pengirimanbarang = PengirimanBarang::with('PengirimanBarangDetails.products')->find($id);
+        $customer = Customer::get();
+        $tanggal = Carbon::parse($pengirimanbarang->tanggal)->format('d-m-Y');
+
+        return view('penjualan.pengirimanbarang.edit', compact('title', 'customer', 'tanggal', 'pengirimanbarang'));
+    }
+
+    public function updatePB (  Request $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $tanggal = Carbon::parse($request->tanggal)->format('Y-m-d');
+
+            $pengirimanbarang = PengirimanBarang::find($id);
+            $pengirimanbarang->update([
+                'tanggal' => $tanggal,
+                'customer_id' => $request->customer,
+                'keterangan' => $request->keterangan
+            ]);
+
+            DB::commit();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data Berhasil Disimpan'
+            ]);
+        } catch (Exception $th) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan: ' . $th->getMessage()
+            ], 500);
         }
     }
 }

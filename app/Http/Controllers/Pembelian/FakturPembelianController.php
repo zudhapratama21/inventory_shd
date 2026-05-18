@@ -64,9 +64,10 @@ class FakturPembelianController extends Controller
                 ->addColumn('action', function ($row) {
                     //$editUrl = route('fakturpembelian.edit', ['fakturpembelian' => $row->id]);
                     $showUrl = route('fakturpembelian.show', ['fakturpembelian' => $row->id]);
+                    $editUrl = route('fakturpembelian.edit', ['fakturpembelian' => $row->id]);
                     $id = $row->id;
                     $status = $row->status_pb_id;
-                    return view('pembelian.fakturpembelian._formAction', compact('id', 'status', 'showUrl'));
+                    return view('pembelian.fakturpembelian._formAction', compact('id', 'status', 'showUrl','editUrl'));
                 })
                 ->make(true);
         }
@@ -205,7 +206,7 @@ class FakturPembelianController extends Controller
             $ongkir_header = $ongkir_det;
             $total_diskon_header = ($subtotal_header * ($diskon_persen_po / 100)) + $diskon_rupiah_po;
             $total_header = $subtotal_header - $total_diskon_header;
-            $ppn_header = round(($total_header * ($ppn_po / 100)), 2);
+            $ppn_header = $ppn_po;
             $grandtotal_header = $total_header + $ppn_header + $ongkir_header;
             DB::commit();
             return view('pembelian.fakturpembelian.create', compact('title', 'FBdetails', 'tglNow', 'fakturpembelian', 'penerimaanbarang', 'PBdetails', 'subtotal_header', 'ongkir_header', 'total_diskon_header', 'total_header', 'ppn_header', 'grandtotal_header', 'idtempbiaya'));
@@ -235,6 +236,7 @@ class FakturPembelianController extends Controller
             if ($tanggal <> null) {
                 $tanggal = Carbon::createFromFormat('d-m-Y', $tanggal)->format('Y-m-d');
             }
+            
 
             $kode = $this->getKodeTransaksi("faktur_pembelians", "FB");
             $id_pb = $penerimaanbarang->id;
@@ -243,7 +245,7 @@ class FakturPembelianController extends Controller
             $tanggalPenerimaan = $penerimaanbarang->tanggal;
             $pembelian = PesananPembelian::where('id', $id_po)->first();
 
-            $tanggal_top = date("Y-m-d", strtotime("+" . $pembelian->top . " days" . $tanggalPenerimaan));
+            $tanggal_top = Carbon::parse($request->jatuhtempo)->format('Y-m-d');
 
             //start cek status exp date PB :
             $PBdetails = PenerimaanBarangDetail::where('penerimaan_barang_id', '=', $id_pb)->get();
@@ -276,7 +278,7 @@ class FakturPembelianController extends Controller
 
             $total_diskon_header = ($subtotal_header * ($diskon_persen_po / 100)) + $diskon_rupiah_po;
             $total_header = $subtotal_header - $total_diskon_header;
-            $ppn_header = round(($total_header * ($ppn_po / 100)), 2);
+            $ppn_header = $ppn_po;
             $grandtotal_header = $total_header + $ppn_header + $ongkir_header + $biayalainlain;
 
             $datas['kode'] = $kode;
@@ -513,4 +515,29 @@ class FakturPembelianController extends Controller
         ]);
 
     }    
+    
+
+    public function edit ($id)
+    {
+        $title = 'Faktur Pembelian Title';
+        $fakturpembelian = FakturPembelian::where('id',$id)->with('PO','PB','detail.products','suppliers','hutangs')->first();        
+
+      return view('pembelian.fakturpembelian.edit',compact('fakturpembelian','title'));
+    }
+
+    public function update (Request $request , $id)
+    {
+        $fakturpembelian =  FakturPembelian::where('id',$id)->update([
+            'tanggal' => Carbon::parse($request->tanggal)->format('Y-m-d'),
+            'keterangan' => $request->keterangan,
+            'no_faktur_supplier' => $request->no_faktur_supplier
+        ]);
+
+        Hutang::where('faktur_pembelian_id',$id)->update([
+            'tanggal' => Carbon::parse($request->tanggal)->format('Y-m-d'),
+            'tanggal_top' => Carbon::parse($request->jatuhtempo)->format('Y-m-d')
+        ]);
+
+        return redirect()->route('fakturpembelian.index')->with('status','Faktur Pembelian Berhasil Update !!');
+    }
 }

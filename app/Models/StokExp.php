@@ -14,15 +14,10 @@ class StokExp extends Model
     use SoftDeletes;
     protected $fillable = [
         'tanggal',
-        'product_id',
-        'supplier_id',
+        'product_id',        
         'qty',
         'lot',
-        'ppn',
-        'harga_beli',
-        'diskon_persen',
-        'diskon_rupiah',
-        'supplier_id'
+        'ppn',        
     ];
 
     protected $dates = ['tanggal'];
@@ -37,9 +32,5 @@ class StokExp extends Model
         return $this->hasMany(StokExpDetail::class, 'stok_exp_id', 'id');
     }
    
-    public function supplier()
-    {
-        return $this->belongsTo(Supplier::class, 'supplier_id', 'id');
-    }
 
 }

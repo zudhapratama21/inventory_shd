@@ -1,130 +1,126 @@
 <div class="card-body">
-
-
     <div class="form-group row">
         <label class="col-lg-1 col-form-label text-right">Customers:</label>
         <div class="col-lg-4">
-            <input type="text" class="form-control form-control-solid" name="customer" readonly
-                value="{{ $pengirimanbarang->customers->nama }}" id="customer" />
+            <select class="form-control select2" id="customer_id" name="customer_id">
+                <option value="">Pilih Customer</option>
+                @foreach ($customer as $cg)
+                    <option value="{{ $cg->id }}">{{ $cg->nama }}</option>
+                @endforeach
+            </select>
         </div>
         <label class="col-lg-2 col-form-label text-right">Tanggal:</label>
         <div class="col-lg-4">
             <div class="input-group date">
-                @if($fakturpenjualan->tanggal <> null)
-                    <input type="text" class="form-control form-control-solid" name="tanggal" readonly
-                        value="{{ $fakturpenjualan->tanggal->format(" d-m-Y") }}" id="tgl1" />
-                    @else
-                    <input type="text" class="form-control" name="tanggal" readonly value="{{ $tglNow }}" id="tgl1" />
-                    @endif
+                <input type="text" class="form-control" name="tanggal" value="{{ $tglNow }}" id="tgl1" />
 
-                    <div class="input-group-append">
-                        <span class="input-group-text">
-                            <i class="la la-calendar"></i>
-                        </span>
-                    </div>
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i class="la la-calendar"></i>
+                    </span>
+                </div>
             </div>
-        </div>       
-    </div>
-    <div class="form-group row">
-        <label class="col-lg-1 col-form-label text-right">No. SP:</label>
-        <div class="col-lg-4">
-            <input type="text" class="form-control form-control-solid" name="pesanan_penjualan" readonly
-                value="{{ $pengirimanbarang->so->kode }}" id="pesanan_penjualan" />
-            @error('pesanan_penjualan')
-            <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-        <label class="col-lg-2 col-form-label text-right">Pengiriman Barang:</label>
-        <div class="col-lg-4">
-            <input type="text" class="form-control form-control-solid" name="pengiriman_barang" readonly
-                value="{{ $pengirimanbarang->kode }}" id="pengiriman_barang" />
-            @error('penerimaan_barang')
-            <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
         </div>
     </div>
-    <div class="form-group row">
-        <label class="col-lg-1 col-form-label text-right">No. KPA:</label>
-        <div class="col-lg-4">
 
-            <select name="kpa_id" id="kt_select2_2" class="form-control" required>
-                @foreach ($nokpa as $item)
-                    <option value="{{$item->id}}">{{$item->no_kpa}}</option>
+    <div class="form-group row">
+        <label class="col-lg-1 col-form-label text-right">No. Perusahaan:</label>
+        <div class="col-lg-2">
+            <input type="number" id="no_urut" name="no_urut" class="form-control" />
+            <p style="font-size: 80%" class="text-danger">*Jika tidak diisi akan terisi otomatis</p>
+        </div>
+        <div class="col-lg-2">
+            <button type="button" class="btn btn-outline-primary btn-sm" onclick="cekNomor()"> <i
+                    class="flaticon2-refresh text-success"></i> Cek Nomor</button>
+        </div>
+
+        <label class="col-lg-2 col-form-label text-right">Tanggal Jatuh Tempo:</label>
+        <div class="col-lg-4">
+            <div class="input-group date">
+                <input type="text" class="form-control" name="tanggal" value="{{ $tglNow }}" id="tgl2" />
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i class="la la-calendar"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-lg-1 col-form-label text-right">Sales:</label>
+        <div class="col-lg-4">
+            <select class="form-control select2" id="sales_id" name="sales_id">
+                <option value="">Pilih Sales</option>
+                @foreach ($sales as $s)
+                    <option value="{{ $s->id }}">{{ $s->nama }}</option>
                 @endforeach
             </select>
-
-            @error('kpa_id')
-               <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-
-        </div>     
-        
-        <label class="col-lg-2 col-form-label text-right">No. Seri Pajak:</label>
+        </div>
+        <label class="col-lg-2 col-form-label text-right">Komoditas:</label>
         <div class="col-lg-4">
-            <input type="text" class="form-control form-control-solid" name="no_seri_pajak" value="" id="no_seri_pajak" required/>
-            @error('no_seri_pajak')
-            <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
+            <select class="form-control" id="komoditas_id" name="komoditas_id">
+                <option value="">Pilih Komoditas</option>
+                @foreach ($komoditas as $k)
+                    <option value="{{ $k->id }}">{{ $k->nama }}</option>
+                @endforeach
+            </select>
         </div>
     </div>
 
     <div class="form-group row">
-        <label class="col-lg-1 col-form-label text-right"></label>
-        <div class="col-lg-4">           
-        </div>   
-
-        <label class="col-lg-2 col-form-label text-right">No. Pajak:</label>
-        <div class="col-lg-4">  
-            
-            <select name="pajak_id" class="form-control" id="kt_select2_1">
-                @foreach ($nopajak as $item)
-                      <option value="{{$item->id}}">{{$item->no_pajak}}</option>
+        <label class="col-lg-1 col-form-label text-right">Kategori Pesanan:</label>
+        <div class="col-lg-4">
+            <select class="form-control select2" id="kategori_id" name="kategori_id">
+                <option value="">Pilih Kategori</option>
+                @foreach ($kategori as $s)
+                    <option value="{{ $s->id }}">{{ $s->nama }}</option>
                 @endforeach
             </select>
-           
-
-            @error('pajak_id')
-            <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>      
+        </div>
+        <label class="col-lg-2 col-form-label text-right"></label>
+        <div class="col-lg-4">
+        </div>
     </div>
+
+    <div class="form-group row">
+        <label class="col-lg-1 col-form-label text-right">No SP Customer:</label>
+        <div class="col-lg-4">
+            <textarea class="form-control" name="no_sp_customer" id="no_sp_customer" cols="30" rows="5"></textarea>
+        </div>
+        <label class="col-lg-2 col-form-label text-right">Tanggal SP Customer</label>
+        <div class="col-lg-4">
+            <textarea class="form-control" name="tanggal_sp_customer" id="tanggal_sp_customer" cols="30" rows="5"></textarea>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <button type="button" class="btn btn-sm btn-outline-primary mb-2" onclick="caripengiriman()"><i
+                class="flaticon-refresh"></i>Ambil Data Pengiriman</button>
+        <button type="button" class="btn btn-sm btn-outline-primary mb-2" onclick="tambahbarang()"><i
+                class="flaticon-add-circular-button"></i> Tambah Barang</button>
+    </div>
+
 
     <div class="form-group row">
         <div class="col-lg-12">
-            <div id="tabel_detil" class="table-responsive">
-                <table class="table">
+            <div id="tabel_detil" class="table table-bordered ">
+                <table class="table yajra-datatable-databarang">
                     <thead class="thead-light">
                         <tr>
-                            <th>Kode barang</th>
                             <th>Nama Barang</th>
                             <th>Satuan</th>
                             <th>Qty</th>
+                            <th>Kena PPn ?</th>
                             <th>Harga</th>
-                            <th>Ongkir</th>
                             <th>Diskon(%)</th>
                             <th>Diskon(Rp)</th>
                             <th>Subtotal</th>
                             <th>Total Diskon</th>
                             <th>Total</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($FJdetails as $item)
-                        <tr>
-                            <td>{{ $item->products->kode }}</td>
-                            <td>{{ $item->products->nama }}</td>
-                            <td>{{ $item->satuan }}</td>
-                            <td>{{ $item->qty }}</td>
-                            <td>{{ number_format($item->hargajual, 2, ',', '.') }}</td>
-                            <td>{{ number_format($item->ongkir, 2, ',', '.') }}</td>
-                            <td>{{ $item->diskon_persen }}</td>
-                            <td>{{ $item->diskon_rp }}</td>
-                            <td>{{ number_format($item->subtotal, 2, ',', '.') }}</td>
-                            <td>{{ number_format($item->total_diskon, 2, ',', '.') }}</td>
-                            <td>{{ number_format($item->total, 2, ',', '.') }}</td>
-
-                        </tr>
-                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -137,7 +133,7 @@
         <div class="col-lg-6">
             <label class="">Keterangan:</label>
             <div class="kt-input-icon kt-input-icon--right">
-                <textarea class="form-control" name="keterangan" id="keterangan"></textarea>
+                <textarea class="form-control" name="keteranganfj" id="keteranganfj"></textarea>
             </div>
 
         </div>
@@ -148,7 +144,7 @@
                     <div class="col-lg-5 mb-2">
                         <div id="div_subtotal">
                             <input type="text" id="subtotal" class="form-control text-right" name="subtotal"
-                                readonly="readonly" value="{{ number_format($subtotal_header, 2, ',', '.')  }}">
+                                readonly="readonly" value="0">
 
                         </div>
                     </div>
@@ -158,7 +154,7 @@
                     <div class="col-lg-5 mb-2">
                         <div class="input-group">
                             <input type="text" class="form-control text-right" id="diskon" name="diskon"
-                                value="{{ number_format($total_diskon_header, 2, ',', '.')  }}" readonly="readonly">
+                                value="0" readonly="readonly">
 
                         </div>
 
@@ -168,48 +164,47 @@
                 <div class="row">
                     <label class="col-lg-7 col-form-label text-right">Ongkir :</label>
                     <div class="col-lg-5 mb-2">
-                        <input type="text" id="ongkirheader" value="{{ number_format($ongkir_header, 2, ',', '.')  }}"
-                            readonly="readonly" name="ongkirheader" class="form-control text-right">
+                        <input type="text" id="ongkirtotal" value="0" readonly="readonly"
+                            name="ongkirtotal" class="form-control text-right">
                     </div>
                 </div>
 
                 <div class="row">
                     <label class="col-lg-7 col-form-label text-right">Total :</label>
                     <div class="col-lg-5 mb-2">
-                        <input type="text" id="total" readonly="readonly"
-                            value="{{ number_format($total_header, 2, ',', '.')  }}" name="total"
+                        <input type="text" id="total" readonly="readonly" value="0" name="total"
                             class="form-control text-right">
                     </div>
                 </div>
                 <div class="row">
-                    <label class="col-lg-7 col-form-label text-right">PPN (%) :</label>
+                    <label class="col-lg-7 col-form-label text-right">PPn (%) :</label>
                     <div class="col-lg-5 mb-2">
                         <div class="input-group">
 
-                            <input type="text" class="form-control text-right" id="ppn" name="ppn"
-                                value="{{ number_format($ppn_header, 2, ',', '.')  }}" readonly="readonly">
+                            <input type="text" class="form-control text-right" id="totalppn" name="ppn"
+                                value="0" readonly="readonly">
                         </div>
                     </div>
-                </div>              
+                </div>
                 <div class="row">
-                    <label class="col-lg-7 col-form-label text-right">Biaya lain-lain (Rp) :</label>
+                    <label class="col-lg-7 col-form-label text-right">Materai :</label>
                     <div class="col-lg-5 mb-2">
                         <div class="input-group">
-                            <a href="javascript:editbiaya();" class="btn  btn-icon btn-primary mr-1">
-                                <i class="flaticon-edit"></i>
-                            </a>
-                            <input type="text" class="form-control text-right" id="biaya" name="biaya" value="0"
-                                readonly="readonly">
+                            <button type="button" onclick="tambahbiaya();"
+                                class="btn  btn-icon btn-outline-primary mr-1">
+                                <i class="flaticon-coins"></i>
+                            </button>
+                            <input type="text" class="form-control text-right" id="materaitotal"
+                                name="materaitotal" value="0" readonly="readonly">
                         </div>
                     </div>
-                </div>    
+                </div>
 
                 <div class="row">
                     <label class="col-lg-7 col-form-label text-right">Grand Total :</label>
                     <div class="col-lg-5">
                         <input type="text" id="grandtotal" readonly="readonly" name="grandtotal"
-                            class="form-control text-right"
-                            value="{{ number_format($grandtotal_header, 2, ',', '.')  }}">
+                            class="form-control text-right" value="0">
                     </div>
                 </div>
             </div>
@@ -217,8 +212,6 @@
         </div>
 
     </div>
-
-
 </div>
 
 </div>
@@ -226,9 +219,10 @@
 <div class="card-footer text-right">
     <div class="row">
         <div class="col-lg-12 ">
-            <button type="submit" class="btn btn-success font-weight-bold mr-2"><i class="flaticon2-paperplane"></i>
+            <button type="button" class="btn btn-success font-weight-bold mr-2" onclick="submitfj()"><i
+                    class="flaticon2-paperplane"></i>
                 {{ $submit }}</button>
-            <a href="{{ route('pesananpenjualan.index') }}" class="btn btn-secondary font-weight-bold mr-2">
+            <a href="{{ route('fakturpenjualan.index') }}" class="btn btn-secondary font-weight-bold mr-2">
                 Cancel</a>
         </div>
     </div>

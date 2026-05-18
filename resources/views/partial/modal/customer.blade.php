@@ -15,8 +15,7 @@
                         <thead class="datatable-head">
                             <tr>                                
                                 <th>Nama Produk</th>    
-                                <th>Merk</th>
-                                <th>Qty</th>
+                                <th>Merk</th>                                
                                 <th>Total Penjualan</th>
                             </tr>
                         </thead>

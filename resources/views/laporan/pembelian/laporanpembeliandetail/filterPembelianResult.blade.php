@@ -167,13 +167,15 @@
     </div>
     <!--end::Entry-->
 </div>
-<!--end::Content-->
-<div id="modal-confirm-delete"></div>
-<div id="modal-show-detail"></div>
+
 @endsection
 @push('script')
-<script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6"') }}"></script>
+<script src="{{ asset('assets/js/pages/widgets.js?v=7.0.6"') }}"></script>
+<script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6') }}"></script>
 <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
 <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
+<script src="{{ asset('/assets/js/pages/crud/datatables/basic/paginations.js') }}"></script>
+
+<script src="{{ asset('/assets/js/pages/crud/datatables/basic/scrollable.js?v=7.0.6') }} "></script>
 
 @endpush

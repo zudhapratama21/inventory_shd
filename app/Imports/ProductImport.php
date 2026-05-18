@@ -7,104 +7,139 @@ use App\Models\HargaNonExpired;
 use App\Models\HargaNonExpiredDetail;
 use App\Models\InventoryTransaction;
 use App\Models\Product;
+use App\Models\StokExp;
+use App\Models\StokExpDetail;
 use App\Models\Supplier;
-use App\Traits\CodeTrait;
 use Carbon\Carbon;
-use Exception;
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Concerns\ToModel;
-use Str;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\ToCollection;
 
-class ProductImport implements ToModel
+class ProductImport implements ToCollection
 {
-    protected $no = 0;
-    use CodeTrait;
-    /**
-     * @param array $row
-     *
-     * @return \Illuminate\Database\Eloquent\Model|null
-     */
-    public function model(array $row)
+   public function collection(Collection $rows)
     {
         DB::beginTransaction();
-        try {
-            if ($this->no !== 0) {
-                // cek produk berdasarkan kode 
-                $product = Product::where('kode', $row[0])->first();
-                $supplier = Supplier::where('kode',$row[1])->first(); 
 
-                // cek stok berdasarkan qty
-                // kurangi dari qty inputan - stok 
-                $stok = $product->stok ;
-                $tanda = 1;
-                if ($stok < 0) {
-                    $tanda = -1;
+        try {
+
+            // =========================================
+            // AMBIL SEMUA PRODUCT ID DARI FILE EXCEL
+            // =========================================
+            $productIds = [];
+
+            foreach ($rows as $key => $row) {
+
+                // skip header
+                if ($key == 0) {
+                    continue;
                 }
 
-                $tahun = Carbon::now()->format('y');
-                $bulan = Carbon::now()->format('m');
+                $product = Product::where('kode', $row[0])->first();
 
-                $kode = 'AJS' . $tahun . $bulan . rand(1000, 9999);
-
-                if ($product->status_exp == 0) {
-                    if ($this->no == 1) {
-                        HargaNonExpired::where('product_id', $product->id)->update([
-                            'qty' => 0
-                        ]);
-                    }
-
-                    $harganonexpired = HargaNonExpired::create([
-                        'product_id' => $product->id,
-                        'supplier' => $supplier->id,
-                        'qty' => $row[3],
-                        'harga_beli' => $row[4],
-                        'diskon_persen' => $row[5],
-                        'diskon_rupiah' => $row[6],
-                        'tanggal_transaksi' => now()->format('Y-m-d'),
-                    ])->id;
-
-                    HargaNonExpiredDetail::create([
-                        'tanggal' => now()->format('Y-m-d'),
-                        'harganonexpired_id' => $harganonexpired,
-                        'product_id' => $product->id,
-                        'qty' => $row[3],                        
-                        'harga_beli' => $row[4],                        
-                        'diskon_persen_beli' => $row[5],
-                        'diskon_rupiah_beli' => $row[6]
-                    ]);
-
-                    // save di tabel adjustmen stok
-                    $ajs = AdjustmentStok::create([
-                        'product_id' => $product->id,
-                        'qty' => $row[3],
-                        'jenis' => 'nonexpired',
-                        'kode' => $kode
-                    ]);
-
-                    // perubahan simpan di inventory transaction
-                    $inv = InventoryTransaction::create([
-                        'tanggal' => Carbon::now()->format('Y-m-d'),
-                        'product_id' => $product->id,
-                        'qty' => $stok * $tanda,
-                        'stok' => $row[3],
-                        'hpp' => $product->hpp,
-                        'jenis' => 'AJS',
-                        'jenis_id' => $kode,
-                    ]);
-
-                    $product->update([
-                        'stok' => $row[3]
-                    ]);
+                if ($product) {
+                    $productIds[] = $product->id;
                 }
             }
 
+            $productIds = collect($productIds)->unique()->toArray();
+
+            // =========================================
+            // RESET STOK PRODUCT
+            // =========================================
+            Product::whereIn('id', $productIds)
+                ->update([
+                    'stok' => 0
+                ]);
+
+            // =========================================
+            // RESET STOK EXP
+            // =========================================
+            StokExp::whereIn('product_id', $productIds)
+                ->update([
+                    'qty' => 0
+                ]);
+
+            // =========================================
+            // LOOP INSERT DATA BARU
+            // =========================================
+            foreach ($rows as $key => $row) {
+
+                // skip header
+                if ($key == 0) {
+                    continue;
+                }
+
+                $product = Product::where('kode', $row[0])->first();                
+
+                if (!$product) {
+                    continue;
+                }               
+
+                // =========================================
+                // INSERT STOK EXP
+                // =========================================
+                $stokExp = StokExp::create([
+                    'tanggal'     => Carbon::now()->format('Y-m-d'),                    
+                    'product_id'  => $product->id,
+                    'qty'         => $row[2],
+                    'lot'         => $row[3],
+                ]);
+
+                // =========================================
+                // INSERT DETAIL STOK EXP
+                // =========================================
+                StokExpDetail::create([
+                    'tanggal'     => Carbon::now()->format('Y-m-d'),
+                    'stok_exp_id' => $stokExp->id,
+                    'product_id'  => $product->id,
+                    'qty'         => $row[2],
+                ]);
+
+                // =========================================
+                // GENERATE KODE AJS
+                // =========================================
+                $kode = 'AJS'
+                    . Carbon::now()->format('ym')
+                    . rand(1000, 9999);
+
+                // =========================================
+                // INSERT ADJUSTMENT STOK
+                // =========================================
+                AdjustmentStok::create([
+                    'product_id' => $product->id,
+                    'qty'        => $row[2],
+                    'jenis'      => 'nonexpired',
+                    'kode'       => $kode
+                ]);
+
+                // =========================================
+                // INSERT INVENTORY TRANSACTION
+                // =========================================
+                InventoryTransaction::create([
+                    'tanggal'   => now()->format('Y-m-d'),
+                    'product_id' => $product->id,
+                    'qty'       => $row[2],
+                    'stok'      => $row[4],
+                    'hpp'       => '-',
+                    'jenis'     => 'AJS',
+                    'jenis_id'  => $kode,
+                ]);
+
+                // =========================================
+                // UPDATE STOK PRODUCT
+                // =========================================
+                $product->update([
+                    'stok' => $row[4]
+                ]);
+            }
+
             DB::commit();
+        } catch (\Exception $e) {
 
-            $this->no++;
+            DB::rollback();
 
-            return;
-        } catch (Exception $th) {
-            DB::rollBack();
+            throw $e;
         }
     }
 }

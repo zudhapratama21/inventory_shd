@@ -51,7 +51,7 @@
                                                 </g>
                                             </svg>
                                             <!--end::Svg Icon--></span> </span>
-                                    <h3 class="card-label">Laporan Penjualan</h3>
+                                    <h3 class="card-label">Laporan Pembelian</h3>
                                 
 
                             </div>                           
@@ -79,7 +79,7 @@
                         </div>
                         <div class="card-body">
                             <!--begin: Datatable-->
-                            <table class="table table-separate table-head-custom table-checkable" id="kt_datatable1">
+                            <table  class="table table-separate table-head-custom table-checkable" id="kt_datatable1">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -144,8 +144,12 @@
 <div id="modal-show-detail"></div>
 @endsection
 @push('script')
-<script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6"') }}"></script>
+<script src="{{ asset('assets/js/pages/widgets.js?v=7.0.6"') }}"></script>
+<script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6') }}"></script>
 <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
 <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
+<script src="{{ asset('/assets/js/pages/crud/datatables/basic/paginations.js') }}"></script>
+
+<script src="{{ asset('/assets/js/pages/crud/datatables/basic/scrollable.js?v=7.0.6') }} "></script>
 
 @endpush

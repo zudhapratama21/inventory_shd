@@ -31,13 +31,7 @@ class StokExpDetail extends Model
         'canvassing_id',
         'canvassing_detail_id',
         'canvassingkembali_id',
-        'canvassingkembali_detail_id',
-        'harga_beli',
-        'diskon_persen_beli',
-        'diskon_rupiah_beli',
-        'harga_jual',
-        'diskon_persen_jual',
-        'diskon_rupiah_jual',
+        'canvassingkembali_detail_id',       
         'stokexpdet_id'
     ];
 

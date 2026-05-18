@@ -18,7 +18,7 @@
             <th>Kode Transaksi</th>
             <th>Customer</th>
             <th>Supplier</th>
-            <th>Action</th>
+            <th>Keterangan</th>
         </tr>
     </thead>
     <tbody>
@@ -35,6 +35,7 @@
                     <td>{{$item->jenis_id}}</td>
                     <td>{{$item->customer}}</td>
                     <td>{{$item->supplier}}</td>
+                    <td>{{$item->keterangan}}</td>
                 </tr>
             @endforeach
     </tbody>    

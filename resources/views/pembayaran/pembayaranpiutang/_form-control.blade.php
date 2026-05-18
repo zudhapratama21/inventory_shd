@@ -1,15 +1,15 @@
 <div class="card-body">
 
     <div class="form-group">
-        <label>No. Faktur :</label>
+        <label>Kode :</label>
         <input type="text" name="no_faktur" readonly="readonly" value="{{ $piutang->fakturpenjualan->kode }}"
             class="form-control form-control-solid" />
 
     </div>
 
     <div class="form-group">
-        <label>Kode KPA :</label>
-        <input type="text" name="no_faktur" readonly="readonly" value="{{ $piutang->fakturpenjualan->no_kpa }}"
+        <label>No Perusahaan :</label>
+        <input type="text" name="no_faktur" readonly="readonly" value="{{ $piutang->fakturpenjualan->no_perusahaan }}"
             class="form-control form-control-solid" />
 
     </div>
@@ -67,6 +67,14 @@
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
+
+    <div class="form-group">
+        <label for="">Status Piutang</label>
+        <select name="status" id="" class="form-control">
+            <option value="2">Lunas</option>
+            <option value="1">Belum Lunas</option>
+        </select>
+    </div>
     <div class="form-group">
         <label>Keterangan :</label>
         <input type="text" name="keterangan" value="" class="form-control" placeholder="Keterangan" />
@@ -76,26 +84,7 @@
     </div>
 </div>
 
-<hr>
 
-<table class="table yajra-datatable collapsed ">
-    <thead class="datatable-head">
-        <tr>
-            <th>Tanggal</th>
-            <th>Customer</th>
-            <th>Faktur</th>
-            <th>No KPA</th>
-            <th>Akun Bank</th>
-            <th>Nominal</th>
-            <th>Keterangan</th>
-            <th style="width: 15%">Action</th>
-        </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
-
-</div>
 <!--end::Form-->
 <div class="card-footer text-right">
     <div class="row">

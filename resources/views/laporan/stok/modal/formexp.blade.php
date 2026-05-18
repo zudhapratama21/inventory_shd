@@ -21,20 +21,7 @@
                     <div class="form-group">
                         <label for="">Qty</label> 
                         <input type="text" value="{{$stok->qty}}" id="qty" class="form-control" >
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="">Harga Beli</label> 
-                        <input type="text" value="{{$stok->harga_beli}}" id="harga_beli" class="form-control" >
-                    </div>
-                    <div class="form-group">
-                        <label for="">Diskon (%)</label> 
-                        <input type="text" value="{{$stok->diskon_persen}}" id="diskon_persen" class="form-control" >
-                    </div>
-                    <div class="form-group">
-                        <label for="">Diskon (Rp.)</label> 
-                        <input type="text" value="{{$stok->diskon_rupiah}}" id="diskon_rupiah" class="form-control" >
-                    </div>
+                    </div>                                      
                 </form>
             </div>
             <div class="modal-footer">

@@ -157,7 +157,7 @@
                                                 <td>{{ number_format($pesananpembelian->total_diskon_header, 2, ',', '.') }}
                                                 </td>
                                                 <td>{{ number_format($pesananpembelian->total, 2, ',', '.') }}</td>
-                                                <td>{{ number_format($pesananpembelian->ppn, 2, ',', '.') }} %</td>
+                                                <td>{{ number_format($pesananpembelian->ppn, 2, ',', '.') }}</td>
                                                 <td>{{ number_format($pesananpembelian->ongkir, 2, ',', '.') }}</td>
                                                 <td class="text-danger font-size-h3 font-weight-boldest">
                                                     {{ number_format($pesananpembelian->grandtotal, 2, ',', '.') }}</td>

@@ -87,8 +87,6 @@ Auth::routes();
 Route::middleware('auth', 'verified')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::post('/chartyear', [HomeController::class, 'chartyear'])->name('chart.year');
-    Route::post('/chartkategori', [HomeController::class, 'chartkategori'])->name('chart.kategori');
-    Route::post('/chartproduk', [HomeController::class, 'grafikProduk'])->name('chart.produk');
     Route::post('/chartbestproduk', [HomeController::class, 'grafikPenjualanProdukTerbaik'])->name('chart.bestproduk');
     Route::post('/listcustomer', [HomeController::class, 'listCustomer'])->name('datatable.listcustomer');
 
@@ -373,27 +371,21 @@ Route::middleware('has.role')->prefix('pembelian')->group(function () {
 
         Route::get('{pesananpembelian}/print_a4', [PesananPembelianController::class, 'print_a4'])->name('pesananpembelian.print_a4');
 
-        Route::post('editdiskon', [PesananPembelianController::class, 'editdiskon'])->name('pesananpembelian.editdiskon');
-        Route::post('updatediskon', [PesananPembelianController::class, 'updatediskon'])->name('pesananpembelian.updatediskon');
-
-        Route::post('editppn', [PesananPembelianController::class, 'editppn'])->name('pesananpembelian.editppn');
-        Route::post('updateppn', [PesananPembelianController::class, 'updateppn'])->name('pesananpembelian.updateppn');
+        Route::post('updateongkir', [PesananPembelianController::class, 'updateongkir'])->name('pesananpembelian.updateongkir');       
 
         Route::post('inputtemppo', [PesananPembelianController::class, 'inputtemppo'])->name('pesananpembelian.inputtemppo');
         Route::post('loadtemppo', [PesananPembelianController::class, 'loadtemppo'])->name('pesananpembelian.loadtemppo');
 
         Route::delete('delete_detail', [PesananPembelianController::class, 'destroy_detail'])->name('pesananpembelian.destroy_detail');
 
-        Route::post('hitungsubtotal', [PesananPembelianController::class, 'hitungsubtotal'])->name('pesananpembelian.hitungsubtotal');
-        Route::post('hitungdiskon', [PesananPembelianController::class, 'hitungdiskon'])->name('pesananpembelian.hitungdiskon');
-        Route::post('hitungtotal', [PesananPembelianController::class, 'hitungtotal'])->name('pesananpembelian.hitungtotal');
-        Route::post('hitungppn', [PesananPembelianController::class, 'hitungppn'])->name('pesananpembelian.hitungppn');
-        Route::post('hitungongkir', [PesananPembelianController::class, 'hitungongkir'])->name('pesananpembelian.hitungongkir');
+        
         Route::post('hitunggrandtotal', [PesananPembelianController::class, 'hitunggrandtotal'])->name('pesananpembelian.hitunggrandtotal');
         Route::post('posting', [PesananPembelianController::class, 'posting'])->name('pesananpembelian.posting');
         Route::post('posted', [PesananPembelianController::class, 'posted'])->name('pesananpembelian.posted');
 
         Route::post('editstatus', [PesananPembelianController::class, 'editstatus'])->name('pesananpembelian.editstatus');
+
+        Route::post('ceksurat', [PesananPembelianController::class, 'cekNoSurat'])->name('pesananpembelian.ceksurat');
 
 
         // EDIT PESANAN PEMBELIAN
@@ -405,22 +397,13 @@ Route::middleware('has.role')->prefix('pembelian')->group(function () {
         Route::post('editbarangdetail', [PesananPembelianController::class, 'editBarangDetail'])->name('pesananpembelian.editbarangdetail');
         Route::post('updatebarangdetail', [PesananPembelianController::class, 'updateBarangDetail'])->name('pesananpembelian.updatebarangdetail');
 
-        Route::post('editdiskondetail', [PesananPembelianController::class, 'editDiskonDetail'])->name('pesananpembelian.editdiskondetail');
-        Route::post('updatediskondetail', [PesananPembelianController::class, 'updateDiskonDetail'])->name('pesananpembelian.updatediskondetail');
-
-        Route::post('editppndetail', [PesananPembelianController::class, 'editPPNDetail'])->name('pesananpembelian.editppndetail');
-        Route::post('updateppndetail', [PesananPembelianController::class, 'updatePPNDetail'])->name('pesananpembelian.updateppndetail');
-
+        Route::post('updateongkirdetail', [PesananPembelianController::class, 'updateOngkirDetail'])->name('pesananpembelian.updateongkirdetail');
+    
         Route::post('inputpesanandetail', [PesananPembelianController::class, 'inputPesananDetail'])->name('pesananpembelian.inputpesanandetail');
         Route::post('loadpesanandetail', [PesananPembelianController::class, 'loadPesananDetail'])->name('pesananpembelian.loadpesanandetail');
 
         Route::delete('delete_pesanan_detail', [PesananPembelianController::class, 'destroyPesananDetail'])->name('pesananpembelian.destroy_pesanan_detail');
 
-        Route::post('hitungsubtotaldetail', [PesananPembelianController::class, 'hitungSubTotalDetail'])->name('pesananpembelian.hitungsubtotaldetail');
-        Route::post('hitungdiskondetail', [PesananPembelianController::class, 'hitungDiskonDetail'])->name('pesananpembelian.hitungdiskondetail');
-        Route::post('hitungtotaldetail', [PesananPembelianController::class, 'hitungTotalDetail'])->name('pesananpembelian.hitungtotaldetail');
-        Route::post('hitungppndetail', [PesananPembelianController::class, 'hitungPPNDetail'])->name('pesananpembelian.hitungppndetail');
-        Route::post('hitungongkirdetail', [PesananPembelianController::class, 'hitungOngkirDetail'])->name('pesananpembelian.hitungongkirdetail');
         Route::post('hitunggrandtotaldetail', [PesananPembelianController::class, 'hitungGrandTotalDetail'])->name('pesananpembelian.hitunggrandtotaldetail');
     });
 
@@ -464,6 +447,9 @@ Route::middleware('has.role')->prefix('pembelian')->group(function () {
         Route::post('{penerimaanbarang}/create', [FakturPembelianController::class, 'store']);
         Route::get('{fakturpembelian}/show', [FakturPembelianController::class, 'show'])->name('fakturpembelian.show');
 
+        Route::get('{fakturpembelian}/edit', [FakturPembelianController::class, 'edit'])->name('fakturpembelian.edit');
+        Route::put('{fakturpembelian}/update', [FakturPembelianController::class, 'update'])->name('fakturpembelian.update');
+
 
         Route::post('delete', [FakturPembelianController::class, 'delete'])->name('fakturpembelian.delete');
         Route::delete('delete', [FakturPembelianController::class, 'destroy'])->name('fakturpembelian.destroy');
@@ -489,83 +475,15 @@ Route::middleware('has.role')->prefix('pembelian')->group(function () {
     });
 });
 
-Route::middleware('has.role')->prefix('penjualan')->group(function () {
-    Route::prefix('pesananpenjualan')->group(function () {
-        Route::get('', [PesananPenjualanController::class, 'index'])->name('pesananpenjualan.index');
-        Route::get('create', [PesananPenjualanController::class, 'create'])->name('pesananpenjualan.create');
-        Route::post('create', [PesananPenjualanController::class, 'store']);
-        Route::get('{pesananpenjualan}/show', [PesananPenjualanController::class, 'show'])->name('pesananpenjualan.show');
-        Route::post('delete', [PesananPenjualanController::class, 'delete'])->name('pesananpenjualan.delete');
-        Route::delete('delete', [PesananPenjualanController::class, 'destroy'])->name('pesananpenjualan.destroy');
-
-        Route::get('caribarang', [PesananPenjualanController::class, 'caribarang'])->name('pesananpenjualan.caribarang');
-        Route::post('setbarang', [PesananPenjualanController::class, 'setbarang'])->name('pesananpenjualan.setbarang');
-
-        Route::post('editbarang', [PesananPenjualanController::class, 'editbarang'])->name('pesananpenjualan.editbarang');
-        Route::post('updatebarang', [PesananPenjualanController::class, 'updatebarang'])->name('pesananpenjualan.updatebarang');
-
-        Route::post('editdiskon', [PesananPenjualanController::class, 'editdiskon'])->name('pesananpenjualan.editdiskon');
-        Route::post('updatediskon', [PesananPenjualanController::class, 'updatediskon'])->name('pesananpenjualan.updatediskon');
-
-        Route::post('editppn', [PesananPenjualanController::class, 'editppn'])->name('pesananpenjualan.editppn');
-        Route::post('updateppn', [PesananPenjualanController::class, 'updateppn'])->name('pesananpenjualan.updateppn');
-
-        Route::post('inputtempso', [PesananPenjualanController::class, 'inputtempso'])->name('pesananpenjualan.inputtempso');
-        Route::post('loadtempso', [PesananPenjualanController::class, 'loadtempso'])->name('pesananpenjualan.loadtempso');
-
-        Route::delete('delete_detail', [PesananPenjualanController::class, 'destroy_detail'])->name('pesananpenjualan.destroy_detail');
-
-        Route::post('hitungsubtotal', [PesananPenjualanController::class, 'hitungsubtotal'])->name('pesananpenjualan.hitungsubtotal');
-        Route::post('hitungdiskon', [PesananPenjualanController::class, 'hitungdiskon'])->name('pesananpenjualan.hitungdiskon');
-        Route::post('hitungtotal', [PesananPenjualanController::class, 'hitungtotal'])->name('pesananpenjualan.hitungtotal');
-        Route::post('hitungppn', [PesananPenjualanController::class, 'hitungppn'])->name('pesananpenjualan.hitungppn');
-        Route::post('hitungongkir', [PesananPenjualanController::class, 'hitungongkir'])->name('pesananpenjualan.hitungongkir');
-        Route::post('hitunggrandtotal', [PesananPenjualanController::class, 'hitunggrandtotal'])->name('pesananpenjualan.hitunggrandtotal');
-        Route::post('posting', [PesananPenjualanController::class, 'posting'])->name('pesananpenjualan.posting');
-        Route::post('posted', [PesananPenjualanController::class, 'posted'])->name('pesananpenjualan.posted');
-
-        Route::post('editstatus', [PesananPenjualanController::class, 'editStatus'])->name('pesananpenjualan.editstatus');
-
-        // EDIT PESANAN PENJUALAN
-        Route::PUT('{pesananpenjualan}/edit', [PesananPenjualanController::class, 'update'])->name('pesananpenjualan.update');
-        Route::get('caribarangdetail/{id}', [PesananPenjualanController::class, 'caribarangdetail'])->name('pesananpenjualan.caribarangdetail');
-        Route::post('setbarang', [PesananPenjualanController::class, 'setbarang'])->name('pesananpenjualan.setbarang');
-
-        Route::get('{pesananpenjualan}/edit', [PesananPenjualanController::class, 'edit'])->name('pesananpenjualan.edit');
-        Route::post('editbarangdetail', [PesananPenjualanController::class, 'editBarangDetail'])->name('pesananpenjualan.editbarangdetail');
-        Route::post('updatebarangdetail', [PesananPenjualanController::class, 'updateBarangDetail'])->name('pesananpenjualan.updatebarangdetail');
-
-        Route::post('editdiskondetail', [PesananPenjualanController::class, 'editDiskonDetail'])->name('pesananpenjualan.editdiskondetail');
-        Route::post('updatediskondetail', [PesananPenjualanController::class, 'updateDiskonDetail'])->name('pesananpenjualan.updatediskondetail');
-
-        Route::post('editppndetail', [PesananPenjualanController::class, 'editPPNDetail'])->name('pesananpenjualan.editppndetail');
-        Route::post('updateppndetail', [PesananPenjualanController::class, 'updatePPNDetail'])->name('pesananpenjualan.updateppndetail');
-
-        Route::post('inputpesanandetail', [PesananPenjualanController::class, 'inputPesananDetail'])->name('pesananpenjualan.inputpesanandetail');
-        Route::post('loadpesanandetail', [PesananPenjualanController::class, 'loadPesananDetail'])->name('pesananpenjualan.loadpesanandetail');
-
-        Route::delete('delete_pesanan_detail', [PesananPenjualanController::class, 'destroyPesananDetail'])->name('pesananpenjualan.destroy_pesanan_detail');
-
-        Route::post('hitungsubtotaldetail', [PesananPenjualanController::class, 'hitungSubTotalDetail'])->name('pesananpenjualan.hitungsubtotaldetail');
-        Route::post('hitungdiskondetail', [PesananPenjualanController::class, 'hitungDiskonDetail'])->name('pesananpenjualan.hitungdiskondetail');
-        Route::post('hitungtotaldetail', [PesananPenjualanController::class, 'hitungTotalDetail'])->name('pesananpenjualan.hitungtotaldetail');
-        Route::post('hitungppndetail', [PesananPenjualanController::class, 'hitungPPNDetail'])->name('pesananpenjualan.hitungppndetail');
-        Route::post('hitungongkirdetail', [PesananPenjualanController::class, 'hitungOngkirDetail'])->name('pesananpenjualan.hitungongkirdetail');
-        Route::post('hitunggrandtotaldetail', [PesananPenjualanController::class, 'hitungGrandTotalDetail'])->name('pesananpenjualan.hitunggrandtotaldetail');
-
-        // PRINT PENJUALAN
-        Route::get('{pesananpenjualan}/print_a4', [PesananPenjualanController::class, 'print_a4'])->name('pesananpenjualan.print_a4');
-
-        Route::post('hitungpph', [PesananPenjualanController::class, 'hitungpph'])->name('pesananpenjualan.hitungpph');
-    });
+Route::middleware('has.role')->prefix('penjualan')->group(function () {   
 
     Route::prefix('pengirimanbarang')->group(function () {
         Route::get('', [PengirimanBarangController::class, 'index'])->name('pengirimanbarang.index');
-        Route::get('{pesananpenjualan}/create', [PengirimanBarangController::class, 'create'])->name('pengirimanbarang.create');
-        Route::post('{pesananpenjualan}/create', [PengirimanBarangController::class, 'store']);
+        Route::get('create', [PengirimanBarangController::class, 'create'])->name('pengirimanbarang.create');
+        Route::post('create', [PengirimanBarangController::class, 'store'])->name('pengirimanbarang.store');
 
         Route::get('{pengirimanbarang}/edit', [PengirimanBarangController::class, 'edit'])->name('pengirimanbarang.edit');
-        Route::put('{pengirimanbarang}/edit', [PengirimanBarangController::class, 'update'])->name('pengirimanbarang.update');
+        Route::POST('{pengirimanbarang}/edit', [PengirimanBarangController::class, 'updatePB'])->name('pengirimanbarang.updatePB');
         Route::get('{pengirimanbarang}/show', [PengirimanBarangController::class, 'show'])->name('pengirimanbarang.show');
         Route::get('{pengirimanbarang}/showData', [PengirimanBarangController::class, 'showData'])->name('pengirimanbarang.showData');
 
@@ -598,32 +516,30 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
         Route::post('submitexp', [PengirimanBarangController::class, 'submitexp'])->name('pengirimanbarang.submitexp');
 
 
-
-        // untuk set harga non expired 
-        Route::get('{pengirimanbarangdetail}/setproduk', [PengirimanBarangController::class, 'setProduk'])->name('pengirimanbarang.setproduk');
-        Route::get('{pengirimanbarangdetail}/listproduk', [PengirimanBarangController::class, 'listProduk'])->name('pengirimanbarang.listproduk');
-        Route::get('{stokproduk}/{pengirimanbarangdetail}/formsetproduk', [PengirimanBarangController::class, 'formSetProduct'])->name('pengirimanbarang.formsetproduk');
-        Route::post('{stokproduk}/{pengirimanbarangdetail}/saveproduk', [PengirimanBarangController::class, 'saveProduk'])->name('pengirimanbarang.saveproduk');
-        Route::post('destroyproduk', [PengirimanBarangController::class, 'destroyProduk'])->name('pengirimanbarang.destroyproduk');
+        // untuk new
+        Route::get('listbarang', [PengirimanBarangController::class, 'listbarang'])->name('pengirimanbarang.listbarang');
+        Route::post('setbarang', [PengirimanBarangController::class, 'setbarang'])->name('pengirimanbarang.setbarang');
+        Route::post('inputbarang', [PengirimanBarangController::class, 'inputbarang'])->name('pengirimanbarang.inputbarang');
+        Route::get('databarang', [PengirimanBarangController::class, 'databarang'])->name('pengirimanbarang.databarang');
+        Route::post('hapusItem', [PengirimanBarangController::class, 'hapusItem'])->name('pengirimanbarang.hapusItem');
+        Route::post('storePB', [PengirimanBarangController::class, 'storePB'])->name('pengirimanbarang.storePB');
 
         Route::get('{pengirimanbarang}/print_a5', [PengirimanBarangController::class, 'print_a5'])->name('pengirimanbarang.print_a5');
-        Route::get('/snycronisasi', [PengirimanBarangController::class, 'syncronisasi'])->name('pengirimanbarang.syncronisasi');
     });
 
 
     Route::prefix('fakturpenjualan')->group(function () {
         Route::get('', [FakturPenjualanController::class, 'index'])->name('fakturpenjualan.index');
-        Route::get('{pengirimanbarang}/create', [FakturPenjualanController::class, 'create'])->name('fakturpenjualan.create');
-        Route::post('{pengirimanbarang}/create', [FakturPenjualanController::class, 'store']);
+        Route::get('create', [FakturPenjualanController::class, 'create'])->name('fakturpenjualan.create');
+        Route::post('create', [FakturPenjualanController::class, 'store'])->name('fakturpenjualan.store');
 
         Route::get('{fakturpenjualan}/edit', [FakturPenjualanController::class, 'edit'])->name('fakturpenjualan.edit');
         Route::post('{fakturpenjualan}/update', [FakturPenjualanController::class, 'update'])->name('fakturpenjualan.update');
 
         Route::get('{fakturpenjualan}/show', [FakturPenjualanController::class, 'show'])->name('fakturpenjualan.show');
         Route::get('{fakturpenjualan}/showdata', [FakturPenjualanController::class, 'showdata'])->name('fakturpenjualan.showdata');
-
-        Route::post('delete', [FakturPenjualanController::class, 'delete'])->name('fakturpenjualan.delete');
-        Route::delete('delete', [FakturPenjualanController::class, 'destroy'])->name('fakturpenjualan.destroy');
+        
+        Route::post('delete', [FakturPenjualanController::class, 'destroy'])->name('fakturpenjualan.destroy');
         Route::get('caribarang', [FakturPenjualanController::class, 'caribarang'])->name('fakturpenjualan.caribarang');
         Route::post('setbarang', [FakturPenjualanController::class, 'setbarang'])->name('fakturpenjualan.setbarang');
         Route::post('editbarang', [FakturPenjualanController::class, 'editbarang'])->name('fakturpenjualan.editbarang');
@@ -644,8 +560,8 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
         Route::post('getnokpa', [FakturPenjualanController::class, 'getNoKpa'])->name('fakturpenjualan.getnokpa');
 
         // cn
-        Route::get('{fakturpenjualan}/print_a4_koma', [FakturPenjualanController::class, 'print_a4_koma'])->name('fakturpenjualan.print_a4_koma');
-        Route::get('{fakturpenjualan}/print_a4', [FakturPenjualanController::class, 'print_a4'])->name('fakturpenjualan.print_a4');
+        Route::post('{fakturpenjualan}/print_a5', [FakturPenjualanController::class, 'print_a5'])->name('fakturpenjualan.print_a5');
+        Route::post('{fakturpenjualan}/print_a4', [FakturPenjualanController::class, 'print_a4'])->name('fakturpenjualan.print_a4');
         Route::get('{fakturpenjualan}/EditCN', [FakturPenjualanController::class, 'editCN'])->name('fakturpenjualan.editCN');
         Route::POST('{fakturpenjualandetail}/EditCN', [FakturPenjualanController::class, 'createCN'])->name('fakturpenjualan.editCN');
         Route::PUT('{fakturpenjualandetail}/updateCN', [FakturPenjualanController::class, 'updateCN'])->name('fakturpenjualan.updateCN');
@@ -653,26 +569,7 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
         // kwitansi
         Route::get('{fakturpenjualan}/kwitansi', [FakturPenjualanController::class, 'kwitansi'])->name('fakturpenjualan.kwitansi');
 
-        // ============================================== BIAYA LAIN - LAIN ===============================================================
-        Route::get('{fakturpenjualan}/biayalain', [BiayaLainController::class, 'index'])->name('fakturpenjualan.biayalain.index');
-        Route::post('/biayalain/datatable', [BiayaLainController::class, 'datatables'])->name('fakturpenjualan.biayalain.datatable');
-        Route::post('/biayalain/store', [BiayaLainController::class, 'store'])->name('fakturpenjualan.biayalain.store');
-        Route::post('/biayalain/edit', [BiayaLainController::class, 'edit'])->name('fakturpenjualan.biayalain.edit');
-        Route::post('/biayalain/update', [BiayaLainController::class, 'update'])->name('fakturpenjualan.biayalain.ubah');
-        Route::post('/biayalain/delete', [BiayaLainController::class, 'destroy'])->name('fakturpenjualan.biayalain.destroy');
-
-        //==============================================  LABA RUGI =======================================================================
-        Route::get('{fakturpenjualan}/labarugi', [LabaRugiController::class, 'show'])->name('fakturpenjualan.labarugi.show');
-
-        Route::get('syncronisasi', [FakturPenjualanController::class, 'syncronisasi'])->name('fakturpenjualan.syncronisasi');
-        Route::get('{id}/syncronisasi2', [FakturPenjualanController::class, 'syncronisasi2'])->name('fakturpenjualan.syncronisasi2');
-
-        Route::post('tandaterima/{id}', [FakturPenjualanController::class, 'tandaTerima'])->name('fakturpenjualan.tandaterima');
-        Route::put('edittandaterima/{id}', [FakturPenjualanController::class, 'editTandaTerima'])->name('fakturpenjualan.edittandaterima');
-
-        Route::post('revision', [FakturPenjualanController::class, 'revision'])->name('fakturpenjualan.revision');
-
-        Route::get('datatablelistsj', [FakturPenjualanController::class, 'datatablelistsj'])->name('fakturpenjualan.datatablelistsj');
+        Route::post('datatablelistsj', [FakturPenjualanController::class, 'datatablelistsj'])->name('fakturpenjualan.datatablelistsj');
         Route::get('datatable', [FakturPenjualanController::class, 'datatable'])->name('fakturpenjualan.datatable');
 
         Route::post('hapusdouble', [FakturPenjualanController::class, 'hapusdouble'])->name('fakturpenjualan.hapusdouble');
@@ -682,10 +579,35 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
         Route::post('inputcn', [FakturPenjualanController::class, 'inputcn'])->name('fakturpenjualan.inputcn');
         Route::post('setcn', [FakturPenjualanController::class, 'setcn'])->name('fakturpenjualan.setcn');
 
+        // new
+        Route::post('simpansj', [FakturPenjualanController::class, 'simpansj'])->name('fakturpenjualan.simpansj');
+        Route::get('loadsj', [FakturPenjualanController::class, 'loadsj'])->name('fakturpenjualan.loadsj');
+        Route::post('editsj', [FakturPenjualanController::class, 'editsj'])->name('fakturpenjualan.editsj');
+        Route::post('updatesj', [FakturPenjualanController::class, 'updatesj'])->name('fakturpenjualan.updatesj');
+        Route::post('hapussj', [FakturPenjualanController::class, 'hapussj'])->name('fakturpenjualan.hapussj');
+        Route::get('caribarang', [FakturPenjualanController::class, 'caribarang'])->name('fakturpenjualan.caribarang');
+        Route::post('setbarang', [FakturPenjualanController::class, 'setbarang'])->name('fakturpenjualan.setbarang');
+        Route::post('simpanbarang', [FakturPenjualanController::class, 'simpanbarang'])->name('fakturpenjualan.simpanbarang');
+        Route::get('hitungtotal', [FakturPenjualanController::class, 'hitungtotal'])->name('fakturpenjualan.hitungtotal');
+        Route::post('simpanbiaya', [FakturPenjualanController::class, 'simpanbiaya'])->name('fakturpenjualan.simpanbiaya');
 
-        Route::post('inputterimaberkas/{id}', [FakturPenjualanController::class, 'inputterimaberkas'])->name('fakturpenjualan.inputterimaberkas');
-        Route::put('editterimaberkas/{id}', [FakturPenjualanController::class, 'editterimaberkas'])->name('fakturpenjualan.editterimaberkas');
+        Route::post('storefj', [FakturPenjualanController::class, 'storefj'])->name('fakturpenjualan.storefj');
+        Route::post('updatefj', [FakturPenjualanController::class, 'updatefj'])->name('fakturpenjualan.updatefj');
 
+        Route::post('ceknomor', [FakturPenjualanController::class, 'ceknomor'])->name('fakturpenjualan.ceknomor');
+
+        Route::post('loadfj', [FakturPenjualanController::class, 'loadfj'])->name('fakturpenjualan.loadfj');
+        Route::post('editfj', [FakturPenjualanController::class, 'editfj'])->name('fakturpenjualan.editfj');
+
+        Route::post('tambahdetail', [FakturPenjualanController::class, 'tambahdetail'])->name('fakturpenjualan.tambahdetail');
+        Route::post('totaldetail', [FakturPenjualanController::class, 'totalDetail'])->name('fakturpenjualan.totaldetail');
+        Route::post('editdetail', [FakturPenjualanController::class, 'editdetail'])->name('fakturpenjualan.editdetail');
+        Route::post('updatedetail', [FakturPenjualanController::class, 'updatedetail'])->name('fakturpenjualan.updatedetail');
+        Route::post('hapusdetail', [FakturPenjualanController::class, 'hapusdetail'])->name('fakturpenjualan.hapusdetail');
+        Route::post('updatebiayadetail', [FakturPenjualanController::class, 'updatebiayadetail'])->name('fakturpenjualan.updatebiayadetail');
+
+        Route::post('tandaterima/{id}', [FakturPenjualanController::class, 'tandaTerima'])->name('fakturpenjualan.tandaterima');
+        Route::put('edittandaterima/{id}', [FakturPenjualanController::class, 'editTandaTerima'])->name('fakturpenjualan.edittandaterima');
     });
 
     Route::prefix('pembayaranhutang')->group(function () {
@@ -696,7 +618,7 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
 Route::middleware('has.role')->prefix('pembayaran')->group(function () {
     Route::prefix('pembayaranhutang')->group(function () {
         Route::get('', [PembayaranHutangController::class, 'index'])->name('pembayaranhutang.index');
-        Route::get('listhutang', [PembayaranHutangController::class, 'listhutang'])->name('pembayaranhutang.listhutang');    
+        Route::get('listhutang', [PembayaranHutangController::class, 'listhutang'])->name('pembayaranhutang.listhutang');
         Route::get('{hutang}/create', [PembayaranHutangController::class, 'create'])->name('pembayaranhutang.create');
         Route::post('{hutang}/create', [PembayaranHutangController::class, 'store']);
         Route::post('show', [PembayaranHutangController::class, 'show'])->name('pembayaranhutang.show');
@@ -766,21 +688,12 @@ Route::middleware('has.role')->prefix('laporan')->group(function () {
 
     Route::prefix('laporanpembayaran')->group(function () {
 
-        Route::get('', [LaporanPembayaranController::class, 'index'])->name('laporanpembayaran.index');
-        Route::get('pembayaranhutang', [LaporanPembayaranController::class, 'filterHutang'])->name('laporanpembayaran.filterpembayaranhutang');
+        Route::get('', [LaporanPembayaranController::class, 'index'])->name('laporanpembayaran.index');        
         Route::get('pembayaranhutangdetail', [LaporanPembayaranController::class, 'filterHutangDetail'])->name('laporanpembayaran.filterpembayaranhutangdetail');
-        Route::get('pembayaranpiutang', [LaporanPembayaranController::class, 'filterPiutang'])->name('laporanpembayaran.filterpembayaranpiutang');
-        Route::get('pembayaranpiutangdetail', [LaporanPembayaranController::class, 'filterPiutangDetail'])->name('laporanpembayaran.filterpembayaranpiutangdetail');
-        Route::get('logtoleransi', [LaporanPembayaranController::class, 'logToleransi'])->name('laporanpembayaran.filterlogtoleransi');
-
-        Route::post('logtoleransi', [LaporanPembayaranController::class, 'filterLogToleransi'])->name('laporanpembayaran.filterlogtoleransi');
-        Route::post('pembayaranhutang', [LaporanPembayaranController::class, 'filterDataHutang'])->name('laporanpembayaran.filterdatapembayaranhutang');
-        Route::post('pembayaranhutang/export', [LaporanPembayaranController::class, 'exportPembayaranHutang'])->name('laporanpembayaran.exportpembayaranhutang');
         Route::post('pembayaranhutangdetail', [LaporanPembayaranController::class, 'filterDataHutangDetail'])->name('laporanpembayaran.filterdatapembayaranhutangdetail');
         Route::post('pembayaranhutangdetail/export', [LaporanPembayaranController::class, 'exportPembayaranHutangDetail'])->name('laporanpembayaran.exportpembayaranhutangdetail');
-
-        Route::post('pembayaranpiutang', [LaporanPembayaranController::class, 'filterDataPiutang'])->name('laporanpembayaran.filterpembayaranpiutang');
-        Route::post('pembayaranpiutang/export', [LaporanPembayaranController::class, 'exportPembayaranPiutang'])->name('laporanpembayaran.exportpembayaranpiutang');
+                
+        Route::get('pembayaranpiutangdetail', [LaporanPembayaranController::class, 'filterPiutangDetail'])->name('laporanpembayaran.filterpembayaranpiutangdetail');        
         Route::post('pembayaranpiutangdetail', [LaporanPembayaranController::class, 'filterPembayaranPiutangDetail'])->name('laporanpembayaran.filterpembayaranpiutangdetail');
         Route::post('pembayaranpiutangdetail/export', [LaporanPembayaranController::class, 'exportPembayaranPiutangDetail'])->name('laporanpembayaran.exportpembayaranpiutangdetail');
     });
@@ -1357,7 +1270,7 @@ Route::prefix('tipesurat')->group(function () {
 
 Route::middleware('has.role')->prefix('keuangan')->group(function () {
     Route::prefix('cashadvance')->group(function () {
-        Route::get('', [CashAdvanceController::class, 'index'])->name('cashadvance.index');        
+        Route::get('', [CashAdvanceController::class, 'index'])->name('cashadvance.index');
         Route::get('/datatable', [CashAdvanceController::class, 'datatable'])->name('cashadvance.datatable');
         Route::post('/store', [CashAdvanceController::class, 'store'])->name('cashadvance.store');
 
@@ -1374,15 +1287,15 @@ Route::middleware('has.role')->prefix('keuangan')->group(function () {
         Route::post('setstatus', [CashAdvanceController::class, 'setstatus'])->name('cashadvance.setstatus');
     });
 
-     Route::prefix('analisis')->group(function () {
-        Route::get('', [AnalisisKeuanganController::class, 'index'])->name('analisiskeuangan.index');        
-        Route::post('/datatable', [AnalisisKeuanganController::class, 'datatable'])->name('analisiskeuangan.datatable');    
+    Route::prefix('analisis')->group(function () {
+        Route::get('', [AnalisisKeuanganController::class, 'index'])->name('analisiskeuangan.index');
+        Route::post('/datatable', [AnalisisKeuanganController::class, 'datatable'])->name('analisiskeuangan.datatable');
 
-        Route::post('/grafikdivisi', [AnalisisKeuanganController::class, 'grafikdivisi'])->name('analisiskeuangan.grafikdivisi');    
+        Route::post('/grafikdivisi', [AnalisisKeuanganController::class, 'grafikdivisi'])->name('analisiskeuangan.grafikdivisi');
 
-        Route::post('/download', [AnalisisKeuanganController::class, 'download'])->name('analisiskeuangan.download');    
+        Route::post('/download', [AnalisisKeuanganController::class, 'download'])->name('analisiskeuangan.download');
 
-        Route::post('/historycash', [AnalisisKeuanganController::class, 'historycash'])->name('analisiskeuangan.historycash');    
-        Route::post('/datatablehistorycash', [AnalisisKeuanganController::class, 'datatablehistorycash'])->name('analisiskeuangan.datatablehistorycash');    
+        Route::post('/historycash', [AnalisisKeuanganController::class, 'historycash'])->name('analisiskeuangan.historycash');
+        Route::post('/datatablehistorycash', [AnalisisKeuanganController::class, 'datatablehistorycash'])->name('analisiskeuangan.datatablehistorycash');
     });
 });

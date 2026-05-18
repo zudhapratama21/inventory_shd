@@ -5,6 +5,7 @@
             <th>Nama Barang</th>
             <th style="width: 5%">Satuan</th>
             <th style="width: 5%">Qty</th>
+            <th style="width: 5%">Kena PPn ?</th>
             <th>Harga</th>
             <th style="width: 5%">Diskon(%)</th>
             <th>Diskon(Rp.)</th>
@@ -28,7 +29,8 @@
                
             </td>
             <td>{{ $item->qty }}</td>
-            <td>{{ number_format($item->hargabeli, 2, ',', '.') }}</td>
+            <td>{{ $item->ppn }} %</td>
+            <td>{{ number_format($item->hargabeli  / ( ($item->ppn+100)/100), 2, ',', '.') }}</td>
             <td>{{ $item->diskon_persen }}</td>
             <td>{{ $item->diskon_rp }}</td>
             <td>{{ number_format($item->subtotal, 2, ',', '.') }}</td>

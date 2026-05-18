@@ -42,8 +42,8 @@ class PembayaranPiutangController extends Controller
                 ->addColumn('kode', function (PembayaranPiutang $ph) {
                     return $ph->fakturpenjualan->kode;
                 })
-                ->addColumn('no_kpa', function (PembayaranPiutang $ph) {
-                    return $ph->fakturpenjualan->no_kpa;
+                ->addColumn('no_perusahaan', function (PembayaranPiutang $ph) {
+                    return $ph->fakturpenjualan->no_perusahaan;
                 })
                 ->addColumn('banks', function (PembayaranPiutang $ph) {
                     return $ph->banks->nama;
@@ -78,7 +78,7 @@ class PembayaranPiutangController extends Controller
 
     public function datatable(Request $request)
     {
-        $piutangs = Piutang::with(['customers:id,nama', 'fakturpenjualan:id,kode,no_kpa'])
+        $piutangs = Piutang::with(['customers:id,nama', 'fakturpenjualan:id,kode,no_perusahaan'])
             ->select('piutangs.*') // ⬅️ Ini penting biar tidak bentrok dengan kolom relasi
             ->where('status', '1')
             ->orderBy('piutangs.id', 'desc');            
@@ -92,8 +92,8 @@ class PembayaranPiutangController extends Controller
             ->editColumn('kode', function (Piutang $pb) {
                 return $pb->fakturpenjualan->kode;
             })
-            ->editColumn('no_kpa', function (Piutang $pb) {
-                return $pb->fakturpenjualan->no_kpa;
+            ->editColumn('no_perusahaan', function (Piutang $pb) {
+                return $pb->fakturpenjualan->no_perusahaan;
             })
             ->editColumn('tanggal', function (Piutang $pb) {
                 return $pb->tanggal ? with(new Carbon($pb->tanggal))->format('d-m-Y') : '';
@@ -131,12 +131,7 @@ class PembayaranPiutangController extends Controller
 
     public function store(Request $request, $id)
     {
-        $piutang = Piutang::with(['customers', 'fakturpenjualan'])->where('id', $id)->first();
-        $request->validate([
-            'tanggal' => ['required'],
-            'nominal' => ['required'],
-            'bank_id' => ['required'],
-        ]);
+        $piutang = Piutang::with(['customers', 'fakturpenjualan'])->where('id', $id)->first();        
 
         DB::beginTransaction();
         try {
@@ -154,22 +149,7 @@ class PembayaranPiutangController extends Controller
             $nominal = str_replace('.', '', $request->nominal) * 1;
             $dibayar_baru = $dibayar + $nominal;
 
-            $toleransi = $dibayar_baru - $total_piutang;
-
-            if ($toleransi >= -500 && $toleransi <= 500) {
-                $status = '2';
-            } elseif ($toleransi < -500) {
-                $status = '1';
-            } else {
-                $status = '1';
-            }
-
-
-            if ($toleransi > 500) {
-                return back()->with('error', 'Nominal tidak boleh melebihi sisa piutang');
-            }
-
-
+            $toleransi = $dibayar_baru - $total_piutang;        
 
             //insert pembayaran
             $datas['tanggal'] = $tanggal;
@@ -183,20 +163,10 @@ class PembayaranPiutangController extends Controller
 
             //update Piutang
             $datapiutang = Piutang::find($piutang->id);
-            $datapiutang->status = $status;
+            $datapiutang->status = $request->status;
             $datapiutang->dibayar = $dibayar_baru;
             $datapiutang->save();
 
-            $faktur = FakturPenjualan::where('id', $piutang->faktur_penjualan_id)->first();
-
-            if ($status == '2') {
-                LogToleransi::create([
-                    'tanggal' => $tanggal,
-                    'rupiah' => $toleransi,
-                    'jenis' => 'Piutang',
-                    'jenis_id' => $faktur->kode,
-                ]);
-            }
             DB::commit();
 
             return redirect()->route('pembayaranpiutang.index')->with('status', 'Pembayaran Piutang Berhasil Dibuat !');

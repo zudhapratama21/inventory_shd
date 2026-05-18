@@ -65,7 +65,7 @@
                                 <thead class="datatable-head">
                                     <tr>
                                         <th>Kode</th>
-                                        <th>No KPA</th>
+                                        <th>No Perusahaan</th>
                                         <th>Tanggal</th>
                                         <th>Supplier</th>
                                         <th>Status</th>

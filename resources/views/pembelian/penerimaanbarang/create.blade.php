@@ -165,12 +165,7 @@
                         data: 'satuan',
                         searchable: false,
                         name: 'products.satuan'
-                    },
-                    {
-                        data: 'stok',
-                        searchable: false,
-                        name: 'products.stok'
-                    },
+                    },                   
                     {
                         data: 'qty',
                         searchable: false,

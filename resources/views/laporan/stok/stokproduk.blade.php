@@ -50,27 +50,8 @@
                                             </g>
                                         </svg>
                                         <!--end::Svg Icon--></span> </span>
-                                <h3 class="card-label">Data Stok Produk</h3>
-                            
-                            </div>
-
-                            <div>
-                                <a href="{{ route('laporanstok.singkronisasi') }}" class="btn btn-danger mr-2" >
-                                    <i class="flaticon-technology"></i>                                  
-                                    Download Sinkronisasi</a>
-                            </div>
-
-                             <div>
-                                <a href="{{ route('laporanstok.getdatanonexp') }}" class="btn btn-success mr-2" >
-                                    <i class="flaticon-technology"></i>                                  
-                                    Download Produk Non Expired</a>
-                            </div>
-
-                            <div>
-                                <a href="{{ route('laporanstok.getdataexp') }}" class="btn btn-success mr-2" >
-                                    <i class="flaticon-technology"></i>                                  
-                                    Download Produk Expired</a>
-                            </div>
+                                <h3 class="card-label">Data Stok Produk</h3>                            
+                            </div>                          
 
                             <div>
                                 <a href="#" class="btn btn-primary mr-2" data-toggle="modal" data-target="#modalexport">

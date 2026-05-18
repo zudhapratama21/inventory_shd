@@ -6,7 +6,7 @@
                 <div class="col-lg-4">
                     <div class="card">
                         <div class="modal-header">
-                            <h5>Input Expired</h5> <br>                                                    
+                            <h5>Input Expired / Lot</h5> <br>                                                    
                         </div>
                         <div class="modal-body">       
                              @if ($penerimaanbarangdet->beda_satuan == 'on')
@@ -18,8 +18,9 @@
                                 <form action="">
                                     <div class="form-group">
                                         <label for="">Tanggal Exp</label>
-                                        <input type="text" class="form-control" id="tgl1">                                        
+                                        <input type="text" class="form-control" id="tgl1" value="{{\Carbon\Carbon::parse(now())->format('d-m-Y')}}">                                        
                                         <input type="hidden" id="detail_id" value="{{ $penerimaanbarangdet->id }}">
+                                        <p class="text-danger" style="font-size: 70%">(*) Untuk produk non expired cukup isi tanggal hari ini</p>
                                     </div>
                                     <div class="form-group">
                                         <label for="">Lot</label>
@@ -60,6 +61,18 @@
                                     <th>Qty Diterima</th>
                                     <td>:</td>
                                     <td> {{ $penerimaanbarangdet->qty }}</td>
+                                </tr>
+                                  <tr>
+                                    <th>Status Expired : </th>
+                                    <td>:</td>
+                                    <td> 
+                                        @if ($penerimaanbarangdet->products->status_exp == 1)
+                                            <p class="badge badge-info">Product Expired</p>
+                                        @else
+                                            <p class="badge badge-info">Product Non Expired</p>                                            
+                                        @endif
+                                        
+                                    </td>
                                 </tr>
                             </table>
                             <table class="table yajra-datatable-exp collapsed">

@@ -185,12 +185,24 @@
             <script></script>
             <!-- Modal-->
         </div>
+
+        @include('pembelian.pesananpembelian.partial.ongkir')
     @endsection
     @push('script')
         <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6"') }}"></script>
         <script src="{{ asset('/assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.6') }}"></script>
         <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
         <script src="{{ asset('/assets/js/pages/crud/forms/widgets/bootstrap-datepicker.js?v=7.0.6') }}"></script>
+
+        <script src="{{ asset('assets/js/pages/features/miscellaneous/blockui.js?v=7.0.6') }} "></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
+            integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css"
+            integrity="sha512-O03ntXoVqaGUTAeAmvQ2YSzkCvclZEcPQu1eqloPaHfJ5RuNGiS4l+3duaidD801P50J28EHyonCV06CUlTSag=="
+            crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
 
         <script type="text/javascript">
             let idpesanan = {{ $pesananpembelian->id }};
@@ -274,7 +286,7 @@
 
             function pilihBarang(data_id) {
                 $('#caribarang').modal('hide');
-                //alert(data_id);
+
                 $.ajax({
                     type: 'POST',
                     url: '{{ route('pesananpembelian.setbarang') }}',
@@ -286,7 +298,12 @@
                         id: data_id,
                         "_token": "{{ csrf_token() }}"
                     },
-
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
+                    complete: function() {
+                        KTApp.unblock();
+                    },
                     success: function(data) {
                         console.log(data);
                         $('#modal-setbarang').html(data);
@@ -310,6 +327,12 @@
                         id: data_id,
                         "_token": "{{ csrf_token() }}"
                     },
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
+                    complete: function() {
+                        KTApp.unblock();
+                    },
 
                     success: function(data) {
 
@@ -323,13 +346,13 @@
             }
 
             function submitItem() {
+
                 var product_id = document.getElementById('product_id').value;
                 var qty = document.getElementById('qty').value;
                 var satuan = document.getElementById('satuan').value;
                 var hargabeli = document.getElementById('hargabeli').value;
                 var diskon_persen = document.getElementById('diskon_persen').value;
                 var diskon_rp = document.getElementById('diskon_rp').value;
-                var ongkir = document.getElementById('ongkir').value;
                 var keterangan = document.getElementById('keterangan').value;
                 var ppn = document.getElementById('ppnprice').value;
 
@@ -337,9 +360,6 @@
                 var satuan_konversi = document.getElementById('satuan_konversi').value;
                 var qty_konversi = document.getElementById('qty_konversi').value;
 
-
-
-                //alert(product_id);
                 $.ajax({
                     type: 'POST',
                     url: '{{ route('pesananpembelian.inputpesanandetail') }}',
@@ -355,7 +375,6 @@
                         "hargabeli": hargabeli,
                         "diskon_persen": diskon_persen,
                         "diskon_rp": diskon_rp,
-                        "ongkir": ongkir,
                         "keterangan": keterangan,
                         "pesanan_pembelian_id": idpesanan,
                         "ppn": ppn,
@@ -364,15 +383,42 @@
                         'qty_konversi': qty_konversi,
                         "_token": "{{ csrf_token() }}"
                     },
-
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
+                    complete: function() {
+                        KTApp.unblock();
+                    },
                     success: function(data) {
-                        console.log(data);
-
                         $('#setBarangModal').modal('hide');
+
+                        iziToast.success({
+                            title: 'success',
+                            message: 'Data Barang Berhasil Ditambahkan',
+                            position: 'topRight',
+                        });
+
                         hitungAll();
                     },
                     error: function(data) {
-                        console.log(data);
+                        const response = JSON.parse(xhr.responseText);
+                        if (xhr.status === 422) {
+                            // Error qty melebihi stok
+                            iziToast.error({
+                                title: 'error',
+                                message: response.message,
+                                position: 'topRight',
+                            });
+                        }
+
+                        if (xhr.status === 500) {
+                            // Error qty melebihi stok
+                            iziToast.error({
+                                title: 'error',
+                                message: response.message,
+                                position: 'topRight',
+                            });
+                        }
                     }
                 });
             }
@@ -385,7 +431,6 @@
                 var hargabeli = document.getElementById('hargabeli').value;
                 var diskon_persen = document.getElementById('diskon_persen').value;
                 var diskon_rp = document.getElementById('diskon_rp').value;
-                var ongkir = document.getElementById('ongkir').value;
                 var keterangan = document.getElementById('keterangan').value;
                 var ppn = document.getElementById('ppnprice').value;
 
@@ -408,7 +453,6 @@
                         "hargabeli": hargabeli,
                         "diskon_persen": diskon_persen,
                         "diskon_rp": diskon_rp,
-                        "ongkir": ongkir,
                         "keterangan": keterangan,
                         "ppn": ppn,
                         "beda_satuan": beda_satuan,
@@ -416,8 +460,21 @@
                         'qty_konversi': qty_konversi,
                         "_token": "{{ csrf_token() }}"
                     },
-                    success: function(data) {                        
+
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
+                    complete: function() {
+                        KTApp.unblock();
+                    },
+                    success: function(data) {
                         $('#setBarangModal').modal('hide');
+                        iziToast.success({
+                            title: 'success',
+                            message: 'Data Barang Berhasil Diupdate',
+                            position: 'topRight',
+                        });
+
                         hitungAll()
                     },
                     error: function(data) {
@@ -439,6 +496,12 @@
 
                         "_token": "{{ csrf_token() }}"
                     },
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
+                    complete: function() {
+                        KTApp.unblock();
+                    },
 
                     success: function(data) {
                         console.log(data);
@@ -451,294 +514,88 @@
                 });
             }
 
-            function editdiskon() {
-                var data_id = idpesanan;
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('pesananpembelian.editdiskondetail') }}',
-                    dataType: 'html',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: {
-                        id: data_id,
-                        "_token": "{{ csrf_token() }}"
-                    },
-
-                    success: function(data) {
-                        console.log(data);
-                        $('#modal-setdiskon').html(data);
-                        $('#setDiskonModal').modal('show');
-                    },
-                    error: function(data) {
-                        console.log(data);
-                    }
-                });
+            function editOngkir() {
+                $('#ongkir').val({{ $pesananpembelian->ongkir }});
+                $('#setOngkir').modal('show');
             }
 
-            function updateDiskon() {
-                var diskon_persen = document.getElementById('diskon_persen_h').value;
-                var diskon_rupiah = document.getElementById('diskon_rp_h').value;
-                var id_diskon = document.getElementById('id_diskon').value;
-                //alert(diskon_persen);
+            function updateOngkir() {
+                var ongkir = document.getElementById('ongkir').value;
+
                 $.ajax({
                     type: 'POST',
-                    url: '{{ route('pesananpembelian.updatediskondetail') }}',
-                    dataType: 'html',
+                    url: '{{ route('pesananpembelian.updateongkirdetail') }}',
+                    dataType: 'json',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     data: {
                         "id": idpesanan,
-                        "id_diskon": id_diskon,
-                        "diskon_persen": diskon_persen,
-                        "diskon_rupiah": diskon_rupiah,
+                        "ongkir": ongkir,
                         "_token": "{{ csrf_token() }}"
                     },
 
                     success: function(data) {
-                        console.log(data);
-                        $('#setDiskonModal').modal('hide');
-                        //$('#diskon').val(data);
+                        $('#setOngkir').modal('hide');
                         hitungAll();
 
-                    },
-                    error: function(data) {
-                        console.log(data);
-                    }
-                });
-            }
-
-            function editppn() {
-                var data_id = idpesanan;
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('pesananpembelian.editppndetail') }}',
-                    dataType: 'html',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: {
-                        id: data_id,
-                        "_token": "{{ csrf_token() }}"
-                    },
-
-                    success: function(data) {
-                        console.log(data);
-                        $('#modal-setppn').html(data);
-                        $('#setPpnModal').modal('show');
+                        iziToast.success({
+                            title: 'success',
+                            message: 'Ongkir Berhasil Diupdate',
+                            position: 'topRight',
+                        });
 
                     },
-                    error: function(data) {
-                        console.log(data);
-                    }
-                });
-            }
-
-            function updatePPN() {
-                var persen = document.getElementById('ppn_persen').value;
-                var id_ppn = document.getElementById('id_ppn').value;
-
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('pesananpembelian.updateppndetail') }}',
-                    dataType: 'html',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: {
-                        "id": idpesanan,
-                        "id_ppn": id_ppn,
-                        "persen": persen,
-                        "_token": "{{ csrf_token() }}"
-                    },
-
-                    success: function(data) {
-                        console.log(data);
-                        $('#setPpnModal').modal('hide');
-                        //$('#ppn').val(data);
-                        hitungAll();
-
-                    },
-                    error: function(data) {
-                        console.log(data);
+                    error: function(xhr) {
+                        const response = JSON.parse(xhr.responseText);
+                        if (xhr.status === 422 || xhr.status === 500) {
+                            iziToast.error({
+                                title: 'error',
+                                message: response.message,
+                                position: 'topRight',
+                            });
+                        }
                     }
                 });
             }
 
             function delete_confirm(data_id) {
-                $('#detailDeleteModal').modal('show');
-                $('#id_detail').val(data_id);
-                // var a = $('#id_detail').val();
-                //alert(a);
-            }
+                Swal.fire({
+                    title: 'Apakah Anda Yakin?',
+                    text: "Data yang dihapus tidak dapat dikembalikan!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Hapus!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'POST',
+                            url: '{{ route('pesananpembelian.destroy_pesanan_detail') }}',
+                            dataType: 'html',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            data: {
+                                id: data_id,
+                                "pembelian_id": idpesanan,
+                                "_method": "delete",
+                                "_token": "{{ csrf_token() }}"
+                            },
 
-            function destroy_detail() {
-                var data_id = $('#id_detail').val();
-                //alert(data_id);
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('pesananpembelian.destroy_pesanan_detail') }}',
-                    dataType: 'html',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: {
-                        id: data_id,
-                        "pembelian_id": idpesanan,
-                        "_method": "delete",
-                        "_token": "{{ csrf_token() }}"
-                    },
-
-                    success: function(data) {
-                        console.log(data);
-                        $('#detailDeleteModal').modal('hide');
-                        hitungAll();
-                    },
-                    error: function(data) {
-                        console.log(data);
-                    }
-                });
-            }
-            /* Fungsi formatRupiah */
-            function formatRupiah(angka, elemenid) {
-                //alert(angka);
-                var prefix = 'Rp. ';
-                var number_string = angka.replace(/[^,\d]/g, '').toString(),
-                    split = number_string.split(','),
-                    sisa = split[0].length % 3,
-                    rupiah = split[0].substr(0, sisa),
-                    ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-                // tambahkan titik jika yang di input sudah menjadi angka ribuan
-                if (ribuan) {
-                    separator = sisa ? '.' : '';
-                    rupiah += separator + ribuan.join('.');
-                }
-
-                rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-                //alert (rupiah);
-                //return rupiah;
-                document.getElementById(elemenid).value = rupiah;
-                //return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
-            }
-
-            function hitungSubtotal() {
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('pesananpembelian.hitungsubtotaldetail') }}',
-                    dataType: 'html',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: {
-                        "id": idpesanan,
-                        "_token": "{{ csrf_token() }}"
-                    },
-
-                    success: function(data) {
-                        console.log(data);
-                        $('#subtotal').val(data);
-
-                    },
-                    error: function(data) {
-                        console.log(data);
-                    }
-                });
-            }
-
-            function hitungDiskon() {
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('pesananpembelian.hitungdiskondetail') }}',
-                    dataType: 'html',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: {
-                        "id": idpesanan,
-                        "_token": "{{ csrf_token() }}"
-                    },
-
-                    success: function(data) {
-                        console.log(data);
-                        $('#diskon').val(data);
-
-                    },
-                    error: function(data) {
-                        console.log(data);
-                    }
-                });
-            }
-
-            function hitungTotal() {
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('pesananpembelian.hitungtotaldetail') }}',
-                    dataType: 'html',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: {
-                        "id": idpesanan,
-                        "_token": "{{ csrf_token() }}"
-                    },
-
-                    success: function(data) {
-                        console.log(data);
-                        $('#total').val(data);
-
-                    },
-                    error: function(data) {
-                        console.log(data);
-                    }
-                });
-            }
-
-            function hitungPPN() {
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('pesananpembelian.hitungppndetail') }}',
-                    dataType: 'html',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: {
-                        "id": idpesanan,
-                        "_token": "{{ csrf_token() }}"
-                    },
-
-                    success: function(data) {
-                        console.log(data);
-                        $('#ppn').val(data);
-
-                    },
-                    error: function(data) {
-                        console.log(data);
-                    }
-                });
-            }
-
-            function hitungOngkir() {
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('pesananpembelian.hitungongkirdetail') }}',
-                    dataType: 'html',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: {
-                        "id": idpesanan,
-                        "_token": "{{ csrf_token() }}"
-                    },
-
-                    success: function(data) {
-                        console.log(data);
-                        $('#ongkirheader').val(data);
-
-                    },
-                    error: function(data) {
-                        console.log(data);
+                            success: function(data) {
+                                iziToast.success({
+                                    title: 'success',
+                                    message: 'Data Barang Berhasil Dihapus',
+                                    position: 'topRight',
+                                });
+                                hitungAll();
+                            },
+                            error: function(data) {
+                                console.log(data);
+                            }
+                        });
                     }
                 });
             }
@@ -747,18 +604,28 @@
                 $.ajax({
                     type: 'POST',
                     url: '{{ route('pesananpembelian.hitunggrandtotaldetail') }}',
-                    dataType: 'html',
+                    dataType: 'json',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
+                    complete: function() {
+                        KTApp.unblock();
                     },
                     data: {
                         "id": idpesanan,
                         "_token": "{{ csrf_token() }}"
                     },
-
-                    success: function(data) {
-                        console.log(data);
-                        $('#grandtotal').val(data);
+                    success: function(res) {
+                        let data = res.data;
+                        $('#subtotal').val(formatRupiah(data.subtotal));
+                        $('#diskon').val(formatRupiah(data.total_diskon));
+                        $('#ppnheader').val(formatRupiah(data.ppn));
+                        $('#grandtotal').val(formatRupiah(data.grandtotal));
+                        $('#total').val(formatRupiah(data.total));
+                        $('#ongkirheader').val(formatRupiah(data.ongkir));
 
                     },
                     error: function(data) {
@@ -767,14 +634,71 @@
                 });
             }
 
+            function formatRupiah(angka) {
+                return new Intl.NumberFormat('id-ID', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }).format(angka);
+            }
+
             function hitungAll() {
                 loadTempPO();
-                hitungSubtotal();
-                hitungDiskon();
-                hitungTotal();
-                hitungPPN();
-                hitungOngkir();
                 hitungGrandTotal();
+            }
+
+            function cekNomor() {
+                var tanggal = document.getElementById('tgl1').value;
+                var no_urut = document.getElementById('no_urut').value;
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('pesananpembelian.ceksurat') }}',
+                    dataType: 'html',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
+                    complete: function() {
+                        KTApp.unblock();
+                    },
+                    data: {
+                        tanggal: tanggal,
+                        no_urut: no_urut,
+                        "_token": "{{ csrf_token() }}"
+                    },
+                    success: function(data) {
+                        iziToast.success({
+                            title: 'Success',
+                            message: 'No aman untuk dipakai',
+                            position: 'topRight',
+                        });
+                    },
+                    error: function(xhr) {
+                        const response = JSON.parse(xhr.responseText);
+                        if (xhr.status === 422) {
+                            // Error qty melebihi stok
+                            iziToast.error({
+                                title: 'error',
+                                message: response.message,
+                                position: 'topRight',
+                            });
+                        }
+
+                        if (xhr.status === 500) {
+                            // Error qty melebihi stok
+                            iziToast.error({
+                                title: 'error',
+                                message: response.message,
+                                position: 'topRight',
+                            });
+                        }
+                    },
+                    complete: function() {
+                        KTApp.unblock();
+                    }
+                });
             }
         </script>
     @endpush

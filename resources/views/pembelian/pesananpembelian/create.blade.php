@@ -183,6 +183,8 @@
             <script></script>
             <!-- Modal-->
         </div>
+
+        @include('pembelian.pesananpembelian.partial.ongkir')
     @endsection
     @push('script')
         <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6"') }}"></script>
@@ -469,8 +471,7 @@
                     complete: function() {
                         KTApp.unblock();
                     },
-                    data: {
-                        "id": "",
+                    data: {                        
                         "_token": "{{ csrf_token() }}"
                     },
 
@@ -485,46 +486,16 @@
                 });
             }
 
-            function editdiskon() {
-                var data_id = '';
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('pesananpembelian.editdiskon') }}',
-                    dataType: 'html',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    beforeSend: function() {
-                        KTApp.blockPage();
-                    },
-                    complete: function() {
-                        KTApp.unblock();
-                    },
-                    data: {
-                        id: data_id,
-                        "_token": "{{ csrf_token() }}"
-                    },
-
-                    success: function(data) {
-                        console.log(data);
-                        $('#modal-setdiskon').html(data);
-                        $('#setDiskonModal').modal('show');
-                    },
-                    error: function(data) {
-                        console.log(data);
-                    }
-                });
+            function editOngkir() {
+                $('#setOngkir').modal('show');
             }
 
-            function updateDiskon() {
-                var diskon_persen = document.getElementById('diskon_persen_h').value;
-                var diskon_rupiah = document.getElementById('diskon_rp_h').value;
-                var id_diskon = document.getElementById('id_diskon').value;
-                //alert(diskon_persen);
+            function updateOngkir() {
+                var ongkir = document.getElementById('ongkir').value;
                 $.ajax({
                     type: 'POST',
-                    url: '{{ route('pesananpembelian.updatediskon') }}',
-                    dataType: 'html',
+                    url: '{{ route('pesananpembelian.updateongkir') }}',
+                    dataType: 'json',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -535,18 +506,15 @@
                         KTApp.unblock();
                     },
                     data: {
-                        "id_diskon": id_diskon,
-                        "diskon_persen": diskon_persen,
-                        "diskon_rupiah": diskon_rupiah,
+                        "ongkir": ongkir,
                         "_token": "{{ csrf_token() }}"
                     },
 
-                    success: function(data) {
-                        console.log(data);
-                        $('#setDiskonModal').modal('hide');
-                        //$('#diskon').val(data);
+                    success: function(res) {
+                        let data = res.data;
+                        $('#setOngkir').modal('hide');
+                        $('#ongkir').val(data.ongkir);
                         hitungAll();
-
                     },
                     error: function(data) {
                         console.log(data);
@@ -554,79 +522,10 @@
                 });
             }
 
-            function editppn() {
-                var data_id = '';
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('pesananpembelian.editppn') }}',
-                    dataType: 'html',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    beforeSend: function() {
-                        KTApp.blockPage();
-                    },
-                    complete: function() {
-                        KTApp.unblock();
-                    },
-                    data: {
-                        id: data_id,
-                        "_token": "{{ csrf_token() }}"
-                    },
-
-                    success: function(data) {
-                        console.log(data);
-                        $('#modal-setppn').html(data);
-                        $('#setPpnModal').modal('show');
-
-                    },
-                    error: function(data) {
-                        console.log(data);
-                    }
-                });
-            }
-
-            function updatePPN() {
-                var persen = document.getElementById('ppn_persen').value;
-                var id_ppn = document.getElementById('id_ppn').value;
-
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('pesananpembelian.updateppn') }}',
-                    dataType: 'html',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    beforeSend: function() {
-                        KTApp.blockPage();
-                    },
-                    complete: function() {
-                        KTApp.unblock();
-                    },
-                    data: {
-                        "id_ppn": id_ppn,
-                        "persen": persen,
-                        "_token": "{{ csrf_token() }}"
-                    },
-
-                    success: function(data) {
-                        console.log(data);
-                        $('#setPpnModal').modal('hide');
-                        //$('#ppn').val(data);
-                        hitungAll();
-
-                    },
-                    error: function(data) {
-                        console.log(data);
-                    }
-                });
-            }
 
             function delete_confirm(data_id) {
                 $('#detailDeleteModal').modal('show');
                 $('#id_detail').val(data_id);
-                // var a = $('#id_detail').val();
-                //alert(a);
             }
 
             function destroy_detail() {
@@ -660,180 +559,13 @@
                         console.log(data);
                     }
                 });
-            }
-            /* Fungsi formatRupiah */
-            function formatRupiah(angka, elemenid) {
-                //alert(angka);
-                var prefix = 'Rp. ';
-                var number_string = angka.replace(/[^,\d]/g, '').toString(),
-                    split = number_string.split(','),
-                    sisa = split[0].length % 3,
-                    rupiah = split[0].substr(0, sisa),
-                    ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-                // tambahkan titik jika yang di input sudah menjadi angka ribuan
-                if (ribuan) {
-                    separator = sisa ? '.' : '';
-                    rupiah += separator + ribuan.join('.');
-                }
-
-                rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-                //alert (rupiah);
-                //return rupiah;
-                document.getElementById(elemenid).value = rupiah;
-                //return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
-            }
-
-            function hitungSubtotal() {
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('pesananpembelian.hitungsubtotal') }}',
-                    dataType: 'html',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    beforeSend: function() {
-                        KTApp.blockPage();
-                    },
-                    complete: function() {
-                        KTApp.unblock();
-                    },
-                    data: {
-                        "_token": "{{ csrf_token() }}"
-                    },
-
-                    success: function(data) {
-                        console.log(data);
-                        $('#subtotal').val(data);
-
-                    },
-                    error: function(data) {
-                        console.log(data);
-                    }
-                });
-            }
-
-            function hitungDiskon() {
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('pesananpembelian.hitungdiskon') }}',
-                    dataType: 'html',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    beforeSend: function() {
-                        KTApp.blockPage();
-                    },
-                    complete: function() {
-                        KTApp.unblock();
-                    },
-                    data: {
-                        "_token": "{{ csrf_token() }}"
-                    },
-
-                    success: function(data) {
-                        console.log(data);
-                        $('#diskon').val(data);
-
-                    },
-                    error: function(data) {
-                        console.log(data);
-                    }
-                });
-            }
-
-            function hitungTotal() {
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('pesananpembelian.hitungtotal') }}',
-                    dataType: 'html',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    beforeSend: function() {
-                        KTApp.blockPage();
-                    },
-                    complete: function() {
-                        KTApp.unblock();
-                    },
-                    data: {
-                        "_token": "{{ csrf_token() }}"
-                    },
-
-                    success: function(data) {
-                        console.log(data);
-                        $('#total').val(data);
-
-                    },
-                    error: function(data) {
-                        console.log(data);
-                    }
-                });
-            }
-
-            function hitungPPN() {
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('pesananpembelian.hitungppn') }}',
-                    dataType: 'html',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    beforeSend: function() {
-                        KTApp.blockPage();
-                    },
-                    complete: function() {
-                        KTApp.unblock();
-                    },
-                    data: {
-                        "_token": "{{ csrf_token() }}"
-                    },
-
-                    success: function(data) {
-                        console.log(data);
-                        $('#ppn').val(data);
-
-                    },
-                    error: function(data) {
-                        console.log(data);
-                    }
-                });
-            }
-
-            function hitungOngkir() {
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('pesananpembelian.hitungongkir') }}',
-                    dataType: 'html',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    beforeSend: function() {
-                        KTApp.blockPage();
-                    },
-                    complete: function() {
-                        KTApp.unblock();
-                    },
-                    data: {
-                        "_token": "{{ csrf_token() }}"
-                    },
-
-                    success: function(data) {
-                        console.log(data);
-                        $('#ongkirheader').val(data);
-
-                    },
-                    error: function(data) {
-                        console.log(data);
-                    }
-                });
-            }
+            }          
 
             function hitungGrandTotal() {
                 $.ajax({
                     type: 'POST',
                     url: '{{ route('pesananpembelian.hitunggrandtotal') }}',
-                    dataType: 'html',
+                    dataType: 'json',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -846,10 +578,14 @@
                     data: {
                         "_token": "{{ csrf_token() }}"
                     },
-
-                    success: function(data) {
-                        console.log(data);
-                        $('#grandtotal').val(data);
+                    success: function(res) {
+                        let data = res.data;                        
+                        $('#subtotal').val(formatRupiah(data.subtotal));
+                        $('#diskon').val(formatRupiah(data.total_diskon));
+                        $('#ppnheader').val(formatRupiah(data.ppn));
+                        $('#grandtotal').val(formatRupiah(data.grandtotal));
+                        $('#total').val(formatRupiah(data.total));                        
+                        $('#ongkirheader').val(formatRupiah(data.ongkir));                        
 
                     },
                     error: function(data) {
@@ -858,14 +594,71 @@
                 });
             }
 
-            function hitungAll() {
-                loadTempPO();
-                hitungSubtotal();
-                hitungDiskon();
-                hitungTotal();
-                hitungPPN();
-                hitungOngkir();
+             function formatRupiah(angka) {
+                return new Intl.NumberFormat('id-ID', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }).format(angka);
+            }
+
+            function hitungAll() {               
                 hitungGrandTotal();
+                loadTempPO();
+            }
+
+            function cekNomor() {
+                var tanggal = document.getElementById('tgl1').value;
+                var no_urut = document.getElementById('no_urut').value;
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('pesananpembelian.ceksurat') }}',
+                    dataType: 'html',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function() {
+                        KTApp.blockPage();
+                    },
+                    complete: function() {
+                        KTApp.unblock();
+                    },
+                    data: {
+                        tanggal: tanggal,
+                        no_urut: no_urut,
+                        "_token": "{{ csrf_token() }}"
+                    },
+                    success: function(data) {
+                        iziToast.success({
+                            title: 'Success',
+                            message: 'No aman untuk dipakai',
+                            position: 'topRight',
+                        });
+                    },
+                    error: function(xhr) {
+                        const response = JSON.parse(xhr.responseText);
+                        if (xhr.status === 422) {
+                            // Error qty melebihi stok
+                            iziToast.error({
+                                title: 'error',
+                                message: response.message,
+                                position: 'topRight',
+                            });
+                        }
+
+                        if (xhr.status === 500) {
+                            // Error qty melebihi stok
+                            iziToast.error({
+                                title: 'error',
+                                message: response.message,
+                                position: 'topRight',
+                            });
+                        }
+                    },
+                    complete: function() {
+                        KTApp.unblock();
+                    }
+                });
             }
         </script>
     @endpush

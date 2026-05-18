@@ -107,6 +107,7 @@
                                     @foreach ($hutang as $item)
                                         <tr>
                                             <td>{{$no++}}</td>
+                                            <td>{{ date('d F Y', strtotime($item->tanggal)) }}</td>
                                             <td>{{ date('d F Y', strtotime($item->tanggal_top)) }}</td>
                                             <td>{{$item->nama_supplier}}</td>
                                             <td>{{$item->kode_pp}}</td>

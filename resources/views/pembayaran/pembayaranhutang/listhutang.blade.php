@@ -70,7 +70,7 @@
                                             <th>Supplier</th>
                                             <th>Total</th>
                                             <th>Terbayar</th>
-                                            <th>Tanggal TOP</th>
+                                            <th>Jatuh Tempo</th>
                                             <th>Sisa</th>
                                             <th style="width: 15%">Action</th>
                                         </tr>

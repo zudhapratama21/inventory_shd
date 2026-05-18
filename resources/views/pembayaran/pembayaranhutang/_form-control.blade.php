@@ -79,6 +79,14 @@
         <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
+
+    <div class="form-group">
+        <label for="">Status</label>
+        <select name="status" class="form-control" id="">
+            <option value="2">Lunas</option>
+            <option value="1">Belum Lunas</option>
+        </select>
+    </div>
     <div class="form-group">
         <label>Keterangan :</label>
         <input type="text" name="keterangan" value="" class="form-control" placeholder="Keterangan" />

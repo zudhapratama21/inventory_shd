@@ -53,14 +53,4 @@
         @endforeach
     </tbody>
 
-    <tr></tr>
-    <tr></tr>
-    <tr></tr>
-
-    <tr>
-        <th><b>Total Hutang : </b></th>
-        <td>
-            <b>{{$totalhutang}}</b>
-        </td>
-    </tr>
 </table>

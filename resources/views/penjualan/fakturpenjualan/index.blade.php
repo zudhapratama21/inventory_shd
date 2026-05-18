@@ -64,34 +64,13 @@
                                     <h3 class="card-label">Data Faktur Penjualan</h3>
                                 </div>
                                 <div class="card-toolbar">
-
-                                    <a href="{{ route('fakturpenjualan.syncronisasi') }}"
-                                        class="btn btn-success font-weight-bolder mr-4" data-toggle="modal"
-                                        data-target="#revision">
-                                        <i class="flaticon2-heart-rate-monitor"></i>
-                                        Import Revision
-                                    </a>
-
-                                    <a href="{{ route('fakturpenjualan.syncronisasi') }}"
-                                        class="btn btn-danger font-weight-bolder mr-4">
-                                        <i class="flaticon2-trash "></i>
-                                        Syncronisasi (Jangan Di Klik)
-                                    </a>
-
-
-
-
-                                    <!--begin::Button-->
-
                                     @can('fakturpenjualan-create')
-                                        <a href="{{ route('fakturpenjualan.listsj') }}"
+                                        <a href="{{ route('fakturpenjualan.create') }}"
                                             class="btn btn-primary font-weight-bolder ">
                                             <i class="flaticon2-add"></i>
                                             Faktur Penjualan
                                         </a>
                                     @endcan
-
-                                    <!--end::Button-->
                                 </div>
                             </div>
                             <div class="card-body">
@@ -99,23 +78,16 @@
                                 <table class="table yajra-datatable collapsed ">
                                     <thead class="datatable-head">
                                         <tr>
-                                            <th>Kode</th>
-                                            <th>No KPA</th>
                                             <th>Tanggal</th>
-                                            <th>No. Surat Pesanan</th>
-                                            <th>No. Pengiriman</th>
+                                            <th>Kode</th>
+                                            <th>No Perusahaan</th>
                                             <th>Customer</th>
-                                            <th>Status Diterima Barang ?</th>
-                                            <th>Status Diterima Berkas ?</th>
-                                            <th>Status Promo</th>
                                             <th style="width: 15%">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                     </tbody>
                                 </table>
-                                <!--end: Datatable-->
-
                             </div>
                         </div>
                     </div>
@@ -125,46 +97,6 @@
         </div>
         <!--end::Entry-->
     </div>
-    <!--end::Content-->
-    <div id="modal-confirm-delete"></div>
-    <div id="modal-show-detail"></div>
-
-    <div id="xcontohmodal">
-        <div class="modal fade" id="revision" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Import Revision</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <i aria-hidden="true" class="ki ki-close"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body" style="height: 400px;">
-                        <form action="{{ route('fakturpenjualan.revision') }}" method="POST"
-                            enctype="multipart/form-data">
-                            @csrf
-                            <div class="form-group">
-                                <label for="">Upload Excel</label>
-                                <input type="file" name="file_revision" class="form-control">
-                            </div>
-
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary btn-sm">Processs</button>
-                            </div>
-
-
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light-primary font-weight-bold"
-                            data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
 @endsection
 @push('script')
     <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6') }}"></script>
@@ -172,72 +104,43 @@
     <script src="{{ asset('/assets/js/pages/crud/datatables/extensions/responsive.js?v=7.0.6') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
 
+    <script src="{{ asset('assets/js/pages/features/miscellaneous/blockui.js?v=7.0.6') }} "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
+        integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css"
+        integrity="sha512-O03ntXoVqaGUTAeAmvQ2YSzkCvclZEcPQu1eqloPaHfJ5RuNGiS4l+3duaidD801P50J28EHyonCV06CUlTSag=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
+
 
 
 
     <script type="text/javascript">
         $(function() {
-
             var table = $('.yajra-datatable').DataTable({
-                //   responsive: true,
                 processing: true,
                 serverSide: true,
                 autoWidth: true,
                 scrollX: true,
                 ajax: "{{ route('fakturpenjualan.datatable') }}",
-                columns: [
-                    //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                columns: [{
+                        data: 'tanggal',
+                        name: 'tanggal'
+                    },
                     {
                         data: 'kode',
                         name: 'kode'
                     },
                     {
-                        data: 'no_kpa',
-                        name: 'no_kpa'
-                    },
-                    {
-                        data: 'tanggal',
-                        name: 'tanggal'
-                    },
-                    {
-                        data: 'kode_so',
-                        name: 'so.kode'
-                    },
-                    {
-                        data: 'kode_sj',
-                        name: 'sj.kode'
+                        data: 'no_perusahaan',
+                        name: 'no_perusahaan'
                     },
                     {
                         data: 'customer',
                         name: 'customers.nama'
                     },
-                    {
-                        data: 'status_diterima',
-                        name: 'status_diterima'
-                    },
-                     {
-                        data: 'status_berkas',
-                        name: 'status_berkas'
-                    },
-                    {
-                        data: null,
-                        name: 'status_cn',
-                        searchable: false,
-                        render: function(data, type, row) {
-                            var status = row.status_cn;
-                            var id = row.id;
-                            var badge = '';
-                            if (status === 'Sudah') {
-                                badge = '<span class="badge badge-success">Sudah</span>';
-                            } else if (status === 'Belum') {
-                                badge = '<span class="badge badge-danger">Belum</span>';
-                            } else {
-                                badge = '<span class="badge badge-secondary">-</span>';
-                            }
-                            return badge + '<a class="ml-2" onclick="cn_success(' + id + ')"><i class="text-success flaticon2-check-mark"></i></a>';
-                        },
-                    },
-                    
                     {
                         data: 'action',
                         render: function(data) {
@@ -273,31 +176,7 @@
             var txt = document.createElement('textarea');
             txt.innerHTML = data;
             return txt.value;
-        }
-
-        function show_confirm(data_id) {
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('fakturpenjualan.delete') }}',
-                dataType: 'html',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: {
-                    id: data_id,
-                    "_token": "{{ csrf_token() }}"
-                },
-
-                success: function(data) {
-                    console.log(data);
-                    $('#modal-confirm-delete').html(data);
-                    $('#exampleModal').modal('show');
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        }
+        }      
 
         function hapus(id) {
             Swal.fire({
@@ -309,10 +188,13 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         type: 'POST',
-                        url: '{{ route('fakturpenjualan.hapusdouble') }}',
+                        url: '{{ route('fakturpenjualan.destroy') }}',
                         dataType: 'html',
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        beforeSend: function() {
+                            KTApp.blockPage();
                         },
                         data: {
                             id: id,
@@ -325,38 +207,23 @@
                                 title: "Anda Berhasil Menghapus Data",
                                 showCancelButton: false,
                             });
+                        },
+                        complete: function() {
+                            KTApp.unblockPage();
+                        },
+                        error: function(xhr) {
+                            const response = JSON.parse(xhr.responseText);
+                            if (xhr.status === 500 || xhr.status === 422) {
+                                iziToast.error({
+                                    title: 'error',
+                                    message: response.message,
+                                    position: 'topRight',
+                                });
+                            }
                         }
                     });
                 }
             });
-        }
-
-        function cn_success(id) {
-              Swal.fire({
-                icon: "question",
-                title: "Mau mengubah status CN ini ?",
-                showCancelButton: true,
-                confirmButtonText: "Save",
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        type: 'POST',
-                        url: '{{ route('fakturpenjualan.setcn') }}',
-                        dataType: 'html',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        data: {
-                            id: id,
-                            "_token": "{{ csrf_token() }}"
-                        },
-                        success: function(data) {
-                            $('.yajra-datatable').DataTable().ajax.reload(null, false);                           
-                        }
-                    });
-                }
-            });
-            
         }
     </script>
 @endpush

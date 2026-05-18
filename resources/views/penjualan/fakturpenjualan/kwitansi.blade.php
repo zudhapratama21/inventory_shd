@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
-    {{-- <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> --}}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
     <style type="text/css">
         .tabel {
@@ -15,7 +15,6 @@
         .tabel td,
         th,
         tr {
-            /* border: 1px  double black; */
             border-style: double;
         }
 
@@ -28,113 +27,118 @@
 </head>
 
 <body style="font-family: sans-serif; ">
-  <table class="tabel" width="100%" style="font-size:90%;margin-top:2px;">
+    <table class="tabel" width="100%" style="font-size:90%;margin-top:2px;">
         <tr>
-            <td width="15%" style="text-align: center;">
-                <div style="transform: rotate(270deg);position: fixed;margin-left:-200px;width: 600px;margin-top:240px;">
-                   <h1 style="margin-top: 5px; margin-bottom: 10px;color:rgb(5, 2, 186)">PT BRILIAN SUKSES BERKAH</h1>
-                   <h3 style="margin-top: 0px; margin-bottom: 3px;">Juanda Regency Blok H-06, JL. Raya Bypass Juanda NO.11
-                    <br> Pabean-Sedati, Sidoarjo
-                    Kode Pos : 61253</h3>
-                   {{-- <h3 style="margin-top: 0px;margin-bottom: 5px;">NPWP : 03.113.119.6-615.000</h3> --}}
-                </div>
+            <td width="15%" style="text-align:center; vertical-align:middle; overflow:hidden;">
+
+                <img src="{{ public_path('ttd/KOPSURAT.png') }}"
+                    style="
+                        height: 19%;                        
+                        max-height: 500px;
+                        transform: rotate(-90deg);
+                    ">
+
             </td>
             <td width="70%" style="padding-left:10px">
 
                 <div>
-                   <table style="margin-top:5px;">
-                        <tr >
-                            <td width="70%" style="padding-left : 10px">
-                                <h3>Kwitansi No. {{$faktur}}</h3> <br>
+                    <table style="margin-top:5px;">
+                        <tr>
+                            <td width="70%" style="border: 1px double white">
+                                <h3 style="font-weight: normal;">Kwitansi No. {{ $no_urut }}</h3> <br>
                             </td>
                         </tr>
-                   </table>
-                </div>  
-                <div >
+                    </table>
+                </div>
+                <div>
                     <table width="100%" style="margin-top:10px;">
                         <tr>
-                            <td width="30%"  style="border: 1px double white">
-                                <h3>Sudah Terima Dari </h3>
+                            <td width="30%" style="border: 1px double white">
+                                <h3 style="font-weight: normal;">Sudah Terima Dari </h3>
                             </td>
-                            <td  width="1%" style="border: 1px double white">
+                            <td width="1%" style="border: 1px double white">
                                 <h3>:</h3>
                             </td>
                             <td width="78%" style="border: 1px double white">
-                                <h3>{{$customer}}.</h3>
+                                <h3>{{ $customer }}.</h3>
                             </td>
-                           
+
                         </tr>
 
                     </table>
-                </div > 
-                <div  >
-                    <table width="100%" style="margin-top:10px;">
+                </div>
+                <div>
+                    <table width="100%" style="margin-top:10px">
                         <tr>
-                            <td width="30%"  style="border: 1px double white">
-                                <h3>Yang Sejumlah</h3>
+                            <td width="30%" style="border: 1px double white; vertical-align: top;">
+                                <h3 style="font-weight: normal; margin: 0;">Jumlah Uang</h3>
                             </td>
-                            <td  width="1%" style="border: 1px double white">
-                                <h3>:</h3>
+                            <td width="1%" style="border: 1px double white; vertical-align: top;">
+                                <h3 style="margin: 0;">:</h3>
                             </td>
-                            <td width="78%" style="border: 1px double white">
-                                <h3> <i>{{$text}}</i></h3>
+                            <td width="78%" style="border: 1px double white; vertical-align: top;">
+                                <h3 style="margin: 0;">
+                                    <i>{{ $text }}</i>
+                                </h3>
                             </td>
                         </tr>
-
                     </table>
-                </div> 
+                </div>
                 <div style="margin-bottom: 60px">
-                    <table width="100%" style="margin-top:10px;margin-bottom:50px">
-                        <tr>
-                            <td width="30%"  style="border: 1px double white">
-                                <h3>Untuk Pembayaran</h3>
+                    <table width="100%" style="margin-top:10px;margin-bottom:50px;">
+                        <tr style="vertical-align: top">
+                            <td width="30%" style="border: 1px double white">
+                                <h3 style="font-weight: normal;">Untuk Pembayaran</h3>
                             </td>
-                            <td  width="1%" style="border: 1px double white">
+                            <td width="1%" style="border: 1px double white">
                                 <h3>:</h3>
                             </td>
                             <td width="78%" style="border: 1px double white">
-                                <h3>Atas Faktur No. {{$faktur}} , Sebagaimana Terlampir  : </h3>
+                                <h3>Pembelian sesuai Atas Faktur No. {{ $faktur }} , Sebagaimana Terlampir : </h3>
                             </td>
                         </tr>
                     </table>
-                </div> 
-                <div style="margin-top: 20px">
-                    <table width="100%" style="margin-top:10px;">
+                </div>
+                <br><br><br>
+                <div style="margin-top: 15px">
+                    <table width="100%">
                         <tr>
-                            <td width="50%"  style="border-left: 1px double white;border-right : 1px double white">
-                                <table width="100%" style="margin-top:5px;">
+                            <td width="50%" style="border:1px white">
+                                <table width="100%" style="border-top:1px solid black;border-bottom:1px solid black">
                                     <tr>
                                         <td width="45%" style="font-size:90%;border:1px white">
-                                            <h2> Terbilang Rp.</h2> 
+                                            <h2> Terbilang : </h2>
                                         </td>
-                                        <td width="55%" style="text-align: center;padding-right:12px">
-                                            <h1>{{  number_format($grandtotal, 0, ',', '.')}}</h1>
+                                        <td width="55%" style="text-align: left;border:1px white">
+                                            <h1>Rp. {{ number_format($grandtotal, 0, ',', '.') }}</h1>
                                         </td>
                                     </tr>
                                 </table>
-                                
+
                             </td>
                             <td width="10%" style="border: 1px double white">
 
                             </td>
                             <td width="40%" style=' text-align:center; vertical-align:top;border: 1px double white'>
-                                <h3 style="margin-top: -10px">Sidoarjo, {{ $tanggal }}</h3>
-                                <br /><br /> <br /><br /> <br /> <br />
-                                <h3>                                                                       
-                                    <u>HEPPY WAHYU PURNOMO</u> <br />
+                                <h3 style="margin-top: -10px">Denpasar {{ $tanggal }}</h3>
+                                <p style="margin-top: -10px">Yang menerima, </p>
+                                <h3 style="margin-top: -10px">PT SYAHID HUSADA DEWATA</h3>
+                                <br><br><br><br><br><br>
+                                <h3>
+                                    <u>M. Taufik Krisdianto</u> <br />
                                     Direktur
                                 </h3>
                             </td>
                         </tr>
                     </table>
 
-                </div> 
-                                
+                </div>
+
             </td>
         </tr>
-       
 
-</table>
+
+    </table>
 
 
 </body>

@@ -68,6 +68,11 @@ class FakturPembelian extends Model
     
     public function hutangs()
     {
-        return $this->hasMany(Hutang::class, 'faktur_pembelian_id');
+        return $this->hasOne(Hutang::class, 'faktur_pembelian_id');
+    }
+   
+    public function detail()
+    {
+        return $this->hasMany(FakturPembelianDetail::class, 'faktur_pembelian_id');
     }
 }

@@ -75,7 +75,7 @@
                                         <th>Supplier</th>
                                         <th>Faktur</th> 
                                         <th>Faktur Supplier</th> 
-                                        <th>No KPA</th>                                        
+                                        <th>No Perusahaan</th>                                        
                                         <th>Akun Bank</th>
                                         <th>Nominal</th>
                                         <th>Keterangan</th>

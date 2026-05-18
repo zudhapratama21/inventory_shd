@@ -64,14 +64,14 @@
                             <table class="table yajra-datatable collapsed ">
                                 <thead class="datatable-head">
                                     <tr>
-                                        <th>Faktur No.</th>
-                                        <th>No KPA</th>
+                                        <th>Kode</th>
+                                        <th>No Perusahaan</th>
                                         <th>Tanggal</th>
                                         <th>Customer</th>
                                         <th>Total</th>
                                         <th>Terbayar</th>
                                         <th>Sisa</th>
-                                        <th>Tanggal TOP</th>
+                                        <th>Jatuh Tempo</th>
                                         <th style="width: 15%">Action</th>
                                     </tr>
                                 </thead>
@@ -118,7 +118,7 @@
               columns: [
                 //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                   {data: 'kode', name: 'fakturpenjualan.kode',},
-                  {data: 'no_kpa', name: 'fakturpenjualan.no_kpa'},
+                  {data: 'no_perusahaan', name: 'fakturpenjualan.no_perusahaan'},
                   {data: 'tanggal', name: 'tanggal'},
                   {data: 'customers', name: 'customers.nama',searchable:true},
                   {data: 'total', name: 'total'},

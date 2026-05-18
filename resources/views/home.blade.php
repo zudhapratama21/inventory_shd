@@ -14,6 +14,7 @@
     @php
         $userPermissions = $permission; // Mengambil daftar permission user
     @endphp
+    
     <div id="modal-data"></div>
     @include('partial.modal.produk')
     @include('partial.modal.customer')
@@ -42,16 +43,13 @@
         const best_produk = document.getElementById('chartbestproduk');
 
         let userPermissions = @json($userPermissions);
-        // =================================== VARIABLE UNTUK GRAFIK PENJUALAN =====================================
-        let principlegrafik = 'All';
+        // =================================== VARIABLE UNTUK GRAFIK PENJUALAN =====================================        
         let customergrafik = 'All';
-        let salesgrafik = 'All';
-        let merkgrafik = 'All';
+        let salesgrafik = 'All';        
         // ======================================= END ==============================================================
 
         // ================================== VARIABLE UNTUK BEST PRODUK ===========================================
-        let salesProduk = 'All';
-        let merkProduk = 'All';
+        let salesProduk = 'All';        
         let tahunProduk = {{ now()->format('Y') }};
         let tipe = 'harga';
         let kategoriProduk = 'All';
@@ -91,29 +89,12 @@
 
         // =========================================================================================================================
         $(document).ready(function() {
-            const permissionActions = {
-                'grafikpenjualan-list': [chartyear],
-                'grafikkategori-list': [chart_kategori],
-                'grafikproduk-list': [chartProduk],
-                'tabletopproduk-list': [datatable, datatableCustomer],
-                'tabletopcustomer-list': [datatabletopcustomer, datatablelistproduct, datatableHistoryProduct],
-                'tabletopprinciple-list': [datatabletopPrinciple, datatableProductByPrinciple],
-                'datapengiriman-list': [datatablepesanan],
-                'datapenerimaan-list': [datatablepembelian],
-                'datahutang-list': [datatablehutang],
-                'datapiutang-list': [datatablepiutang],
-                'rekaphutang-list': [datahutang],
-                'rekappiutang-list': [datapiutang],
-                'rekaplabarugi-list': [rekaplabarugi]
-            };
+            chartyear();
+            datatable();
+            datatableCustomer();
+            datatabletopcustomer();
+            datatablelistproduct();
 
-            Object.entries(permissionActions).forEach(([permission, actions]) => {
-                if (hasPermission(permission)) {
-                    actions.forEach(action => action());
-                }
-            });
-
-            datatablepengumuman();
         })
         // ============================================================================================================================
 
@@ -185,10 +166,8 @@
                 },
                 data: {
                     'year': year,
-                    'kategori': kategori,
-                    'principlegrafik': principlegrafik,
-                    'customergrafik': customergrafik,
-                    'merkgrafik': merkgrafik,
+                    'kategori': kategori,                    
+                    'customergrafik': customergrafik,                    
                     'salesgrafik': salesgrafik,
                     "_token": "{{ csrf_token() }}"
                 },
@@ -220,10 +199,8 @@
                 },
                 data: {
                     'year': year,
-                    'kategori': kategori,
-                    'principlegrafik': principlegrafik,
-                    'customergrafik': customergrafik,
-                    'merkgrafik': merkgrafik,
+                    'kategori': kategori,                
+                    'customergrafik': customergrafik,                    
                     'salesgrafik': salesgrafik,
                     "_token": "{{ csrf_token() }}"
                 },
@@ -293,217 +270,6 @@
 
         //========================================================= end of Chart Penjualan Bar =====================================================
 
-        //=========================================================CHART UNTUK DOUGNOT  =====================================================
-        let dougnut = {
-            type: 'bar',
-            data: {
-                labels: null,
-                datasets: [{
-                    label: 'Grafik Penjualan Per Kategori',
-                    data: null,
-                    borderWidth: 1,
-                    backgroundColor: ['#FF6384', '#36A2EB'],
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: (ctx) => 'Data Dalam Persen Rupiah ',
-                    },
-                },
-                scales: {
-                    y: {
-                        stacked: true
-                    }
-                }
-            },
-            interaction: {
-                intersect: false,
-            }
-        }
-
-        // Chart dougnut Kategori Penjualan
-        function chart_kategori() {
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('chart.kategori') }}',
-                dataType: 'html',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: {
-                    'year': year,
-                    "_token": "{{ csrf_token() }}"
-                },
-                success: function(data) {
-                    res = JSON.parse("[" + data + "]");
-                    datakategori = res[0].datakategori;
-                    datapenjualan = res[0].datapenjualan;
-                    dougnut.data.labels = datakategori;
-                    dougnut.data.datasets[0].data = datapenjualan;
-                    chartkategori = new Chart(chartKategori, dougnut);
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        }
-
-        function filterYearKategori() {
-            let e = document.getElementById("chart_kategori");
-            year = e.options[e.selectedIndex].value;
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('chart.kategori') }}',
-                dataType: 'html',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: {
-                    'year': year,
-                    "_token": "{{ csrf_token() }}"
-                },
-                success: function(data) {
-                    res = JSON.parse("[" + data + "]");
-                    datakategori = res[0].datakategori;
-                    datapenjualan = res[0].datapenjualan;
-                    dougnut.data.labels = datakategori;
-                    dougnut.data.datasets[0].data = datapenjualan;
-                    chartkategori.destroy();
-                    chartkategori = new Chart(chartKategori, dougnut);
-                    chartkategori.update();
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        }
-
-        //========================================================= CHART UNTUK DOUGNOT  ===================================================== 
-
-        //========================================================= CHART UNTUK FORECAST PRODUK  ===================================================== 
-        let produkchart = {
-            type: 'line',
-            data: {
-                labels: null,
-                datasets: [{
-                    label: 'Penjualan per Produk',
-                    data: null,
-                    pointStyle: 'circle',
-                    pointRadius: 10,
-                    pointHoverRadius: 15,
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: (ctx) => 'Data Dalam Persen Rupiah ',
-                    },
-                    legend: {
-                        labels: {
-                            font: {
-                                size: 11
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        stacked: true,
-                        ticks: {
-                            font: {
-                                size: 12,
-                            }
-                        }
-                    },
-                    x: {
-                        ticks: {
-                            font: {
-                                size: 12,
-                            }
-                        }
-                    }
-                }
-            },
-            interaction: {
-                intersect: false,
-            }
-        }
-
-        // function chartProduk() {
-        //     $.ajax({
-        //         type: 'POST',
-        //         url: '{{ route('chart.produk') }}',
-        //         dataType: 'html',
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //         },
-        //         data: {
-        //             'year': year,
-        //             'produk': produk,
-        //             "_token": "{{ csrf_token() }}"
-        //         },
-        //         success: function(data) {
-        //             res = JSON.parse("[" + data + "]");
-        //             dataStok = res[0].stok;
-        //             dataBulan = res[0].bulan;
-        //             produkchart.data.labels = dataBulan;
-        //             produkchart.data.datasets[0].data = dataStok;
-        //             grafikProduk = new Chart(produk_chart, produkchart);
-        //         },
-        //         error: function(data) {
-        //             console.log(data);
-        //         }
-        //     });
-        // }
-
-        // function chartProdukUpdate() {
-        //     $.ajax({
-        //         type: 'POST',
-        //         url: '{{ route('chart.produk') }}',
-        //         dataType: 'html',
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //         },
-        //         data: {
-        //             'year': year,
-        //             'produk': produk,
-        //             "_token": "{{ csrf_token() }}"
-        //         },
-        //         success: function(data) {
-        //             res = JSON.parse("[" + data + "]");
-        //             dataStok = res[0].stok;
-        //             dataBulan = res[0].bulan;
-        //             produkchart.data.labels = dataBulan;
-        //             produkchart.data.datasets[0].data = dataStok;
-        //             grafikProduk.destroy();
-        //             grafikProduk = new Chart(produk_chart, produkchart);
-        //             grafikProduk.update();
-        //         },
-        //         error: function(data) {
-        //             console.log(data);
-        //         }
-        //     });
-        // }
-
-        function filteryearproduk() {
-            let e = document.getElementById("grafikproduk_tahun");
-            year = e.options[e.selectedIndex].value;
-            chartProdukUpdate();
-        }
-
-        // function filterProduk() {
-        //     let e = document.getElementById("kt_select2_3");
-        //     produk = e.options[e.selectedIndex].value;
-        //     chartProdukUpdate();
-        // }
-
-        //========================================================= END OF  CHART UNTUK FORECAST PRODUK  ===================================================== 
-
 
         // ============================================================== DATATABLE PRODUK TERBAIK ============================================================
         function datatable() {
@@ -521,8 +287,7 @@
                             params.bulan = bulanProduk,
                             params.tipe = tipe,
                             params.kategori = kategoriProduk,
-                            params.sales = salesProduk,
-                            params.merk = merkProduk,
+                            params.sales = salesProduk,                            
                             params._token = "{{ csrf_token() }}";
                         return params;
                     }
@@ -536,11 +301,7 @@
                     {
                         data: 'nama',
                         name: 'nama'
-                    },
-                    {
-                        data: 'stok_produk',
-                        name: 'stok_produk'
-                    },
+                    },                  
                     {
                         data: 'total',
                         name: 'total'
@@ -584,13 +345,7 @@
             bulanProduk = e.options[e.selectedIndex].value;
             $('#bulan_product').val(bulanProduk);
             $('.yajra-datatable').DataTable().ajax.reload(null, false);
-        }
-
-        function filtertypebestproduk() {
-            let e = document.getElementById("produk_tipe");
-            tipe = e.options[e.selectedIndex].value;
-            $('.yajra-datatable').DataTable().ajax.reload(null, false);
-        }
+        }        
 
         function filterkategoribestproduk() {
             let e = document.getElementById("produk_kategori");
@@ -603,14 +358,7 @@
             let e = document.getElementById("kt_select2_7");
             salesProduk = e.options[e.selectedIndex].value;
             $('.yajra-datatable').DataTable().ajax.reload(null, false);
-        }
-
-        function filtermerkbestproduk() {
-            let e = document.getElementById("kt_select2_8");
-            merkProduk = e.options[e.selectedIndex].value;
-            $('.yajra-datatable').DataTable().ajax.reload(null, false);
-        }
-
+        }        
 
         // ======================================= MODAL CUSTOMER ==========================================
         function showCustomer(id) {
@@ -629,12 +377,10 @@
                     url: "{{ route('datatable.listcustomer') }}",
                     type: "POST",
                     data: function(params) {
-                        params.bulan = bulanProduk,
-                            params.year = tahunProduk,
-                            params.tipe = tipe,
+                              params.bulan = bulanProduk,
+                            params.year = tahunProduk,                            
                             params.kategori = kategoriProduk,
-                            params.sales = salesProduk,
-                            params.merk = merkProduk,
+                            params.sales = salesProduk,                            
                             params.product_id = product_id,
                             params._token = "{{ csrf_token() }}";
                         return params;
@@ -645,11 +391,7 @@
                     {
                         data: 'nama',
                         name: 'nama'
-                    },
-                    {
-                        data: 'stok_produk',
-                        name: 'stok_produk'
-                    },
+                    },                   
                     {
                         data: 'total',
                         name: 'total'
@@ -684,7 +426,7 @@
                     url: "{{ route('datatable.topCustomer') }}",
                     type: "POST",
                     data: function(params) {
-                        params.year = topcustomeryear,
+                            params.year = topcustomeryear,
                             params.bulan = topcustomerbulan,
                             params.kategori = topcustomerkategori,
                             params.sales = salescustomer,
@@ -701,11 +443,7 @@
                     {
                         data: 'nama',
                         name: 'nama'
-                    },
-                    {
-                        data: 'stok_produk',
-                        name: 'stok_produk'
-                    },
+                    },                   
                     {
                         data: 'total',
                         name: 'total'
@@ -770,11 +508,7 @@
                     {
                         data: 'nama_merk',
                         name: 'nama_merk'
-                    },
-                    {
-                        data: 'stok_produk',
-                        name: 'stok_produk'
-                    },
+                    },                   
                     {
                         data: 'total',
                         name: 'total'
@@ -792,98 +526,6 @@
             });
         }
 
-        function datatableHistoryProduct() {
-            var tablelistproduct = $('.yajra-datatablehistoryproduct').DataTable({
-                responsive: true,
-                processing: true,
-                serverSide: true,
-                order: [],
-                ajax: {
-                    url: "{{ route('datatable.historyOrder') }}",
-                    type: "POST",
-                    data: function(params) {
-                        params.year = topcustomeryear,
-                            params.bulan = topcustomerbulan,
-                            params.customer = customer_id,
-                            params.kategori = topcustomerkategori,
-                            params.sales = salescustomer,
-                            params._token = "{{ csrf_token() }}";
-                        return params;
-                    }
-                },
-                columns: [
-                    //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},                
-                    {
-                        data: 'nama',
-                        name: 'nama'
-                    },
-                    {
-                        data: 'jan',
-                        name: 'jan'
-                    },
-                    {
-                        data: 'feb',
-                        name: 'feb'
-                    },
-                    {
-                        data: 'mar',
-                        name: 'mar'
-                    },
-                    {
-                        data: 'apr',
-                        name: 'apr'
-                    },
-                    {
-                        data: 'mei',
-                        name: 'mei'
-                    },
-                    {
-                        data: 'jun',
-                        name: 'jun'
-                    },
-                    {
-                        data: 'jul',
-                        name: 'jul'
-                    },
-                    {
-                        data: 'agst',
-                        name: 'agst',
-                    },
-                    {
-                        data: 'sep',
-                        name: 'sep'
-                    },
-                    {
-                        data: 'okt',
-                        name: 'okt'
-                    },
-                    {
-                        data: 'nov',
-                        name: 'nov'
-                    },
-                    {
-                        data: 'des',
-                        name: 'des'
-                    },
-                    {
-                        data: 'total_qty',
-                        name: 'total_qty',
-                        render: function(data, type, row) {
-                            return `<span class="badge bg-info text-white">${data}</span>`;
-                        }
-                    }
-                ],
-                columnDefs: [{
-                        responsivePriority: 1,
-                        targets: 0
-                    },
-                    {
-                        responsivePriority: 2,
-                        targets: -1
-                    },
-                ],
-            });
-        }
 
         function filteryeartopcustomer() {
             let e = document.getElementById("kt_select2_13");
@@ -914,628 +556,5 @@
             $('.yajra-datatabletopcustomer').DataTable().ajax.reload(null, false);
         }
 
-
-        // ========================= DATATABLE TOP PRINCIPLE =============================================
-        function datatabletopPrinciple(params) {
-            var tabletopcustomer = $('.yajra-datatabletopprinciple').DataTable({
-                responsive: true,
-                processing: true,
-                serverSide: true,
-                order: [],
-                ajax: {
-                    url: "{{ route('datatable.topPrinciple') }}",
-                    type: "POST",
-                    data: function(params) {
-                        params.year = topprincipleyear,
-                            params.bulan = topprinciplebulan,
-                            params.kategori = topprinciplekategori,
-                            params.sales = sales_principle,
-                            params._token = "{{ csrf_token() }}";
-                        return params;
-                    }
-                },
-                columns: [
-                    //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {
-                        data: 'tanggal',
-                        name: 'tanggal'
-                    },
-                    {
-                        data: 'nama_supplier',
-                        name: 'nama_supplier'
-                    },
-                    {
-                        data: 'stok_produk',
-                        name: 'stok_produk'
-                    },
-                    {
-                        data: 'total',
-                        name: 'total'
-                    },
-                    {
-                        data: 'action',
-                        render: function(data) {
-                            return htmlDecode(data);
-                        },
-                        className: "nowrap",
-                    },
-                ],
-                columnDefs: [{
-                        responsivePriority: 1,
-                        targets: 0
-                    },
-                    {
-                        responsivePriority: 2,
-                        targets: -1
-                    },
-                ],
-            });
-        }
-
-        function filteryeartopprinciple() {
-            let e = document.getElementById("topprincipletahun");
-            topprincipleyear = e.options[e.selectedIndex].value;
-            $('#tahun_principle').val(topprincipleyear);
-            $('.yajra-datatabletopprinciple').DataTable().ajax.reload(null, false);
-        }
-
-        function filterbulantopprinciple() {
-            let e = document.getElementById("topprinciplebulan");
-            topprinciplebulan = e.options[e.selectedIndex].value;
-            $('#bulan_principle').val(topprinciplebulan);
-            $('.yajra-datatabletopprinciple').DataTable().ajax.reload(null, false);
-        }
-
-        function filterkategoritopprinciple() {
-            let e = document.getElementById("topprinciplekategori");
-            topprinciplekategori = e.options[e.selectedIndex].value;
-            $('#kategori_principle').val(topprinciplekategori);
-            $('.yajra-datatabletopprinciple').DataTable().ajax.reload(null, false);
-        }
-
-
-        function filtersalestopprinciple() {
-            let e = document.getElementById("sales_principle");
-            sales_principle = e.options[e.selectedIndex].value;
-            $('#kategori_principle').val(topprinciplekategori);
-            $('.yajra-datatabletopprinciple').DataTable().ajax.reload(null, false);
-        }
-
-        function datatableProductByPrinciple() {
-            var tabletopcustomer = $('.yajra-datatableproductbyprinciple').DataTable({
-                responsive: true,
-                processing: true,
-                serverSide: true,
-                order: [],
-                ajax: {
-                    url: "{{ route('datatable.productbyprinciple') }}",
-                    type: "POST",
-                    data: function(params) {
-                        params.year = topprincipleyear,
-                            params.bulan = topprinciplebulan,
-                            params.kategori = topprinciplekategori,
-                            params.supplier = supplier_id,
-                            params.sales = sales_principle,
-                            params._token = "{{ csrf_token() }}";
-                        return params;
-                    }
-                },
-                columns: [
-                    //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {
-                        data: 'nama_produk',
-                        name: 'nama_produk'
-                    },
-                    {
-                        data: 'nama_merek',
-                        name: 'nama_merek'
-                    },
-                    {
-                        data: 'stok_produk',
-                        name: 'stok_produk'
-                    },
-                    {
-                        data: 'total',
-                        name: 'total'
-                    },
-                ],
-                columnDefs: [{
-                        responsivePriority: 1,
-                        targets: 0
-                    },
-                    {
-                        responsivePriority: 2,
-                        targets: -1
-                    },
-                ],
-            });
-        }
-
-        function showProductByPrinciple(id) {
-            $('#productbyprinciple').modal('show');
-            supplier_id = id;
-            $('.yajra-datatableproductbyprinciple').DataTable().ajax.reload(null, false);
-        }
-
-        function datatablepengumuman() {
-            var table = $('.yajra-datatable-pengumuman').DataTable({
-                responsive: true,
-                processing: true,
-                serverSide: true,
-                order: [],
-                ajax: {
-                    url: "{{ route('pengumuman.homedatatable') }}",
-                    type: "POST",
-                    data: function(params) {
-                        params._token = "{{ csrf_token() }}";
-                        return params;
-                    }
-                },
-                columns: [
-                    //   {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {
-                        data: 'tanggal',
-                        name: 'tanggal'
-                    },
-                    {
-                        data: 'topic',
-                        name: 'topic'
-                    },
-                    {
-                        data: 'subject',
-                        name: 'subject'
-                    },
-                    {
-                        data: 'file',
-                        name: 'file'
-                    },
-                    {
-                        data: 'action',
-                        render: function(data) {
-                            return htmlDecode(data);
-                        },
-                        className: "nowrap",
-                    },
-                ],
-                columnDefs: [{
-                        responsivePriority: 1,
-                        targets: 0
-                    },
-                    {
-                        responsivePriority: 2,
-                        targets: -1
-                    },
-                ],
-            });
-        }
-
-        function showpengumuman(id) {
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('pengumuman.show') }}',
-                dataType: 'html',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: {
-                    'id': id,
-                    "_token": "{{ csrf_token() }}"
-                },
-                success: function(data) {
-                    $('#modal-data').html(data);
-                    $('#pengumumanshow').modal('show');
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        }
-
-        function initializeDataTable(selector, url, columns) {
-            return $(selector).DataTable({
-                responsive: true,
-                processing: true,
-                serverSide: true,
-                order: [],
-                ajax: {
-                    url: url,
-                    type: "POST",
-                    data: function(params) {
-                        params._token = "{{ csrf_token() }}";
-                        return params;
-                    }
-                },
-                columns: columns,
-                columnDefs: [{
-                        responsivePriority: 1,
-                        targets: 0
-                    },
-                    {
-                        responsivePriority: 2,
-                        targets: -1
-                    }
-                ]
-            });
-        }
-
-        function renderActionButton(urlBase, data) {
-            return `<a href="${urlBase}/${data}/create" class="btn btn-success btn-sm">
-                        <i class="flaticon2-check-mark"></i> Pilih
-                    </a>`;
-        }
-
-        function renderActionButton(urlBase, data) {
-            return `<a href="${urlBase}/${data}/create" class="btn btn-success btn-sm">
-                        <i class="flaticon2-check-mark"></i> Pilih
-                    </a>`;
-        }
-
-        function renderAgeBadge(data) {
-            var badgeClass = data > 0 ? 'badge-info' : 'badge-danger';
-            return `<span class="badge ${badgeClass}">${data} Hari</span>`;
-        }
-
-        function datatablepesanan() {
-            initializeDataTable('.yajra-datatable-pengiriman', "{{ route('home.pengiriman') }}", [{
-                    data: 'kode',
-                    name: 'kode'
-                },
-                {
-                    data: 'tanggal',
-                    name: 'tanggal'
-                },
-                {
-                    data: 'customer',
-                    name: 'customers.nama'
-                },
-                {
-                    data: 'umur',
-                    searchable: false,
-                    render: renderAgeBadge
-                },
-                {
-                    data: 'status',
-                    name: 'StatusSo.nama',
-                    searchable: false
-                },
-                {
-                    data: 'keterangan_internal',
-                    name: 'keterangan_internal'
-                },
-                {
-                    data: 'action',
-                    render: data => renderActionButton('penjualan/pengirimanbarang', data),
-                    className: "nowrap"
-                }
-            ]);
-        }
-
-        function datatablepembelian() {
-            initializeDataTable('.yajra-datatable-pembelian', "{{ route('home.penerimaan') }}", [{
-                    data: 'kode',
-                    name: 'kode'
-                },
-                {
-                    data: 'tanggal',
-                    name: 'tanggal'
-                },
-                {
-                    data: 'supplier',
-                    name: 'suppliers.nama'
-                },
-                {
-                    data: 'umur',
-                    searchable: false,
-                    render: renderAgeBadge
-                },
-                {
-                    data: 'status',
-                    name: 'statusPO.nama'
-                },
-                {
-                    data: 'keterangan_internal',
-                    name: 'keterangan_internal'
-                },
-                {
-                    data: 'action',
-                    render: data => renderActionButton('pembelian/penerimaanbarang', data),
-                    className: "nowrap"
-                }
-            ]);
-        }
-
-        function datatablehutang() {
-            initializeDataTable('.yajra-datatable-hutang', "{{ route('home.hutang') }}", [{
-                    data: 'tanggal_top',
-                    searchable: false,
-                    name: 'tanggal_top'
-                },
-                {
-                    data: 'nama_supplier',
-                    name: 'suppliers.nama'
-                },
-                {
-                    data: 'kode_faktur',
-                    name: 'FakturPO.kode'
-                },
-                {
-                    data: 'no_faktur_supplier',
-                    name: 'FakturPO.no_faktur_supplier'
-                },
-                {
-                    data: 'total',
-                    searchable: false,
-                    name: 'total'
-                },
-                {
-                    data: 'dibayar',
-                    searchable: false,
-                    name: 'dibayar'
-                },
-                {
-                    data: 'sisa',
-                    searchable: false,
-                    name: 'sisa'
-                },
-                {
-                    data: 'umur',
-                    searchable: false,
-                    render: renderAgeBadge
-                },
-                {
-                    data: 'status',
-                    render: function(data) {
-                        if (data == 1) {
-                            return '<span class="badge badge-info">Belum Jatuh Tempo</span>';
-                        } else {
-                            return '<span class="badge badge-danger">Sudah Jatuh Tempo</span>';
-                        }
-                    }
-                },
-                {
-                    data: 'action',
-                    render: data => renderActionButton('pembayaran/pembayaranhutang', data),
-                    className: "nowrap"
-                }
-            ]);
-        }
-
-        function datatablepiutang() {
-            initializeDataTable('.yajra-datatable-piutang', "{{ route('home.piutang') }}", [{
-                    data: 'tanggal_top',
-                    searchable: false,
-                    render: function(data, type, row) {
-                        // row.id berisi id, row.tanggal_top berisi tanggal
-                        // Contoh: return tanggal dan id
-                        return `${data} <span class="btn btn-icon btn-outline-success btn-circle btn-sm" onclick=ubahtanggal(${row.id})><i class="flaticon-browser"></i></span>`;
-                    }
-                },
-                {
-                    data: 'no_kpa',
-                    name: 'fakturpenjualan.no_kpa'
-                },
-                {
-                    data: 'customer',
-                    name: 'customers.nama'
-                },
-                {
-                    data: 'total',
-                    searchable: false,
-                    name: 'total'
-                },
-                {
-                    data: 'dibayar',
-                    searchable: false,
-                    name: 'dibayar'
-                },
-                {
-                    data: 'sisa',
-                    searchable: false,
-                    name: 'sisa'
-                },
-                {
-                    data: 'umur',
-                    searchable: false,
-                    render: renderAgeBadge
-                },
-                {
-                    data: 'status',
-                    render: function(data) {
-                        if (data == 1) {
-                            return '<span class="badge badge-info">Belum Jatuh Tempo</span>';
-                        } else {
-                            return '<span class="badge badge-danger">Sudah Jatuh Tempo</span>';
-                        }
-                    }
-                },
-                {
-                    data: 'sales',
-                    name: 'sales'
-                },
-                {
-                    data: 'action',
-                    render: data => renderActionButton('pembayaran/pembayaranpiutang', data),
-                    className: "nowrap"
-                }
-            ]);
-        }
-
-        function datahutang() {
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('home.rekaphutang') }}',
-                dataType: 'html',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: {
-                    'tahun': tahunrekaphutang,
-                    "_token": "{{ csrf_token() }}"
-                },
-                success: function(data) {
-                    let response = JSON.parse(data);
-                    $('#hutang-lunas').html(response.total_lunas);
-                    $('#hutang-belum-lunas').html(response.total_belum_lunas);
-                    $('#hutang-jatuh-tempo').html(response.total_jatuh_tempo);
-                    $('#hutang-belum-jatuh-tempo').html(response.total_belum_jatuh_tempo);
-
-                    $('#totalhutangtahunan').html(response.hutangtotaltahunan);
-                    $('#totalhutangseluruh').html(response.hutangtotal);
-                    // Update the width of the progress bar based on the percentage values
-                    $('#progress-hutang-lunas').css('width', response.persenlunas + '%');
-                    $('#progress-hutang-belum-lunas').css('width', response.persenbelumlunas + '%');
-                    $('#progress-jatuh-tempo').css('width', response.persenjatuhtempo + '%');
-                    $('#progress-belum-jatuh-tempo').css('width', response.persenbelumjatuhtempo + '%');
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        }
-
-
-
-        function datapiutang(params) {
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('home.rekappiutang') }}',
-                dataType: 'html',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: {
-                    'tahun': tahunrekappiutang,
-                    "_token": "{{ csrf_token() }}"
-                },
-                success: function(data) {
-                    let response = JSON.parse(data);
-                    $('#piutang-lunas').html(response.total_lunas);
-                    $('#piutang-belum-lunas').html(response.total_belum_lunas);
-                    $('#piutang-jatuh-tempo').html(response.total_jatuh_tempo);
-                    $('#piutang-belum-jatuh-tempo').html(response.total_belum_jatuh_tempo);
-
-                    $('#totalpiutangtahunan').html(response.piutangtotaltahunan);
-                    $('#totalpiutangseluruh').html(response.piutangtotal);
-
-                    // Update the width of the progress bar based on the percentage values
-                    $('#progress-piutang-lunas').css('width', response.persenlunas + '%');
-                    $('#progress-piutang-belum-lunas').css('width', response.persenbelumlunas + '%');
-                    $('#progress-piutang-jatuh-tempo').css('width', response.persenjatuhtempo + '%');
-                    $('#progress-piutang-belum-jatuh-tempo').css('width', response.persenbelumjatuhtempo + '%');
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        }
-
-        function filterhutang() {
-            let e = document.getElementById("rekaphutang");
-            tahunrekaphutang = e.options[e.selectedIndex].value;
-            datahutang();
-        }
-
-        function filterpiutang() {
-            let e = document.getElementById("rekappiutang");
-            tahunrekappiutang = e.options[e.selectedIndex].value;
-            datapiutang();
-        }
-
-
-        function ubahtanggal(id) {
-
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('home.ubahtanggal') }}',
-                dataType: 'html',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                beforeSend: function() {
-                    KTApp.blockPage();
-                },
-                data: {
-                    'id': id,
-                    "_token": "{{ csrf_token() }}"
-                },
-                success: function(data) {
-                    $('#modal-data').html(data);
-                    $('#ubahtanggal').modal('show');
-                },
-                complete: function() {
-                    KTApp.unblock();
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        }
-
-        function simpantanggal(id) {
-            let tanggaljatuhtempo = $('#tanggaljatuhtempo').val();
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('home.simpantanggal') }}',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: {
-                    'id': id,
-                    'tanggaljatuhtempo': tanggaljatuhtempo,
-                    "_token": "{{ csrf_token() }}"
-                },
-                success: function(data) {
-                    $('.yajra-datatable-piutang').DataTable().ajax.reload(null, false);
-                    iziToast.success({
-                        title: 'Success',
-                        message: 'Data Berhasil Diubah',
-                        position: 'topRight',
-                    });
-                    $('#ubahtanggal').modal('hide');
-
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-
-        }
-
-        function rekaplabarugi() {
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('home.rekaplabarugi') }}',
-                dataType: 'html',
-                beforeSend: function() {
-                    KTApp.blockPage();
-                },
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: {
-                    'tahun': tahunlabarugi,
-                    "_token": "{{ csrf_token() }}"
-                },
-                success: function(data) {
-                    let response = JSON.parse(data);
-                    $('#laba_penjualan').html(response.grand_total_penjualan_bersih);
-                    $('#beban_operasional').html(response.grand_total_pengeluaran);
-                    $('#total_keuntungan').html(response.total_keuntungan);
-                    $('#beban_persediaan').html(response.total_stok);
-                },
-                complete: function() {
-                    KTApp.unblock();
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        }
-
-        function filtertahunlabarugi() {
-            let e = document.getElementById("tahunrekaplabarugi");
-            tahunlabarugi = e.options[e.selectedIndex].value;
-            rekaplabarugi();
-        }
     </script>
 @endpush

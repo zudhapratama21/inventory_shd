@@ -14,8 +14,7 @@
                     <table class="table yajra-datatablecustomer collapsed ">
                         <thead class="datatable-head">
                             <tr>                                
-                                <th>Nama Customer</th>
-                                <th>Qty</th>
+                                <th>Nama Customer</th>                                
                                 <th>Total Penjualan</th>
                             </tr>
                         </thead>
