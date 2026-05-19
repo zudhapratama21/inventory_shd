@@ -181,7 +181,7 @@
                     <label class="col-lg-7 col-form-label text-right">Ongkir :</label>
                     <div class="col-lg-5 mb-2">
                         <div class="input-group">
-                            @if ($item->pesananpembelian->status_po_id !== 5)
+                            @if ($pesananpembelian->status_po_id !== 5)
                                 <a href="javascript:editOngkir();" class="btn  btn-icon btn-primary mr-1">
                                     <i class="flaticon-edit"></i>
                                 </a>
