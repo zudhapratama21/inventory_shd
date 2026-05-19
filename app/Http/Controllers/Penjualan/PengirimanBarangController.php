@@ -707,14 +707,20 @@ class PengirimanBarangController extends Controller
             // $stokdet = StokExpDetail::where('id_sj_detail', $request->pengirimandet)->sum('qty') * -1;
             $stok = StokExp::where('id', $request->stok_id)->first();
 
-            
+            if ($qty > $pengirimandet->qty_sisa) {
+                DB::rollBack();
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Qty tidak boleh melebihi sisa stok atau qty pengiriman'
+                ], 422);
+            }
 
             // cek qty kirim jika beda satuan 
             if ($pengirimandet->beda_satuan == 'on') {
                 $qty = $qty * $pengirimandet->qty_konversi;
             }
 
-            if ($stok->qty < $qty || $qty > $pengirimandet->qty_sisa) {
+            if ($stok->qty < $qty) {
                 DB::rollBack();
                 return response()->json([
                     'status' => 'error',
