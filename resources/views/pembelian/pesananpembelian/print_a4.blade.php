@@ -170,7 +170,7 @@
                         {{ $item->products->nama }}<br>
                         {{ $item->products->no_ijinedar }}
                     </td>
-                    <td class="item-group" class="text-center">{{ $item->products->merks->nama }}</td>
+                    <td class="item-group" class="text-center">{{  ($item->products->merks ? $item->products->merks->nama : '') }}</td>
                     <td class="text-center item-group">{{ $item->qty }}</td>
                     <td class="item-group">
                         @if ($item->beda_satuan == 'on')
