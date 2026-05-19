@@ -36,6 +36,8 @@ class Product extends Model
         'hpp',
         'diskon_persen',
         'diskon_rp',
+        'diskon_persen_beli',
+        'diskon_rp_beli',
         'stok',
         'keterangan',
         'status',

@@ -84,7 +84,7 @@
                                             <th>Kode</th>
                                             <th>Tanggal</th>
                                             <th>Kode PO</th>
-                                            <th>No KPA</th>
+                                            <th>No Perusahaan</th>
                                             <th>Supplier</th>
                                             <th>Status</th>
                                             <th style="width: 15%">Action</th>

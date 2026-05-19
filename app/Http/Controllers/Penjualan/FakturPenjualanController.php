@@ -1181,6 +1181,12 @@ class FakturPenjualanController extends Controller
                         'qty_sisa' => $stokpb - $item['qty']
                     ]);
                 }
+
+                Product::where('id', $item['product_id'])->update([
+                    'hargajual' => $item['hargajual'],
+                    'diskon_persen' => $item['diskon_persen'],
+                    'diskon_rp' => $item['diskon_rp'],
+                ]);
             }
 
 

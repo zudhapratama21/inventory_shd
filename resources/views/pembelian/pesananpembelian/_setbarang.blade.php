@@ -13,7 +13,7 @@
                                     <span class="nav-icon"><i class="flaticon2-chat-1"></i></span>
                                     <span class="nav-text">FORM</span>
                                 </a>
-                            </li>                        
+                            </li>
                         </ul>
                     </div>
 
@@ -89,8 +89,8 @@
                                     <div class="form-group row">
                                         <label class="col-lg-2 col-form-label">Harga</label>
                                         <div class="col-lg-10">
-                                            <input type="text" class="form-control" id="hargabeli"
-                                                name="hargabeli" value="{{ $product->hargabeli }}" />
+                                            <input type="text" class="form-control" id="hargabeli" name="hargabeli"
+                                                value="{{ $product->hargabeli }}" />
                                         </div>
                                     </div>
 
@@ -117,21 +117,21 @@
                                             <input type="text" class="form-control" id="diskon_rp"
                                                 name="diskon_rp" value="0" />
                                         </div>
-                                    </div>                                
+                                    </div>
                                     <div class="form-group row">
                                         <label class="col-lg-2 col-form-label">Keterangan</label>
                                         <div class="col-lg-10">
                                             <input type="text" class="form-control" id="keterangan"
                                                 name="keterangan" value="" />
                                         </div>
-                                    </div>                                    
+                                    </div>
                                 </div>
                             </form>
-                        </div>                    
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" onclick="javascript:submitItem();"
-                                        class="btn btn-success mr-2">Save</button>
+                            class="btn btn-success mr-2">Save</button>
                         <button type="button" class="btn btn-light-primary font-weight-bold"
                             data-dismiss="modal">Close</button>
                     </div>
@@ -185,30 +185,34 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label class="col-lg-2 col-form-label">Ubah Satuan ?</label>
-                                    <div class="col-3">
-                                        <span class="switch switch-outline switch-icon switch-success">
-                                            <label>
-                                                <input type="checkbox" name="select" id="beda_satuan"
-                                                    onclick="satuanFunction()"                                                    
-                                                    value="{{$item->beda_satuan}}" />
-                                                <span></span>
-                                            </label>
-                                        </span>
+                                @if ($item->pesananpembelian->status_po_id < 3)
+                                    <div class="form-group row">
+                                        <label class="col-lg-2 col-form-label">Ubah Satuan ?</label>
+                                        <div class="col-3">
+                                            <span class="switch switch-outline switch-icon switch-success">
+                                                <label>
+                                                    <input type="checkbox" name="select" id="beda_satuan"
+                                                        onclick="satuanFunction()"
+                                                        value="{{ $item->beda_satuan }}" />
+                                                    <span></span>
+                                                </label>
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
+
 
                                 <div class="form-group row">
                                     <label class="col-lg-2 col-form-label">Satuan Konversi</label>
                                     <div class="col-lg-4">
                                         <select name="satuan" class="form-control" id="satuan_konversi" disabled>
                                             @foreach ($satuan as $data)
-                                               @if ($data->nama == $item->satuan_konversi)
-                                                    <option value="{{ $data->nama }}" selected>{{ $data->nama }}</option>   
-                                               @else
-                                                   <option value="{{ $data->nama }}">{{ $data->nama }}</option>   
-                                               @endif                                                
+                                                @if ($data->nama == $item->satuan_konversi)
+                                                    <option value="{{ $data->nama }}" selected>{{ $data->nama }}
+                                                    </option>
+                                                @else
+                                                    <option value="{{ $data->nama }}">{{ $data->nama }}</option>
+                                                @endif
                                             @endforeach
                                         </select>
                                     </div>
@@ -216,7 +220,7 @@
                                     <label class="col-lg-2 col-form-label">Qty Konversi</label>
                                     <div class="col-lg-4">
                                         <input type="text" class="form-control" id="qty_konversi"
-                                            name="qty_konversi" value="{{$item->qty_konversi}}" disabled />
+                                            name="qty_konversi" value="{{ $item->qty_konversi }}" disabled />
                                         <p class="text-danger" style="font-size: 65%">(*) Qty akan di kali dengan qty
                                             konversi</p>
                                     </div>
@@ -248,7 +252,7 @@
                                         <input type="text" class="form-control" id="diskon_rp" name="diskon_rp"
                                             value="{{ $item->diskon_rp }}" />
                                     </div>
-                                </div>                               
+                                </div>
                                 <div class="form-group row">
                                     <label class="col-lg-2 col-form-label">Keterangan</label>
                                     <div class="col-lg-10">
@@ -275,5 +279,3 @@
         </div>
 @endif
 <!-- Modal-->
-
-

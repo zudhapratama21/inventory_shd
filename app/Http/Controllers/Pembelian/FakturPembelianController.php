@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\FakturPembelianDetail;
 use App\Models\PenerimaanBarangDetail;
 use App\Models\PesananPembelianDetail;
+use App\Models\Product;
 use App\Models\TempBiaya;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -318,6 +319,13 @@ class FakturPembelianController extends Controller
                 $detil->ongkir = $pb->ongkir;
                 $detil->keterangan = $pb->keterangan;
                 $detil->save();
+
+
+                Product::where('id', $pb->product_id)->update([
+                    'hargabeli' => $pb->hargabeli,
+                    'diskon_persen_beli' => $pb->diskon_persen,
+                    'diskon_rp_beli' => $pb->diskon_rp,
+                ]);
             }
 
             #################### update Status PB ##################
