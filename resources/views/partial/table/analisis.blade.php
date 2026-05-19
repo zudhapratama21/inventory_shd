@@ -297,8 +297,7 @@
                     <thead>
                         <tr>
                             <th>Bulan Transaksi</th>
-                            <th>Nama Customer</th>
-                            <th>Qty</th>
+                            <th>Nama Customer</th>                            
                             <th>Total Penjualan</th>
                             <th>Action</th>
                         </tr>

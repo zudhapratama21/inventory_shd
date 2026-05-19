@@ -43,7 +43,7 @@
                         <tr>
                             <th scope="row">Merk</th>
                             <td>:</td>
-                            <td>{{ $product->merks->nama }}</td>
+                            <td>{{ $product->merks ? $product->merks->nama : '-' }}</td>
                         </tr>
                         <tr>
                             <th scope="row">Harga Jual</th>

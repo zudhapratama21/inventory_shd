@@ -984,7 +984,7 @@ class FakturPenjualanController extends Controller
                 return $pb->kode;
             })
             ->editColumn('merk', function ($pb) {
-                return $pb->merks->nama;
+                return $pb->merks ? $pb->merks->nama : '-';
             })
             ->editColumn('satuan', function ($pb) {
                 return $pb->satuan;

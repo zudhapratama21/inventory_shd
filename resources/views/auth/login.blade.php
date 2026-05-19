@@ -62,21 +62,11 @@
                                     <span></span>
                                     Remember me
                                 </label>
-                            </div>
-                            <a href="/forgot-password" id="kt_login_forgot" class="text-muted text-hover-primary">Forget
-                                Password ?</a>
+                            </div>                         
                         </div>
                         <button id="kt_login_signin_submit"
                             class="btn btn-primary font-weight-bold px-9 py-4 my-3 mx-4">Sign In</button>
-                    </form>
-                    <div class="mt-10">
-                        <span class="opacity-70 mr-4">
-                            Don't have an account yet?
-                        </span>
-                        <a href="/register" id="kt_login_signup"
-                            class="text-muted text-hover-primary font-weight-bold">Sign
-                            Up!</a>
-                    </div>
+                    </form>                
                 </div>
                 <!--end::Login Sign in form-->
 

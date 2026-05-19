@@ -109,7 +109,8 @@ class UserController extends Controller
             'email' => $request->email,
             'sales_id' => $sales,
             'phone' => $request->phone,
-            'divisi_id' => $request->divisi
+            'divisi_id' => $request->divisi,
+            'password' => Hash::make($request->password),
         ]);
 
         if ($user->roles->first() <> null) {

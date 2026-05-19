@@ -37,7 +37,7 @@
                 <td>{{$no++}}</td>
                 <td>{{$item->kode}}</td>
                 <td>{{$item->nama}}</td>
-                <td>{{$item->merks->nama}}</td>
+                <td>{{$item->merks ? $item->merks->nama : '-'}}</td>
                 <td>{{$item->satuan}}</td>   
                 <td>{{$item->categories->nama}}</td>   
                 <td>{{$item->subcategories->nama}}</td>   

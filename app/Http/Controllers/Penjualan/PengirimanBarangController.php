@@ -89,7 +89,7 @@ class PengirimanBarangController extends Controller
                 return $pb->kode;
             })
             ->editColumn('merk', function ($pb) {
-                return $pb->merks->nama;
+                return $pb->merks ? $pb->merks->nama : '-';
             })
             ->editColumn('satuan', function ($pb) {
                 return $pb->satuan;
@@ -640,7 +640,7 @@ class PengirimanBarangController extends Controller
     {
         $stok = StokExp::with(['stokExpDetail' => function ($query) use ($request) {
             $query->where('id_sj_detail', $request->pengirimandet);
-        }, 'products', 'supplier'])->where('product_id', $request->product_id)->where('qty', '>', '0');
+        }, 'products'])->where('product_id', $request->product_id)->where('qty', '>', '0');
 
         return Datatables::of($stok)
             ->addIndexColumn()
@@ -665,7 +665,7 @@ class PengirimanBarangController extends Controller
 
     public function daftarProdukKirim(Request $request)
     {
-        $stok = StokExpDetail::with(['stockExp.supplier', 'products'])->where('id_sj_detail', $request->pengirimandet);
+        $stok = StokExpDetail::with(['stockExp', 'products'])->where('id_sj_detail', $request->pengirimandet);
         return Datatables::of($stok)
             ->addIndexColumn()
             ->editColumn('tanggal', function ($pb) {
@@ -676,10 +676,7 @@ class PengirimanBarangController extends Controller
             })
             ->editColumn('lot', function ($pb) {
                 return $pb->stockExp->lot;
-            })
-            ->editColumn('supplier', function ($pb) {
-                return $pb->stockExp->supplier ? $pb->stockExp->supplier->nama : '-';
-            })
+            })            
             ->addColumn('action', function ($pb) {
                 $id = $pb->id;
                 return view('penjualan.pengirimanbarang.partial.actionbarang', compact('id'));
