@@ -327,8 +327,9 @@ class FakturPenjualanController extends Controller
             foreach ($faktur->fakturpenjualandetail as $item) {
                 // ubah qty sisa yang ada di pengiriman det
                 if ($item->pengiriman_barang_detail_id) {
-                    PengirimanBarangDetail::where('id', $item->pengiriman_barang_detail_id)
-                        ->increment('qty_sisa', $item->qty);
+                    $qty = PengirimanBarangDetail::where('id', $item->pengiriman_barang_detail_id)->first();                       
+                    $qty->qty_sisa = $qty->qty_sisa + $item->qty;
+                    $qty->save();
 
                     // simpan kode pengiriman barang
                     $pb[] = [
