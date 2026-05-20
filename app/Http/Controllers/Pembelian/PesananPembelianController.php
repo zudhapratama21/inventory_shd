@@ -553,6 +553,13 @@ class PesananPembelianController extends Controller
         if ($tanggal <> null) {
             $tanggal = Carbon::createFromFormat('d-m-Y', $tanggal)->format('Y-m-d');
         }
+
+        $pesananpembelian = PesananPembelian::findOrFail($id);
+        $no_urut =  $pesananpembelian->no_urut;
+        if ($request->no_urut) {
+            $no_urut = $request->no_urut;
+        }        
+        $noSurat = $this->noPerusahaan($tanggal, $no_urut);
         $data['tanggal'] = $tanggal;
         PesananPembelian::where('id', $id)->update([
             'supplier_id' => $request->supplier_id,
@@ -561,7 +568,8 @@ class PesananPembelianController extends Controller
             'top' => $request->top,
             'kategoripesanan_id' => $request->kategoripesanan_id,
             'keterangan' => $request->keterangan,
-            'no_so' => $request->no_so,
+            'no_so' => $noSurat['no_surat'],
+            'no_urut' => $no_urut,
             'no_so_customer' => $request->no_so_customer,
             'keterangan' => $request->keterangan,            
         ]);
