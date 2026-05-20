@@ -796,7 +796,7 @@ class PenerimaanBarangController extends Controller
     }
 
     public function update (Request $request , $id)
-    {        
+    {                
        $penerimaanbarang = PenerimaanBarang::where('id',$id)->update([
             'tanggal' => Carbon::parse($request->tanggal)->format('Y-m-d'),
             'sj_supplier' => $request->sj_supplier,

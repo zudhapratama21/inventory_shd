@@ -16,7 +16,7 @@ class PenerimaanBarang extends Model
         'kode',
         'tanggal',
         'pesanan_pembelian_id',
-        'sj_customer',
+        'sj_supplier',
         'supplier_id',
         'status_pb_id',
         'status_exp',
