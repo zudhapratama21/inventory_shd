@@ -252,15 +252,16 @@ class PesananPembelianController extends Controller
         return view('pembelian.pesananpembelian._caribarang', compact('produk'));
     }
     public function setbarang(Request $request)
-    {
+    {        
         $product = Product::where('id', '=', $request->id)->get()->first();
         $penjualan = FakturPenjualanDetail::where('product_id', $request->id)->with('fakturpenjualan.customers')->take(30)->orderBy('id', 'desc')->get();
         $pembelian = FakturPembelianDetail::where('product_id', $request->id)->with('fakturpembelian.suppliers')->take(30)->orderBy('id', 'desc')->get();
 
         $mode = "new";
+        $status_po_id = 0;
 
         $satuan = Satuan::get();
-        return view('pembelian.pesananpembelian._setbarang', compact('product', 'mode', 'penjualan', 'pembelian', 'satuan'));
+        return view('pembelian.pesananpembelian._setbarang', compact('product', 'mode', 'penjualan', 'pembelian', 'satuan','status_po_id'));
     }
 
     public function inputtemppo(Request $request)
@@ -323,8 +324,10 @@ class PesananPembelianController extends Controller
         $status = null;
         $mode = "edit";
 
+        $status_po_id = 0;
+
         $satuan = Satuan::get();
-        return view('pembelian.pesananpembelian._setbarang', compact('product_name', 'mode', 'item', 'product', 'status', 'satuan'));
+        return view('pembelian.pesananpembelian._setbarang', compact('product_name', 'mode', 'item', 'product', 'status', 'satuan','status_po_id'));
     }
 
     public function updatebarang(Request $request)
@@ -721,7 +724,8 @@ class PesananPembelianController extends Controller
         $status = $item->pesananpembelian->status_po_id;
         $satuan = Satuan::get();
         $mode = "edit";
-        return view('pembelian.pesananpembelian._setbarang', compact('product_name', 'mode', 'item', 'product', 'status', 'satuan'));
+        $status_po_id = $item->pesananpembelian->status_po_id;
+        return view('pembelian.pesananpembelian._setbarang', compact('product_name', 'mode', 'item', 'product', 'status', 'satuan', 'status_po_id'));
     }
 
     public function updateBarangDetail(Request $request)

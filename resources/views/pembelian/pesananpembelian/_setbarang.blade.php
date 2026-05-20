@@ -185,7 +185,7 @@
                                     </div>
                                 </div>
 
-                                @if ($item->pesananpembelian->status_po_id < 3)
+                                @if ($status_po_id < 3)
                                     <div class="form-group row">
                                         <label class="col-lg-2 col-form-label">Ubah Satuan ?</label>
                                         <div class="col-3">
