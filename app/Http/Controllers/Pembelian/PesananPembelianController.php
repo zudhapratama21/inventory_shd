@@ -386,17 +386,12 @@ class PesananPembelianController extends Controller
     public function hitunggrandtotal(Request $request)
     {
         $subtotal = TempPo::where('user_id', '=', Auth::user()->id)->sum('total');
-        $diskon = TempDiskon::where('jenis', '=', "PO")
-            ->where('user_id', '=', Auth::user()->id)
-            ->get()->first();
-        $diskon_persen = $diskon->persen;
-        $diskon_rupiah = $diskon->rupiah;
+        $diskon = TempPo::where('user_id', '=', Auth::user()->id)->sum('total_diskon');        
 
         $namaSessionBiaya = 'PO_BIAYA_' . Auth::user()->id;
         $biaya = session()->get($namaSessionBiaya, []);
-
-        $total_diskon = ($subtotal * ($diskon_persen / 100)) + $diskon_rupiah;
-        $total = $subtotal - $total_diskon + ($biaya['ongkir'] ?? 0);
+        
+        $total = $subtotal - $diskon + ($biaya['ongkir'] ?? 0);
         $ppn = $total * (11 / 100);
 
         // $ongkir = TempPo::where('user_id', '=', Auth::user()->id)->sum('ongkir');
@@ -406,7 +401,7 @@ class PesananPembelianController extends Controller
             'status' => 'success',
             'data' => [
                 'subtotal' => $subtotal,
-                'total_diskon' => $total_diskon,
+                'total_diskon' => $diskon,
                 'ppn' => $ppn,
                 'total' => $total,
                 'grandtotal' => $grandtotal,
