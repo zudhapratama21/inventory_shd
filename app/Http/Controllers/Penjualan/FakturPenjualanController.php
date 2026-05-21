@@ -89,11 +89,12 @@ class FakturPenjualanController extends Controller
             ->make(true);
     }
 
-    public function datatablelistsj()
+    public function datatablelistsj(Request $request)
     {
         $pengirimanbarangs = PengirimanBarang::with('customers')
             ->where('status_sj_id', '=', '2')
             ->orWhere('status_sj_id', '=', '3')
+            ->where('customer_id',$request->customer_id)
             ->orderBy('id', 'desc');
 
         return Datatables::of($pengirimanbarangs)
