@@ -94,7 +94,9 @@ class FakturPenjualanController extends Controller
         $pengirimanbarangs = PengirimanBarang::with('customers')
             ->where('status_sj_id', '=', '2')
             ->orWhere('status_sj_id', '=', '3')
-            ->where('customer_id',$request->customer_id)
+            ->when($request->customer_id != 'all', function ($q) use ($request) {
+                $q->where('customer_id', $request->customer_id);
+            })
             ->orderBy('id', 'desc');
 
         return Datatables::of($pengirimanbarangs)
@@ -121,8 +123,13 @@ class FakturPenjualanController extends Controller
         $kategori = Kategoripesanan::get();
         $sales = Sales::get();
 
-        // $namaSession = "PB" . Auth::user()->id;
-        // session()->forget($namaSession);
+        $namaSession = "PB" . Auth::user()->id;
+        
+
+        $namaSessionBiaya = 'PB_BIAYA_' . Auth::user()->id;        
+        session()->forget($namaSession);
+        session()->forget($namaSessionBiaya);
+
 
         return view('penjualan.fakturpenjualan.create', compact('customer', 'komoditas', 'kategori', 'sales', 'title', 'tglNow'));
     }
@@ -310,7 +317,7 @@ class FakturPenjualanController extends Controller
     }
 
     public function destroy(Request $request)
-    {        
+    {
         DB::beginTransaction();
 
         try {
@@ -328,7 +335,7 @@ class FakturPenjualanController extends Controller
             foreach ($faktur->fakturpenjualandetail as $item) {
                 // ubah qty sisa yang ada di pengiriman det
                 if ($item->pengiriman_barang_detail_id) {
-                    $qty = PengirimanBarangDetail::where('id', $item->pengiriman_barang_detail_id)->first();                       
+                    $qty = PengirimanBarangDetail::where('id', $item->pengiriman_barang_detail_id)->first();
                     $qty->qty_sisa = $qty->qty_sisa + $item->qty;
                     $qty->save();
 
@@ -340,7 +347,7 @@ class FakturPenjualanController extends Controller
             }
 
             // hapus piutang
-            Piutang::where('faktur_penjualan_id',$request->id)->delete();
+            Piutang::where('faktur_penjualan_id', $request->id)->delete();
 
             // hapus detail dulu
             $faktur->fakturpenjualandetail()->delete();
@@ -373,7 +380,7 @@ class FakturPenjualanController extends Controller
                 'status' => 'error',
                 'message' => $e->getMessage()
             ], 500);
-        }        
+        }
     }
 
     public function edit(FakturPenjualan $fakturpenjualan)

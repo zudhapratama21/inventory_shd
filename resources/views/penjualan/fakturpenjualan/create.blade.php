@@ -99,7 +99,7 @@
 
 
         <script type="text/javascript">
-            let customer_id = null;
+            let customer_id = 'all';
 
 
             $(document).on('click', '#check-all', function() {
