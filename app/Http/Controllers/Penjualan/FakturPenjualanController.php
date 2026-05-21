@@ -92,13 +92,14 @@ class FakturPenjualanController extends Controller
     public function datatablelistsj(Request $request)
     {
         $pengirimanbarangs = PengirimanBarang::with('customers')
-            ->where('status_sj_id', '=', '2')
-            ->orWhere('status_sj_id', '=', '3')
+            ->where(function ($q) {
+                $q->where('status_sj_id', 2)
+                    ->orWhere('status_sj_id', 3);
+            })
             ->when($request->customer_id != 'all', function ($q) use ($request) {
                 $q->where('customer_id', $request->customer_id);
             })
-            ->orderBy('id', 'desc');
-
+            ->orderBy('id', 'desc');        
         return Datatables::of($pengirimanbarangs)
             ->addIndexColumn()
             ->editColumn('id', function ($row) {
@@ -124,9 +125,9 @@ class FakturPenjualanController extends Controller
         $sales = Sales::get();
 
         $namaSession = "PB" . Auth::user()->id;
-        
 
-        $namaSessionBiaya = 'PB_BIAYA_' . Auth::user()->id;        
+
+        $namaSessionBiaya = 'PB_BIAYA_' . Auth::user()->id;
         session()->forget($namaSession);
         session()->forget($namaSessionBiaya);
 
