@@ -272,14 +272,13 @@ class FakturPembelianController extends Controller
             $subtotal_header = TempFakturpos::where('penerimaan_barang_id', '=', $id_pb)
                 ->where('user_id', '=', Auth::user()->id)->sum('total');
             //$subtotal_header = $total_det;
-            $ongkir_header = TempFakturpos::where('penerimaan_barang_id', '=', $id_pb)
-                ->where('user_id', '=', Auth::user()->id)->sum('ongkir');
+            $ongkir_header = $POdata->ongkir;
 
             $total_diskon_detail = TempFakturpos::where('penerimaan_barang_id', '=', $id_pb)
                 ->where('user_id', '=', Auth::user()->id)->sum('total_diskon');
 
-            $total_diskon_header = ($subtotal_header * ($diskon_persen_po / 100)) + $diskon_rupiah_po;
-            $total_header = $subtotal_header - $total_diskon_header;
+            $total_diskon_header = $total_diskon_detail;
+            $total_header = $subtotal_header - $total_diskon_detail;
             $ppn_header = $ppn_po;
             $grandtotal_header = $total_header + $ppn_header + $ongkir_header + $biayalainlain;
 
@@ -294,7 +293,7 @@ class FakturPembelianController extends Controller
             $datas['diskon_persen'] = $diskon_persen_po;
             $datas['subtotal'] = $subtotal_header;
             $datas['total_diskon_detail'] = $total_diskon_detail;
-            $datas['total_diskon_header'] = $total_diskon_header;
+            $datas['total_diskon_header'] = $total_diskon_detail;
             $datas['total'] = $total_header;
             $datas['grandtotal'] = $grandtotal_header;
             $datas['ppn'] = $ppn_header;
