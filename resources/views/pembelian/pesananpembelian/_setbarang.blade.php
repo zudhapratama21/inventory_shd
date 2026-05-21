@@ -185,21 +185,19 @@
                                     </div>
                                 </div>
 
-                                @if ($status_po_id < 3)
-                                    <div class="form-group row">
-                                        <label class="col-lg-2 col-form-label">Ubah Satuan ?</label>
-                                        <div class="col-3">
-                                            <span class="switch switch-outline switch-icon switch-success">
-                                                <label>
-                                                    <input type="checkbox" name="select" id="beda_satuan"
-                                                        onclick="satuanFunction()"
-                                                        value="{{ $item->beda_satuan }}" />
-                                                    <span></span>
-                                                </label>
-                                            </span>
-                                        </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-2 col-form-label">Ubah Satuan ?</label>
+                                    <div class="col-3">
+                                        <span class="switch switch-outline switch-icon switch-success">
+                                            <label>
+                                                <input type="checkbox" name="select" id="beda_satuan"
+                                                    @if ($status_po_id < 3) onclick="satuanFunction()" @endif
+                                                    value="{{ $item->beda_satuan }}" />
+                                                <span></span>
+                                            </label>
+                                        </span>
                                     </div>
-                                @endif
+                                </div>
 
 
                                 <div class="form-group row">

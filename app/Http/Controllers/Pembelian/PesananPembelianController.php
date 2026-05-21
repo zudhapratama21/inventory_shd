@@ -719,7 +719,7 @@ class PesananPembelianController extends Controller
     {
         $item = PesananPembelianDetail::with('pesananpembelian')->where('id', '=', $request->id)->first();
         $id_product = $item->product_id;
-
+        
         $product = new Product;
         $productx = Product::where('id', '=', $id_product)->first();
         $product_name = $productx->nama;
