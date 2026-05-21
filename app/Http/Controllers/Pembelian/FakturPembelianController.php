@@ -161,7 +161,8 @@ class FakturPembelianController extends Controller
 
 
             $total_det = 0;
-            $ongkir_det = 0;
+            $ongkir_det = $POdata->ongkir;
+            $total_diskon = 0;
             foreach ($PBdetails as $pb) {
                 $temp = new TempFakturpos;
 
@@ -175,9 +176,9 @@ class FakturPembelianController extends Controller
 
                 $subtotal = $hargabeli * $pb->qty;
                 $totaldiskon = (($subtotal * ($diskon_persen / 100)) + $diskon_rp);
+                $total_diskon = $total_diskon + $totaldiskon;
                 $total = $subtotal - $totaldiskon;
-                $total_det = $total_det + $total;
-                $ongkir_det = $ongkir_det + $ongkir;
+                $total_det = $total_det + $total;                
 
                 $temp->product_id = $pb->product_id;
                 $temp->penerimaan_barang_id = $pb->penerimaan_barang_id;
@@ -205,7 +206,7 @@ class FakturPembelianController extends Controller
             //dd($FBdetails);
             $subtotal_header = $total_det;
             $ongkir_header = $ongkir_det;
-            $total_diskon_header = ($subtotal_header * ($diskon_persen_po / 100)) + $diskon_rupiah_po;
+            $total_diskon_header = $total_diskon;
             $total_header = $subtotal_header - $total_diskon_header;
             $ppn_header = $ppn_po;
             $grandtotal_header = $total_header + $ppn_header + $ongkir_header;
