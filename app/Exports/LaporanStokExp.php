@@ -47,7 +47,7 @@ class LaporanStokExp implements FromView
         }
 
         $result = $tanggalFilter->orderBy('se.tanggal','asc')
-                                ->select('p.nama as nama_produk','p.kode','se.lot','se.tanggal','se.qty')->get();
+                                ->select('p.nama as nama_produk','p.kode','se.lot','se.tanggal','se.qty','p.status_exp')->get();
         
         return view('laporan.stok.export.stokexp',[
             'stok' => $result

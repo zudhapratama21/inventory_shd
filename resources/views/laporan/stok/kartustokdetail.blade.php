@@ -56,9 +56,7 @@
                                     Kartu Stok : &nbsp; <i>{{ ' ' . $product->kode . ' - ' . $product->nama }}</i>
                                 </h3>
                                 <div class="card-toolbar">
-                                    <div class="example-tools justify-content-center">
-                                        <a href="{{ route('laporanstok.refresh') }}"
-                                            class="btn btn-success btn-sm mr-2">Refresh</a>
+                                    <div class="example-tools justify-content-center">                                       
                                         <form action="{{ route('laporanstok.exportkartustok') }}" method="POST">
                                             @csrf
 

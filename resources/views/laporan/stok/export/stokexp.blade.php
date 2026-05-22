@@ -1,12 +1,9 @@
 <table >
     <thead>
         <tr>
-            <th>No</th>     
-            <th>ID Produk</th>     
-            <th>ID Exp</th>  
+            <th>No</th>               
             <th>Nama Produk</th>
-            <th>Kode Barang</th>
-            <th>Stok Barang All</th>
+            <th>Kode Barang</th>            
             <th>Tgl Expired</th>           
             <th>Lot</th>
             <th>Stok</th>
@@ -24,13 +21,16 @@
            
                 @foreach ($item->stokExp as $exp)
                     <tr>
-                        <td>{{$no++}}</td>
-                        <td>{{$item->id}}</td>   
-                        <td>{{$exp->id}}</td>                 
+                        <td>{{$no++}}</td>                                  
                         <td>{{$item->nama}}</td>
-                        <td>{{$item->kode}}</td>
-                        <td>{{$item->stok}}</td>          
-                        <td>{{ Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') }}</td>                                                   
+                        <td>{{$item->kode}}</td>                                 
+                        <td>
+                            @if ($item->status_exp == 1)
+                                {{ Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') }}
+                            @else
+                                -
+                            @endif                            
+                        </td>                                                   
                         <td>{{$exp->lot}}</td>
                         <td>{{$exp->qty}}</td>
                         <td>{{$exp->supplier ? $exp->supplier->nama : '-' }}</td>                                                                                  

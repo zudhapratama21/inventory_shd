@@ -105,7 +105,13 @@
                                     
                                     <tr>
                                         <td>{{ ++$index }}</td>
-                                        <td>{{ Carbon\Carbon::parse($a->tanggal)->format('d F Y') }}</td>
+                                        <td>
+                                            @if ($stok->products->status_exp == 1)
+                                                {{ Carbon\Carbon::parse($a->tanggal)->format('d F Y') }}                                                
+                                            @else
+                                                -
+                                            @endif                                                    
+                                        </td>
                                         <td>{{ $a->products->nama }}</td> 
                                         <td>{{ $a->products->kode }}</td>
                                         <td>{{ $a->lot }}</td>

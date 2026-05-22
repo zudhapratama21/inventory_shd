@@ -332,12 +332,13 @@ class PenerimaanBarangController extends Controller
             
                 $nilai_terima = $a->qty * $hargabeli_fix;
 
+                $qty =  $a->qty;
                   // hitung stok baru dengan beda satuan 
                 if ($detailPesanan->beda_satuan == 'on') {
-                    $stok_baru = $stok_lama + ( $a->qty * $detailPesanan->qty_konversi);
-                }else{
-                    $stok_baru = $stok_lama + $a->qty;    
-                }                
+                    $qty = $a->qty * $detailPesanan->qty_konversi;                    
+                }
+
+                $stok_baru = $stok_lama + $qty;                 
                 $nilai_baru = $nilai_lama + $nilai_terima;
                 $hpp_baru = ROUND(($nilai_baru / $stok_baru), 2);
                 $product->stok = $stok_baru;
@@ -370,14 +371,14 @@ class PenerimaanBarangController extends Controller
                 $inventoryTrans = new InventoryTransaction;
                 $inventoryTrans->tanggal = $tanggal;
                 $inventoryTrans->product_id = $product_id;
-                $inventoryTrans->qty = $a->qty;
+                $inventoryTrans->qty = $qty;
                 $inventoryTrans->stok = $stok_baru;
                 $inventoryTrans->hpp = $hpp_baru;
                 $inventoryTrans->jenis = "PB";
                 $inventoryTrans->jenis_id = $kode;
                 $inventoryTrans->supplier = $supplier->nama;
                 if ($detailPesanan->beda_satuan == 'on') {
-                    $inventoryTrans->keterangan = "Penerimaan dengan beda satuan .[ Pembelian produk dengan " . $detailPesanan->satuan_konversi . "dengan satuan produk asli adalah " .  $detailPesanan->satuan . " ]";
+                    $inventoryTrans->keterangan = "Penerimaan dengan beda satuan .[ Pembelian produk dengan " . $detailPesanan->satuan_konversi . "dengan satuan produk asli adalah " .  $detailPesanan->satuan . " ] dengan nilai konvers per satuan adalah " . $detailPesanan->qty_konversi;
                 }
 
                 $inventoryTrans->save();

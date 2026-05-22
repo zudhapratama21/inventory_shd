@@ -127,7 +127,7 @@ class FakturPenjualanController extends Controller
         $namaSession = "PB" . Auth::user()->id;
 
 
-        $namaSessionBiaya = 'PB_BIAYA_' . Auth::user()->id;
+        $namaSessionBiaya = 'FB_BIAYA_' . Auth::user()->id;
         session()->forget($namaSession);
         session()->forget($namaSessionBiaya);
 
@@ -841,7 +841,7 @@ class FakturPenjualanController extends Controller
         $pengirimanBarang = PengirimanBarang::whereIn('id', $id)->with('PengirimanBarangDetails.products')->get();
 
 
-        $namaSession = 'PB' . Auth::user()->id;
+        $namaSession = 'FB' . Auth::user()->id;
         $items = session()->get($namaSession, []);
         foreach ($pengirimanBarang as $pb) {
             foreach ($pb->PengirimanBarangDetails as $detail) {
@@ -879,7 +879,7 @@ class FakturPenjualanController extends Controller
 
     public function loadsj()
     {
-        $namaSession = 'PB' . Auth::user()->id;
+        $namaSession = 'FB' . Auth::user()->id;
         $items = session()->get($namaSession, []);
 
         $data = [];
@@ -922,7 +922,7 @@ class FakturPenjualanController extends Controller
 
     public function editsj(Request $request)
     {
-        $namaSession = 'PB' . Auth::user()->id;
+        $namaSession = 'FB' . Auth::user()->id;
         $items = session()->get($namaSession, []);
 
         $item = $items[$request->id] ?? null;
@@ -934,7 +934,7 @@ class FakturPenjualanController extends Controller
     {
         DB::beginTransaction();
         try {
-            $namaSession = 'PB' . Auth::user()->id;
+            $namaSession = 'FB' . Auth::user()->id;
             $items = session()->get($namaSession, []);
 
             if (isset($items[$request->product_id])) {
@@ -971,7 +971,7 @@ class FakturPenjualanController extends Controller
 
     public function hapussj(Request $request)
     {
-        $namaSession = 'PB' . Auth::user()->id;
+        $namaSession = 'FB' . Auth::user()->id;
         $items = session()->get($namaSession, []);
 
         unset($items[$request->id]);
@@ -1020,7 +1020,7 @@ class FakturPenjualanController extends Controller
     public function simpanbarang(Request $request)
     {
 
-        $namaSession = 'PB' . Auth::user()->id;
+        $namaSession = 'FB' . Auth::user()->id;
         $items = session()->get($namaSession, []);
 
         $subtotal = $request->qty * ($request->hargajual / (1 + ($request->ppn / 100)));
@@ -1058,7 +1058,7 @@ class FakturPenjualanController extends Controller
 
     public function hitungtotal()
     {
-        $namaSession = 'PB' . Auth::user()->id;
+        $namaSession = 'FB' . Auth::user()->id;
         $items = session()->get($namaSession, []);
         $grandtotal = 0;
         $subtotal = 0;
@@ -1066,7 +1066,7 @@ class FakturPenjualanController extends Controller
         $ppn = 0;
         $total = 0;
 
-        $namaSessionBiaya = 'PB_BIAYA_' . Auth::user()->id;
+        $namaSessionBiaya = 'FB_BIAYA_' . Auth::user()->id;
         $biaya = session()->get($namaSessionBiaya, []);
 
         foreach ($items as $item) {
@@ -1095,7 +1095,7 @@ class FakturPenjualanController extends Controller
 
     public function simpanbiaya(Request $request)
     {
-        $namaSession = 'PB_BIAYA_' . Auth::user()->id;
+        $namaSession = 'FB_BIAYA_' . Auth::user()->id;
         session()->get($namaSession, []);
 
         $ongkir = $request->ongkir ?? 0;
@@ -1122,10 +1122,10 @@ class FakturPenjualanController extends Controller
 
         try {
             // dd($request->all());
-            $namaSessionBiaya = 'PB_BIAYA_' . Auth::user()->id;
+            $namaSessionBiaya = 'FB_BIAYA_' . Auth::user()->id;
             $biaya = session()->get($namaSessionBiaya, []);
 
-            $namaSession = 'PB' . Auth::user()->id;
+            $namaSession = 'FB' . Auth::user()->id;
             $sessionItem = session()->get($namaSession, []);
 
 

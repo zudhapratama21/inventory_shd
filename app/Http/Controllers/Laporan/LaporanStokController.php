@@ -319,6 +319,7 @@ class LaporanStokController extends Controller
 
         $stok = StokExp::with('products')->has('products')
             ->whereBetween('tanggal', [$tgl1, $tgl2])
+            ->where('qty', '<>', '0')
             ->orderBy('tanggal', 'ASC')->get();
 
         return view('laporan.stok.expstokresult', compact('stok', 'title', 'datas'));
