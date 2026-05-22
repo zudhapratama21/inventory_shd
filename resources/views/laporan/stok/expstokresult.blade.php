@@ -106,7 +106,7 @@
                                     <tr>
                                         <td>{{ ++$index }}</td>
                                         <td>
-                                            @if ($stok->products->status_exp == 1)
+                                            @if ($a->products->status_exp == 1)
                                                 {{ Carbon\Carbon::parse($a->tanggal)->format('d F Y') }}                                                
                                             @else
                                                 -
