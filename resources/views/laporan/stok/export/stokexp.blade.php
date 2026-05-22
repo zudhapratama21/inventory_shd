@@ -13,7 +13,7 @@
         @php
             $no = 1;
         @endphp
-        @foreach ($stokexp as $item)
+        @foreach ($stok as $item)
             <tr>
                 <td>{{ $no++ }}</td>
                 <td>{{ $item->nama_produk }}</td>
