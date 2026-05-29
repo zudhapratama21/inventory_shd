@@ -103,10 +103,11 @@
 
     <div>
         <img src="{{ public_path('ttd/KOPSURAT.png') }}" alt="" width="100%" height="100px">
+        <hr>
     </div>
 
-    <div class="title mt-10"><u>Surat Pesanan</u></div>
-    <div class="capt mt-2">No. {{ $pesananpembelian->no_so }}</div>
+    <div class="title"><u>Surat Pesanan</u></div>
+    <div class="capt">No. {{ $pesananpembelian->no_so }}</div>
 
     <table class="no-border">
         <tr>
@@ -264,7 +265,7 @@
         </tr>
     </table>
 
-    <table class="mt-10">
+    <table class="mt-2">
         <tr>
             <td>Demikian Surat Pesanan kami , atas perhatianya kami sampaikan terima kasih .</td>
         </tr>

@@ -889,7 +889,7 @@ class PengirimanBarangController extends Controller
 
                 $product = Product::find($a->product_id);
                 $stok = $product->stok;
-                $hpp = $product->hpp;
+                $hpp = 0;
                 $product->stok = $stok + $qty;
                 $product->save();
                 $stok_baru = $stok + $qty;
