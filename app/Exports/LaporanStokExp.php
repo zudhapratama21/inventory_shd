@@ -24,6 +24,7 @@ class LaporanStokExp implements FromView
         $penjualan = DB::table('stok_exps as se')    
                     ->join('products  as p','se.product_id','=','p.id')    
                     ->where('se.deleted_at',null)
+                    ->where('p.status_exp', 1)
                     ->where('qty','<>',0);
                     
         

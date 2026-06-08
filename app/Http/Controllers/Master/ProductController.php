@@ -258,8 +258,7 @@ class ProductController extends Controller
     {
         // dd($request->all());
         $now = Carbon::parse(now())->format('Y-m-d');
-        return Excel::download(new ProductExport($request->all()), 'laporanproduct-'.$now.'.xlsx');
-        
+        return Excel::download(new ProductExport($request->all()), 'laporanproduct-'.$now.'.xlsx');        
 
     }
 

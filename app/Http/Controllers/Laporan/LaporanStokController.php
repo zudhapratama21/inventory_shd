@@ -183,9 +183,9 @@ class LaporanStokController extends Controller
         DB::beginTransaction();
         try {
             $stok = StokExp::create([
-                'product_id' => $request->id,                
+                'product_id' => $request->id,
                 'qty' => $request->qty,
-                'lot' => $request->lot,                
+                'lot' => $request->lot,
                 'tanggal' => Carbon::parse($request->tanggal)->format('Y-m-d'),
             ]);
             DB::commit();
@@ -317,10 +317,14 @@ class LaporanStokController extends Controller
             $tgl2 = Carbon::createFromFormat('d-m-Y', $tgl2)->format('Y-m-d');
         }
 
-        $stok = StokExp::with('products')->has('products')
+        $stok = StokExp::with('products')
+            ->whereHas('products', function ($q) {
+                $q->where('status_exp', 1);
+            })
             ->whereBetween('tanggal', [$tgl1, $tgl2])
-            ->where('qty', '<>', '0')
-            ->orderBy('tanggal', 'ASC')->get();
+            ->where('qty', '<>', 0)
+            ->orderBy('tanggal', 'ASC')
+            ->get();
 
         return view('laporan.stok.expstokresult', compact('stok', 'title', 'datas'));
     }
