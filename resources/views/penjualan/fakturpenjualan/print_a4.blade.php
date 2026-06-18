@@ -377,10 +377,10 @@
         </table>
         <table class="no-border">
             <tr>
-                <td width="56%" style="font-size:10px">
+                <td width="50%" style="font-size:10px">
                     PO Customer : {{ $fakturpenjualan->no_sp_customer }}
                 </td>
-                <td width="44%" style="font-size:10px">Tanggal PO Customer. :
+                <td width="50%" style="font-size:10px">Tanggal PO Customer. :
                     {{ $fakturpenjualan->tanggal_sp_customer }}
                 </td>
             </tr>
