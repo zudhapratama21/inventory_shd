@@ -171,9 +171,9 @@
                         {{ $item->products->nama }}<br>
                         {{ $item->products->no_ijinedar }}
                     </td>
-                    <td class="item-group" class="text-center">{{  ($item->products->merks ? $item->products->merks->nama : '') }}</td>
-                    <td class="text-center item-group">{{ $item->qty }}</td>
-                    <td class="item-group">
+                    <td class="item-group text-center">{{  ($item->products->merks ? $item->products->merks->nama : '') }}</td>
+                    <td class="text-center item-group" >{{ $item->qty }}</td>
+                    <td class="item-group text-center" >
                         @if ($item->beda_satuan == 'on')
                             {{ $item->satuan_konversi }}
                         @else
@@ -201,7 +201,7 @@
                 </tr>
             @endforeach
 
-            @for ($i = 1; $i < 27 - $jumlahproduk; $i++)
+            @for ($i = 1; $i < 24 - $jumlahproduk; $i++)
                 <tr>
                     <td class="text-center item-group"></td>
                     <td class="item-group">
@@ -230,6 +230,9 @@
                     <tr>
                         <td width="99.9%">- Setelah Surat pesanan diterima mohon ditandatangani , distempel , dan
                             diberi nama terang lalu di email kembali</td>
+                    </tr>
+                    <tr>
+                        <td width="99.9%">- {{ $pesananpembelian->keterangan }}</td>
                     </tr>
                 </table>
 

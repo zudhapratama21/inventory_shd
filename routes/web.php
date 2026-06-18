@@ -567,7 +567,7 @@ Route::middleware('has.role')->prefix('penjualan')->group(function () {
         Route::PUT('{fakturpenjualandetail}/updateCN', [FakturPenjualanController::class, 'updateCN'])->name('fakturpenjualan.updateCN');
 
         // kwitansi
-        Route::get('{fakturpenjualan}/kwitansi', [FakturPenjualanController::class, 'kwitansi'])->name('fakturpenjualan.kwitansi');
+        Route::post('{fakturpenjualan}/kwitansi', [FakturPenjualanController::class, 'kwitansi'])->name('fakturpenjualan.kwitansi');
 
         Route::post('datatablelistsj', [FakturPenjualanController::class, 'datatablelistsj'])->name('fakturpenjualan.datatablelistsj');
         Route::get('datatable', [FakturPenjualanController::class, 'datatable'])->name('fakturpenjualan.datatable');

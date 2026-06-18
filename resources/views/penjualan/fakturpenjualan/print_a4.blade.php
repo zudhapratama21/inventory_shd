@@ -9,12 +9,13 @@
         @page {
             size: A4;
             margin: 0;
+            border: 1px solid #000;
         }
 
 
         body {
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 11px;
+            font-family: "DejaVu Sans", sans-serif;
+            font-size: 10px;
             color: #000;
         }
 
@@ -37,8 +38,9 @@
         .border th,
         .border td {
             border: 1px solid #000;
-            padding: 4px;
+            padding: 2px;
             vertical-align: top;
+            line-height: 1;
         }
 
         .text-center {
@@ -97,10 +99,10 @@
 
         }
 
-        .page-frame {
+        /* .page-frame {
             border: 1px solid #000;
             padding: 2px;
-        }
+        } */
     </style>
 </head>
 
@@ -152,19 +154,19 @@
 
         <!-- TABEL BARANG -->
         <table class="border mt-10">
-            <thead>
+            <thead style="font-size: 10px">
                 <tr class="text-center text-bold">
-                    <th width="6%">Qty</th>
-                    <th width="10%">Kode Item</th>
-                    <th width="32%">Nama Barang</th>
-                    <th width="8%">EXP</th>
-                    <th width="14%">SN / LOT</th>
-                    <th width="11%">Harga</th>
-                    <th width="6%">Disc</th>
+                    <th width="6%">Kuantum</th>
+                    <th width="8%">Kode Item</th>
+                    <th width="34%">Nama Barang</th>
+                    <th width="12%">EXP</th>
+                    <th width="12%">SN / LOT</th>
+                    <th width="10%">Harga</th>
+                    <th width="5%">Disc</th>
                     <th width="13%">Jumlah</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody style="font-size: 10px">
                 <?php
                 $no = 0;
                 ?>
@@ -175,74 +177,74 @@
                         $merks = $item->products->merks->nama;
                     } else {
                         $merks = '';
-                    }                    
+                    }
                     ?>
-                    @if ($item->pengirimanbarang_id != null)                        
-                            @foreach ($item->pengirimanbarangdetail->stokexpdetail as $exp)
-                                {{ $no++ }}
-                                <tr>
-                                    <td class="text-left item-group">{{ $exp->qty * -1 }} {{ $item->satuan }}</td>
-                                    <td class="item-group">{{ $item->products->kode_item }}</td>
-                                    <td class="item-group">
-                                        {{ $merks }} {{ $item->products->nama }}<br>
-                                        {{ $item->products->no_ijinedar }}
-                                    </td>
-                                    <td class="text-center item-group">
-                                        @if ($item->products->status_exp == 1)
-                                            {{ \Carbon\Carbon::parse($exp->stockExp->tanggal)->format('F Y') }}    
-                                        @else
-                                            <span>----</span>
-                                        @endif
-                                        
-                                    </td>
-                                    <td class="text-center item-group">{{ $exp->stockExp->lot }}</td>
-                                    <td class="item-group">
-                                        <table width="100%" class="no-border">
-                                            <tr>
-                                                <td style="width: 30%" class="text-left">Rp.</td>
-                                                <td style="width: 50%" class="text-right">
-                                                    {{ number_format($item->hargajual, 0, ',', '.') }}
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                    <td class="text-center item-group">
-                                        {{ number_format($item->diskon_persen, 0, ',', '.') }} %</td>
-                                    <td class="item-group">
-                                        <table width="100%" class="no-border">
-                                            <tr>
-                                                <td style="width: 30%" class="text-left">Rp.</td>
-                                                <td style="width: 50%" class="text-right">
-                                                    {{ number_format($item->hargajual * ($exp->qty * -1), 0, ',', '.') }}
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            @endforeach                       
+                    @if ($item->pengirimanbarang_id != null)
+                        @foreach ($item->pengirimanbarangdetail->stokexpdetail as $exp)
+                            {{ $no++ }}
+                            <tr>
+                                <td class="text-center item-group">{{ $exp->qty * -1 }} {{ $item->satuan }}</td>
+                                <td class="item-group text-center">{{ $item->products->kode_item }}</td>
+                                <td class="item-group">
+                                    {{ $merks }} {{ $item->products->nama }}
+                                    @if ($item->products->no_ijinedar)
+                                        {{ $no++ }}
+                                        <br>{{ $item->products->no_ijinedar }}
+                                    @endif
+                                </td>
+                                <td class="text-center item-group">
+                                    @if ($item->products->status_exp == 1)
+                                        {{ \Carbon\Carbon::parse($exp->stockExp->tanggal)->format('F Y') }}
+                                    @else
+                                        <span>-</span>
+                                    @endif
+
+                                </td>
+                                <td class="text-center item-group">{{ $exp->stockExp->lot }}</td>
+                                <td class="item-group">
+                                    <span style="float:left">Rp.</span>
+                                    <span style="float:right">
+                                        {{ number_format($item->hargajual, 0, ',', '.') }}
+                                    </span>
+                                </td>
+                                <td class="text-center item-group">
+                                    {{ number_format($item->diskon_persen, 0, ',', '.') }} %
+                                </td>
+
+                                <td class="item-group">
+                                    <table width="100%" class="no-border">
+                                        <tr>
+                                            <td style="width: 30%" class="text-left">Rp.</td>
+                                            <td style="width: 50%" class="text-right">
+                                                {{ number_format($item->hargajual * ($exp->qty * -1), 0, ',', '.') }}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        @endforeach
                     @else
                         {{ $no++ }}
                         <tr>
-                            <td class="text-left item-group">{{ $item->qty }} {{ $item->satuan }}</td>
-                            <td class="item-group">{{ $item->products->kode_item }}</td>
+                            <td class="text-center item-group">{{ $item->qty }} {{ $item->satuan }}</td>
+                            <td class="text-center item-group">{{ $item->products->kode_item }}</td>
                             <td class="item-group">
-                                {{ $merks }} {{ $item->products->nama }}<br>
-                                {{ $item->products->no_ijinedar }}
+                                {{ $merks }} {{ $item->products->nama }}
+                                @if ($item->products->no_ijinedar)
+                                    {{ $no++ }}
+                                    <br>{{ $item->products->no_ijinedar }}
+                                @endif
                             </td>
-                            <td class="text-center item-group">-----</td>
-                            <td class="text-center item-group">-----</td>
+                            <td class="text-center item-group">-</td>
+                            <td class="text-center item-group">-</td>
                             <td class="item-group">
-                                <table width="100%" class="no-border">
-                                    <tr>
-                                        <td style="width: 30%" class="text-left">Rp.</td>
-                                        <td style="width: 50%" class="text-right">
-                                            {{ number_format($item->hargajual, 0, ',', '.') }}
-                                        </td>
-                                    </tr>
-                                </table>
+                                <span style="float:left">Rp.</span>
+                                <span style="float:right">
+                                    {{ number_format($item->hargajual, 0, ',', '.') }}
+                                </span>
                             </td>
-                            <td class="text-center item-group"> {{ number_format($item->diskon_persen, 0, ',', '.') }}
-                                %</td>
+                            <td class="text-center item-group"> {{ number_format($item->diskon_persen, 0, ',', '.') }}%
+                            </td>
                             <td class="item-group">
                                 <table width="100%" class="no-border">
                                     <tr>
@@ -259,18 +261,18 @@
 
 
                 <!-- baris kosong tapi tetap ada BORDER -->
-                @for ($i = 1; $i < 27 - $no; $i++)
+                @for ($i = 1; $i < 24 - $no; $i++)
                     <tr>
-                        <td class="text-center item-group"></td>
-                        <td class="item-group"></td>
-                        <td class="item-group">
-                            <br>
+                        <td class="text-center item-group">
+                            &nbsp;
                         </td>
-                        <td class="text-center item-group"></td>
-                        <td class="item-group"></td>
-                        <td class="text-right item-group"></td>
-                        <td class="item-group"></td>
-                        <td class="text-right item-group"></td>
+                        <td class="item-group">&nbsp;</td>
+                        <td class="item-group">&nbsp;</td>
+                        <td class="text-center item-group">&nbsp; <br> &nbsp;</td>
+                        <td class="item-group">&nbsp;</td>
+                        <td class="text-right item-group">&nbsp;</td>  
+                        <td class="item-group">&nbsp;</td>
+                        <td class="text-right item-group">&nbsp;</td>
                     </tr>
                 @endfor
 
@@ -281,13 +283,13 @@
         <table width="100%" class="border">
             <tr>
                 <!-- kiri kosong -->
-                <td width="56%">
+                <td width="50%">
                     <table class="no-border">
                         <tr>
                             <b>Terbilang :</b><br>
                         </tr>
                         <tr>
-                            <td height="20px" style="font-size:10px">
+                            <td height="20px">
                                 {{ $tertulis }} Rupiah
                             </td>
                         </tr>
@@ -307,10 +309,10 @@
                 </td>
 
                 <!-- kanan total -->
-                <td width="44%">
+                <td width="50%">
                     <table class="no-border">
                         <tr>
-                            <td width="68%">
+                            <td width="70%">
                                 <table width="100%" class="no-border">
                                     <tr>
                                         <td>Total Jumlah</td>
@@ -332,7 +334,7 @@
                                     </tr>
                                 </table>
                             </td>
-                            <td width="32%">
+                            <td width="30%">
                                 <table width="100%" class="no-border">
                                     <tr>
                                         <td style="width: 30%" class="text-left">Rp.</td>
@@ -394,7 +396,7 @@
             <tr>
                 <td height="50px"></td>
                 <td>
-                    <img src="{{ public_path('ttd/ttdpjt.png') }}" alt="" height="50px">
+                    {{-- <img src="{{ public_path('ttd/ttdpjt.png') }}" alt="" height="50px"> --}}
                 </td>
                 <td>
 
@@ -412,10 +414,10 @@
         </table>
 
         <div style="border: 0.5px solid black;width: 100%;line-height:90% ; margin-bottom:11px">
-            <p style="font-size:90%;text-align:center"><b> Pembayaran dapat ditransfer ke Rek : <b>{{ $bank->nama }} No. {{ $bank->nomor }}
+            <p style="font-size:90%;text-align:center"><b> Pembayaran dapat ditransfer ke Rek : <b>{{ $bank->nama }}
+                        No. {{ $bank->nomor }}
                     </b> a/n PT Syahid Husada Dewata </b></p>
-        </div>  
-        <br>      
+        </div>
 
     </div>
 </body>

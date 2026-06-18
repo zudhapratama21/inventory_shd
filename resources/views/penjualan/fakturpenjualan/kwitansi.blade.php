@@ -7,10 +7,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
     <style type="text/css">
-        .tabel {
+        /* .tabel {
             border-collapse: collapse;
             border-style: double;
-        }
+        } */
 
         .tabel td,
         th,
@@ -39,7 +39,7 @@
                     ">
 
             </td>
-            <td width="70%" style="padding-left:10px">
+            <td width="70%" style="padding-left:10px;border: 1px double white" >
 
                 <div>
                     <table style="margin-top:5px;">
@@ -94,7 +94,7 @@
                                 <h3>:</h3>
                             </td>
                             <td width="78%" style="border: 1px double white">
-                                <h3>Pembelian sesuai Atas Faktur No. {{ $faktur }} , Sebagaimana Terlampir : </h3>
+                                <h3>{{ $keterangan }}</h3>
                             </td>
                         </tr>
                     </table>

@@ -241,18 +241,18 @@
                                                     <i class="flaticon2-print font-weight-bold"></i> Faktur A4
                                                 </button>
 
-                                                  <button type="button" class="btn btn-primary mr-2" data-toggle="modal"
+                                                <button type="button" class="btn btn-primary mr-2" data-toggle="modal"
                                                     data-target="#printa5">
-                                                  <i class="flaticon2-print font-weight-bold"></i> Faktur A5
-                                                </button>                                          
+                                                    <i class="flaticon2-print font-weight-bold"></i> Faktur A5
+                                                </button>
                                             </div>
                                         @endcan
 
                                         @can('fakturpenjualan-delete')
-                                            <a href="{{ route('fakturpenjualan.kwitansi', $fakturpenjualan) }}"
-                                                class="btn btn-success " target="_blank">
+                                            <button type="button" class="btn btn-success" data-toggle="modal"
+                                                data-target="#kwitansi">
                                                 <i class="flaticon2-print font-weight-bold"></i> Kwitansi
-                                            </a>
+                                            </button>
                                         @endcan
 
 
@@ -314,10 +314,11 @@
                             </div>
                             <div class="form-group">
                                 <label for="">Foto Bukti</label> <br>
-                                <img src="{{ asset('storage/bukti_tandaterima/' . $fakturpenjualan->foto_bukti) }}"
+                                <img src="{{ asset('bukti_tandaterima/' . $fakturpenjualan->foto_bukti) }}"
                                     alt="" width="30%" style="margin-bottom:10px">
-                                <a href="{{ asset('storage/bukti_tandaterima/' . $fakturpenjualan->foto_bukti) }}"
-                                    class="btn btn-primary btn-sm" download><i class="fas fa-download"></i></a>
+                                <a href="{{ asset('bukti_tandaterima/' . $fakturpenjualan->foto_bukti) }}"
+                                    class="btn btn-primary btn-sm" download><i class="fas fa-download"></i>
+                                </a>
                                 <input type="file" class="form-control" name="foto_bukti">
                             </div>
                             <div class="form-group">
@@ -329,7 +330,7 @@
                                     <option value="belum terima">Belum Diterima</option>
                                 </select>
                             </div>
-                           
+
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-light-primary font-weight-bold"
                                     data-dismiss="modal">Close</button>
@@ -361,7 +362,7 @@
                                     <option value="terima">Diterima</option>
                                     <option value="belum terima">Belum Diterima</option>
                                 </select>
-                            </div>                          
+                            </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-light-primary font-weight-bold"
                                     data-dismiss="modal">Close</button>
@@ -376,8 +377,14 @@
         </div>
     </div>
     {{-- END MODAL  --}}
+
+
+    {{-- MODAL KWITANSI --}}
+
+    {{-- END MODAL KWITANSI --}}
     @include('penjualan.fakturpenjualan.modal.printa4')
     @include('penjualan.fakturpenjualan.modal.printa5')
+    @include('penjualan.fakturpenjualan.modal.kwitansi')
 @endsection
 @push('script')
     <script src="{{ asset('/assets/js/pages/crud/forms/widgets/select2.js?v=7.0.6"') }}"></script>

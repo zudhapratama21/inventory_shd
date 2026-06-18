@@ -183,25 +183,7 @@
 
 
                             </div>
-                        </div>
-                        <!-- end: Invoice footer-->
-                        <!-- begin: Invoice action-->
-                        <div class="row justify-content-center py-8 px-8 py-md-10 px-md-0">
-
-                            <div class="col-md-9">
-                                <div class="d-flex justify-content-between">
-                                    <a href="{{ route('penerimaanbarang.print_a5', $penerimaanbarang) }}"
-                                        class="btn btn-primary " target="_blank">
-                                        <i class="flaticon2-print font-weight-bold"></i> Download & Print
-                                    </a>
-                                    <a class="btn btn-danger font-weight-bold"
-                                        href="{{ url('pembelian/penerimaanbarang') }}">Back </a>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- end: Invoice action-->
-
-                        <!-- end: Invoice-->
+                        </div>                                                
                     </div>
                 </div>
                 <!-- end::Card-->

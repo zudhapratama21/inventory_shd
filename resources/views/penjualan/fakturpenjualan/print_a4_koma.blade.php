@@ -9,12 +9,13 @@
         @page {
             size: A5 landscape;
             margin: 0;
+            border: 1px solid #000;
         }
 
 
         body {
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 11px;
+            font-family: "DejaVu Sans", sans-serif;
+            font-size: 10px;
             color: #000;
         }
 
@@ -39,6 +40,7 @@
             border: 1px solid #000;
             padding: 2px;
             vertical-align: top;
+            line-height: 1;
         }
 
         .text-center {
@@ -102,10 +104,10 @@
 
         }
 
-        .page-frame {
+        /* .page-frame {
             border: 1px solid #000;
             padding: 2px;
-        }
+        } */
     </style>
 </head>
 
@@ -181,10 +183,10 @@
                 </td>
             </tr>
         </table>
-        <table class="border">
+        <table class="border" style="font-size:9.5px">
             <thead>
                 <tr class="text-center bold">
-                    <th width="6%">Qty</th>
+                    <th width="6%">Kuantum</th>
                     <th width="7%">Kode</th>
                     <th width="34%">Nama Barang</th>
                     <th width="10%">EXP</th>
@@ -213,18 +215,23 @@
                             {{ $no++ }}
                             <tr>
                                 <td class="text-left item-group">{{ $exp->qty * -1 }} {{ $item->satuan }}</td>
-                                <td class="item-group">{{ $item->products->kode_item }}</td>
+                                <td class=" text-center  item-group">{{ $item->products->kode_item }}</td>
                                 <td class="item-group">
-                                    {{ $merks }} {{ $item->products->nama }}<br>
-                                    {{ $item->products->no_ijinedar }}
+                                    {{ $merks }} {{ $item->products->nama }}
+                                    @if ($item->products->no_ijinedar)
+                                        {{ $no++ }}
+                                        <br>
+                                        {{ $item->products->no_ijinedar }}
+                                    @endif
+
                                 </td>
                                 <td class="text-center item-group">
                                     @if ($item->products->status_exp == 1)
-                                        {{ \Carbon\Carbon::parse($exp->stockExp->tanggal)->format('F Y') }}    
+                                        {{ \Carbon\Carbon::parse($exp->stockExp->tanggal)->format('F Y') }}
                                     @else
                                         <span>----</span>
                                     @endif
-                                    
+
                                 </td>
                                 <td class="text-center item-group">{{ $exp->stockExp->lot }}</td>
                                 <td class="item-group">
@@ -254,11 +261,16 @@
                     @else
                         {{ $no++ }}
                         <tr>
-                            <td class="text-left item-group">{{ $item->qty }} {{ $item->satuan }}</td>
-                            <td class="item-group">{{ $item->products->kode_item }}</td>
+                            <td class="text-center item-group">{{ $item->qty }} {{ $item->satuan }}</td>
+                            <td class="text-center  item-group">{{ $item->products->kode_item }}</td>
                             <td class="item-group">
-                                {{ $merks }} {{ $item->products->nama }}<br>
-                                {{ $item->products->no_ijinedar }}
+                                {{ $merks }} {{ $item->products->nama }}
+                                @if ($item->products->no_ijinedar)
+                                    {{ $no++ }}
+                                    <br>
+                                    {{ $item->products->no_ijinedar }}
+                                @endif
+
                             </td>
                             <td class="text-center item-group">-----</td>
                             <td class="text-center item-group">-----</td>
@@ -290,18 +302,20 @@
 
 
                 <!-- baris kosong tapi tetap ada BORDER -->
-                @for ($i = 1; $i < 7 - $no; $i++)
+                @for ($i = 1; $i < 9 - $no; $i++)
                     <tr>
                         <td class="text-center item-group">&nbsp;</td>
-                        <td class="item-group"></td>
+                        <td class="item-group">&nbsp;</td>
                         <td class="item-group">
+                            &nbsp;
                             <br>
+                            &nbsp;
                         </td>
-                        <td class="text-center item-group"></td>
-                        <td class="item-group"></td>
-                        <td class="text-right item-group"></td>
-                        <td class="item-group"></td>
-                        <td class="text-right item-group"></td>
+                        <td class="text-center item-group">&nbsp;</td>
+                        <td class="item-group">&nbsp;</td>
+                        <td class="text-right item-group">&nbsp;</td>
+                        <td class="item-group">&nbsp;</td>
+                        <td class="text-right item-group">&nbsp;</td>
                     </tr>
                 @endfor
 
@@ -393,9 +407,9 @@
                 <td>Hormat Kami</td>
             </tr>
             <tr>
-                <td height="70px"></td>
+                <td height="50px"></td>
                 <td>
-                    <img src="{{ public_path('ttd/ttdpjt.png') }}" alt="" height="70px">
+                    {{-- <img src="{{ public_path('ttd/ttdpjt.png') }}" alt="" height="70px"> --}}
                 </td>
                 <td>
                 </td>

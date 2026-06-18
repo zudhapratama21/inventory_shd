@@ -13,13 +13,10 @@ use App\Models\PengirimanBarang;
 use App\Models\PesananPenjualan;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
-use App\Imports\RevisionPenjualanImport;
 use App\Models\Bank;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Auth;
 use App\Models\FakturPenjualanDetail;
-use App\Models\HargaNonExpiredDetail;
-use App\Models\Hutang;
 use App\Models\Kategoripesanan;
 use App\Models\Komoditas;
 use App\Models\LogNoFakturPajak;
@@ -31,14 +28,10 @@ use App\Models\PesananPenjualanDetail;
 use App\Models\Product;
 use App\Models\Sales;
 use App\Models\Satuan;
-use App\Models\StokExpDetail;
 use App\Models\TempBiaya;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Maatwebsite\Excel\Facades\Excel;
-use PhpOffice\PhpSpreadsheet\Reader\Xls\RC4;
-use PhpParser\Node\Stmt\Return_;
+use Illuminate\Support\Facades\File;
 
 use function App\Traits\textKoma;
 use function App\Traits\wordOfNumber;
@@ -99,7 +92,7 @@ class FakturPenjualanController extends Controller
             ->when($request->customer_id != 'all', function ($q) use ($request) {
                 $q->where('customer_id', $request->customer_id);
             })
-            ->orderBy('id', 'desc');        
+            ->orderBy('id', 'desc');
         return Datatables::of($pengirimanbarangs)
             ->addIndexColumn()
             ->editColumn('id', function ($row) {
@@ -664,7 +657,7 @@ class FakturPenjualanController extends Controller
     }
 
 
-    public function kwitansi(FakturPenjualan $fakturpenjualan)
+    public function kwitansi(Request $request, FakturPenjualan $fakturpenjualan)
     {
         $customer = Customer::where('id', $fakturpenjualan->customer_id)->first();
         $text = wordOfNumber(round($fakturpenjualan->grandtotal));
@@ -677,7 +670,8 @@ class FakturPenjualanController extends Controller
             'text' => $responseText,
             'grandtotal' => $fakturpenjualan->grandtotal,
             'customer' => $customer->nama,
-            'tanggal' => Carbon::parse($fakturpenjualan->tanggal)->format('d F Y')
+            'tanggal' => Carbon::parse($fakturpenjualan->tanggal)->format('d F Y'),
+            'keterangan' => $request->keterangan
         ])->setPaper('a4', 'landscape');
 
 
@@ -693,9 +687,10 @@ class FakturPenjualanController extends Controller
 
         if ($img) {
             $dataFoto = $img->getClientOriginalName();
-            $waktu = time();
-            $name = $waktu . $dataFoto;
-            $nameFile = Storage::putFileAs('bukti_tandaterima', $img, $name);
+            $name = time() . '_' . $dataFoto;
+
+            $img->move(public_path('bukti_tandaterima'), $name);
+
             $nameFile = $name;
         }
 
@@ -715,26 +710,36 @@ class FakturPenjualanController extends Controller
 
         $tanggal = Carbon::parse($request->tanggal_terima)->format('Y-m-d');
 
-        $fakturpenjualan = FakturPenjualan::where('id', $id)->first();
+        $fakturpenjualan = FakturPenjualan::findOrFail($id);
+
         $nameFile = $fakturpenjualan->foto_bukti;
 
         if ($img) {
-            if ($request->foto_bukti) {
-                Storage::disk('public')->delete($fakturpenjualan->foto_bukti);
+
+            // Hapus foto lama
+            if ($fakturpenjualan->foto_bukti) {
+
+                $oldFile = public_path('bukti_tandaterima/' . $fakturpenjualan->foto_bukti);
+
+                if (File::exists($oldFile)) {
+                    File::delete($oldFile);
+                }
             }
 
-            $dataFoto = $img->getClientOriginalName();
-            $waktu = time();
-            $name = $waktu . $dataFoto;
-            $nameFile = Storage::putFileAs('bukti_tandaterima', $img, $name);
-            $nameFile = $name;
+            // Upload foto baru
+            $nameFile = time() . '_' . $img->getClientOriginalName();
+
+            $img->move(
+                public_path('bukti_tandaterima'),
+                $nameFile
+            );
         }
 
-        $tandaterima = $fakturpenjualan->update([
+        $fakturpenjualan->update([
             'tanggal_diterima' => $tanggal,
             'status_diterima' => $request->status_diterima,
             'foto_bukti' => $nameFile,
-            'no_resi' => $request->no_resi
+            'no_resi' => $request->no_resi,
         ]);
 
         return back();
@@ -1130,7 +1135,7 @@ class FakturPenjualanController extends Controller
 
 
             $no_urut = null;
-            if ($no_urut) {
+            if ($request->no_urut) {
                 $no_urut = $request->no_urut;
             }
             $noPerusahaan = $this->kodePerusahaan($no_urut, $request->tanggal);
@@ -1312,7 +1317,8 @@ class FakturPenjualanController extends Controller
     public function kodePerusahaan($urut, $tanggal)
     {
         DB::beginTransaction();
-        $tahun = Carbon::parse($tanggal)->format('Y');
+
+        $tahun = Carbon::parse($tanggal)->format('y');
         $max = FakturPenjualan::whereYear('tanggal', $tahun)->lockForUpdate()->max('no_urut');
 
         $next = $max ? $max + 1 : 1;
@@ -1321,12 +1327,15 @@ class FakturPenjualanController extends Controller
             $next = $urut;
         }
 
+
+
         $no_perusahaan =  $tahun . '.' . str_pad($next, 5, '0', STR_PAD_LEFT);
 
         $data = [
             'no_urut' => $next,
             'kode' => $no_perusahaan
         ];
+
 
         DB::commit();
         return $data;
