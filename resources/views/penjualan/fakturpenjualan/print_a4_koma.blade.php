@@ -151,7 +151,9 @@
                 <td>
                     <b>PT. SYAHID HUSADA DEWATA</b><br>
                     Jl. Padang Indah II/16 Denpasar<br>
-                    NPWP : 002.152.666.0-901.000
+                    NPWP : 002.152.666.0-901.000 <br>
+                    Phone/Fax : (0361) 420997 / 085971680666
+
                 </td>
                 <td>
                     <table class="no-border">
@@ -229,7 +231,7 @@
                                     @if ($item->products->status_exp == 1)
                                         {{ \Carbon\Carbon::parse($exp->stockExp->tanggal)->format('F Y') }}
                                     @else
-                                        <span>----</span>
+                                        <span>-</span>
                                     @endif
 
                                 </td>

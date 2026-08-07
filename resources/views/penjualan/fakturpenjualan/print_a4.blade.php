@@ -75,6 +75,10 @@
             margin-top: 10px;
         }
 
+        .mt-8 {
+            margin-top: 8px;
+        }
+
         .mt-20 {
             margin-top: 20px;
         }
@@ -114,9 +118,10 @@
         <div class="subtitle text-bold">PT. SYAHID HUSADA DEWATA</div>
         <div class="capt">Jl. Padang Indah II No. 16 Denpasar</div>
         <div class="capt">NPWP : 002.152.666.0.901.000</div>
+        <div class="capt">Phone/Fax : (0361) 420997 / 085971680666</div>
 
         <!-- INFO FAKTUR -->
-        <table class="mt-10 bordertop">
+        <table class="mt-8 bordertop">
             <tr>
                 <td width="42%">No. Faktur : <b>{{ $fakturpenjualan->no_perusahaan }}</b></td>
                 <td width="30%" style="border-left: none">Tanggal :
@@ -261,7 +266,7 @@
 
 
                 <!-- baris kosong tapi tetap ada BORDER -->
-                @for ($i = 1; $i < 24 - $no; $i++)
+                @for ($i = 1; $i < 23 - $no; $i++)
                     <tr>
                         <td class="text-center item-group">
                             &nbsp;

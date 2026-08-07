@@ -85,7 +85,7 @@
 
         .no-border td {
             border: none;
-            padding: 10px;
+            padding: 9px;
         }
 
         .signature {
@@ -114,13 +114,15 @@
     <div class="page-frame">
         <table class="no-border">
             <tr>
-                <td width="60%" style="vertical-align: top;">
+                <td width="55%" style="vertical-align: top;">
                     <table>
                         <tr>
                             <td>
                                 <span style="font-size:15px"><b>PT SYAHID HUSADA DEWATA</b></span>
                                 <br>
-                                <span style="font-size:12px"><u>Jl. Padang Indah II/16 Denpasar</u></span>
+                                <span style="font-size:12px">Jl. Padang Indah II/16 Denpasar</span> 
+                                <br>
+                                <span style="font-size:12px"><u>Phone/Fax : (0361) 420997 / 085971680666</u></span> 
                             </td>
                         </tr>
                         <tr>
@@ -137,7 +139,7 @@
                         </tr>
                     </table>
                 </td>
-                <td width="40%" style="vertical-align: top;">
+                <td width="45%" style="vertical-align: top;">
                     <table>
                         <tr>
                             <td>Denpasar, {{ \Carbon\Carbon::parse($pengirimanbarang->tanggal)->format('d F Y') }}</td>
@@ -154,7 +156,6 @@
                     </table>
                 </td>
             </tr>
-
         </table>
 
         <div>
